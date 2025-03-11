@@ -1,91 +1,8 @@
 import React, { useState } from 'react';
 import { Card, Button, Modal } from '@nabhan/view-module';
 import { useNavigate } from 'react-router-dom';
-import { Workspace } from '@/types/workspace';
-
-const workspaces: Workspace[] = [
-  {
-    id: '1',
-    name: 'Design Team',
-    description: 'Creative design and branding workspace',
-    image: '',
-    members: [
-      {
-        id: '1',
-        name: 'John Doe',
-        avatar: 'https://randomuser.me/api/portraits/men/1.jpg',
-      },
-      {
-        id: '2',
-        name: 'Jane Smith',
-        avatar: 'https://randomuser.me/api/portraits/women/2.jpg',
-      },
-      { id: '3', name: 'Mike Johnson' }, // No avatar
-      {
-        id: '4',
-        name: 'Perry',
-        avatar: 'https://randomuser.me/api/portraits/men/1.jpg',
-      },
-      {
-        id: '4',
-        name: 'Perry',
-        avatar: 'https://randomuser.me/api/portraits/men/1.jpg',
-      },
-      {
-        id: '4',
-        name: 'Perry',
-        avatar: 'https://randomuser.me/api/portraits/men/1.jpg',
-      },
-    ],
-  },
-  {
-    id: '2',
-    name: 'Marketing',
-    description: 'Marketing and communication strategies',
-    image: '',
-    members: [
-      {
-        id: '4',
-        name: 'Sarah Lee',
-        avatar: 'https://randomuser.me/api/portraits/women/3.jpg',
-      },
-      { id: '5', name: 'Alex Chen' }, // No avatar
-    ],
-  },
-  {
-    id: '3',
-    name: 'Development',
-    description: 'Software engineering and web development',
-    image: '',
-    members: [
-      {
-        id: '6',
-        name: 'Emily Carter',
-        avatar: 'https://randomuser.me/api/portraits/women/4.jpg',
-      },
-      { id: '7', name: 'Liam Scott' }, // No avatar
-      {
-        id: '8',
-        name: 'Noah Wilson',
-        avatar: 'https://randomuser.me/api/portraits/men/5.jpg',
-      },
-    ],
-  },
-  {
-    id: '4',
-    name: 'HR & Recruitment',
-    description: 'Managing employee relations and hiring',
-    image: '', // No workspace image
-    members: [
-      { id: '9', name: 'Sophia Adams' }, // No avatar
-      {
-        id: '10',
-        name: 'Ethan Green',
-        avatar: 'https://randomuser.me/api/portraits/men/6.jpg',
-      },
-    ],
-  },
-];
+import { Workspace } from '@/types/Workspace';
+import { data } from '../utils/data';
 
 export const Home: React.FC = () => {
   const navigate = useNavigate();
@@ -299,7 +216,7 @@ export const Home: React.FC = () => {
 
         {/* Workspaces List */}
         <div className="mx-3">
-          {workspaces.map((workspace) => (
+          {data.map((workspace) => (
             <Card
               variant="elevated"
               className="w-100 mb-3 max-w-screen-lg cursor-pointer border py-3 shadow-sm "

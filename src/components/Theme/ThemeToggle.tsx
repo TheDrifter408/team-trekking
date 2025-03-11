@@ -35,10 +35,10 @@ export function ThemeToggle() {
         <select
           value={currentTheme}
           onChange={(e) => dispatch(setTheme(e.target.value as ThemeType))}
-          className="bg-bg-tertiary appearance-none rounded-lg py-2 pl-4 pr-10 text-text-primary shadow-sm focus:outline-none focus:ring-2 focus:ring-primary"
+          className="bg-bg-tertiary appearance-none rounded-lg py-2 pl-4 pr-10 text-text-primary shadow-sm focus:outline-none focus:ring-2 focus:ring-primary dark:bg-white dark:text-black"
         >
           {themes.map((theme) => (
-            <option key={theme.value} value={theme.value}>
+            <option key={theme.value} value={theme.value} className="dark:text-white text-black">
               {theme.label}
             </option>
           ))}

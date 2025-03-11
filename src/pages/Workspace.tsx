@@ -1,10 +1,10 @@
-import { useLocation, NavLink, redirect } from 'react-router-dom';
-import { Workspace } from '@/types/workspace.ts';
+import { useLocation, NavLink, redirect, useParams } from 'react-router-dom';
+import { Workspace } from '@/types/Workspace';
 import { Button, Modal, Table } from '@nabhan/view-module';
 import { Column } from '@/types/Column.ts';
 import { Assignee } from '@/types/Assignee.ts';
 import { Task } from '@/types/Task.ts';
-import { ChangeEvent, useState, useMemo } from 'react';
+import { ChangeEvent, useState, useMemo, useEffect } from 'react';
 import { ProgressBar } from '@/components/Common/ProgressBar';
 import { FormEvent } from 'react';
 import { DatePicker } from '@components/ListComponents/DatePicker';
@@ -12,70 +12,47 @@ import { Text, Input, Card } from '@nabhan/view-module';
 import { Search } from 'lucide-react';
 import { CreateTask } from '@components/Forms/CreateTask';
 import { Layout } from '@components/Common/Layout.tsx';
-
-const dummyTasks: Task[] = [...new Array(10)].map((_, idx) => {
-  const task: Task = {
-    id: idx.toString(),
-    name: `Task ${idx + 1}`,
-    description: `Task description ${idx + 1}`,
-    startDate: new Date(),
-    endDate: new Date(
-      new Date().setDate(new Date().getDate() + Math.floor(Math.random() * 14))
-    ),
-    assignees: [
-      {
-        id: `${idx + 1}`,
-        name: 'John',
-        imageUrl: '',
-      },
-    ],
-    progress: Math.floor(Math.random() * 100),
-    priority: ['low', 'medium', 'high'][Math.floor(Math.random() * 3)],
-    tags: ['important', 'backlog'],
-    checklist: [
-      {
-        id: `${idx + 1}`,
-        description: `Description ${idx + 1}`,
-        isChecked: Math.random() > 0.5,
-      },
-      {
-        id: `${idx + 10 + 1}`,
-        description: `Another item ${idx + 1}`,
-        isChecked: Math.random() > 0.5,
-      },
-    ],
-    status: {
-      id: `Status ${idx + 1}`,
-      name: ['Backlog', 'In Progress', 'Review', 'Done'][
-        Math.floor(Math.random() * 4)
-      ],
-      statusColor: ['blue', 'yellow', 'purple', 'green'][
-        Math.floor(Math.random() * 4)
-      ],
-    },
-  };
-  return task;
-});
-
+import { Space } from '@/types/Space';
+import { data } from '@/utils/data';
 const WorkspacePage = () => {
-  const [tasks, setTasks] = useState<Task[]>(dummyTasks);
-  const [searchTerm, setSearchTerm] = useState<string>('');
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const { state } = useLocation();
-
+  // Get the state of the workspace 
+  let { state } = useLocation();
+  const params = useParams();
+  // Return an Error Page if the state is null
   if (state === null) {
-    return (
-      <div>
-        <h1>Workspace not found</h1>
-      </div>
-    );
+    const workspaceIndex = data.findIndex((workspace) => workspace.id === params.workspaceId); 
+    if (workspaceIndex === -1) {
+      redirect('/home');
+    }
+    state = data[workspaceIndex] as Workspace;
   }
-
-  const { name, description, members } = state as Workspace;
+  // Destructure the workspace state
+  const { name, description, members, spaces } = state as Workspace;
 
   if (!name || !description || !members) {
     redirect('/home');
   }
+
+  const ExtractTasks = (space: Space) => {
+    let allTasks: Task[] = [];
+    space.folders.forEach((folder) => {
+      folder.lists.forEach((list) => {
+        allTasks = allTasks.concat(list.tasks);
+      });
+    });
+    return allTasks;
+  }
+
+  useEffect(() => {
+    const allTasks = spaces.map(ExtractTasks).flat();
+    setTasks(allTasks);
+  },[state])
+
+
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  
 
   // Calculate stats based on tasks
   const stats = useMemo(() => {
@@ -173,7 +150,7 @@ const WorkspacePage = () => {
       header: 'Name',
       sticky: true,
       render: (task: Task) => (
-        <input
+        <input className=""
           value={task.name}
           onChange={(e) => handleNameChange(e, Number(task.id))}
         />
@@ -181,7 +158,7 @@ const WorkspacePage = () => {
     },
     {
       key: '1',
-      header: 'Progress',
+      header: 'Progress', 
       render: (task: Task) => <ProgressBar progress={task.progress} />,
     },
     {
@@ -206,7 +183,7 @@ const WorkspacePage = () => {
       header: 'Status',
       render: (task: Task) => (
         <span
-          className={`rounded px-2 py-1 text-sm ${
+          className={`rounded px-2 py-1 text-xs text-nowrap ${
             task.status.name === 'Backlog'
               ? 'bg-gray-100 text-gray-800'
               : task.status.name === 'In Progress'
@@ -255,7 +232,7 @@ const WorkspacePage = () => {
         (assignee, idx) => ({
           id: idx.toString(),
           name: assignee,
-          imageUrl: '',
+          avatar: '',
         })
       ),
       progress: 0,
@@ -332,7 +309,7 @@ const WorkspacePage = () => {
               <Text variant="label" className="text-gray-500">
                 Total Tasks
               </Text>
-              <Text variant="heading3" weight="bold">
+              <Text variant="h3" weight="bold">
                 {stats.totalTasks}
               </Text>
               <div className="mt-2 h-2 w-full rounded-full bg-gray-200">
@@ -353,7 +330,7 @@ const WorkspacePage = () => {
               <Text variant="label" className="text-gray-500">
                 Upcoming Deadlines
               </Text>
-              <Text variant="heading3" weight="bold">
+              <Text variant="h3" weight="bold">
                 {stats.upcomingDeadlines}
               </Text>
               <Text variant="caption" className="mt-1 text-yellow-600">
@@ -408,7 +385,7 @@ const WorkspacePage = () => {
               <Text variant="label" className="text-gray-500">
                 Checklist Progress
               </Text>
-              <Text variant="heading3" weight="bold">
+              <Text variant="h3" weight="bold">
                 {stats.checklistCompletion.total > 0
                   ? Math.round(
                       (stats.checklistCompletion.completed /
@@ -436,7 +413,6 @@ const WorkspacePage = () => {
             </div>
           </Card>
         </div>
-
         {/* Status Distribution */}
         <Card className="p-4 shadow-sm">
           <Text variant="body" weight="bold" className="mb-3 text-gray-700">
