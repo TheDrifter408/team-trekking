@@ -50,6 +50,4 @@
   body {
     @apply bg-bg-primary text-text-primary transition-colors duration-200;
   }
-
 }
-

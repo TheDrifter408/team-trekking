@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/store';
 import { setTheme } from '@store/slices/themeSlice.ts';
 import { ThemeType } from '@/types/theme.ts';
-import {Text} from '@nabhan/view-module'
+import { Text } from '@nabhan/view-module';
 
 const themes: { label: string; value: ThemeType }[] = [
   { label: 'Light', value: 'light' },
@@ -22,10 +22,12 @@ export function ThemeToggle() {
   }, [currentTheme]);
 
   return (
-    <div className="w-full flex flex-row items-center justify-between">
+    <div className="flex w-full flex-row items-center justify-between">
       {/* Left-aligned Title */}
       <div className="flex-start">
-        <Text variant="h5" weight="bold" className="text-text-primary">Team Trakking</Text>
+        <Text variant="h5" weight="bold" className="text-text-primary">
+          Team Trakking
+        </Text>
       </div>
 
       {/* Right-aligned Theme Selector */}
@@ -33,7 +35,7 @@ export function ThemeToggle() {
         <select
           value={currentTheme}
           onChange={(e) => dispatch(setTheme(e.target.value as ThemeType))}
-          className="appearance-none rounded-lg bg-bg-tertiary py-2 pl-4 pr-10 text-text-primary shadow-sm focus:outline-none focus:ring-2 focus:ring-primary"
+          className="bg-bg-tertiary appearance-none rounded-lg py-2 pl-4 pr-10 text-text-primary shadow-sm focus:outline-none focus:ring-2 focus:ring-primary"
         >
           {themes.map((theme) => (
             <option key={theme.value} value={theme.value}>
@@ -46,6 +48,4 @@ export function ThemeToggle() {
       </div>
     </div>
   );
-
-
 }

@@ -5,7 +5,7 @@ interface ThemeState {
   current: ThemeType;
 }
 
-const savedTheme = localStorage.getItem('theme') as ThemeType || 'light';
+const savedTheme = (localStorage.getItem('theme') as ThemeType) || 'light';
 
 const initialState: ThemeState = {
   current: savedTheme,

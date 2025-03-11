@@ -10,12 +10,32 @@ const workspaces: Workspace[] = [
     description: 'Creative design and branding workspace',
     image: '',
     members: [
-      { id: '1', name: 'John Doe', avatar: 'https://randomuser.me/api/portraits/men/1.jpg' },
-      { id: '2', name: 'Jane Smith', avatar: 'https://randomuser.me/api/portraits/women/2.jpg' },
+      {
+        id: '1',
+        name: 'John Doe',
+        avatar: 'https://randomuser.me/api/portraits/men/1.jpg',
+      },
+      {
+        id: '2',
+        name: 'Jane Smith',
+        avatar: 'https://randomuser.me/api/portraits/women/2.jpg',
+      },
       { id: '3', name: 'Mike Johnson' }, // No avatar
-      { id: '4', name: 'Perry', avatar: 'https://randomuser.me/api/portraits/men/1.jpg' },
-      { id: '4', name: 'Perry', avatar: 'https://randomuser.me/api/portraits/men/1.jpg' },
-      { id: '4', name: 'Perry', avatar: 'https://randomuser.me/api/portraits/men/1.jpg' },
+      {
+        id: '4',
+        name: 'Perry',
+        avatar: 'https://randomuser.me/api/portraits/men/1.jpg',
+      },
+      {
+        id: '4',
+        name: 'Perry',
+        avatar: 'https://randomuser.me/api/portraits/men/1.jpg',
+      },
+      {
+        id: '4',
+        name: 'Perry',
+        avatar: 'https://randomuser.me/api/portraits/men/1.jpg',
+      },
     ],
   },
   {
@@ -24,7 +44,11 @@ const workspaces: Workspace[] = [
     description: 'Marketing and communication strategies',
     image: '',
     members: [
-      { id: '4', name: 'Sarah Lee', avatar: 'https://randomuser.me/api/portraits/women/3.jpg' },
+      {
+        id: '4',
+        name: 'Sarah Lee',
+        avatar: 'https://randomuser.me/api/portraits/women/3.jpg',
+      },
       { id: '5', name: 'Alex Chen' }, // No avatar
     ],
   },
@@ -34,9 +58,17 @@ const workspaces: Workspace[] = [
     description: 'Software engineering and web development',
     image: '',
     members: [
-      { id: '6', name: 'Emily Carter', avatar: 'https://randomuser.me/api/portraits/women/4.jpg' },
+      {
+        id: '6',
+        name: 'Emily Carter',
+        avatar: 'https://randomuser.me/api/portraits/women/4.jpg',
+      },
       { id: '7', name: 'Liam Scott' }, // No avatar
-      { id: '8', name: 'Noah Wilson', avatar: 'https://randomuser.me/api/portraits/men/5.jpg' },
+      {
+        id: '8',
+        name: 'Noah Wilson',
+        avatar: 'https://randomuser.me/api/portraits/men/5.jpg',
+      },
     ],
   },
   {
@@ -46,7 +78,11 @@ const workspaces: Workspace[] = [
     image: '', // No workspace image
     members: [
       { id: '9', name: 'Sophia Adams' }, // No avatar
-      { id: '10', name: 'Ethan Green', avatar: 'https://randomuser.me/api/portraits/men/6.jpg' },
+      {
+        id: '10',
+        name: 'Ethan Green',
+        avatar: 'https://randomuser.me/api/portraits/men/6.jpg',
+      },
     ],
   },
 ];
@@ -63,7 +99,7 @@ export const Home: React.FC = () => {
   const getInitials = (name: string) => {
     return name
       .split(' ')
-      .map(word => word[0].toUpperCase())
+      .map((word) => word[0].toUpperCase())
       .join('')
       .slice(0, 2);
   };
@@ -80,7 +116,7 @@ export const Home: React.FC = () => {
   };
 
   const handleRemoveEmail = (emailToRemove: string) => {
-    setEmailList(emailList.filter(item => item !== emailToRemove));
+    setEmailList(emailList.filter((item) => item !== emailToRemove));
   };
 
   const handleCreateNew = () => {
@@ -130,7 +166,7 @@ export const Home: React.FC = () => {
         return (
           <>
             <div className="gap-lg-3 flex w-full flex-wrap justify-center gap-2">
-              {['Work', 'Personal', 'School'].map(title => (
+              {['Work', 'Personal', 'School'].map((title) => (
                 <Button
                   key={title}
                   title={title}
@@ -154,7 +190,7 @@ export const Home: React.FC = () => {
                 'It',
                 'HR & Recruiting',
                 'PMO',
-              ].map(title => (
+              ].map((title) => (
                 <Button
                   key={title}
                   title={title}
@@ -175,12 +211,16 @@ export const Home: React.FC = () => {
                 <input
                   type="email"
                   value={email}
-                  onChange={e => setEmail(e.target.value)}
-                  onKeyUp={e => (e.key === 'Enter' ? handleAddEmail() : '')}
+                  onChange={(e) => setEmail(e.target.value)}
+                  onKeyUp={(e) => (e.key === 'Enter' ? handleAddEmail() : '')}
                   placeholder="Enter email(s)"
                   className="w-full rounded-md border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
-                <Button style={{ height: 40, width: 80 }} title={'Add'} onClick={handleAddEmail}>
+                <Button
+                  style={{ height: 40, width: 80 }}
+                  title={'Add'}
+                  onClick={handleAddEmail}
+                >
                   Add
                 </Button>
               </div>
@@ -211,7 +251,7 @@ export const Home: React.FC = () => {
             <input
               type="text"
               value={workspaceName}
-              onChange={e => setWorkspaceName(e.target.value)}
+              onChange={(e) => setWorkspaceName(e.target.value)}
               className="w-full rounded-md border border-gray-300 px-4 py-2 "
             />
           </div>
@@ -245,13 +285,13 @@ export const Home: React.FC = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-bg-secondary flex items-center justify-center min-w-full">
+    <div className="flex min-h-screen min-w-full items-center justify-center bg-bg-secondary">
       <div className={''}>
         {/* Button aligned to the top right */}
         <div className="d-flex justify-content-end ">
           <Button
             title={'Create workspace'}
-            className="px-4 mr-4 my-2  bg-primary"
+            className="my-2 mr-4 bg-primary  px-4"
             onClick={handleCreateNew}
             leftIcons={addWorkspaceIcon}
           />
@@ -259,7 +299,7 @@ export const Home: React.FC = () => {
 
         {/* Workspaces List */}
         <div className="mx-3">
-          {workspaces.map(workspace => (
+          {workspaces.map((workspace) => (
             <Card
               variant="elevated"
               className="w-100 mb-3 max-w-screen-lg cursor-pointer border py-3 shadow-sm "
@@ -273,19 +313,27 @@ export const Home: React.FC = () => {
                       src={workspace.image}
                       alt={workspace.name}
                       className="rounded-circle me-2 border"
-                      style={{ width: '50px', height: '50px', objectFit: 'cover' }}
+                      style={{
+                        width: '50px',
+                        height: '50px',
+                        objectFit: 'cover',
+                      }}
                     />
                   ) : (
                     <div
-                      className="rounded-circle d-flex align-items-center bg-tertiary justify-content-center me-2 font-bold text-white"
+                      className="rounded-circle d-flex align-items-center justify-content-center me-2 bg-tertiary font-bold text-white"
                       style={{ width: '65px', height: '65px' }}
                     >
                       {getInitials(workspace.name)}
                     </div>
                   )}
                   <div>
-                    <h5 className="textf mb-1 hover:underline">{workspace.name}</h5>
-                    <p className="font-light text-secondary">{workspace.description}</p>
+                    <h5 className="textf mb-1 hover:underline">
+                      {workspace.name}
+                    </h5>
+                    <p className="font-light text-secondary">
+                      {workspace.description}
+                    </p>
                   </div>
                 </div>
 

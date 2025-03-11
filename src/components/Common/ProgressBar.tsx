@@ -19,14 +19,14 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({ progress }) => {
 
   return (
     <div className="w-full">
-      <div className="flex items-center w-full">
-        <div className="w-[150px] h-5 bg-gray-200 rounded-full relative overflow-hidden">
+      <div className="flex w-full items-center">
+        <div className="relative h-5 w-[150px] overflow-hidden rounded-full bg-gray-200">
           <div
-            className={`absolute top-0 left-0 h-full transition-all duration-300 ease-in-out rounded-full ${getProgressColor(progress)}`}
+            className={`absolute left-0 top-0 h-full rounded-full transition-all duration-300 ease-in-out ${getProgressColor(progress)}`}
             style={{ width: `${progress}%` }}
           ></div>
           <div
-            className={`absolute top-0 left-0 w-full h-full flex items-center justify-center text-xs font-semibold ${getTextColor(progress)}`}
+            className={`absolute left-0 top-0 flex h-full w-full items-center justify-center text-xs font-semibold ${getTextColor(progress)}`}
           >
             {progress}%
           </div>
