@@ -1,14 +1,17 @@
 import { FC, useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
-  Folder,
-  FolderOpen,
+  Grid2x2,
+  Layers,
+  Layers2,
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Text} from '@nabhan/view-module'
 import {getInitials} from '@utils/Common'
 import { data } from '@utils/data';
 import { Workspace } from '@/types/Workspace';
+import SpaceItem from '../ListComponents/SpaceItem';
+import { Space } from '@/types/Space';
 
 
 const ExpandableButton:FC<Workspace & SidebarProps> = ({ id, name, spaces, sidebarOpen }) => {
@@ -23,30 +26,37 @@ const ExpandableButton:FC<Workspace & SidebarProps> = ({ id, name, spaces, sideb
   }
 
   return (
-    <div className="rounded-lg p-2 hover:bg-bg-secondary">
-      <div className={`flex items-center gap-1`}>
-        <button onClick={onToggle} className="flex items-center p-0">
+    <div className="overflow-visible">
+      <div className={`flex items-center justify-between w-full gap-1`}>
+        <button onClick={onToggle} className="flex items-center px-2 py-1 gap-2 hover:bg-bg-secondary rounded-lg">
           {
             isOpen ? 
-            <FolderOpen className="h-4 w-4" /> :
-            <Folder className="h-4 w-4" />
+            <Layers2 className="h-4 w-4" /> :
+            <Layers className="h-4 w-4" />
           }
-        </button>
-        <Link to={`/workspace/${id}`} className={`mt-1`}>
+          <Link to={`/workspace/${id}`} className={`mt-1`}>
             <Text variant={'body-small'} weight={'semibold'} className={`flex items-center space-x-2 text-nowrap dark:text-white`}>
               {sidebarOpen ? name : <></>}
             </Text>
         </Link>
+        </button>
       </div>
-      <motion.ul animate={{ height: isOpen ? 'auto' : 0}} className="overflow-hidden">
+      <motion.ul 
+      animate={{ height: isOpen ? 100 : 0}} 
+      className="rounded-lg h-full overflow-hidden">
         {spaces.map((space) => (
-          <li key={space.id} className="flex items-center space-x-2 p-2 hover:bg-bg-secondary ml-6">
-            <Link to={`/workspace/${id}`} className='flex items-center space-x-2'>
-              <FolderOpen className='h-5 w-5' />
-              <Text variant={'body-small'} weight={'normal'} className="dark:text-white">
+          <li key={space.id} className="space-x-2 px-2 rounded-lg">
+            <Link to={`/workspace/${id}`} className='flex items-center space-x-2 hover:bg-bg-secondary p-2 rounded-lg'>
+              <Grid2x2 className='h-5 w-5' />
+              <Text variant={'body-small'} weight={'normal'} className="dark:text-white text-nowrap">
                 {space.name}
               </Text>
             </Link>
+            {
+              spaces.map((space:Space) => (
+                <SpaceItem key={space.id} space={space} workspaceId={id} />
+              ))
+            }
           </li>
         ))}
       </motion.ul>
@@ -65,7 +75,7 @@ export const Sidebar: FC<SidebarProps> = ({ sidebarOpen, name }) => {
 
   return (
     <>
-      <aside className="flex h-full flex-col">
+      <aside className="flex h-full flex-col overflow-visible">
         {/* Sidebar Header */}
         <div className="flex items-center justify-between border-b p-4">
           <motion.h2
@@ -88,19 +98,19 @@ export const Sidebar: FC<SidebarProps> = ({ sidebarOpen, name }) => {
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 space-y-2 p-4">
-          <motion.div>
+        <nav className="flex-1 space-y-2 p-4 overflow-visible">
+          <motion.div className=''>
           <Text variant='h3' weight='semibold' className='flex items-center dark:text-white'>
             { sidebarOpen ? 'Spaces' : '' }
           </Text>
           </motion.div>
-          <motion.div animate={{ x: sidebarOpen ? 0 : -10 }} transition={{ duration: 0.3 }}>
+          <motion.ul animate={{ x: sidebarOpen ? 0 : -10 }} transition={{ duration: 0.3 }} className='overflow-visible'>
           {
             data.map((workspace:Workspace) => (
               <ExpandableButton key={workspace.id} {...workspace} sidebarOpen={sidebarOpen} />
             ))
           }
-          </motion.div>
+          </motion.ul>
         </nav>
       </aside>
     </>
