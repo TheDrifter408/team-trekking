@@ -6,17 +6,16 @@ import {
   Navigate,
 } from 'react-router-dom';
 import { Provider } from 'react-redux';
-import { store } from './store';
-import { Login } from './pages/Login';
-import { Home } from './pages/Home';
-import WorkspacePage from './pages/Workspace';
-import { useSelector } from 'react-redux';
-import { RootState } from './store';
+import { store } from '@/store';
+import { Login } from '@/pages/Login';
+import { Home } from '@/pages/Home';
+import WorkspacePage from '@/pages/Workspace';
 
 function PrivateRoute({ children }: { children: React.ReactNode }) {
-  const token = useSelector((state: RootState) => state.auth.token);
-  return token ? children : <Navigate to="/login" />;
+    const token = localStorage.getItem('token'); // Read from localStorage
+    return token ? children : <Navigate to="/login" />;
 }
+
 
 function App() {
   return (

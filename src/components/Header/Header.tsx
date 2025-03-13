@@ -1,15 +1,14 @@
 import { useNavigate } from 'react-router-dom';
 import { LogOut } from 'lucide-react';
-import { useDispatch } from 'react-redux';
-import { logout } from '@store/slices/authSlice.ts';
 import { ThemeToggle } from '../Theme/ThemeToggle.tsx';
+import {useLogoutMutation} from "@store/services/auth.ts";
 
 export function Header() {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [logout] = useLogoutMutation();
 
   const handleLogout = () => {
-    dispatch(logout());
+    logout();
     navigate('/login');
   };
 

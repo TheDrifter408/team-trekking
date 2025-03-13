@@ -15,38 +15,46 @@ interface LoginRequest {
   password: string;
 }
 
-// Mock API that doesn't make actual HTTP requests
 export const authApi = createApi({
   reducerPath: 'authApi',
   baseQuery: fetchBaseQuery({ baseUrl: '/' }),
   endpoints: (builder) => ({
     login: builder.mutation<AuthResponse, LoginRequest>({
-      queryFn: (credentials) => {
-        // Mock successful response
-        return {
-          data: {
-            user: {
-              id: '1',
-              email: credentials.email,
-            },
-            token: 'mock-jwt-token',
-          },
+      queryFn: async (credentials) => {
+        const response = {
+          user: { id: '1', email: credentials.email },
+          token: 'mock-jwt-token',
         };
+
+        // Store token in localStorage
+        localStorage.setItem('token', response.token);
+
+        return { data: response };
       },
     }),
     signup: builder.mutation<AuthResponse, LoginRequest>({
-      queryFn: (credentials) => {
-        // Mock successful response
-        return {
-          data: {
-            user: {
-              id: '1',
-              email: credentials.email,
-            },
-            token: 'mock-jwt-token',
-          },
+      queryFn: async (credentials) => {
+        const response = {
+          user: { id: '1', email: credentials.email },
+          token: 'mock-jwt-token',
         };
+
+        // Store token in localStorage
+        localStorage.setItem('token', response.token);
+
+        return { data: response };
+      },
+    }),
+    logout: builder.mutation<void, void>({
+      queryFn: async () => {
+        // Clear authentication data
+        localStorage.removeItem('token');
+        localStorage.removeItem('theme');
+
+        return { data: undefined };
       },
     }),
   }),
 });
+
+export const { useLoginMutation, useSignupMutation, useLogoutMutation } = authApi;
