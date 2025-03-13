@@ -1,28 +1,27 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import { authApi } from '@/store/services/auth';
-import { setCredentials } from '@/store/slices/authSlice';
+import { useLoginMutation, useSignupMutation } from '@/store/services/auth';
 
 export function Login() {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
-  const dispatch = useDispatch();
 
-  const [login] = authApi.useLoginMutation();
-  const [signup] = authApi.useSignupMutation();
+  const [login ] = useLoginMutation();
+  const [signup] = useSignupMutation();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     try {
       const auth = isLogin ? login : signup;
       const result = await auth({ email, password }).unwrap();
-      dispatch(setCredentials(result));
-      navigate('/workspace');
+      localStorage.setItem('token', result.token);
+
+      navigate('/home');
     } catch (err) {
-      console.error('Failed to authenticate:', err);
+      console.error('Authentication failed:', err);
     }
   };
 
@@ -71,7 +70,7 @@ export function Login() {
                 name="password"
                 type="password"
                 required
-                className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                className="mt-1 block w-full rounded-md border  border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
                 placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}

@@ -1,17 +1,15 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { setupListeners } from '@reduxjs/toolkit/query';
 import { authApi } from './services/auth';
-import authReducer from './slices/authSlice';
-import themeReducer from './slices/themeSlice';
+import themeReducer from './slices/themeSlice'; // Keep theme reducer if needed
 
 export const store = configureStore({
   reducer: {
     [authApi.reducerPath]: authApi.reducer,
-    auth: authReducer,
-    theme: themeReducer,
+    theme: themeReducer, // Keep this if your theme still uses Redux
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(authApi.middleware),
+      getDefaultMiddleware().concat(authApi.middleware),
 });
 
 setupListeners(store.dispatch);
