@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useState } from 'react';
+import { Outlet, useLocation } from 'react-router-dom';
 import { ChevronRight, ChevronLeft } from 'lucide-react';
 import { Header } from '../Header/Header.tsx';
 import { Sidebar } from '../Sidebar/Sidebar.tsx';
 import { motion } from 'framer-motion';
 
-export function Layout({ children }: { children: React.ReactNode }) {
+export function Layout() {
   const { state } = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
@@ -44,7 +44,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
             sidebarOpen ? 'ml-64' : 'ml-16'
           }`}
         >
-          {children}
+          <Outlet/>
         </main>
       </div>
     </div>

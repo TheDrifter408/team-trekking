@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useLoginMutation, useSignupMutation } from '@/store/services/auth';
+import { useLoginMutation, useSignupMutation } from '@store/services/auth.ts';
 
 export function Login() {
   const [isLogin, setIsLogin] = useState(true);

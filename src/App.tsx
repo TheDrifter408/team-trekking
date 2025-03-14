@@ -1,49 +1,21 @@
-import React from 'react';
 import {
   BrowserRouter as Router,
-  Routes,
-  Route,
-  Navigate,
 } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { store } from '@/store';
-import { Login } from '@/pages/Login';
-import { Home } from '@/pages/Home';
-import WorkspacePage from '@/pages/Workspace';
-
-function PrivateRoute({ children }: { children: React.ReactNode }) {
-    const token = localStorage.getItem('token'); // Read from localStorage
-    return token ? children : <Navigate to="/login" />;
-}
+import AppRoutes from '../src/routes/index';
 
 
 function App() {
   return (
     <Provider store={store}>
       <Router>
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route
-            path="/home"
-            element={
-              <PrivateRoute>
-                <Home />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/workspace/:workspaceId"
-            element={
-              <PrivateRoute>
-                <WorkspacePage />
-              </PrivateRoute>
-            }
-          />
-          <Route path="/" element={<Navigate to="/home" />} />
-        </Routes>
+        <AppRoutes />
       </Router>
     </Provider>
   );
 }
 
 export default App;
+
+
