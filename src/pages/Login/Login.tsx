@@ -1,15 +1,31 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLoginMutation, useSignupMutation } from '@store/services/auth.ts';
+import { motion, AnimatePresence } from 'framer-motion';
+// import {Button } from '@nabhan/view-module'
+import {ButtonComponent as Button} from '@/components/Common/Button'
+import {IconButton} from '@/components/Common/IconButton';
+import { useThemeStore } from '@store/zustand';
+import {GoogleIcon, GithubIcon, SunIcon, MoonIcon} from '@/assets/icons/Icons'
+
 
 export function Login() {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [darkMode, setDarkMode] = useState(false);
   const navigate = useNavigate();
+  const { currentTheme, setTheme } = useThemeStore();
 
-  const [login ] = useLoginMutation();
+
+  const [login] = useLoginMutation();
   const [signup] = useSignupMutation();
+
+  // Check system preference for dark mode on component mount
+  useEffect(() => {
+    if(currentTheme !== 'dark' && currentTheme !== 'light')  document.documentElement.setAttribute('data-theme', 'light');
+    else document.documentElement.setAttribute('data-theme', currentTheme);
+  }, [currentTheme]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -25,80 +41,184 @@ export function Login() {
     }
   };
 
+  const handleSocialAuth = async (provider: string) => {
+    console.log(`Authenticating with ${provider}`);
+  };
+
+  const toggleDarkMode = () => {
+    const newTheme = currentTheme === 'light' ? 'dark' : 'light'; // Example of toggling between themes
+    setTheme(newTheme);
+    setDarkMode(!darkMode);
+  };
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4 py-12 sm:px-6 lg:px-8">
-      <div className="w-full max-w-md space-y-8">
-        <div className="text-center">
-          <h2 className="text-3xl font-bold tracking-tight text-gray-900">
-            {isLogin ? 'Welcome back!' : 'Create your account'}
-          </h2>
-          <p className="mt-2 text-sm text-gray-600">
-            {isLogin
-              ? 'Sign in to access your workspace'
-              : 'Start your journey with us'}
+    <div className={`flex flex-col md:flex-row min-h-screen bg-bg-primary`}>
+      {/* Left side - Brand/Illustration */}
+
+      <div className="hidden md:flex md:w-1/2 bg-indigo-600 items-center justify-center p-12">
+        <div className="max-w-md">
+          <h1 className="text-4xl font-bold text-white mb-6">Welcome to Our Platform</h1>
+          <p className="text-lg text-indigo-100">
+            Streamline your workflow and boost productivity with our powerful tools.
           </p>
+
+          {/* Illustration placeholder */}
+          <div className="mt-12 h-64 bg-indigo-500 rounded-lg flex items-center justify-center">
+            <svg className="w-32 h-32 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+            </svg>
+          </div>
         </div>
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          <div className="space-y-4">
-            <div>
-              <label
-                htmlFor="email-address"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Email address
-              </label>
-              <input
-                id="email-address"
-                name="email"
-                type="email"
-                required
-                className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                placeholder="you@example.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </div>
-            <div>
-              <label
-                htmlFor="password"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Password
-              </label>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                required
-                className="mt-1 block w-full rounded-md border  border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                placeholder="••••••••"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </div>
+      </div>
+
+      {/* Right side - Auth Form */}
+      <div className="flex flex-col w-full md:w-1/2 p-8 md:p-12 justify-center">
+        {/* Dark mode toggle */}
+        <div className="absolute top-4 right-4">
+          <IconButton
+            onClick={toggleDarkMode}
+            className={`rounded-5 ${darkMode ? 'bg-gray-700 text-yellow-300' : 'bg-gray-200 text-gray-700'}`}
+            ariaLabel={'theme'}
+          >
+            {
+              darkMode ? (
+                <SunIcon/>
+              ) : (
+                <MoonIcon/>
+              )
+            }
+          </IconButton>
+        </div>
+
+        <div className="max-w-md mx-auto w-full">
+          {/* Logo */}
+          <div className="text-center mb-8">
+            <svg className="mx-auto h-12 w-12 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path>
+            </svg>
+            <h2 className="mt-2 text-3xl font-bold">Auth System</h2>
           </div>
 
-          <div>
-            <button
-              type="submit"
-              className="group relative flex w-full justify-center rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+          {/* Tabs */}
+          <div className="flex mb-8 ">
+            <Button
+              variant={'ghost'}
+              onClick={() => setIsLogin(true)}
+              className={`flex-1 py-2 focus:outline-none focus:ring-0 focus:ring-offset-0 ${isLogin ? "border-b-2 border-indigo-600" : "border-b-2 text-text-muted border-gray-500"}`}
             >
-              {isLogin ? 'Sign in' : 'Create account'}
-            </button>
+              Login
+            </Button>
+            <Button
+              variant={!isLogin ? "ghost" : "ghost"}
+              onClick={() => setIsLogin(false)}
+              className={`flex-1 py-2 focus:outline-none focus:ring-0 focus:ring-offset-0 ${!isLogin ? "border-b-2 border-indigo-600" : "border-b-2 text-text-muted border-gray-500"}`}
+            >
+              Sign Up
+            </Button>
           </div>
 
-          <div className="text-center">
-            <button
-              type="button"
-              onClick={() => setIsLogin(!isLogin)}
-              className="text-sm font-medium text-indigo-600 hover:text-indigo-500"
+          {/* Form */}
+          <AnimatePresence mode="wait">
+            <motion.form
+              key={isLogin ? 'login' : 'signup'}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.2 }}
+              className="space-y-6"
+              onSubmit={handleSubmit}
             >
-              {isLogin
-                ? "Don't have an account? Sign up"
-                : 'Already have an account? Sign in'}
-            </button>
-          </div>
-        </form>
+              <div className="space-y-4">
+                <div>
+                  <label
+                    htmlFor="email-address"
+                    className={`block text-sm font-medium text-text-muted`}
+                  >
+                    Email address
+                  </label>
+                  <input
+                    id="email-address"
+                    name="email"
+                    type="email"
+                    required
+                    className={`mt-1 block w-full rounded-md px-3 py-2 shadow-sm sm:text-sm  focus:border-indigo-500 focus:ring-indigo-500  bg-bg-inverted text-text-default`}
+                    placeholder="you@example.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
+                </div>
+                <div>
+                  <label
+                    htmlFor="password"
+                    className={`block text-sm font-medium text-text-muted`}
+                  >
+                    Password
+                  </label>
+                  <input
+                    id="password"
+                    name="password"
+                    type="password"
+                    required
+                    className={`mt-1 block w-full rounded-md px-3 py-2 shadow-sm sm:text-sm  focus:border-indigo-500 focus:ring-indigo-500  bg-bg-inverted text-text-default`}
+                    placeholder="••••••••"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
+                </div>
+              </div>
+
+              <Button fullWidth >{isLogin ? 'Sign in' : 'Create account'}</Button>
+
+              {/* Social auth */}
+              <div>
+                <div className="relative my-4">
+                  <div className="absolute inset-0 flex items-center">
+                    <div className={`w-full border-t ${darkMode ? 'border-gray-700' : 'border-gray-300'}`}></div>
+                  </div>
+                  <div className="relative flex justify-center text-sm">
+                    <span className={`px-2 text-text-primary bg-bg-primary`}>Or continue with</span>
+                  </div>
+                </div>
+
+                <div className="w-full flex ">
+
+                  <Button
+                    variant={'outline'}
+
+                    onClick={() => handleSocialAuth('github')}
+                    leftIcons={[{ icon: <GithubIcon />, onClick: () => handleSocialAuth('google') }]}
+                    className="p-2 mx-1 w-50 rounded-md flex items-center gap-2 justify-between  bg-bg-inverted border border-border-primary text-text-default gap-2"
+                  >
+                    <div className={'flex-grow text-left ml-2'}>Github</div>
+                  </Button>
+                  <Button
+                    variant={'outline'}
+                    onClick={() => handleSocialAuth('google')}
+                    leftIcons={[{ icon: <GoogleIcon />, onClick: () => handleSocialAuth('google') }]}
+                    className="p-2 mx-1 w-50 rounded-md flex items-center gap-2 justify-between  bg-bg-inverted border border-border-primary text-text-default gap-2"
+                  >
+                    <div className={'flex-grow text-left ml-2'}>Google</div>
+                  </Button>
+
+                </div>
+              </div>
+
+              {/* Switch between login and signup */}
+              <div className="text-center mt-6">
+                <Button
+                  variant={'link'}
+                  fullWidth
+                  onClick={() => setIsLogin(!isLogin)}
+                  className={`text-sm flex font-medium`}
+                >
+                  {isLogin
+                    ? "Don't have an account? Sign up"
+                    : 'Already have an account? Login'}
+                </Button>
+              </div>
+            </motion.form>
+          </AnimatePresence>
+        </div>
       </div>
     </div>
   );
