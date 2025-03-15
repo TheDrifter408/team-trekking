@@ -164,16 +164,16 @@ export function Login() {
                   <Button
                     variant={'outline'}
 
-                    onClick={() => handleSocialAuth('github')}
-                    leftIcons={[{ icon: <GithubIcon />, onClick: () => handleSocialAuth('google') }]}
+                    onClick={() => handleSocialAuth()}
+                    leftIcons={[{ icon: <GithubIcon />, onClick: () => handleSocialAuth() }]}
                     className="p-2 mx-1 w-50 rounded-md flex items-center gap-2 justify-between  bg-bg-inverted border border-border-primary text-text-default gap-2"
                   >
                     <div className={'flex-grow text-left ml-2'}>Github</div>
                   </Button>
                   <Button
                     variant={'outline'}
-                    onClick={() => handleSocialAuth('google')}
-                    leftIcons={[{ icon: <GoogleIcon />, onClick: () => handleSocialAuth('google') }]}
+                    onClick={() => handleSocialAuth()}
+                    leftIcons={[{ icon: <GoogleIcon />, onClick: () => handleSocialAuth() }]}
                     className="p-2 mx-1 w-50 rounded-md flex items-center gap-2 justify-between  bg-bg-inverted border border-border-primary text-text-default gap-2"
                   >
                     <div className={'flex-grow text-left ml-2'}>Google</div>
