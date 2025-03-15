@@ -1,11 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useLoginMutation, useSignupMutation } from '@store/services/auth.ts';
 import { motion, AnimatePresence } from 'framer-motion';
-// import {Button } from '@nabhan/view-module'
-import {ButtonComponent as Button} from '@/components/Common/Button'
-import {IconButton} from '@/components/Common/IconButton';
+import {Button, IconButton} from '@/components/index'
 import { useThemeStore } from '@store/zustand';
+import {useAuth} from '@/hooks/useAuth'
 import {GoogleIcon, GithubIcon, SunIcon, MoonIcon} from '@/assets/icons/Icons'
 
 
@@ -14,35 +11,17 @@ export function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [darkMode, setDarkMode] = useState(false);
-  const navigate = useNavigate();
   const { currentTheme, setTheme } = useThemeStore();
-
-
-  const [login] = useLoginMutation();
-  const [signup] = useSignupMutation();
+  const {authenticate, handleSocialAuth} = useAuth();
 
   // Check system preference for dark mode on component mount
   useEffect(() => {
-    if(currentTheme !== 'dark' && currentTheme !== 'light')  document.documentElement.setAttribute('data-theme', 'light');
-    else document.documentElement.setAttribute('data-theme', currentTheme);
+    document.documentElement.setAttribute('data-theme', currentTheme || 'light');
   }, [currentTheme]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    try {
-      const auth = isLogin ? login : signup;
-      const result = await auth({ email, password }).unwrap();
-      localStorage.setItem('token', result.token);
-
-      navigate('/home');
-    } catch (err) {
-      console.error('Authentication failed:', err);
-    }
-  };
-
-  const handleSocialAuth = async (provider: string) => {
-    console.log(`Authenticating with ${provider}`);
+    await authenticate(isLogin, email, password);
   };
 
   const toggleDarkMode = () => {
@@ -53,8 +32,8 @@ export function Login() {
 
   return (
     <div className={`flex flex-col md:flex-row min-h-screen bg-bg-primary`}>
-      {/* Left side - Brand/Illustration */}
 
+      {/* Left side - Brand/Illustration */}
       <div className="hidden md:flex md:w-1/2 bg-indigo-600 items-center justify-center p-12">
         <div className="max-w-md">
           <h1 className="text-4xl font-bold text-white mb-6">Welcome to Our Platform</h1>
@@ -77,7 +56,7 @@ export function Login() {
         <div className="absolute top-4 right-4">
           <IconButton
             onClick={toggleDarkMode}
-            className={`rounded-5 ${darkMode ? 'bg-gray-700 text-yellow-300' : 'bg-gray-200 text-gray-700'}`}
+            className={`rounded-5 ${darkMode ? 'bg-gray-700 text-yellow-300' : 'bg-gray-50 text-gray-700'}`}
             ariaLabel={'theme'}
           >
             {
