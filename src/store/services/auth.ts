@@ -26,7 +26,6 @@ export const authApi = createApi({
           token: 'mock-jwt-token',
         };
 
-        // Store token in localStorage
         localStorage.setItem('token', response.token);
 
         return { data: response };

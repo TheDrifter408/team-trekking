@@ -8,7 +8,7 @@ import {
 import { motion } from 'framer-motion';
 import { Text} from '@nabhan/view-module'
 import {getInitials} from '@utils/Common'
-import { data } from '@utils/data';
+import { data } from '@utils/data2.ts';
 import { Workspace } from '@/types/Workspace';
 import SpaceItem from '../ListComponents/SpaceItem';
 import { Space } from '@/types/Space';

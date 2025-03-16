@@ -1,6 +1,4 @@
-// src/types/Workspace.ts
 
-// User type for consistent representation of users across the system
 export interface User {
   id: string;
   name: string;
@@ -57,20 +55,6 @@ export interface TaskDependency {
   name: string;
 }
 
-// For file attachments
-export interface Attachment {
-  id: string;
-  name: string;
-  type: string;
-  size: string;
-  url: string;
-  uploadedAt?: Date;
-  uploadedBy?: {
-    id: string;
-    name: string;
-  };
-}
-
 // Checklist items in tasks
 export interface ChecklistItem {
   id: string;
@@ -92,7 +76,6 @@ export interface Comment {
   content: string;
   timestamp: Date;
   likes: number;
-  attachments: Attachment[];
 }
 
 // Subtasks within tasks
@@ -125,7 +108,6 @@ export interface Task {
   priority: 'Low' | 'Medium' | 'High' | 'Urgent';
   priorityValue?: number; // Numeric representation (1 = high, 4 = low)
   tags: string[];
-  attachments?: Attachment[];
   checklist: ChecklistItem[];
   comments?: Comment[];
   startDate: Date;
@@ -137,7 +119,6 @@ export interface Task {
   status: Status;
   timeTracking?: TimeTracking;
   subtasks?: Subtask[];
-  customFields?: Record<string, any>;
 }
 
 // Task list - a collection of tasks
@@ -183,6 +164,13 @@ export interface Space {
   lists?: TaskList[]; // Made optional with '?'
 }
 
+interface TaskType {
+  id: number;
+  name: string;
+  description: string;
+}
+
+
 // Workspace - the top-level container
 export interface Workspace {
   id: string;
@@ -197,4 +185,5 @@ export interface Workspace {
   members: User[];
   activity?: Activity[];
   spaces: Space[];
+  taskTypes: TaskType[];
 }

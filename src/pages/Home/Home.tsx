@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Card, Button, Modal } from '@nabhan/view-module';
 import { useNavigate } from 'react-router-dom';
 import { Workspace } from '@/types/Workspace.ts';
-import { data } from '@utils/data.ts';
+import { data } from '@utils/data2.ts';
 
 export const Home: React.FC = () => {
   const navigate = useNavigate();

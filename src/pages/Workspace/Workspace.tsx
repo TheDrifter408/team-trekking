@@ -12,7 +12,7 @@ import { Text, Input, Card } from '@nabhan/view-module';
 import { Search } from 'lucide-react';
 import { CreateTask } from '@components/Forms/CreateTask.tsx';
 import { Space } from '@/types/Space.ts';
-import { data } from '@utils/data.ts';
+import { data } from '@utils/data2.ts';
 
 export const WorkspacePage = () => {
   // Get the state of the workspace 
