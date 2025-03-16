@@ -5,7 +5,7 @@ import { Space } from "./Space";
 
 
 export interface Workspace {
-  id: string;
+  id?: string;
   name: string;
   description: string;
   image?: string; // Optional workspace image
