@@ -1,4 +1,3 @@
-
 export interface User {
   id: string;
   name: string;
@@ -15,8 +14,23 @@ export interface User {
 export interface Activity {
   id: string;
   userId: string;
-  action: 'created' | 'commented' | 'updated' | 'completed' | 'deleted' | 'moved' | 'assigned' | 'shared';
-  targetType: 'task' | 'space' | 'folder' | 'list' | 'checklist' | 'comment' | 'attachment';
+  action:
+    | 'created'
+    | 'commented'
+    | 'updated'
+    | 'completed'
+    | 'deleted'
+    | 'moved'
+    | 'assigned'
+    | 'shared';
+  targetType:
+    | 'task'
+    | 'space'
+    | 'folder'
+    | 'list'
+    | 'checklist'
+    | 'comment'
+    | 'attachment';
   targetId: string;
   targetName: string;
   comment?: string;
@@ -51,7 +65,11 @@ export interface TimeTracking {
 // Task dependencies
 export interface TaskDependency {
   id: string;
-  type: 'finish-to-start' | 'start-to-start' | 'finish-to-finish' | 'start-to-finish';
+  type:
+    | 'finish-to-start'
+    | 'start-to-start'
+    | 'finish-to-finish'
+    | 'start-to-finish';
   name: string;
 }
 
@@ -169,7 +187,6 @@ interface TaskType {
   name: string;
   description: string;
 }
-
 
 // Workspace - the top-level container
 export interface Workspace {

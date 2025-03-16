@@ -1,8 +1,8 @@
-import { List } from "./List";
+import { List } from './List';
 
 export type Folder = {
-    id:string;
-    name:string;
-    description?:string;
-    lists: List[]
-}
+  id: string;
+  name: string;
+  description?: string;
+  lists: List[];
+};

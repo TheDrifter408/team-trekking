@@ -7,25 +7,15 @@ interface ThemeState {
   setTheme: (theme: ThemeType) => void;
   workspace?: {
     id: string;
-    name:string;
+    name: string;
     description: string;
     spaces: [
       id: string,
       name: string,
-      folders : [
-        id: string,
-        name: string,
-        list: [
-          id: string,
-          name: string,
-        ]
-      ],
-      list: [
-        id: string,
-        name: string,
-      ]
+      folders: [id: string, name: string, list: [id: string, name: string]],
+      list: [id: string, name: string],
     ];
-  }
+  };
 }
 
 export const useThemeStore = create<ThemeState>((set) => ({
@@ -34,5 +24,4 @@ export const useThemeStore = create<ThemeState>((set) => ({
     localStorage.setItem('theme', theme);
     set({ currentTheme: theme });
   },
-
 }));

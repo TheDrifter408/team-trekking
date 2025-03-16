@@ -1,4 +1,10 @@
-import { useLocation, NavLink, redirect, useParams, Link } from 'react-router-dom';
+import {
+  useLocation,
+  NavLink,
+  redirect,
+  useParams,
+  Link,
+} from 'react-router-dom';
 import { Workspace } from '@/types/Workspace.ts';
 import { Button, Modal, Table } from '@nabhan/view-module';
 import { Column } from '@/types/Column.ts';
@@ -20,7 +26,9 @@ export const WorkspacePage2 = () => {
   const params = useParams();
   // Return an Error Page if the state is null
   if (state === null) {
-    const workspaceIndex = data.findIndex((workspace) => workspace.id === params.workspaceId);
+    const workspaceIndex = data.findIndex(
+      (workspace) => workspace.id === params.workspaceId
+    );
     if (workspaceIndex === -1) {
       redirect('/home');
     }
@@ -41,18 +49,16 @@ export const WorkspacePage2 = () => {
       });
     });
     return allTasks;
-  }
+  };
 
   useEffect(() => {
     const allTasks = spaces.map(ExtractTasks).flat();
     setTasks(allTasks);
-  },[state])
-
+  }, [state]);
 
   const [tasks, setTasks] = useState<Task[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-
 
   // Calculate stats based on tasks
   const stats = useMemo(() => {
@@ -67,47 +73,47 @@ export const WorkspacePage2 = () => {
     }).length;
 
     const statusDistribution = tasks.reduce(
-        (acc, task) => {
-          acc[task.status.name] = (acc[task.status.name] || 0) + 1;
-          return acc;
-        },
-        {} as Record<string, number>
+      (acc, task) => {
+        acc[task.status.name] = (acc[task.status.name] || 0) + 1;
+        return acc;
+      },
+      {} as Record<string, number>
     );
 
     const priorityDistribution = tasks.reduce(
-        (acc, task) => {
-          acc[task.priority] = (acc[task.priority] || 0) + 1;
-          return acc;
-        },
-        {} as Record<string, number>
+      (acc, task) => {
+        acc[task.priority] = (acc[task.priority] || 0) + 1;
+        return acc;
+      },
+      {} as Record<string, number>
     );
 
     const assigneeWorkload = tasks.reduce(
-        (acc, task) => {
-          task.assignees.forEach((assignee) => {
-            acc[assignee.name] = (acc[assignee.name] || 0) + 1;
-          });
-          return acc;
-        },
-        {} as Record<string, number>
+      (acc, task) => {
+        task.assignees.forEach((assignee) => {
+          acc[assignee.name] = (acc[assignee.name] || 0) + 1;
+        });
+        return acc;
+      },
+      {} as Record<string, number>
     );
 
     const checklistCompletion = tasks.reduce(
-        (acc, task) => {
-          const totalItems = task.checklist.length;
-          const checkedItems = task.checklist.filter(
-              (item) => item.isChecked
-          ).length;
-          return {
-            total: acc.total + totalItems,
-            completed: acc.completed + checkedItems,
-          };
-        },
-        { total: 0, completed: 0 }
+      (acc, task) => {
+        const totalItems = task.checklist.length;
+        const checkedItems = task.checklist.filter(
+          (item) => item.isChecked
+        ).length;
+        return {
+          total: acc.total + totalItems,
+          completed: acc.completed + checkedItems,
+        };
+      },
+      { total: 0, completed: 0 }
     );
 
     const completionRate =
-        totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0;
+      totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0;
 
     return {
       totalTasks,
@@ -124,10 +130,10 @@ export const WorkspacePage2 = () => {
   const filteredTasks = useMemo(() => {
     if (!searchTerm) return tasks;
     return tasks.filter(
-        (task) =>
-            task.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            task.status.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            task.priority.toLowerCase().includes(searchTerm.toLowerCase())
+      (task) =>
+        task.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        task.status.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        task.priority.toLowerCase().includes(searchTerm.toLowerCase())
     );
   }, [tasks, searchTerm]);
 
@@ -150,10 +156,11 @@ export const WorkspacePage2 = () => {
       header: 'Name',
       sticky: true,
       render: (task: Task) => (
-          <input className=""
-                 value={task.name}
-                 onChange={(e) => handleNameChange(e, Number(task.id))}
-          />
+        <input
+          className=""
+          value={task.name}
+          onChange={(e) => handleNameChange(e, Number(task.id))}
+        />
       ),
     },
     {
@@ -165,15 +172,15 @@ export const WorkspacePage2 = () => {
       key: '2',
       header: 'Priority',
       render: (task: Task) => (
-          <span
-              className={`rounded px-2 py-1 text-sm ${
-                  task.priority === 'high'
-                      ? 'bg-red-100 text-red-800'
-                      : task.priority === 'medium'
-                          ? 'bg-yellow-100 text-yellow-800'
-                          : 'bg-green-100 text-green-800'
-              }`}
-          >
+        <span
+          className={`rounded px-2 py-1 text-sm ${
+            task.priority === 'high'
+              ? 'bg-red-100 text-red-800'
+              : task.priority === 'medium'
+                ? 'bg-yellow-100 text-yellow-800'
+                : 'bg-green-100 text-green-800'
+          }`}
+        >
           {task.priority}
         </span>
       ),
@@ -182,17 +189,17 @@ export const WorkspacePage2 = () => {
       key: '3',
       header: 'Status',
       render: (task: Task) => (
-          <span
-              className={`rounded px-2 py-1 text-xs text-nowrap ${
-                  task.status.name === 'Backlog'
-                      ? 'bg-gray-100 text-gray-800'
-                      : task.status.name === 'In Progress'
-                          ? 'bg-blue-100 text-blue-800'
-                          : task.status.name === 'Review'
-                              ? 'bg-purple-100 text-purple-800'
-                              : 'bg-green-100 text-green-800'
-              }`}
-          >
+        <span
+          className={`text-nowrap rounded px-2 py-1 text-xs ${
+            task.status.name === 'Backlog'
+              ? 'bg-gray-100 text-gray-800'
+              : task.status.name === 'In Progress'
+                ? 'bg-blue-100 text-blue-800'
+                : task.status.name === 'Review'
+                  ? 'bg-purple-100 text-purple-800'
+                  : 'bg-green-100 text-green-800'
+          }`}
+        >
           {task.status.name}
         </span>
       ),
@@ -201,7 +208,7 @@ export const WorkspacePage2 = () => {
       key: '4',
       header: 'Assignee',
       render: (task: Task) => (
-          <span>
+        <span>
           {task.assignees.map((assignee: Assignee) => assignee.name).join(', ')}
         </span>
       ),
@@ -210,10 +217,10 @@ export const WorkspacePage2 = () => {
       key: '6',
       header: 'Due Date',
       render: (task: Task) => (
-          <DatePicker
-              date={task.endDate}
-              onDateChange={(e) => handleDateChange(e, Number(task.id))}
-          />
+        <DatePicker
+          date={task.endDate}
+          onDateChange={(e) => handleDateChange(e, Number(task.id))}
+        />
       ),
     },
   ];
@@ -229,11 +236,11 @@ export const WorkspacePage2 = () => {
 
       endDate: new Date(formdata.get('endDate') as string),
       assignees: (formdata.getAll('assignees') as string[]).map(
-          (assignee, idx) => ({
-            id: idx.toString(),
-            name: assignee,
-            avatar: '',
-          })
+        (assignee, idx) => ({
+          id: idx.toString(),
+          name: assignee,
+          avatar: '',
+        })
       ),
       progress: 0,
       priority: formdata.get('priority') as string,
@@ -263,9 +270,9 @@ export const WorkspacePage2 = () => {
             >
               Dashboard
               <span className="text-tertiary">
-                  {' / '}
+                {' / '}
                 {state?.name ?? '( Workspace not found )'}
-                </span>
+              </span>
             </Text>
           </NavLink>
         </div>
@@ -282,8 +289,7 @@ export const WorkspacePage2 = () => {
                 />
               ))}
               {members.length > 3 && (
-                <div
-                  className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-white bg-gray-200 text-xs font-medium">
+                <div className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-white bg-gray-200 text-xs font-medium">
                   +{members.length - 3}
                 </div>
               )}
@@ -367,15 +373,15 @@ export const WorkspacePage2 = () => {
               ></div>
             </div>
             <div className="mt-1 flex justify-between text-xs">
-                <span className="text-red-600">
-                  High: {stats.priorityDistribution.high || 0}
-                </span>
+              <span className="text-red-600">
+                High: {stats.priorityDistribution.high || 0}
+              </span>
               <span className="text-yellow-600">
-                  Medium: {stats.priorityDistribution.medium || 0}
-                </span>
+                Medium: {stats.priorityDistribution.medium || 0}
+              </span>
               <span className="text-green-600">
-                  Low: {stats.priorityDistribution.low || 0}
-                </span>
+                Low: {stats.priorityDistribution.low || 0}
+              </span>
             </div>
           </div>
         </Card>
@@ -388,10 +394,10 @@ export const WorkspacePage2 = () => {
             <Text variant="h3" weight="bold">
               {stats.checklistCompletion.total > 0
                 ? Math.round(
-                  (stats.checklistCompletion.completed /
-                    stats.checklistCompletion.total) *
-                  100
-                )
+                    (stats.checklistCompletion.completed /
+                      stats.checklistCompletion.total) *
+                      100
+                  )
                 : 0}
               %
             </Text>
@@ -420,26 +426,24 @@ export const WorkspacePage2 = () => {
         </Text>
         <div className="mb-4 flex flex-col items-center justify-between md:flex-row">
           <div className="mb-2 flex flex-wrap gap-2 md:mb-0">
-            {Object.entries(stats.statusDistribution).map(
-              ([status, count]) => (
-                <div key={status} className="flex items-center space-x-2">
-                  <div
-                    className={`h-3 w-3 rounded-full ${
-                      status === 'Backlog'
-                        ? 'bg-gray-500'
-                        : status === 'In Progress'
-                          ? 'bg-blue-500'
-                          : status === 'Review'
-                            ? 'bg-purple-500'
-                            : 'bg-green-500'
-                    }`}
-                  ></div>
-                  <span className="text-sm">
-                      {status}: {count}
-                    </span>
-                </div>
-              )
-            )}
+            {Object.entries(stats.statusDistribution).map(([status, count]) => (
+              <div key={status} className="flex items-center space-x-2">
+                <div
+                  className={`h-3 w-3 rounded-full ${
+                    status === 'Backlog'
+                      ? 'bg-gray-500'
+                      : status === 'In Progress'
+                        ? 'bg-blue-500'
+                        : status === 'Review'
+                          ? 'bg-purple-500'
+                          : 'bg-green-500'
+                  }`}
+                ></div>
+                <span className="text-sm">
+                  {status}: {count}
+                </span>
+              </div>
+            ))}
           </div>
 
           <div>
@@ -533,7 +537,6 @@ export const WorkspacePage2 = () => {
         <CreateTask onTaskAdd={handleAddTask} />
       </Modal>
     </div>
-
   );
 };
 
