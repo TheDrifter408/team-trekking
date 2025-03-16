@@ -11,7 +11,7 @@ export const WorkspaceCard:FC<Pick<Workspace, "id" | "name" | "description" | "m
                 <div 
                 className="rounded-full flex items-center justify-center mr-4 bg-indigo-600 text-white font-bold"
                 style={{ width: '50px', height: '50px' }}>
-                    {name.split(' ').map((n) => n[0]).join('')}
+                    {name.split(' ').map((n) => n[0]).join('')} 
                 </div>
                 <div>
                 <h5 className="font-medium mb-1 hover:underline dark:text-black"><Link to={`/workspace/${id}`}>{name}</Link></h5>

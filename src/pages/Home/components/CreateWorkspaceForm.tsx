@@ -1,19 +1,6 @@
-import { Dispatch, FC, FormEvent, SetStateAction, useState } from "react";
+import {  ChangeEvent, FC, useState } from "react";
 import { Button, Modal } from "@nabhan/view-module";
-import { Workspace } from "@/types/ApiResponse";
-
-interface CreateWorkspaceFormProps {
-    isOpen: boolean;
-    onClose: () => void;
-    state: Workspace;
-    formSteps: number;
-    setFormSteps: Dispatch<SetStateAction<number>>;
-    setState: (property: keyof Workspace, value: string | Workspace['members'] | Workspace['spaces'] ) => void;
-    onSubmit: (e:FormEvent<HTMLFormElement>) => void;
-    isSubmitting: boolean;
-}
-
-
+import { CreateWorkspaceFormProps } from "@/types/Props";
 
 export const CreateWorkspaceForm:FC<CreateWorkspaceFormProps> = ({ 
     isOpen, 
@@ -23,9 +10,10 @@ export const CreateWorkspaceForm:FC<CreateWorkspaceFormProps> = ({
     onSubmit,
     formSteps,
     setFormSteps,
-    isSubmitting, }) => {
+    isSubmitting,
+    memberEmail,
+    setMemberEmail }) => {
     
-    const [email,setEmail] = useState('');
 
     const [selectedButton, setSelectedButton] = useState<string>('');
     
@@ -34,15 +22,22 @@ export const CreateWorkspaceForm:FC<CreateWorkspaceFormProps> = ({
     };
 
     const handleAddEmail = () => {
-        if (email && !state.members.find((item) => item.email === email)) {
+
+        if (memberEmail.length > 0 && !state.members.find((item) => item.email === memberEmail)) {
             const newId = String(state.members.length + 1);
-            setState("members", [...state.members, { id: newId, email, name:"", avatar:"" } ]);
-            setEmail(''); // Clear the input field
+            setState("members", [...state.members, { id: newId, email: memberEmail, name:"", avatar:"" } ]);
+            setMemberEmail(''); // Clear the input field
         }
     };
 
+    const handleWorkspaceNameChange = (e:ChangeEvent<HTMLInputElement>) => {
+        if (e.currentTarget.value.length > 0) {
+            setState("name", e.currentTarget.value);
+        }
+    }
+
     const handleRemoveEmail = (emailToRemove: string) => {
-        setState("members", state.members.filter((member) => member.name !== emailToRemove));
+        setState("members", state.members.filter((member) => member.email !== emailToRemove));
     };
 
     const handleNext = () => {
@@ -126,9 +121,9 @@ export const CreateWorkspaceForm:FC<CreateWorkspaceFormProps> = ({
                     <div className="mb-4 flex items-center gap-2">
                     <input
                         type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        onKeyUp={(e) => (e.key === 'Enter' ? handleAddEmail() : '')}
+                        value={memberEmail}
+                        onChange={(e) => setMemberEmail(e.target.value)}
+                        onKeyDown={(e) => (e.key === 'Enter' ? handleAddEmail() : '')}
                         placeholder="Enter email(s)"
                         className="w-full rounded-md border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
@@ -168,7 +163,7 @@ export const CreateWorkspaceForm:FC<CreateWorkspaceFormProps> = ({
                     value={state.name}
                     name="name"
                     id="name"
-                    onChange={(e) => setState("name", e.target.value)}
+                    onChange={handleWorkspaceNameChange}
                     placeholder="Workspace Name"
                     className="w-full rounded-md border border-gray-300 px-4 py-2 "
                 />
@@ -192,22 +187,8 @@ export const CreateWorkspaceForm:FC<CreateWorkspaceFormProps> = ({
             >
             <div className="p-4">
                 <h3 className="text-lg font-semibold mb-4">Create a new workspace</h3>
-                <form onSubmit={onSubmit}>
-                    {/* <div className="mb-4">
-                        <label htmlFor="name" className="block text-sm font-medium text-gray-700">Name</label> 
-                        <input type="text" id="name" name="name" className="mt-1 p-2 w-full border border-gray-300 rounded-md" />
-                    </div>
-                    <div className="mb-4">
-                        <label htmlFor="description" className="block text-sm font-medium text-gray-700">Description</label>
-                        <textarea id="description" name="description" className="mt-1 p-2 w-full border border-gray-300 rounded-md" />
-                    </div>
-                    <div className="mb-4">
-                        <label htmlFor="members" className="block text-sm font-medium text-gray-700">Members</label>
-                        <input type="text" id="members" name="members" className="mt-1 p-2 w-full border border-gray-300 rounded-md" />
-                    </div>
-                    <div className="flex justify-end">
-                        <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded-md">Create</button>
-                    </div> */}
+                {/* The onKeyDown prevents premature form submission */}
+                <form onSubmit={onSubmit} onKeyDown={(e) => e.key === 'Enter' ? e.preventDefault() : ''}>
                     { renderStepContent() }
                     {
                         formSteps === 4 ? (

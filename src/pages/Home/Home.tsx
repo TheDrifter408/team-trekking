@@ -4,6 +4,7 @@ import { Workspace, Space } from '@/types/ApiResponse';
 import { useCreateWorkSpaceMutation, useLazyGetWorkSpacesQuery } from '@/store/services/main';
 import { WorkspaceCard } from './components/WorkspaceCard';
 import { CreateWorkspaceForm } from './components/CreateWorkspaceForm';
+import { PlusIcon } from '@/assets/icons/Icons';
 
 export const Home: React.FC = () => {
 
@@ -27,6 +28,9 @@ export const Home: React.FC = () => {
     taskTypes: []
   });
 
+  // state to temporarily store the email of the member being added
+  const [memberEmail, setMemberEmail] = useState('');
+
   const handleWorkspaceChange = (property: keyof Workspace, value: string | Workspace['members'] | Workspace['spaces'] ) => {
     setWorkspace((prev) => ({
       ...prev,
@@ -42,7 +46,7 @@ export const Home: React.FC = () => {
     const result:Workspace = { 
       id: "",
       image: "",
-      name: formdata.get('name') as string,
+      name: formdata.get('name') as string || "Workspace Name",
       description: "",
       members: [...workspace.members],
       spaces: [] as Space[],
@@ -163,12 +167,14 @@ export const Home: React.FC = () => {
           <div className="flex justify-end mb-6">
             <Button 
               onClick={handleCreateNew}
-              leftIcons={[ {
-                icon: <><svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-              </svg></>, onClick: () => {
-                setWorkspaceModal(true);}
-              }]}
+              leftIcons={[
+                {
+                  icon: <PlusIcon />, 
+                  onClick: () => {
+                    setWorkspaceModal(true);
+                  }
+                } 
+              ]}
               className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md flex items-center"
             >
               {/* Plus Icon */}
@@ -190,75 +196,13 @@ export const Home: React.FC = () => {
               )
             }
           </div>
-
-          {/* Empty State (commented out but included for reference) */}
-          {/*
-          <div className="text-center py-12 bg-gray-50 rounded-lg border border-dashed border-gray-300">
-            <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path>
-            </svg>
-            <h3 className="mt-2 text-lg font-medium">No workspaces yet</h3>
-            <p className="mt-1 text-sm text-gray-500">Get started by creating your first workspace.</p>
-            <div className="mt-6">
-              <button className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md">
-                Create Workspace
-              </button>
-            </div>
-          </div>
-          */}
         </div>
       </div>
-
-      {/* Modal Structure (positioned but not shown)
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div className="bg-white rounded-lg w-full max-w-md p-6">
-          <div className="flex justify-between items-center mb-4">
-            <h3 className="text-lg font-medium">Create New Workspace</h3>
-            <button className="text-gray-400 hover:text-gray-500">
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12"></path>
-              </svg>
-            </button>
-          </div>
-
-          <div>
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  Workspace Name
-                </label>
-                <input
-                  type="text"
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                  placeholder="My Workspace"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  Description
-                </label>
-                <textarea
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                  rows={3}
-                  placeholder="Describe what this workspace is for..."
-                />
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-6 flex justify-end space-x-3">
-            <button className="px-4 py-2 border rounded-md text-gray-700 hover:bg-gray-50">
-              Back
-            </button>
-            <button className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700">
-              Next
-            </button>
-          </div>
-        </div>
-      </div> */}
       {/* Create workspace modal */}
       <CreateWorkspaceForm 
         formSteps={steps}
+        memberEmail={memberEmail}
+        setMemberEmail={setMemberEmail}
         setFormSteps={setSteps}
         onSubmit={handleSubmit} 
         isOpen={workspaceModal} 
