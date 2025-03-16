@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {Button, IconButton} from '@/components/index'
 import { useThemeStore } from '@store/zustand';
 import {useAuth} from '@/hooks/useAuth'
-import {GoogleIcon, GithubIcon, SunIcon, MoonIcon} from '@/assets/icons/Icons'
+import {GoogleIcon, GithubIcon, SunIcon, MoonIcon, IllustrationIcon, AuthIcon} from '@/assets/icons/Icons'
 
 
 export function Login() {
@@ -43,9 +43,7 @@ export function Login() {
 
           {/* Illustration placeholder */}
           <div className="mt-12 h-64 bg-indigo-500 rounded-lg flex items-center justify-center">
-            <svg className="w-32 h-32 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-            </svg>
+            <IllustrationIcon />
           </div>
         </div>
       </div>
@@ -72,9 +70,7 @@ export function Login() {
         <div className="max-w-md mx-auto w-full">
           {/* Logo */}
           <div className="text-center mb-8">
-            <svg className="mx-auto h-12 w-12 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path>
-            </svg>
+            <AuthIcon />
             <h2 className="mt-2 text-3xl font-bold">Auth System</h2>
           </div>
 
@@ -166,7 +162,7 @@ export function Login() {
 
                     onClick={() => handleSocialAuth()}
                     leftIcons={[{ icon: <GithubIcon />, onClick: () => handleSocialAuth() }]}
-                    className="p-2 mx-1 w-50 rounded-md flex items-center gap-2 justify-between  bg-bg-inverted border border-border-primary text-text-default gap-2"
+                    className="p-2 mx-1 w-50 rounded-md flex items-center justify-between  bg-bg-inverted border border-border-primary text-text-default"
                   >
                     <div className={'flex-grow text-left ml-2'}>Github</div>
                   </Button>
@@ -174,7 +170,7 @@ export function Login() {
                     variant={'outline'}
                     onClick={() => handleSocialAuth()}
                     leftIcons={[{ icon: <GoogleIcon />, onClick: () => handleSocialAuth() }]}
-                    className="p-2 mx-1 w-50 rounded-md flex items-center gap-2 justify-between  bg-bg-inverted border border-border-primary text-text-default gap-2"
+                    className="p-2 mx-1 w-50 rounded-md flex items-center justify-between  bg-bg-inverted border border-border-primary text-text-default gap-2"
                   >
                     <div className={'flex-grow text-left ml-2'}>Google</div>
                   </Button>
