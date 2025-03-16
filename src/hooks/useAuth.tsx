@@ -1,11 +1,12 @@
 import {useState} from 'react'
 import {useNavigate} from 'react-router-dom';
-import { useLoginMutation, useSignupMutation } from '@store/services/auth.ts';
+import { useLoginMutation, useSignupMutation,useLogoutMutation } from '@store/services/auth.ts';
 
 export function useAuth() {
   const navigate = useNavigate();
   const [login] = useLoginMutation();
   const [signup] = useSignupMutation();
+  const [logout] = useLogoutMutation();
   const [error, setError] = useState<Error | null>(null);
 
   const authenticate = async(isLogin: boolean, email:string, password: string) => {
@@ -18,6 +19,11 @@ export function useAuth() {
     }
   }
 
+  const handleLogout = () => {
+    logout();
+    navigate("/login");
+  };
+
   const handleSocialAuth = async () => {
     console.log('Authenticated with provider')
   }
@@ -25,6 +31,7 @@ export function useAuth() {
   return {
     authenticate,
     handleSocialAuth,
+    handleLogout,
     error,
   }
 }

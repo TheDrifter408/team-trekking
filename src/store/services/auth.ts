@@ -49,7 +49,6 @@ export const authApi = createApi({
         // Clear authentication data
         localStorage.removeItem('token');
         localStorage.removeItem('theme');
-
         return { data: undefined };
       },
     }),
