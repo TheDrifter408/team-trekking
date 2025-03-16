@@ -9,11 +9,11 @@
     --color-tertiary: 129 140 248;
     --color-bg-primary: 255 255 255;
     --color-bg-secondary: 243 244 246;
-    --color-text-primary: 17 24 39;
+    --color-text-primary: 51 50 54;
     --color-text-secondary: 55 65 81;
     --color-text-muted: 107 114 128;
     --color-bg-inverted: 255 255 255;
-    --color-text-inverted: 255 255 255;
+    --color-text-inverted: 48 47 47;
     --color-text-default: 48 47 47;
     --color-border-primary: 209 213 219;
     --color-border-hover: 79 70 229;
@@ -25,7 +25,7 @@
     --color-tertiary: 165 180 252;
     --color-bg-primary: 17 24 39;
     --color-bg-secondary: 31 41 55;
-    --color-text-primary: 255 255 255;
+    --color-text-primary: 247 245 252;
     --color-text-secondary: 229 231 235;
     --color-text-muted: 156 163 175;
     --color-bg-inverted: 255 255 255;

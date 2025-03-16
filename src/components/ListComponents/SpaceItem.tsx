@@ -48,9 +48,9 @@ const SpaceItem:FC<SpaceItemProps> = ({ space, workspaceId }) => {
             </motion.ul>
             <motion.ul className="">
                 {
-                space.lists.map((list: List) => (
-                    <ListItem key={list.id} list={list} />
-                ))
+                // space.lists.map((list: List) => (
+                //     <ListItem key={list.id} list={list} />
+                // ))
                 }
             </motion.ul>
         </li>
