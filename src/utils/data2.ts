@@ -1,5 +1,65 @@
 import { Workspace } from "@/types/ApiResponse";
 
+interface ListItem {
+  id: string;
+  name: string;
+}
+
+interface Folder {
+  id: string;
+  name: string;
+  list?: ListItem[]; // optional as not all folders may have a list
+}
+
+interface Space {
+  id: string;
+  name: string;
+  folders: Folder[];
+  list: ListItem[];
+}
+
+interface Items {
+  id: string;
+  name: string;
+  description: string;
+  spaces: Space[];
+}
+
+export const workspaceItems: Items[] = [
+  {
+    id: '1',
+    name: 'Rentx Special ops',
+    description: 'Demo description for Rentx Special Ops or so to know the software team',
+    spaces: [
+      {
+        id: '1',
+        name: 'admin panel',
+        folders: [
+          { id: '1', name: 'folder rent x' },
+          { id: '2', name: 'folder rent y', list: [{ id: '22', name: 'payments' }, { id: '99', name: 'tenants' }] },
+        ],
+        list: [
+          { id: '11', name: 'bug list' },
+          { id: '12', name: 'completion list' },
+        ]
+      },
+      {
+        id: '2',
+        name: 'admin panel',
+        folders: [
+          { id: '1', name: 'folder rent x' },
+          { id: '2', name: 'folder rent y',list: [{ id: '232', name: 'rent history' }, { id: '111', name: 'reward history' }] },
+        ],
+        list: [
+          { id: '14', name: 'bug list',  },
+          { id: '17', name: 'completion list' },
+        ]
+      },
+    ]
+  }
+];
+
+
 export const data: Workspace[] = [
   {
     id: '4',

@@ -1,13 +1,38 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import { ChevronRight, ChevronLeft } from 'lucide-react';
 import { Header } from '../Header/Header.tsx';
 import { Sidebar } from '../Sidebar/Sidebar.tsx';
 import { motion } from 'framer-motion';
+import {workspaceItems} from '@utils/data2.ts';
 
 export function Layout() {
-  const { state } = useLocation();
+  let { state } = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(true);
+
+  state = '1';
+
+  const data = workspaceItems.find((w: any) => w.id === state);
+
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Check if screen size is mobile
+  useEffect(() => {
+    const checkScreenSize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    checkScreenSize();
+    window.addEventListener('resize', checkScreenSize);
+
+    return () => {
+      window.removeEventListener('resize', checkScreenSize);
+    };
+  }, []);
+
+  useEffect(() => {
+    if(isMobile) setSidebarOpen(false);
+  }, [isMobile]);
 
   return (
     <div className="flex min-h-screen flex-col bg-bg-secondary">
@@ -25,17 +50,23 @@ export function Layout() {
         >
           <Sidebar sidebarOpen={sidebarOpen} name={state?.name ?? 'Dashboard'} />
 
-          {/* Sidebar Toggle Button */}
-          <button
-            onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="absolute right-[-12px] top-10 flex h-8 w-8 -translate-y-1/2 transform items-center justify-center rounded-full bg-tertiary text-white shadow-lg"
-          >
-            {sidebarOpen ? (
-              <ChevronLeft className="h-4 w-4" />
-            ) : (
-              <ChevronRight className="h-4 w-4" />
-            )}
-          </button>
+          {
+            !isMobile && (
+              <>
+                {/* Sidebar Toggle Button */}
+                <button
+                  onClick={() => setSidebarOpen(!sidebarOpen)}
+                  className="absolute right-[-12px] top-10 flex h-8 w-8 -translate-y-1/2 transform items-center justify-center rounded-full bg-tertiary text-white shadow-lg"
+                >
+                  {sidebarOpen ? (
+                    <ChevronLeft className="h-4 w-4" />
+                  ) : (
+                    <ChevronRight className="h-4 w-4" />
+                  )}
+                </button>
+              </>
+            )
+          }
         </motion.div>
 
         {/* Main Content */}
