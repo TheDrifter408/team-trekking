@@ -1,10 +1,17 @@
 import { User, Workspace } from '@/types/ApiResponse';
 import { FC } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 export const WorkspaceCard: FC<
   Pick<Workspace, 'id' | 'name' | 'description' | 'members'>
 > = ({ id, name, description, members }) => {
+
+  const navigate = useNavigate()
+
+  const handlePressWorkspace = (workspaceId: string) => {
+    navigate(`/workspace/${workspaceId}`, {state:{workspaceId: workspaceId}})
+  }
+
   return (
     <div className="w-full cursor-pointer rounded-lg border bg-white shadow-sm transition-shadow duration-200 hover:shadow-md">
       <div className="flex items-center justify-between p-4">
@@ -21,7 +28,7 @@ export const WorkspaceCard: FC<
           </div>
           <div>
             <h5 className="mb-1 font-medium hover:underline dark:text-black">
-              <Link to={`/workspace/${id}`}>{name}</Link>
+              <div onClick={()=> handlePressWorkspace(id)}>{name}</div>
             </h5>
             <p className="text-sm text-gray-500">{description}</p>
           </div>
@@ -41,7 +48,7 @@ export const WorkspaceCard: FC<
                   marginLeft: index > 0 ? '-10px' : '0',
                 }}
               >
-                {member.email
+                {member?.email && member.email
                   .split(' ')
                   .map((n) => n[0].toLocaleUpperCase())
                   .join('')}

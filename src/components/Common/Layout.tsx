@@ -4,15 +4,14 @@ import { ChevronRight, ChevronLeft } from 'lucide-react';
 import { Header } from '../Header/Header.tsx';
 import { Sidebar } from '../Sidebar/Sidebar.tsx';
 import { motion } from 'framer-motion';
-import { workspaceItems } from '@utils/data2.ts';
+import { useGetWorkspaceItemsQuery} from '@store/services/main.ts';
 
 export function Layout() {
-  let { state } = useLocation();
+  const { state } = useLocation();
+  const workspaceId = state?.workspaceId || '';
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
-  state = '1';
-
-  const data = workspaceItems.find((w: any) => w.id === state);
+  const {data} = useGetWorkspaceItemsQuery(workspaceId);
 
   const [isMobile, setIsMobile] = useState(false);
 
@@ -51,6 +50,7 @@ export function Layout() {
           <Sidebar
             sidebarOpen={sidebarOpen}
             name={state?.name ?? 'Dashboard'}
+            spaces = {data}
           />
 
           {!isMobile && (

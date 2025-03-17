@@ -1,6 +1,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { data } from '@utils/data2.ts';
-import { Workspace } from '@/types/ApiResponse';
+import { SpaceItem, Workspace } from '@/types/ApiResponse';
+
 
 export const mainApi = createApi({
   reducerPath: 'mainApi',
@@ -34,6 +35,27 @@ export const mainApi = createApi({
         return { data: null };
       },
     }),
+
+    getWorkspaceItems: builder.query<SpaceItem[], string>({
+      queryFn: async (workspaceId: string): Promise<{ data: SpaceItem[] }> => {
+        const workspace = data.find((ws) => ws.id === workspaceId);
+        if (!workspace) return { data: [] }; // Always return an array
+
+        const workspaceItems = (workspace.spaces ?? []).map((space) => ({
+          workspaceName: workspace.name,
+          id: space.id,
+          name: space.name,
+          folders: (space.folders ?? []).map((folder) => ({
+            id: folder.id,
+            name: folder.name,
+            lists: (folder.lists ?? []).map(list => list.name),
+          })),
+        })) as SpaceItem[];
+
+        return { data: workspaceItems };
+      },
+    })
+
   }),
 });
 
@@ -42,4 +64,5 @@ export const {
   useLazyGetWorkSpacesQuery,
   useGetWorkSpaceQuery,
   useCreateWorkSpaceMutation,
+  useGetWorkspaceItemsQuery
 } = mainApi;

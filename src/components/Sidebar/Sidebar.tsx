@@ -1,72 +1,25 @@
-import React, { FC, useState } from 'react';
+import  { FC, useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
+  ChevronRight,
+  Folder,
+  FolderPlus,
   Grid2x2,
   Layers,
-  ChevronRight,
-  Home,
-  Users,
-  Settings,
-  LayoutDashboard,
-  Bell,
-  Folder,
-  Plus,
   ListPlus,
-  FolderPlus,
-  ChevronDown,
-  List,
   MoreVertical,
 } from 'lucide-react';
 import { Text } from '@nabhan/view-module';
 import { getInitials } from '@utils/Common';
 import { SidebarProps } from '@/types/Props.ts';
+import SidebarSpaceItem from './SidebarSpaceItem'
 
-interface SpaceItem {
-  id: string;
-  name: string;
-  folders: {
-    id: string;
-    name: string;
-    lists: string[];
-  }[];
-}
-
-const spaces: SpaceItem[] = [
-  {
-    id: '1',
-    name: 'Personal Space',
-    folders: [
-      {
-        id: '11',
-        name: 'Work Projects',
-        lists: ['To-Do', 'In Progress', 'Done'],
-      },
-      {
-        id: '12',
-        name: 'Personal Tasks',
-        lists: ['Shopping', 'Errands', 'Ideas'],
-      },
-    ],
-  },
-  {
-    id: '2',
-    name: 'Team Space',
-    folders: [
-      {
-        id: '21',
-        name: 'Development',
-        lists: ['Backlog', 'Sprint Tasks', 'Completed'],
-      },
-    ],
-  },
-];
-
-export const Sidebar: FC<SidebarProps> = ({ sidebarOpen, name }) => {
+export const Sidebar: FC<SidebarProps> = ({ sidebarOpen, name, spaces }) => {
   const secondarySidebarOpen = false;
-
   const [expandedSpaces, setExpandedSpaces] = useState<string[]>([]);
   const [expandedFolders, setExpandedFolders] = useState<string[]>([]);
   const [activePopup, setActivePopup] = useState<string | null>(null);
+  const workspaceName = spaces && spaces.length > 0 ? spaces[0].workspaceName : 'Workspace Dashboard'
 
   // const toggleSecondarySidebar = () => {
   //   setSecondarySidebarOpen(!secondarySidebarOpen);
@@ -81,7 +34,6 @@ export const Sidebar: FC<SidebarProps> = ({ sidebarOpen, name }) => {
   };
 
   const toggleFolder = (folderId: string) => {
-
     setExpandedFolders((prev) =>
       prev.includes(folderId)
         ? prev.filter((id) => id !== folderId)
@@ -99,14 +51,14 @@ export const Sidebar: FC<SidebarProps> = ({ sidebarOpen, name }) => {
       <div className="flex h-full flex-col ">
         {/* Sidebar Header */}
         <div
-          className={`${sidebarOpen ? 'px-4' : 'px-0'} flex items-center justify-center py-4`}
+          className={`${sidebarOpen ? 'px-4' : 'px-0 flex'}  items-center justify-center py-4`}
         >
           {!sidebarOpen ? (
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-500">
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-500">
               {getInitials(name)}
             </div>
           ) : (
-            <div className="truncate text-lg font-bold">{name}</div>
+            <div className="truncate text-text-primary text-lg font-bold">{workspaceName}</div>
           )}
         </div>
 
@@ -155,69 +107,8 @@ export const Sidebar: FC<SidebarProps> = ({ sidebarOpen, name }) => {
               )}
             </Link>
 
-            <div className="items-center space-y-2">
-              {spaces.map((space) => (
-                <div className={'flex flex-col'}>
-                  <div
-                    className={` ${sidebarOpen ? `flex flex-row space-x-2 px-4 py-2 text-sm` : `flex w-full justify-center`}`}
-                  >
-                    <Folder size={18} />{' '}
-                    {sidebarOpen && (
-                      <div
-                        className={
-                          'justify-content-between relative flex w-full flex-col'
-                        }
-                      >
-                        <div
-                          onClick={() => toggleSpace(space.id)}
-                          className="justify-content-between relative flex w-full cursor-pointer flex-row "
-                        >
-                          <span className={'truncate'}>{space.name}</span>
-                          <div className="relative">
-                            <MoreVertical
-                              size={18}
-                              onClick={() => togglePopup(space.id)}
-                            />
-                            {activePopup === space.id && (
-                              <div className="absolute  top-6 z-50 w-48 rounded-lg border border-gray-200 bg-white py-1 shadow-lg">
-                                <button className="w-full px-4 py-2 text-left hover:bg-gray-50">
-                                  Rename Space
-                                </button>
-                                <button className="w-full px-4 py-2 text-left text-red-600 hover:bg-gray-50">
-                                  Delete Space
-                                </button>
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                        {expandedSpaces.includes(space.id) && sidebarOpen && (
-                          <div className={'ml-4 mt-1 flex flex-col space-y-2 '}>
-                            {space.folders.map((folder) => (
-                              <div className={'flex flex-col cursor-pointer  '} onClick={() => toggleFolder(folder.id)}>
-                                <div className="flex flex-row gap-2 items-center"><FolderPlus size={17}/> {folder.name}</div>
-                                <div className={''}>
-                                  {
-                                    expandedFolders.includes(folder.id) && (
-                                      <div className={'flex flex-col space-y-2  justify-center'}>
-                                        {folder.lists.map((item) => (
-                                          <div className={'flex flex-row ml-4 mt-1 items-center gap-2'}>
-                                           <ListPlus size={16}/> {item}
-                                          </div>
-                                        ))}
-                                      </div>
-                                    )
-                                  }
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
+            <SidebarSpaceItem spaces = {spaces} sidebarOpen={sidebarOpen}/>
+
           </div>
         </div>
 
