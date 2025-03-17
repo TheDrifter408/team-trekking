@@ -17,7 +17,7 @@ export function Header() {
   };
 
   return (
-    <header className="fixed left-0 right-0 top-0 z-30 flex h-16 items-center justify-between border-b border-gray-500 bg-bg-primary px-4 shadow-sm">
+    <header className="fixed left-0 right-0 top-0 z-30 flex h-16 items-center justify-between  bg-bg-primary px-4 shadow-sm">
       {/* Logo & App Name */}
       <div className="flex items-center space-x-2">
         <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-500">
