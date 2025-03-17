@@ -15,7 +15,9 @@ export const mainApi = createApi({
     // query to get a single workspace
     getWorkSpace: builder.query<Workspace | null, string>({
       queryFn: async (workspaceId) => {
-        const workspace = data.find((workspace: Workspace) => workspace.id === workspaceId) || null;
+        const workspace =
+          data.find((workspace: Workspace) => workspace.id === workspaceId) ||
+          null;
         return { data: workspace };
       },
     }),
@@ -35,4 +37,9 @@ export const mainApi = createApi({
   }),
 });
 
-export const { useGetWorkSpacesQuery, useLazyGetWorkSpacesQuery, useGetWorkSpaceQuery, useCreateWorkSpaceMutation } = mainApi;
+export const {
+  useGetWorkSpacesQuery,
+  useLazyGetWorkSpacesQuery,
+  useGetWorkSpaceQuery,
+  useCreateWorkSpaceMutation,
+} = mainApi;

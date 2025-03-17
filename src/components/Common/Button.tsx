@@ -1,6 +1,5 @@
 import { ButtonHTMLAttributes, ReactNode } from 'react';
-import {Button} from '@nabhan/view-module'
-
+import { Button } from '@nabhan/view-module';
 
 export type IconWithHandler = {
   icon: ReactNode;
@@ -8,7 +7,12 @@ export type IconWithHandler = {
 };
 
 // Define variants and their corresponding styles
-export type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost' | 'link';
+export type ButtonVariant =
+  | 'primary'
+  | 'secondary'
+  | 'outline'
+  | 'ghost'
+  | 'link';
 
 export type ButtonSize = 'sm' | 'md' | 'lg';
 
@@ -24,17 +28,17 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 export const ButtonComponent = ({
-                         children,
-                         variant = 'primary',
-                         size = 'md',
-                         leftIcons,
-                         rightIcons,
-                         isLoading = false,
-                         isDisabled = false,
-                         fullWidth = false,
-                         className = '',
-                         ...props
-                       }: ButtonProps) => {
+  children,
+  variant = 'primary',
+  size = 'md',
+  leftIcons,
+  rightIcons,
+  isLoading = false,
+  isDisabled = false,
+  fullWidth = false,
+  className = '',
+  ...props
+}: ButtonProps) => {
   // Base button styles that apply to all variants
   const baseStyles = 'font-medium rounded-2 transition-colors';
 
@@ -46,8 +50,10 @@ export const ButtonComponent = ({
 
   const variantStyles = {
     primary: 'bg-indigo-600 hover:bg-indigo-700 text-gray-200 shadow-sm ',
-    secondary: 'bg-gray-200 hover:bg-gray-300 text-gray-800 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-200',
-    outline: 'border border-gray-300  bg-bg-inverted border border-border-primary text-text-default',
+    secondary:
+      'bg-gray-200 hover:bg-gray-300 text-gray-800 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-200',
+    outline:
+      'border border-gray-300  bg-bg-inverted border border-border-primary text-text-default',
     ghost: 'text-indigo-600',
     link: 'text-indigo-500 hover:text-indigo-700  p-0',
   };

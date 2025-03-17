@@ -1,8 +1,5 @@
-import { Member } from "./Member";
-import { Space } from "./Space";
-
-
-
+import { Member } from './Member';
+import { Space } from './Space';
 
 export interface Workspace {
   id?: string;

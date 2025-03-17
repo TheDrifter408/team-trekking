@@ -1,6 +1,7 @@
 import { ButtonHTMLAttributes, ReactNode } from 'react';
 
-export interface IconButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+export interface IconButtonProps
+  extends ButtonHTMLAttributes<HTMLButtonElement> {
   children: ReactNode; // Using children prop for the icon
   size?: 'sm' | 'md' | 'lg';
   variant?: 'default' | 'ghost' | 'outline';
@@ -10,15 +11,15 @@ export interface IconButtonProps extends ButtonHTMLAttributes<HTMLButtonElement>
 }
 
 export const IconButton = ({
-                             children,
-                             size = 'md',
-                             variant = 'default',
-                             isDisabled = false,
-                             isLoading = false,
-                             ariaLabel,
-                             className = '',
-                             ...props
-                           }: IconButtonProps) => {
+  children,
+  size = 'md',
+  variant = 'default',
+  isDisabled = false,
+  isLoading = false,
+  ariaLabel,
+  className = '',
+  ...props
+}: IconButtonProps) => {
   // Size styles that are separate from ButtonComponent
   const sizeStyles = {
     sm: 'w-8 h-8 p-1',
@@ -30,7 +31,8 @@ export const IconButton = ({
   const variantStyles = {
     default: 'bg-gray-100 text-gray-700 hover:scale-105 hover:shadow-md',
     ghost: 'bg-transparent text-gray-700 hover:scale-105',
-    outline: 'bg-transparent border border-gray-300 text-gray-700 hover:scale-105 hover:shadow-sm',
+    outline:
+      'bg-transparent border border-gray-300 text-gray-700 hover:scale-105 hover:shadow-sm',
   };
 
   // States
@@ -58,7 +60,7 @@ export const IconButton = ({
     >
       {isLoading ? (
         <span className="absolute inset-0 flex items-center justify-center">
-          <span className="h-4 w-4 rounded-full border-2 border-t-transparent border-gray-700 animate-spin" />
+          <span className="h-4 w-4 animate-spin rounded-full border-2 border-gray-700 border-t-transparent" />
         </span>
       ) : null}
       <span className={isLoading ? 'opacity-0' : ''}>{children}</span>

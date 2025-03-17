@@ -4,7 +4,7 @@ import { ChevronRight, ChevronLeft } from 'lucide-react';
 import { Header } from '../Header/Header.tsx';
 import { Sidebar } from '../Sidebar/Sidebar.tsx';
 import { motion } from 'framer-motion';
-import {workspaceItems} from '@utils/data2.ts';
+import { workspaceItems } from '@utils/data2.ts';
 
 export function Layout() {
   let { state } = useLocation();
@@ -31,7 +31,7 @@ export function Layout() {
   }, []);
 
   useEffect(() => {
-    if(isMobile) setSidebarOpen(false);
+    if (isMobile) setSidebarOpen(false);
   }, [isMobile]);
 
   return (
@@ -48,25 +48,26 @@ export function Layout() {
           transition={{ ease: 'easeOut', duration: 0.5 }}
           className="fixed left-0 top-16 h-[calc(100vh-4rem)] bg-bg-primary"
         >
-          <Sidebar sidebarOpen={sidebarOpen} name={state?.name ?? 'Dashboard'} />
+          <Sidebar
+            sidebarOpen={sidebarOpen}
+            name={state?.name ?? 'Dashboard'}
+          />
 
-          {
-            !isMobile && (
-              <>
-                {/* Sidebar Toggle Button */}
-                <button
-                  onClick={() => setSidebarOpen(!sidebarOpen)}
-                  className="absolute right-[-12px] top-10 flex h-8 w-8 -translate-y-1/2 transform items-center justify-center rounded-full bg-tertiary text-white shadow-lg"
-                >
-                  {sidebarOpen ? (
-                    <ChevronLeft className="h-4 w-4" />
-                  ) : (
-                    <ChevronRight className="h-4 w-4" />
-                  )}
-                </button>
-              </>
-            )
-          }
+          {!isMobile && (
+            <>
+              {/* Sidebar Toggle Button */}
+              <button
+                onClick={() => setSidebarOpen(!sidebarOpen)}
+                className="absolute right-[-12px] top-10 flex h-8 w-8 -translate-y-1/2 transform items-center justify-center rounded-full bg-tertiary text-white shadow-lg"
+              >
+                {sidebarOpen ? (
+                  <ChevronLeft className="h-4 w-4" />
+                ) : (
+                  <ChevronRight className="h-4 w-4" />
+                )}
+              </button>
+            </>
+          )}
         </motion.div>
 
         {/* Main Content */}
@@ -75,7 +76,7 @@ export function Layout() {
             sidebarOpen ? 'ml-64' : 'ml-16'
           }`}
         >
-          <Outlet/>
+          <Outlet />
         </main>
       </div>
     </div>

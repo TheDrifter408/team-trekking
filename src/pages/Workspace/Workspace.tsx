@@ -1,11 +1,5 @@
-
-
 export const WorkspacePage = () => {
-  return (
-    <>
-      Hello
-    </>
-  )
-}
+  return <>Hello</>;
+};
 
 export default WorkspacePage;
