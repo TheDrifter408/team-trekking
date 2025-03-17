@@ -3,7 +3,7 @@ export interface User {
   name: string;
   avatar: string;
   role?: string;
-  email: string;
+  email?: string;
   position?: string;
   department?: string;
   isAdmin?: boolean;
@@ -203,4 +203,15 @@ export interface Workspace {
   activity?: Activity[];
   spaces: Space[];
   taskTypes: TaskType[];
+}
+
+export interface SpaceItem {
+  workspaceName: string;
+  id: string;
+  name: string;
+  folders: {
+    id: string;
+    name: string;
+    lists: string[];
+  }[];
 }
