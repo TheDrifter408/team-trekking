@@ -4,7 +4,7 @@ export interface User {
   name: string;
   avatar: string;
   role?: string;
-  email?: string;
+  email: string;
   position?: string;
   department?: string;
   isAdmin?: boolean;
@@ -78,7 +78,7 @@ export interface Comment {
   likes: number;
 }
 
-// Subtasks within tasks
+// // Subtasks within tasks
 export interface Subtask {
   id: string;
   name: string;
