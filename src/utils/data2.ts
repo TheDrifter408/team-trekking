@@ -246,6 +246,7 @@ export const data: Workspace[] = [
                         id: '1',
                         name: 'John Doe',
                         avatar: 'https://randomuser.me/api/portraits/men/1.jpg',
+                        email:'',
                         role: 'Lead Designer',
                       },
                       {
@@ -253,6 +254,7 @@ export const data: Workspace[] = [
                         name: 'Jane Smith',
                         avatar:
                           'https://randomuser.me/api/portraits/women/2.jpg',
+                        email:'',
                         role: 'UI/UX Designer',
                       },
                     ],
@@ -313,7 +315,7 @@ export const data: Workspace[] = [
                       },
                     ],
                     startDate: new Date('2025-03-10'),
-                    endDate: new Date('2025-03-15'),
+                    endDate: new Date('2025-03-25'),
                     estimatedHours: 12,
                     actualHours: 8,
                     dependencies: [],
@@ -398,6 +400,7 @@ export const data: Workspace[] = [
                         id: '1',
                         name: 'John Doe',
                         avatar: 'https://randomuser.me/api/portraits/men/1.jpg',
+                        email:'',
                         role: 'Lead Designer',
                       },
                       {
@@ -405,12 +408,14 @@ export const data: Workspace[] = [
                         name: 'Jane Smith',
                         avatar:
                           'https://randomuser.me/api/portraits/women/2.jpg',
+                        email:'',
                         role: 'UI/UX Designer',
                       },
                       {
                         id: '7',
                         name: 'Michael Brown',
                         avatar: 'https://randomuser.me/api/portraits/men/7.jpg',
+                        email:'',
                         role: 'Graphic Designer',
                       },
                     ],
@@ -465,7 +470,7 @@ export const data: Workspace[] = [
                       },
                     ],
                     startDate: new Date('2025-03-11'),
-                    endDate: new Date('2025-03-16'),
+                    endDate: new Date('2025-03-30'),
                     estimatedHours: 8,
                     actualHours: 5,
                     dependencies: [

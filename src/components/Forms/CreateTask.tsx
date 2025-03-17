@@ -1,8 +1,5 @@
 import { ChangeEvent, FC, FormEvent, useState } from 'react';
-import { Task } from '../../types/Task';
-import { Assignee } from '../../types/Assignee';
-import { Status } from '../../types/Status';
-import { Checklist } from '../../types/Checklist';
+import { ChecklistItem, Status, Task, User } from '@/types/ApiResponse';
 
 interface CreateTaskProps {
   // Add props as needed
@@ -14,18 +11,20 @@ export const CreateTask: FC<CreateTaskProps> = ({ onTaskAdd }) => {
     id: '0',
     name: '',
     description: '',
-    tags: [],
-    checklist: [] as Checklist[],
+    tags: [] as string[],
+    checklist: [] as ChecklistItem[],
     status: {
       id: '1',
       name: 'Backlog',
       statusColor: 'bg-gray-400',
     },
     progress: 0,
-    priority: '',
-    assignees: [] as Assignee[],
+    priority: 'Low',
+    assignees: [] as User[],
     startDate: new Date(),
     endDate: new Date(),
+    createdAt: new Date(),
+    updatedAt: new Date(),
   });
 
   const defaultStatuses: Status[] = [
@@ -46,13 +45,14 @@ export const CreateTask: FC<CreateTaskProps> = ({ onTaskAdd }) => {
     },
   ];
 
-  const handleStatusChange = () => {
+  const handleStatusChange = (e:ChangeEvent<HTMLSelectElement>) => {
     // Implement the logic to change the status
-    const currentIndex = defaultStatuses.findIndex(
-      (status) => status.id === task.status.id
+    const newStatus = defaultStatuses.find(
+      (status) => status.id === e.currentTarget.value
     );
-    const nextIndex = (currentIndex + 1) % defaultStatuses.length;
-    setTask({ ...task, status: defaultStatuses[nextIndex] });
+    if (newStatus) {
+      setTask({ ...task, status: newStatus });
+    }
   };
 
   const handleCheckListChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -66,7 +66,7 @@ export const CreateTask: FC<CreateTaskProps> = ({ onTaskAdd }) => {
   };
 
   return (
-    <form onSubmit={onTaskAdd} className="w-[100%] space-y-4 border-none">
+    <form onSubmit={onTaskAdd} className="w-[100%] border-none flex flex-col gap-2">
       {/* First Column contains the Start and End dates, statuses and Tags*/}
       <div className="flex justify-between">
         <div className="items-left flex flex-col gap-2">
@@ -74,29 +74,18 @@ export const CreateTask: FC<CreateTaskProps> = ({ onTaskAdd }) => {
             <label htmlFor="status" className="mb-2 mt-2 font-semibold">
               Status:
             </label>
-            <div className={`flex items-center gap-0`}>
-              <input
-                type="text"
-                id="status"
-                name="status"
-                value={task.status.name}
-                onChange={(e) =>
-                  setTask({
-                    ...task,
-                    status: { ...task.status, name: e.target.value },
-                  })
-                }
-                className={`rounded-l-md border-0 p-2 font-bold uppercase ${task.status.statusColor}`}
-              />
-              <button
-                type="button"
-                onClick={handleStatusChange}
-                role="button"
-                className={`rounded-r-md border-l-2 border-white p-2 uppercase ${task.status.statusColor}`}
+            <select
+              id="status"
+              name="status"
+              className="rounded-md border px-2"
+              onChange={handleStatusChange}
               >
-                {'>'}
-              </button>
-            </div>
+              {
+                defaultStatuses.map((value,idx:number) => (
+                  <option key={idx} className='capitalize' value={value.name}>{value.name}</option>
+                ))
+              }
+            </select>
           </div>
           <div className="flex justify-between gap-1">
             <label htmlFor="startDate" className="mb-2 mt-2 font-semibold">
@@ -172,16 +161,11 @@ export const CreateTask: FC<CreateTaskProps> = ({ onTaskAdd }) => {
               className="rounded-md border p-2"
               onChange={(e) => setTask({ ...task, priority: e.target.value })}
             >
-              <option value="high" className="capitalize">
-                High
-              </option>
-              <option value="normal" className="capitalize">
-                Normal
-              </option>
-              <option value="instant" className="capitalize">
-                Instant
-              </option>
-              {/* Add more options as needed */}
+              {
+                ["Low" , "Medium" , "High" , "Urgent"].map((value,idx:number) => (
+                  <option key={idx} className='capitalize' value={value}>{value}</option>
+                ))
+              }
             </select>
           </div>
         </div>
@@ -226,7 +210,7 @@ export const CreateTask: FC<CreateTaskProps> = ({ onTaskAdd }) => {
           className="rounded-md border p-2"
         />
       </div>
-      <div>
+      <div className='mt-4'>
         <button type="submit" className="rounded-md bg-blue-500 p-2 text-white">
           {' '}
           Submit{' '}

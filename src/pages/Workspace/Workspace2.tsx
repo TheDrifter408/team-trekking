@@ -1,28 +1,23 @@
 import {
-  useLocation,
   NavLink,
   redirect,
   useParams,
-  Link,
 } from 'react-router-dom';
-import { Workspace } from '@/types/Workspace.ts';
-import { Button, Modal, Table } from '@nabhan/view-module';
+import { Button, Modal, Table, Text, Input, Card } from '@nabhan/view-module';
 import { Column } from '@/types/Column.ts';
 import { Assignee } from '@/types/Assignee.ts';
-import { Task } from '@/types/Task.ts';
-import { ChangeEvent, useState, useMemo, useEffect } from 'react';
+import { ChangeEvent, useState, useMemo, useEffect, FormEvent } from 'react';
 import { ProgressBar } from '@components/Common/ProgressBar.tsx';
-import { FormEvent } from 'react';
 import { DatePicker } from '@components/ListComponents/DatePicker.tsx';
-import { Text, Input, Card } from '@nabhan/view-module';
 import { Search } from 'lucide-react';
 import { CreateTask } from '@components/Forms/CreateTask.tsx';
-import { Space } from '@/types/Space.ts';
-import { data } from '@utils/data.ts';
+import { data } from '@utils/data2.ts';
+import { Task, Space, Workspace } from '@/types/ApiResponse';
 
 export const WorkspacePage2 = () => {
   // Get the state of the workspace
-  let { state } = useLocation();
+  //let { state } = useLocation();
+  let state:Workspace = {} as Workspace;
   const params = useParams();
   // Return an Error Page if the state is null
   if (state === null) {
@@ -32,7 +27,7 @@ export const WorkspacePage2 = () => {
     if (workspaceIndex === -1) {
       redirect('/home');
     }
-    state = data[workspaceIndex] as Workspace;
+    state = data[workspaceIndex];
   }
   // Destructure the workspace state
   const { name, description, members, spaces } = state as Workspace;
@@ -174,9 +169,9 @@ export const WorkspacePage2 = () => {
       render: (task: Task) => (
         <span
           className={`rounded px-2 py-1 text-sm ${
-            task.priority === 'high'
+            task.priority === 'High'
               ? 'bg-red-100 text-red-800'
-              : task.priority === 'medium'
+              : task.priority === 'Medium'
                 ? 'bg-yellow-100 text-yellow-800'
                 : 'bg-green-100 text-green-800'
           }`}
@@ -231,19 +226,21 @@ export const WorkspacePage2 = () => {
     const newTask: Task = {
       id: (tasks.length + 1).toString(),
       name: formdata.get('name') as string,
+      createdAt: new Date(),
+      updatedAt: new Date(),
       description: formdata.get('description') as string,
       startDate: new Date(formdata.get('startDate') as string),
-
       endDate: new Date(formdata.get('endDate') as string),
       assignees: (formdata.getAll('assignees') as string[]).map(
         (assignee, idx) => ({
           id: idx.toString(),
           name: assignee,
           avatar: '',
+          email:'',
         })
       ),
       progress: 0,
-      priority: formdata.get('priority') as string,
+      priority: "Low",
       tags: (formdata.get('tags') as string).split(','),
       checklist: [],
       status: {
@@ -539,5 +536,3 @@ export const WorkspacePage2 = () => {
     </div>
   );
 };
-
-export default WorkspacePage2;
