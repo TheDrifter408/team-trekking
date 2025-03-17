@@ -21,7 +21,6 @@ export const mainApi = createApi({
         return { data: workspace };
       },
     }),
-
     // mutation to create a new workspace
     createWorkSpace: builder.mutation<Workspace | null, Workspace>({
       queryFn: async (workspace) => {
