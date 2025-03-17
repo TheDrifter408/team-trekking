@@ -25,6 +25,7 @@ interface Items {
   spaces: Space[];
 }
 
+
 export const workspaceItems: Items[] = [
   {
     id: '1',
