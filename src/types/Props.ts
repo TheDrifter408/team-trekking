@@ -25,3 +25,20 @@ export interface SidebarProps {
   name: string;
   spaces?: SpaceItem[];
 }
+
+export interface TaskCardProps {
+  task:Task
+}
+
+export interface PriorityTasksProps {
+  tasks: Task[]
+}
+
+export interface UpcomingDeadlineProps {
+  tasks: Task[];
+}
+
+export interface TaskListProps {
+  tasks: Task[];
+  setTasks: Dispatch<SetStateAction<Task[]>>,
+}
