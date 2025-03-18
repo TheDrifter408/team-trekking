@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronRight, Grid2x2, Layers } from 'lucide-react';
-import { Text } from '@nabhan/view-module';
+import { Text } from '@library/components';
 import { getInitials } from '@utils/Common';
 import { SidebarProps } from '@/types/Props.ts';
 import SidebarSpaceItem from './SidebarSpaceItem';
@@ -12,8 +12,6 @@ export const Sidebar: FC<SidebarProps> = ({ sidebarOpen, name, spaces }) => {
     spaces && spaces.length > 0
       ? spaces[0].workspaceName
       : 'Workspace Dashboard';
-
-
 
   // const toggleSecondarySidebar = () => {
   //   setSecondarySidebarOpen(!secondarySidebarOpen);
@@ -83,8 +81,9 @@ export const Sidebar: FC<SidebarProps> = ({ sidebarOpen, name, spaces }) => {
               )}
             </Link>
 
-            {spaces && <SidebarSpaceItem spaces={spaces} sidebarOpen={sidebarOpen} />}
-
+            {spaces && (
+              <SidebarSpaceItem spaces={spaces} sidebarOpen={sidebarOpen} />
+            )}
           </div>
         </div>
 

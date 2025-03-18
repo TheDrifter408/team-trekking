@@ -1,7 +1,7 @@
 import { FC, RefObject, useCallback, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRightFromLine, Copy, Pencil, Trash } from 'lucide-react';
-import { Text } from '@nabhan/view-module';
+import { Text } from '@library/components';
 
 const options = [
   {

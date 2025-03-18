@@ -1,5 +1,5 @@
 import { ButtonHTMLAttributes, ReactNode } from 'react';
-import { Button } from '@nabhan/view-module';
+import { Button } from '@library/components';
 
 export type IconWithHandler = {
   icon: ReactNode;

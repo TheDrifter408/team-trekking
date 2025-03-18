@@ -1,5 +1,5 @@
 import { Space } from '@/types/Space';
-import { Text } from '@nabhan/view-module';
+import { Text } from '@library/components';
 import { Ellipsis, Grid2x2 } from 'lucide-react';
 import { FC, useRef, useState } from 'react';
 import { Link } from 'react-router';

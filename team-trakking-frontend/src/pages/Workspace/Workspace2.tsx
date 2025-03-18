@@ -6,7 +6,7 @@ import {
   Link,
 } from 'react-router-dom';
 import { Workspace } from '@/types/Workspace.ts';
-import { Button, Modal, Table } from '@nabhan/view-module';
+import { Button, Modal, Table } from '@library/components';
 import { Column } from '@/types/Column.ts';
 import { Assignee } from '@/types/Assignee.ts';
 import { Task } from '@/types/Task.ts';
@@ -14,7 +14,7 @@ import { ChangeEvent, useState, useMemo, useEffect } from 'react';
 import { ProgressBar } from '@components/Common/ProgressBar.tsx';
 import { FormEvent } from 'react';
 import { DatePicker } from '@components/ListComponents/DatePicker.tsx';
-import { Text, Input, Card } from '@nabhan/view-module';
+import { Text, Input, Card } from '@library/components';
 import { Search } from 'lucide-react';
 import { CreateTask } from '@components/Forms/CreateTask.tsx';
 import { Space } from '@/types/Space.ts';

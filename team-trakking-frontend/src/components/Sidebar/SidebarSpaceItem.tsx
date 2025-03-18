@@ -1,8 +1,7 @@
 import { Folder, FolderPlus, ListPlus, MoreVertical } from 'lucide-react';
 import { useState } from 'react';
-import { Modal  } from '@nabhan/view-module';
-import {SidebarSpaceItemProps} from '@/types/Props.ts';
-
+import { Modal } from '@library/components';
+import { SidebarSpaceItemProps } from '@/types/Props.ts';
 
 const SidebarSpaceItem = ({ spaces, sidebarOpen }: SidebarSpaceItemProps) => {
   const [expandedSpaces, setExpandedSpaces] = useState<string[]>([]);
@@ -130,7 +129,10 @@ const SidebarSpaceItem = ({ spaces, sidebarOpen }: SidebarSpaceItemProps) => {
         onClose={() => setOpen(false)}
         maxWidth={700}
       >
-        <div className="flex flex-row" style={{height: 180, marginBottom: 20}}>
+        <div
+          className="flex flex-row"
+          style={{ height: 180, marginBottom: 20 }}
+        >
           <div className="w-1/2"></div>
 
           <div className="w-1/2  space-y-2">
@@ -139,15 +141,14 @@ const SidebarSpaceItem = ({ spaces, sidebarOpen }: SidebarSpaceItemProps) => {
               taskTypes.map((task: any) => (
                 <div
                   key={task.id}
-                  className={`rounded-lg  px-2  py-1 shadow-md bg-gray-50`}
+                  className={`rounded-lg  bg-gray-50  px-2 py-1 shadow-md`}
                 >
-                  <div className="flex flex-row w-full items-center space-x-4 py-1">
+                  <div className="flex w-full flex-row items-center space-x-4 py-1">
                     <div className="">
                       <button
-                        className={'rounded-lg w-4 h-4'}
-                        style={{background: `${task.color}`}}
-                      >
-                      </button>
+                        className={'h-4 w-4 rounded-lg'}
+                        style={{ background: `${task.color}` }}
+                      ></button>
                     </div>
                     <div>
                       <p className={`text-sm font-semibold`}>{task.name}</p>
@@ -163,4 +164,3 @@ const SidebarSpaceItem = ({ spaces, sidebarOpen }: SidebarSpaceItemProps) => {
 };
 
 export default SidebarSpaceItem;
-

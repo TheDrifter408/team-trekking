@@ -1,5 +1,5 @@
 import { List } from '@/types/List';
-import { Text } from '@nabhan/view-module';
+import { Text } from '@library/components';
 import { Ellipsis, List as LucideList } from 'lucide-react';
 import { FC, useRef, useState } from 'react';
 import OptionsMenu from './OptionsMenu';

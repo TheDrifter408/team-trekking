@@ -1,5 +1,5 @@
 import { Folder } from '@/types/Folder';
-import { Text } from '@nabhan/view-module';
+import { Text } from '@library/components';
 import { Ellipsis, Folder as LucideFolder } from 'lucide-react';
 import { FC, useRef, useState } from 'react';
 import OptionsMenu from './OptionsMenu';

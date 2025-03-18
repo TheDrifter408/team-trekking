@@ -1,5 +1,5 @@
 import { ChangeEvent, FC, useState } from 'react';
-import { Button, Modal } from '@nabhan/view-module';
+import { Button, Modal } from '@library/components';
 import { CreateWorkspaceFormProps } from '@/types/Props';
 
 export const CreateWorkspaceForm: FC<CreateWorkspaceFormProps> = ({

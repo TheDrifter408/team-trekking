@@ -1,5 +1,5 @@
 import React, { FormEvent, useEffect, useState } from 'react';
-import { Button } from '@nabhan/view-module';
+import { Button } from '@library/components';
 import { Workspace, Space } from '@/types/ApiResponse';
 import {
   useCreateWorkSpaceMutation,
