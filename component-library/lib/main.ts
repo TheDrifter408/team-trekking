@@ -1,6 +1,5 @@
 export { KanbanBoard } from './components/KanbanBoard/KanbanBoard.tsx';
 export { ListView } from './components/ListView/ListView.tsx';
-export { ListView2 } from './components/ListView/ListView2.tsx';
 export { TimelineView } from './components/TimelineView/TimelineView.tsx';
 export { Table } from './components/Table/Table.tsx';
 export { Button } from './components/Button/Button.tsx';

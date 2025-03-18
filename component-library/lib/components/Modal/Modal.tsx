@@ -1,6 +1,6 @@
-import {useEffect} from "react";
-import styles from "../../styles/modal.module.css";
-import {ModalProps} from '../../types/index';
+import { useEffect } from 'react';
+import styles from '../../styles/modal.module.css';
+import { ModalProps } from '../../types/PropTypes.ts';
 
 export const Modal = ({
   isOpen,
@@ -8,49 +8,49 @@ export const Modal = ({
   title,
   children,
   maxWidth = 500,
-  scrollbarTheme = "custom",
+  scrollbarTheme = 'custom',
   // Simplified button props
   showLeftButton = false,
-  leftButtonText = "Cancel",
+  leftButtonText = 'Cancel',
   leftButtonOnClick,
   leftButtonDisabled = false,
-  leftButtonVariant = "ghost",
+  leftButtonVariant = 'ghost',
 
   showRightButton = true,
-  rightButtonText = "Confirm",
+  rightButtonText = 'Confirm',
   rightButtonOnClick,
   rightButtonDisabled = false,
-  rightButtonVariant = "primary",
+  rightButtonVariant = 'primary',
 }: ModalProps) => {
   // Close modal with escape key
   useEffect(() => {
     const handleEscape = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
+      if (event.key === 'Escape') {
         onClose();
       }
     };
 
     if (isOpen) {
-      document.addEventListener("keydown", handleEscape);
+      document.addEventListener('keydown', handleEscape);
       // Prevent body scrolling when modal is open
-      document.body.style.overflow = "hidden";
+      document.body.style.overflow = 'hidden';
     }
 
     return () => {
-      document.removeEventListener("keydown", handleEscape);
+      document.removeEventListener('keydown', handleEscape);
       // Re-enable body scrolling when modal is closed
-      document.body.style.overflow = "auto";
+      document.body.style.overflow = 'auto';
     };
   }, [isOpen, onClose]);
 
   // Determine which scrollbar class to use
   const getScrollbarClass = () => {
     switch (scrollbarTheme) {
-      case "dark":
+      case 'dark':
         return styles.darkScrollbar;
-      case "primary":
+      case 'primary':
         return styles.primaryScrollbar;
-      case "custom":
+      case 'custom':
       default:
         return styles.customScrollbar;
     }

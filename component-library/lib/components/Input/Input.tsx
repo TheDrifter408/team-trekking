@@ -1,23 +1,8 @@
-import React, {forwardRef, useState} from "react";
-import styles from "../../styles/input.module.css";
+import React, { forwardRef, useState } from 'react';
+import styles from '../../styles/input.module.css';
+import { InputProps } from '../../types/PropTypes.ts';
 
 // Omit the native 'size' attribute and use our own 'inputSize' prop instead
-interface InputProps
-  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "size"> {
-  label?: string;
-  error?: string;
-  helper?: string;
-  leftIcon?: React.ReactNode;
-  rightIcon?: React.ReactNode;
-  variant?: "default" | "primary" | "secondary";
-  inputSize?: "small" | "medium" | "large";
-  fullWidth?: boolean;
-  containerClassName?: string;
-  labelClassName?: string;
-  inputClassName?: string;
-  helperClassName?: string;
-  errorClassName?: string;
-}
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(
   (
@@ -27,18 +12,18 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       helper,
       leftIcon,
       rightIcon,
-      variant = "default",
-      inputSize = "medium", // Renamed from 'size' to 'inputSize'
+      variant = 'default',
+      inputSize = 'medium', // Renamed from 'size' to 'inputSize'
       fullWidth = false,
-      containerClassName = "",
-      labelClassName = "",
-      inputClassName = "",
-      helperClassName = "",
-      errorClassName = "",
+      containerClassName = '',
+      labelClassName = '',
+      inputClassName = '',
+      helperClassName = '',
+      errorClassName = '',
       disabled,
       ...props
     },
-    ref,
+    ref
   ) => {
     const [isFocused, setIsFocused] = useState(false);
 
@@ -54,47 +39,47 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
 
     const containerClasses = [
       styles.container,
-      fullWidth ? styles.fullWidth : "",
+      fullWidth ? styles.fullWidth : '',
       containerClassName,
     ]
       .filter(Boolean)
-      .join(" ");
+      .join(' ');
 
     const labelClasses = [
       styles.label,
-      disabled ? styles.disabled : "",
+      disabled ? styles.disabled : '',
       labelClassName,
     ]
       .filter(Boolean)
-      .join(" ");
+      .join(' ');
 
     const inputWrapperClasses = [
       styles.inputWrapper,
       styles[variant],
       styles[inputSize], // Use inputSize here
-      isFocused ? styles.focused : "",
-      error ? styles.error : "",
-      disabled ? styles.disabled : "",
+      isFocused ? styles.focused : '',
+      error ? styles.error : '',
+      disabled ? styles.disabled : '',
     ]
       .filter(Boolean)
-      .join(" ");
+      .join(' ');
 
     const inputClasses = [
       styles.input,
-      leftIcon ? styles.withLeftIcon : "",
-      rightIcon ? styles.withRightIcon : "",
+      leftIcon ? styles.withLeftIcon : '',
+      rightIcon ? styles.withRightIcon : '',
       inputClassName,
     ]
       .filter(Boolean)
-      .join(" ");
+      .join(' ');
 
     const helperClasses = [styles.helper, helperClassName]
       .filter(Boolean)
-      .join(" ");
+      .join(' ');
 
     const errorClasses = [styles.errorMessage, errorClassName]
       .filter(Boolean)
-      .join(" ");
+      .join(' ');
 
     return (
       <div className={containerClasses}>
@@ -118,5 +103,5 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         ) : null}
       </div>
     );
-  },
+  }
 );

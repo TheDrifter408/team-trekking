@@ -1,35 +1,20 @@
-import React, {useEffect, useState} from "react";
-import styled from "styled-components";
-import "bootstrap/dist/css/bootstrap.min.css";
-import {mockTasks} from "../../data/task.ts";
-
-// Types
-interface Task {
-  id: string;
-  name: string;
-  description: string;
-  assignees: { name: string }[];
-  priority: string;
-  status: { id: string };
-  startDate: string;
-  endDate: string;
-}
-
-interface GroupedTasks {
-  [key: string]: Task[];
-}
+import React, { useEffect, useState } from 'react';
+import styled from 'styled-components';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { mockTasks } from '../../data/task.ts';
+import { GroupedTasks, TimelineTask } from '../../types/PropTypes.ts';
 
 // Helper Functions
 const formatDate = (dateString: string): string => {
   const date = new Date(dateString);
-  return date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 };
 
 const getDaysBetween = (start: string, end: string): number => {
   const startDate = new Date(start);
   const endDate = new Date(end);
   return Math.ceil(
-    (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24),
+    (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)
   );
 };
 
@@ -53,14 +38,14 @@ export const TimelineView: React.FC = () => {
   const [groupedTasks, setGroupedTasks] = useState<GroupedTasks>({});
   const [currentDate] = useState<Date>(new Date());
   const [timelineDates, setTimelineDates] = useState<Date[]>([]);
-  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+  const [selectedTask, setSelectedTask] = useState<TimelineTask | null>(null);
 
   useEffect(() => {
     // Group tasks by assignee
     const grouped: GroupedTasks = {};
 
     Object.values(mockTasks).forEach((task: any) => {
-      const assignee = task.assignees[0]?.name || "Unassigned";
+      const assignee = task.assignees[0]?.name || 'Unassigned';
 
       if (!grouped[assignee]) {
         grouped[assignee] = [];
@@ -91,12 +76,12 @@ export const TimelineView: React.FC = () => {
         <HeaderTitle>Timeline View</HeaderTitle>
         <HeaderControls>
           <Button>Today</Button>
-          <Button>{"<"}</Button>
-          <Button>{">"}</Button>
+          <Button>{'<'}</Button>
+          <Button>{'>'}</Button>
           <DateDisplay>
-            {firstDate.toLocaleDateString("en-US", {
-              month: "long",
-              year: "numeric",
+            {firstDate.toLocaleDateString('en-US', {
+              month: 'long',
+              year: 'numeric',
             })}
           </DateDisplay>
         </HeaderControls>
@@ -129,7 +114,7 @@ export const TimelineView: React.FC = () => {
               return (
                 <DateHeader key={index} isWeekend={isWeekend} isToday={isToday}>
                   <DayName>
-                    {date.toLocaleDateString("en-US", { weekday: "short" })}
+                    {date.toLocaleDateString('en-US', { weekday: 'short' })}
                   </DayName>
                   <DayNumber>{date.getDate()}</DayNumber>
                 </DateHeader>
@@ -141,7 +126,7 @@ export const TimelineView: React.FC = () => {
           {Object.entries(groupedTasks).map(([assignee, tasks]) => (
             <AssigneeTaskRow key={assignee}>
               {timelineDates.map((date, dateIndex) => {
-                const dateStr = date.toISOString().split("T")[0];
+                const dateStr = date.toISOString().split('T')[0];
 
                 return (
                   <DateCell
@@ -151,10 +136,10 @@ export const TimelineView: React.FC = () => {
                     {tasks.map((task) => {
                       const startDate = new Date(task.startDate)
                         .toISOString()
-                        .split("T")[0];
+                        .split('T')[0];
                       const endDate = new Date(task.endDate)
                         .toISOString()
-                        .split("T")[0];
+                        .split('T')[0];
 
                       if (dateStr >= startDate && dateStr <= endDate) {
                         const isFirstDay = dateStr === startDate;
@@ -176,7 +161,7 @@ export const TimelineView: React.FC = () => {
                             >
                               <TaskTitle>{task.name}</TaskTitle>
                               <TaskDates>
-                                {formatDate(task.startDate)} -{" "}
+                                {formatDate(task.startDate)} -{' '}
                                 {formatDate(task.endDate)}
                               </TaskDates>
                             </TaskBar>
@@ -219,13 +204,13 @@ export const TimelineView: React.FC = () => {
               <div>
                 {selectedTask.assignees.length > 0
                   ? selectedTask.assignees[0].name
-                  : "Unassigned"}
+                  : 'Unassigned'}
               </div>
             </DetailRow>
             <DetailRow>
               <DetailLabel>Dates:</DetailLabel>
               <div>
-                {formatDate(selectedTask.startDate)} -{" "}
+                {formatDate(selectedTask.startDate)} -{' '}
                 {formatDate(selectedTask.endDate)}
               </div>
             </DetailRow>
@@ -263,7 +248,7 @@ const HeaderTitle = styled.h1`
   align-items: center;
 
   &:before {
-    content: "";
+    content: '';
     display: inline-block;
     width: 24px;
     height: 24px;
@@ -383,7 +368,7 @@ const DateHeader = styled.div<DateHeaderProps>`
   justify-content: center;
   border-right: 1px solid #f0f2f5;
   background-color: ${(props) =>
-    props.isToday ? "#f0f7ff" : props.isWeekend ? "#f9fafc" : "transparent"};
+    props.isToday ? '#f0f7ff' : props.isWeekend ? '#f9fafc' : 'transparent'};
 `;
 
 const DayName = styled.div`
@@ -414,7 +399,7 @@ const DateCell = styled.div<DateCellProps>`
   min-width: 100px;
   height: 100%;
   border-right: 1px solid #f0f2f5;
-  background-color: ${(props) => (props.isWeekend ? "#f9fafc" : "transparent")};
+  background-color: ${(props) => (props.isWeekend ? '#f9fafc' : 'transparent')};
   position: relative;
 `;
 
@@ -432,18 +417,18 @@ const TaskBar = styled.div<TaskBarProps>`
   z-index: 1;
   width: ${(props) => `calc(${props.width * 100}px - 10px)`};
   background-color: ${(props) =>
-    props.priority === "high"
-      ? "#ffefef"
-      : props.priority === "medium"
-        ? "#fff7e8"
-        : "#ebf7ff"};
+    props.priority === 'high'
+      ? '#ffefef'
+      : props.priority === 'medium'
+        ? '#fff7e8'
+        : '#ebf7ff'};
   border-left: 3px solid
     ${(props) =>
-      props.priority === "high"
-        ? "#ff5c5c"
-        : props.priority === "medium"
-          ? "#ffbd3e"
-          : "#4bade8"};
+      props.priority === 'high'
+        ? '#ff5c5c'
+        : props.priority === 'medium'
+          ? '#ffbd3e'
+          : '#4bade8'};
   border-radius: 6px;
   padding: 0 8px;
   display: flex;
@@ -451,7 +436,7 @@ const TaskBar = styled.div<TaskBarProps>`
   justify-content: center;
   cursor: pointer;
   box-shadow: ${(props) =>
-    props.isSelected ? "0 0 0 2px #7b68ee" : "0 1px 3px rgba(0,0,0,0.1)"};
+    props.isSelected ? '0 0 0 2px #7b68ee' : '0 1px 3px rgba(0,0,0,0.1)'};
   overflow: hidden;
   transition: box-shadow 0.2s;
 
@@ -539,30 +524,30 @@ const StatusBadge = styled.div<StatusBadgeProps>`
   font-weight: 500;
   background-color: ${(props) => {
     switch (props.status) {
-      case "todo":
-        return "#ebf7ff";
-      case "inProgress":
-        return "#f0f0ff";
-      case "inReview":
-        return "#fff7e8";
-      case "done":
-        return "#efffef";
+      case 'todo':
+        return '#ebf7ff';
+      case 'inProgress':
+        return '#f0f0ff';
+      case 'inReview':
+        return '#fff7e8';
+      case 'done':
+        return '#efffef';
       default:
-        return "#f0f2f5";
+        return '#f0f2f5';
     }
   }};
   color: ${(props) => {
     switch (props.status) {
-      case "todo":
-        return "#4bade8";
-      case "inProgress":
-        return "#7b68ee";
-      case "inReview":
-        return "#ffbd3e";
-      case "done":
-        return "#68d391";
+      case 'todo':
+        return '#4bade8';
+      case 'inProgress':
+        return '#7b68ee';
+      case 'inReview':
+        return '#ffbd3e';
+      case 'done':
+        return '#68d391';
       default:
-        return "#7f8595";
+        return '#7f8595';
     }
   }};
 `;
@@ -578,17 +563,17 @@ const PriorityBadge = styled.div<PriorityBadgeProps>`
   font-weight: 500;
   text-transform: capitalize;
   background-color: ${(props) =>
-    props.priority === "high"
-      ? "#fff0f0"
-      : props.priority === "medium"
-        ? "#fff8e8"
-        : "#ebf7ff"};
+    props.priority === 'high'
+      ? '#fff0f0'
+      : props.priority === 'medium'
+        ? '#fff8e8'
+        : '#ebf7ff'};
   color: ${(props) =>
-    props.priority === "high"
-      ? "#ff5c5c"
-      : props.priority === "medium"
-        ? "#ffbd3e"
-        : "#4bade8"};
+    props.priority === 'high'
+      ? '#ff5c5c'
+      : props.priority === 'medium'
+        ? '#ffbd3e'
+        : '#4bade8'};
 `;
 
 const Description = styled.div`
