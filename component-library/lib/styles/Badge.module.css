@@ -30,32 +30,32 @@
 
 /* Color variants */
 .badge-primary {
-    background-color: #3b82f6;
+    background-color: var(--badge-primary);
     color: white;
 }
 
 .badge-secondary {
-    background-color: #6b7280;
+    background-color: var(--badge-secondary);
     color: white;
 }
 
 .badge-success {
-    background-color: #10b981;
+    background-color: var(--badge-success);
     color: white;
 }
 
 .badge-danger {
-    background-color: #ef4444;
+    background-color: var(--badge-danger);
     color: white;
 }
 
 .badge-warning {
-    background-color: #f59e0b;
+    background-color: var(--badge-warning);
     color: white;
 }
 
 .badge-info {
-    background-color: #0ea5e9;
+    background-color: var(--badge-info);
     color: white;
 }
 
@@ -65,33 +65,33 @@
 }
 
 .badge.outlined.badge-primary {
-    color: #3b82f6;
-    border: 1px solid #3b82f6;
+    color: var(--badge-primary);
+    border: 1px solid var(--badge-primary);
 }
 
 .badge.outlined.badge-secondary {
-    color: #6b7280;
-    border: 1px solid #6b7280;
+    color: var(--badge-secondary);
+    border: 1px solid var(--badge-secondary);
 }
 
 .badge.outlined.badge-success {
-    color: #10b981;
-    border: 1px solid #10b981;
+    color: var(--badge-success);
+    border: 1px solid var(--badge-success);
 }
 
 .badge.outlined.badge-danger {
-    color: #ef4444;
-    border: 1px solid #ef4444;
+    color: var(--badge-danger);
+    border: 1px solid var(--badge-danger);
 }
 
 .badge.outlined.badge-warning {
-    color: #f59e0b;
-    border: 1px solid #f59e0b;
+    color: var(--badge-warning);
+    border: 1px solid var(--badge-warning);
 }
 
 .badge.outlined.badge-info {
-    color: #0ea5e9;
-    border: 1px solid #0ea5e9;
+    color: var(--badge-info);
+    border: 1px solid var(--badge-info);
 }
 
 /* Rounded style */

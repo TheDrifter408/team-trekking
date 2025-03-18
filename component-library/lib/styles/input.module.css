@@ -1,14 +1,5 @@
 /* Input.module.css */
-:root {
-    --input-border: var(--neutral-300, #d1d5db);
-    --input-bg: var(--white, #ffffff);
-    --input-text: var(--neutral-800, #1f2937);
-    --input-focus-ring: rgba(91, 33, 182, 0.25);
-    --input-error: #ef4444;
-    --input-error-ring: rgba(239, 68, 68, 0.25);
-    --input-disabled-bg: var(--neutral-100, #f3f4f6);
-    --input-disabled-text: var(--neutral-400, #9ca3af);
-}
+
 
 .container {
     display: flex;
@@ -51,7 +42,7 @@
 }
 
 .input::placeholder {
-    color: var(--neutral-400, #9ca3af);
+    color: var(--neutral-300, #9ca3af);
 }
 
 .input:disabled {

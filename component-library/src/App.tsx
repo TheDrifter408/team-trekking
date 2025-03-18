@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Container } from 'react-bootstrap';
-import { Button } from '../lib/main';
+import { Button, Modal } from '../lib/main';
 import CardComponentTesting from './tests/cards.tsx';
 import BadgeComponentTest from './tests/badges.tsx';
 
@@ -52,12 +52,13 @@ const ComponentShowcase: React.FC = () => {
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
   };
+  const [open, setIsOpen] = useState(false);
 
   return (
     <Container className="py-3">
       <div className="absolute top-4 right-4">
         <Button
-          onClick={toggleDarkMode}
+          onClick={() => setIsOpen(true)}
           className={`py-2 mx-1 rounded-md flex  items-center gap-2 justify-between  ${darkMode ? 'bg-gray-700 text-yellow-300' : 'bg-gray-200 text-gray-700'}`}
         >
           <div className={'flex-grow text-center'}>
@@ -94,6 +95,9 @@ const ComponentShowcase: React.FC = () => {
             )}
           </div>
         </Button>
+        <Modal isOpen={open} onClose={() => setIsOpen(false)} title={'Test'}>
+          HELLo{' '}
+        </Modal>
       </div>
       <div className="space-y-4">
         <Button

@@ -1,3 +1,4 @@
+
 .listViewContainer {
     margin: 30px 0;
     padding: 30px;
@@ -26,26 +27,26 @@
 }
 
 .priorityTagHigh {
-    color: #ff4d4f;
-    border-color: #ff4d4f;
+    color: var(--list-primary);
+    border-color: var(--list-primary);
     background-color: rgba(255, 77, 79, 0.1);
 }
 
 .priorityTagMedium {
-    color: #faad14;
-    border-color: #faad14;
+    color: var(--list-medium);
+    border-color: var(--list-medium);
     background-color: rgba(250, 173, 20, 0.1);
 }
 
 .priorityTagLow {
-    color: #52c41a;
-    border-color: #52c41a;
+    color: var(--list-low);
+    border-color: var(--list-low);
     background-color: rgba(82, 196, 26, 0.1);
 }
 
 .priorityTagDefault {
-    color: #d9d9d9;
-    border-color: #d9d9d9;
+    color: var(--list-default);
+    border-color: var(--list-default);
     background-color: rgba(217, 217, 217, 0.1);
 }
 
@@ -62,7 +63,7 @@
 .progressBarOuter {
     width: 150px;
     height: 20px;
-    background-color: #e0e4eb;
+    background-color: var(--list-progress-bar-outer);
     border-radius: 10px;
     position: relative;
     overflow: hidden;
@@ -78,15 +79,15 @@
 }
 
 .progressBarInnerHigh {
-    background-color: #52c41a;
+    background-color: var(--list-progress-bar-inner-high);
 }
 
 .progressBarInnerMedium {
-    background-color: #7b68ee;
+    background-color: var(--list-progress-bar-inner-medium);
 }
 
 .progressBarInnerLow {
-    background-color: #faad14;
+    background-color: var(--list-progress-bar-inner-low);
 }
 
 .progressLabel {
@@ -103,7 +104,7 @@
 }
 
 .progressLabelLight {
-    color: #5e6577;
+    color: var(--list-progress-label-light);
 }
 
 .progressLabelDark {
@@ -133,17 +134,17 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #7f8595;
+    color: var(--list-expand-button);
 }
 
 .expandButton:hover {
-    color: #7b68ee;
+    color: var(--list-expand-button-hover);
 }
 
 .subtaskIndicator {
     width: 16px;
     height: 1px;
-    background-color: #7f8595;
+    background-color: var(--list-subtask-indicator);
     margin-right: 8px;
 }
 
@@ -151,12 +152,12 @@
     background: none;
     border: none;
     cursor: pointer;
-    color: #7f8595;
+    color: var(--list-action-button);
     padding: 4px 8px;
     border-radius: 4px;
 }
 
 .actionButton:hover {
-    background-color: #f0f2f5;
-    color: #7b68ee;
+    background-color: var(--list-action-button-hover-bg);
+    color: var(--list-action-button-hover-color);
 }

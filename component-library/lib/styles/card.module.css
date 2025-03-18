@@ -1,16 +1,5 @@
 /* Card.module.css */
-:root {
-    --card-bg: var(--white, #ffffff);
-    --card-border: var(--neutral-200, #e5e7eb);
-    --card-shadow: var(--shadow, 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04));
-    --card-radius: 12px;
 
-    --card-primary-bg: var(--primary, #5b21b6);
-    --card-primary-color: var(--white, #ffffff);
-
-    --card-secondary-bg: var(--secondary, #2dd4bf);
-    --card-secondary-color: var(--white, #ffffff);
-}
 
 .card {
     background-color: var(--card-bg);
