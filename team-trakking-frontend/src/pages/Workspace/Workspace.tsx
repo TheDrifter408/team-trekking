@@ -1,8 +1,7 @@
-import { ButtonComponent } from "@/components/Common/Button";
 import { CreateTask } from "@/components/Forms/CreateTask";
 import { useGetWorkSpaceQuery } from "@/store/services/main";
 import { Task } from "@/types/ApiResponse";
-import { Modal } from "@library/components";
+import { Button, Modal } from "@library/components";
 import { FormEvent, useEffect, useState } from "react";
 import { Navigate, useParams } from "react-router-dom";
 import TaskList from "./components/TaskList";
@@ -102,13 +101,13 @@ export const WorkspacePage = () => {
       <div>
         <div className="flex items-center justify-between mb-2">
           <h3 className="text-xl font-bold">Tasks:</h3>
-          <ButtonComponent className="bg-blue-600 w-fit" leftIcons={[
+          <Button className="bg-blue-600 w-fit" leftIcons={[
              {
                icon: <Plus />
              }
             ]} onClick={() => setCreateTaskModal(true)}>
             Create Task
-          </ButtonComponent>
+          </Button>
         </div>
         <TaskList tasks={allTasks} setTasks={setAllTasks} />
       </div>
