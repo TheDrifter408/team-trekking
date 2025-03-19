@@ -1,19 +1,20 @@
-import { User, Workspace } from '@/types/ApiResponse';
 import { FC } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Member, WorkspaceItem } from '@/types/ApiResponse';
 
-export const WorkspaceCard: FC<
-  Pick<Workspace, 'id' | 'name' | 'description' | 'members'>
-> = ({ id, name, description, members }) => {
+interface WorkspaceCardProps {
+  workspace: WorkspaceItem;
+}
 
-  const navigate = useNavigate()
+export const WorkspaceCard: FC<WorkspaceCardProps> = ({ workspace }) => {
+  const navigate = useNavigate();
 
-  const handlePressWorkspace = (workspaceId: string) => {
-    navigate(`/workspace/${workspaceId}`, {state:{workspaceId: workspaceId}})
-  }
+  const handlePressWorkspace = (workspaceId: number) => {
+    navigate(`/workspace/${workspaceId}`, { state: { workspaceId } });
+  };
 
   return (
-    <div className="w-full cursor-pointer rounded-lg border bg-white shadow-sm transition-shadow duration-200 hover:shadow-md">
+    <div className="w-full cursor-pointer rounded-lg border bg-bg-secondary shadow-sm transition-shadow duration-200 hover:shadow-md">
       <div className="flex items-center justify-between p-4">
         <div className="flex items-center">
           {/* Workspace Icon/Initials */}
@@ -21,42 +22,57 @@ export const WorkspaceCard: FC<
             className="mr-4 flex items-center justify-center rounded-full bg-indigo-600 font-bold text-white"
             style={{ width: '50px', height: '50px' }}
           >
-            {name
+            {workspace.name
               .split(' ')
               .map((n) => n[0])
               .join('')}
           </div>
+
           <div>
-            <h5 className="mb-1 font-medium hover:underline dark:text-black">
-              <div onClick={()=> handlePressWorkspace(id)}>{name}</div>
+            <h5 className="mb-1 font-medium hover:underline">
+              <div onClick={() => handlePressWorkspace(workspace.id)}>
+                {workspace.name}
+              </div>
             </h5>
-            <p className="text-sm text-gray-500">{description}</p>
+            <p className="text-sm text-text-muted">{workspace.description}</p>
           </div>
         </div>
 
         {/* Members Avatars */}
         <div className="flex">
-          {members.length > 0 ? (
-            members.map((member: User, index) => (
-              <div
-                key={index}
-                className="flex items-center justify-center rounded-full bg-gray-400 text-white"
-                style={{
-                  width: '25px',
-                  height: '25px',
-                  fontSize: '10px',
-                  marginLeft: index > 0 ? '-10px' : '0',
-                }}
-              >
-                {member?.email && member.email
-                  .split(' ')
-                  .map((n) => n[0].toLocaleUpperCase())
-                  .join('')}
-              </div>
-            ))
+          {workspace.members.length > 0 ? (
+            workspace.members
+              .slice(0, 4)
+              .map((member: Member, index: number) => (
+                <div
+                  key={member.id}
+                  className="flex items-center justify-center rounded-full bg-gray-50 text-text-inverted overflow-hidden border"
+                  style={{
+                    width: '30px',
+                    height: '30px',
+                    fontSize: '12px',
+                    marginLeft: index > 0 ? '-9px' : '0',
+                  }}
+                >
+                  {member.avatar ? (
+                    <img
+                      src={member.avatar}
+                      alt={member.name}
+                      className="w-full h-full object-cover rounded-full"
+                    />
+                  ) : (
+                    <span>
+                      {member.name
+                        .split(' ')
+                        .map((n) => n[0])
+                        .join('')}
+                    </span>
+                  )}
+                </div>
+              ))
           ) : (
             <div
-              className="flex items-center justify-center rounded-full bg-gray-400 text-white"
+              className="flex items-center justify-center rounded-full bg-gray-50 text-text-inverted"
               style={{
                 width: '25px',
                 height: '25px',
@@ -64,7 +80,7 @@ export const WorkspaceCard: FC<
                 marginLeft: '0',
               }}
             >
-              No Members Added
+              No Members
             </div>
           )}
         </div>

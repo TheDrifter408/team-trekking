@@ -1,19 +1,23 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { data } from '@utils/data2.ts';
-import { SpaceItem, Workspace } from '@/types/ApiResponse';
-
+import { workspaces, members } from '@/data/mockData';
+import { SpaceItem, Workspace, WorkspaceItem } from '@/types/ApiResponse';
 
 export const mainApi = createApi({
   reducerPath: 'mainApi',
   baseQuery: fetchBaseQuery({ baseUrl: '/' }),
   endpoints: (builder) => ({
-    // query to get all workspaces
-    getWorkSpaces: builder.query<Workspace[], void>({
+    getWorkSpaces: builder.query<WorkspaceItem[], void>({
       queryFn: async () => {
-        return { data: [...data] };
+        const enrichedWorkspaces = workspaces.map((workspace) => ({
+          ...workspace,
+          members: members.filter(
+            (member) => member.workspaceId === workspace.id
+          ),
+        }));
+        return { data: enrichedWorkspaces };
       },
     }),
-    // query to get a single workspace
     getWorkSpace: builder.query<Workspace | null, string>({
       queryFn: async (workspaceId) => {
         const workspace =
@@ -49,14 +53,13 @@ export const mainApi = createApi({
           folders: (space.folders ?? []).map((folder) => ({
             id: folder.id,
             name: folder.name,
-            lists: (folder.lists ?? []).map(list => list.name),
+            lists: (folder.lists ?? []).map((list) => list.name),
           })),
         })) as SpaceItem[];
 
         return { data: workspaceItems };
       },
-    })
-
+    }),
   }),
 });
 
@@ -65,5 +68,5 @@ export const {
   useLazyGetWorkSpacesQuery,
   useGetWorkSpaceQuery,
   useCreateWorkSpaceMutation,
-  useGetWorkspaceItemsQuery
+  useGetWorkspaceItemsQuery,
 } = mainApi;

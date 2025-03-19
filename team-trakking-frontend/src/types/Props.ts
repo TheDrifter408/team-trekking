@@ -1,15 +1,15 @@
 import { Dispatch, FormEvent, SetStateAction } from 'react';
-import { SpaceItem, Task, Workspace } from './ApiResponse';
+import { SpaceItem, Task, WorkspaceItem } from './ApiResponse';
 
 export interface CreateWorkspaceFormProps {
   isOpen: boolean;
   onClose: () => void;
-  state: Workspace;
+  state: WorkspaceItem;
   formSteps: number;
   setFormSteps: Dispatch<SetStateAction<number>>;
   setState: (
-    property: keyof Workspace,
-    value: string | Workspace['members'] | Workspace['spaces']
+    property: keyof WorkspaceItem,
+    value: string | WorkspaceItem['members']
   ) => void;
   onSubmit: (e: FormEvent<HTMLFormElement>) => void;
   isSubmitting: boolean;
@@ -32,7 +32,7 @@ export interface SidebarSpaceItemProps {
 }
 
 export interface PriorityTasksProps {
-  tasks: Task[]
+  tasks: Task[];
 }
 
 export interface UpcomingDeadlineProps {
@@ -41,5 +41,5 @@ export interface UpcomingDeadlineProps {
 
 export interface TaskListProps {
   tasks: Task[];
-  setTasks: Dispatch<SetStateAction<Task[]>>,
+  setTasks: Dispatch<SetStateAction<Task[]>>;
 }

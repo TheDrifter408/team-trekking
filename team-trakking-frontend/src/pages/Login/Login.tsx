@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button, IconButton, Input } from '@/components/index';
 import { useThemeStore } from '@store/zustand';
@@ -13,14 +13,6 @@ export function Login() {
   const [darkMode, setDarkMode] = useState(false);
   const { currentTheme, setTheme } = useThemeStore();
   const { authenticate, handleSocialAuth } = useAuth();
-
-  // Check system preference for dark mode on component mount
-  useEffect(() => {
-    document.documentElement.setAttribute(
-      'data-theme',
-      currentTheme || 'light'
-    );
-  }, [currentTheme]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -58,6 +50,7 @@ export function Login() {
         {/* Dark mode toggle */}
         <div className="absolute right-4 top-4">
           <Button
+            size={'sm'}
             variant={'ghost'}
             onClick={toggleDarkMode}
             className={`rounded-5 hover:scale-105  ${darkMode ? 'bg-gray-700  text-yellow-300' : 'bg-gray-100 text-text-inverted'}`}
