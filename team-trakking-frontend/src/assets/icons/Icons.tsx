@@ -1,14 +1,36 @@
 export const AuthIcon = () => (
-  <svg className="mx-auto h-12 w-12 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path>
+  <svg
+    className="mx-auto h-12 w-12 text-indigo-600"
+    fill="none"
+    stroke="currentColor"
+    viewBox="0 0 24 24"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"
+    ></path>
   </svg>
-)
+);
 
 export const IllustrationIcon = () => (
-  <svg className="w-32 h-32 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+  <svg
+    className="w-32 h-32 text-white"
+    fill="none"
+    stroke="currentColor"
+    viewBox="0 0 24 24"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+    ></path>
   </svg>
-)
+);
 
 export const GoogleIcon = () => (
   <svg
@@ -36,7 +58,7 @@ export const GithubIcon = () => (
 
 export const SunIcon = () => (
   <svg
-    className="h-5 w-5"
+    className=""
     fill="none"
     stroke="currentColor"
     viewBox="0 0 24 24"
@@ -53,7 +75,7 @@ export const SunIcon = () => (
 
 export const MoonIcon = () => (
   <svg
-    className="h-5 w-5"
+    className=""
     fill="none"
     stroke="currentColor"
     viewBox="0 0 24 24"
@@ -116,7 +138,7 @@ export const CheckIcon = () => (
       d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
     ></path>
   </svg>
-)
+);
 
 export const PeopleIcon = () => (
   <svg
@@ -133,7 +155,7 @@ export const PeopleIcon = () => (
       d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
     ></path>
   </svg>
-)
+);
 
 export const ClipboardIcon = () => (
   <svg
@@ -150,4 +172,4 @@ export const ClipboardIcon = () => (
       d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
     ></path>
   </svg>
-)
+);

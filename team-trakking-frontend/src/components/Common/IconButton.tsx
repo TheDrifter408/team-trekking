@@ -1,4 +1,5 @@
 import { ButtonHTMLAttributes, ReactNode } from 'react';
+import { Button } from '@library/components';
 
 export interface IconButtonProps
   extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -51,7 +52,7 @@ export const IconButton = ({
   `;
 
   return (
-    <button
+    <Button
       type="button"
       disabled={isDisabled || isLoading}
       aria-label={ariaLabel}
@@ -64,6 +65,6 @@ export const IconButton = ({
         </span>
       ) : null}
       <span className={isLoading ? 'opacity-0' : ''}>{children}</span>
-    </button>
+    </Button>
   );
 };

@@ -18,7 +18,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   ) => {
     const buttonClass = clsx(
       'inline-flex items-center justify-start gap-3 px-2 py-2 font-semibold rounded-lg transition',
-      { 'opacity-50 cursor-not-allowed': disabled },
+      { 'opacity-50 cursor-not-allowed ': disabled },
       className
     );
 
