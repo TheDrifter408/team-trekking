@@ -6,14 +6,8 @@ import {
 } from '@/store/services/main';
 import { WorkspaceCard } from './components/WorkspaceCard';
 import { CreateWorkspaceForm } from './components/CreateWorkspaceForm';
-import {
-  CheckIcon,
-  ClipboardIcon,
-  MoonIcon,
-  PeopleIcon,
-  PlusIcon,
-  SunIcon,
-} from '@/assets/icons/Icons';
+import { BrandSection } from './components/BrandSection';
+import { MoonIcon, PlusIcon, SunIcon } from '@/assets/icons/Icons';
 import { useThemeStore } from '@store/zustand';
 import { Button } from '@/components';
 
@@ -100,60 +94,7 @@ export const Home: React.FC = () => {
   return (
     <div className="flex min-h-screen flex-col bg-bg-primary md:flex-row">
       {/* Left side - Brand/Instructions */}
-      <div className="hidden items-center justify-center bg-indigo-600 p-12 md:flex md:w-1/3">
-        <div className="max-w-md">
-          <h2 className="mb-6 text-3xl font-bold text-white">Team Trakking</h2>
-          <p className="mb-6 text-lg text-indigo-100">
-            Welcome to your personal task management hub. Organize your work,
-            collaborate with your team, and boost productivity.
-          </p>
-
-          <div className="mt-8 space-y-6">
-            <div className="flex items-start">
-              <div className="mr-4 rounded-full bg-indigo-500 p-2">
-                <CheckIcon />
-              </div>
-              <div>
-                <h3 className="text-xl font-semibold text-white">
-                  Create Workspaces
-                </h3>
-                <p className="text-indigo-100">
-                  Organize your projects into dedicated workspaces
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-start">
-              <div className="mr-4 rounded-full bg-indigo-500 p-2">
-                <PeopleIcon />
-              </div>
-              <div>
-                <h3 className="text-xl font-semibold text-white">
-                  Invite Team Members
-                </h3>
-                <p className="text-indigo-100">
-                  Collaborate with your team in real-time
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-start">
-              <div className="mr-4 rounded-full bg-indigo-500 p-2">
-                <ClipboardIcon />
-              </div>
-              <div>
-                <h3 className="text-xl font-semibold text-white">
-                  Manage Tasks
-                </h3>
-                <p className="text-indigo-100">
-                  Track progress and never miss a deadline
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
+      <BrandSection />
       <div className="absolute right-4 top-4">
         <Button
           variant={'ghost'}

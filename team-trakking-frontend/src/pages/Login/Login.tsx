@@ -1,10 +1,16 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Button, IconButton, Input } from '@/components/index';
+import { Button, Input } from '@/components/index';
 import { useThemeStore } from '@store/zustand';
-import {useAuth} from '@/hooks/useAuth'
-import {GoogleIcon, GithubIcon, SunIcon, MoonIcon, IllustrationIcon, AuthIcon} from '@/assets/icons/Icons'
-
+import { useAuth } from '@/hooks/useAuth';
+import {
+  GoogleIcon,
+  GithubIcon,
+  SunIcon,
+  MoonIcon,
+  IllustrationIcon,
+  AuthIcon,
+} from '@/assets/icons/Icons';
 
 export function Login() {
   const [isLogin, setIsLogin] = useState(true);
