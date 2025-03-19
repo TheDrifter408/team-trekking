@@ -7,9 +7,9 @@ import {
 import { WorkspaceCard } from './components/WorkspaceCard';
 import { CreateWorkspaceForm } from './components/CreateWorkspaceForm';
 import { BrandSection } from './components/BrandSection';
-import { MoonIcon, PlusIcon, SunIcon } from '@/assets/icons/Icons';
+import { PlusIcon } from '@/assets/icons/Icons';
 import { useThemeStore } from '@store/zustand';
-import { Button } from '@/components';
+import { Button, ThemeToggle } from '@/components';
 
 export const Home: React.FC = () => {
   const [submitting, setSubmitting] = useState(false);
@@ -33,7 +33,7 @@ export const Home: React.FC = () => {
     image: '',
     name: '',
     description: '',
-    members: [], // Initialize with empty members array
+    members: [],
   });
 
   // state to temporarily store the email of the member being added
@@ -96,14 +96,7 @@ export const Home: React.FC = () => {
       {/* Left side - Brand/Instructions */}
       <BrandSection />
       <div className="absolute right-4 top-4">
-        <Button
-          variant={'ghost'}
-          size={'sm'}
-          onClick={toggleDarkMode}
-          className={`rounded-5 hover:scale-105  ${darkMode ? 'bg-gray-700  text-yellow-300' : 'bg-gray-100 text-text-inverted'}`}
-        >
-          <div>{darkMode ? <SunIcon /> : <MoonIcon />} </div>
-        </Button>
+        <ThemeToggle toggleDarkMode={toggleDarkMode} />
       </div>
 
       {/* Right side - Workspace List */}
