@@ -7,7 +7,7 @@ import {
 import { WorkspaceCard } from './components/WorkspaceCard';
 import { CreateWorkspaceForm } from './components/CreateWorkspaceForm';
 import { CheckIcon, ClipboardIcon, MoonIcon, PeopleIcon, PlusIcon } from '@/assets/icons/Icons';
-import { ButtonComponent } from '@/components/Common/Button';
+import { Button } from '@library/components';
 
 export const Home: React.FC = () => {
   const [submitting, setSubmitting] = useState(false);
@@ -158,13 +158,13 @@ export const Home: React.FC = () => {
       <div className="flex w-full flex-col p-8 md:w-2/3 md:p-12">
         {/* Dark mode toggle */}
         <div className="absolute right-4 top-4">
-          <button
+          <Button
             className="rounded-md bg-gray-50 p-2 text-gray-700"
             aria-label="Toggle theme"
           >
             {/* Moon Icon */}
             <MoonIcon />
-          </button>
+          </Button>
         </div>
 
         <div className="mx-auto w-full max-w-3xl">
@@ -178,7 +178,7 @@ export const Home: React.FC = () => {
 
           {/* Create workspace button */}
           <div className="mb-6 flex justify-end">
-            <ButtonComponent
+            <Button
               onClick={handleCreateNew}
               leftIcons={[
                 {
@@ -192,7 +192,7 @@ export const Home: React.FC = () => {
             >
               {/* Plus Icon */}
               Create Workspace
-            </ButtonComponent>
+            </Button>
           </div>
 
           {/* Workspaces List */}
