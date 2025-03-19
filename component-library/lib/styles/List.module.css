@@ -1,0 +1,163 @@
+
+.listViewContainer {
+    margin: 30px 0;
+    padding: 30px;
+}
+
+.statusBadge {
+    padding: 4px 12px;
+    border-radius: 12px;
+    color: white;
+    font-size: 12px;
+    font-weight: 600;
+    display: inline-block;
+    min-width: 80px;
+    text-align: center;
+}
+
+.priorityTag {
+    border: 1px solid;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    display: inline-block;
+    min-width: 80px;
+    text-align: center;
+}
+
+.priorityTagHigh {
+    color: var(--list-primary);
+    border-color: var(--list-primary);
+    background-color: rgba(255, 77, 79, 0.1);
+}
+
+.priorityTagMedium {
+    color: var(--list-medium);
+    border-color: var(--list-medium);
+    background-color: rgba(250, 173, 20, 0.1);
+}
+
+.priorityTagLow {
+    color: var(--list-low);
+    border-color: var(--list-low);
+    background-color: rgba(82, 196, 26, 0.1);
+}
+
+.priorityTagDefault {
+    color: var(--list-default);
+    border-color: var(--list-default);
+    background-color: rgba(217, 217, 217, 0.1);
+}
+
+.progressCell {
+    width: 100%;
+}
+
+.progressBarWrapper {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.progressBarOuter {
+    width: 150px;
+    height: 20px;
+    background-color: var(--list-progress-bar-outer);
+    border-radius: 10px;
+    position: relative;
+    overflow: hidden;
+}
+
+.progressBarInner {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    transition: width 0.3s ease-in-out, background-color 0.3s ease-in-out;
+    border-radius: 10px;
+}
+
+.progressBarInnerHigh {
+    background-color: var(--list-progress-bar-inner-high);
+}
+
+.progressBarInnerMedium {
+    background-color: var(--list-progress-bar-inner-medium);
+}
+
+.progressBarInnerLow {
+    background-color: var(--list-progress-bar-inner-low);
+}
+
+.progressLabel {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.progressLabelLight {
+    color: var(--list-progress-label-light);
+}
+
+.progressLabelDark {
+    color: white;
+}
+
+.taskNameWrapper {
+    display: flex;
+    align-items: center;
+}
+
+.taskNameWrapperParent {
+    font-weight: bold;
+}
+
+.taskNameWrapperSubtask {
+    padding-left: 24px;
+    font-weight: normal;
+}
+
+.expandButton {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    margin-right: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--list-expand-button);
+}
+
+.expandButton:hover {
+    color: var(--list-expand-button-hover);
+}
+
+.subtaskIndicator {
+    width: 16px;
+    height: 1px;
+    background-color: var(--list-subtask-indicator);
+    margin-right: 8px;
+}
+
+.actionButton {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--list-action-button);
+    padding: 4px 8px;
+    border-radius: 4px;
+}
+
+.actionButton:hover {
+    background-color: var(--list-action-button-hover-bg);
+    color: var(--list-action-button-hover-color);
+}
