@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Card, ListView } from '../../lib/main';
+import { Card, ListView, KanbanBoard } from '../../lib/main';
 import {
   ChevronRight,
   Bell,
@@ -27,6 +27,11 @@ const CardComponentTesting = () => {
       <div className="mb-12">
         <Card>
           <ListView />
+        </Card>
+      </div>
+      <div className="">
+        <Card>
+          <KanbanBoard />
         </Card>
       </div>
 

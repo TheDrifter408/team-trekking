@@ -2,29 +2,7 @@ import { FC, RefObject, useCallback, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRightFromLine, Copy, Pencil, Trash } from 'lucide-react';
 import { Text } from '@library/components';
-
-const options = [
-  {
-    id: 1,
-    name: 'Rename',
-    lucideIcon: <Pencil className="h-5 w-5" />,
-  },
-  {
-    id: 2,
-    name: 'Delete',
-    lucideIcon: <Trash className="h-5 w-5" />,
-  },
-  {
-    id: 3,
-    name: 'Duplicate',
-    lucideIcon: <Copy className="h-5 w-5" />,
-  },
-  {
-    id: 4,
-    name: 'Export',
-    lucideIcon: <ArrowRightFromLine className="h-5 w-5" />,
-  },
-];
+import { options } from '@utils/data';
 
 interface OptionsMenuProps {
   isOpen: boolean;

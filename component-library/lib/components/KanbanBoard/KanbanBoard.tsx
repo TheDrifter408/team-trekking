@@ -1,48 +1,37 @@
-import React, {useEffect, useState} from "react";
-import styled from "styled-components";
+import React, { useEffect, useState } from 'react';
+import styles from './KanbanBoard.module.css';
 import {
-    closestCenter,
-    DndContext,
-    DragEndEvent,
-    DragOverEvent,
-    DragOverlay,
-    DragStartEvent,
-    KeyboardSensor,
-    PointerSensor,
-    UniqueIdentifier,
-    useDroppable,
-    useSensor,
-    useSensors,
-} from "@dnd-kit/core";
+  closestCenter,
+  DndContext,
+  DragOverlay,
+  KeyboardSensor,
+  PointerSensor,
+  UniqueIdentifier,
+  useDroppable,
+  useSensor,
+  useSensors,
+  DragStartEvent,
+  DragOverEvent,
+  DragEndEvent,
+} from '@dnd-kit/core';
 import {
-    arrayMove,
-    SortableContext,
-    sortableKeyboardCoordinates,
-    useSortable,
-    verticalListSortingStrategy,
-} from "@dnd-kit/sortable";
-import {CSS} from "@dnd-kit/utilities";
-import "bootstrap/dist/css/bootstrap.min.css";
-import {mockTasks} from "../../data/task.ts";
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  useSortable,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { mockTasks } from '../../data/task.ts';
 
-// Styled Components - ClickUp Inspired Modern UI
-
-interface StyledTaskCardProps {
-  isDragging: boolean;
-  isOverlay?: boolean;
-  priority: "low" | "medium" | "high";
-}
-
-interface PriorityBadgeProps {
-  priority: "low" | "medium" | "high";
-}
-
+// Interface definitions
 interface Task {
   id: UniqueIdentifier;
   title: string;
   description: string;
   assignee?: string;
-  priority: "low" | "medium" | "high";
+  priority: 'low' | 'medium' | 'high';
 }
 
 interface Column {
@@ -52,10 +41,13 @@ interface Column {
 }
 
 // Task Card Component
-const TaskCard: React.FC<{
+const TaskCard = ({
+  task,
+  isOverlay = false,
+}: {
   task: Task;
-  isOverlay?: boolean;
-}> = ({ task, isOverlay = false }) => {
+  isOverlay: boolean;
+}) => {
   const {
     attributes,
     listeners,
@@ -66,7 +58,7 @@ const TaskCard: React.FC<{
   } = useSortable({
     id: task.id,
     data: {
-      type: "task",
+      type: 'task',
       task,
     },
   });
@@ -77,151 +69,192 @@ const TaskCard: React.FC<{
   };
 
   // Translate priority to label for display
-  const priorityLabels = {
-    high: "High",
-    medium: "Medium",
-    low: "Low",
+  const priorityLabels: Record<Task['priority'], string> = {
+    high: 'High',
+    medium: 'Medium',
+    low: 'Low',
   };
 
+  // Determine the appropriate class names based on priority and state
+  const taskCardClasses = [
+    styles.taskCard,
+    isDragging ? styles.taskCardDragging : '',
+    isOverlay ? styles.taskCardOverlay : '',
+    task.priority === 'high'
+      ? styles.taskCardHighPriority
+      : task.priority === 'medium'
+        ? styles.taskCardMediumPriority
+        : styles.taskCardLowPriority,
+  ]
+    .filter(Boolean)
+    .join(' ');
+
+  const priorityBadgeClasses = [
+    styles.priorityBadge,
+    task.priority === 'high'
+      ? styles.priorityBadgeHigh
+      : task.priority === 'medium'
+        ? styles.priorityBadgeMedium
+        : styles.priorityBadgeLow,
+  ]
+    .filter(Boolean)
+    .join(' ');
+
   return (
-    <StyledTaskCard
+    <div
       ref={setNodeRef}
       style={style}
-      isDragging={isDragging}
-      isOverlay={isOverlay}
-      priority={task.priority}
+      className={taskCardClasses}
       {...attributes}
       {...listeners}
     >
-      <TaskTitle>{task.title}</TaskTitle>
-      <TaskMeta>
-        <PriorityBadge priority={task.priority}>
+      <div className={styles.taskTitle}>{task.title}</div>
+      <div className={styles.taskMeta}>
+        <div className={priorityBadgeClasses}>
           {priorityLabels[task.priority]}
-        </PriorityBadge>
-      </TaskMeta>
-      <TaskDescription>{task.description}</TaskDescription>
+        </div>
+      </div>
+      <div className={styles.taskDescription}>{task.description}</div>
       {task.assignee && (
-        <TaskFooter>
-          <AssigneeContainer>
-            <AssigneeAvatar>
+        <div className={styles.taskFooter}>
+          <div className={styles.assigneeContainer}>
+            <div className={styles.assigneeAvatar}>
               {task.assignee.charAt(0).toUpperCase()}
-            </AssigneeAvatar>
-            <AssigneeName>{task.assignee}</AssigneeName>
-          </AssigneeContainer>
-        </TaskFooter>
+            </div>
+            <span className={styles.assigneeName}>{task.assignee}</span>
+          </div>
+        </div>
       )}
-    </StyledTaskCard>
+    </div>
   );
 };
 
-const EmptyColumn: React.FC<{
-  columnId: UniqueIdentifier;
-}> = ({ columnId }) => {
+const EmptyColumn = ({ columnId }: { columnId: number | string }) => {
   const { setNodeRef, isOver } = useDroppable({
     id: `empty-${columnId}`,
     data: {
-      type: "column",
+      type: 'column',
       columnId,
     },
   });
 
-  const style = {
-    backgroundColor: isOver ? "#f5f8ff" : undefined,
-    borderColor: isOver ? "#7b68ee" : undefined,
-  };
+  const emptyPlaceholderClasses = [
+    styles.emptyPlaceholder,
+    isOver ? styles.emptyPlaceholderOver : '',
+  ]
+    .filter(Boolean)
+    .join(' ');
 
   return (
-    <EmptyPlaceholder ref={setNodeRef} style={style}>
+    <div ref={setNodeRef} className={emptyPlaceholderClasses}>
       Drop tasks here
-    </EmptyPlaceholder>
+    </div>
   );
 };
 
 // Column Component with droppable area
-const Column: React.FC<{
-  column: Column;
-  tasks: Task[];
-}> = ({ column, tasks }) => {
+const Column = ({ column, tasks }: { column: Column; tasks: Task[] }) => {
   const { id, title } = column;
 
   const { setNodeRef, isOver } = useDroppable({
     id: id,
     data: {
-      type: "column",
+      type: 'column',
       columnId: id,
     },
   });
 
-  const style = {
-    backgroundColor: isOver ? "#f5f8ff" : undefined,
-  };
+  const droppableAreaClasses = [
+    styles.droppableArea,
+    isOver ? styles.droppableAreaOver : '',
+  ]
+    .filter(Boolean)
+    .join(' ');
 
   // Convert column IDs to colors for visual distinction
-  const getColumnColor = (columnId: UniqueIdentifier) => {
+  const getColumnColor = (columnId: string) => {
     switch (columnId) {
-      case "todo":
-        return "#4bade8";
-      case "in-progress":
-        return "#7b68ee";
-      case "review":
-        return "#ffbd3e";
-      case "done":
-        return "#68d391";
+      case 'todo':
+        return 'var(--column-todo)';
+      case 'in-progress':
+        return 'var(--column-in-progress)';
+      case 'review':
+        return 'var(--column-review)';
+      case 'done':
+        return 'var(--column-done)';
       default:
-        return "#a3adc2";
+        return 'var(--color-light-gray)';
     }
   };
 
   return (
-    <ColumnWrapper>
-      <ColumnHeader>
-        <ColumnTitle>
+    <div className={styles.columnWrapper}>
+      <div className={styles.columnHeader}>
+        <h3 className={styles.columnTitle}>
           <div
-            style={{
-              width: "12px",
-              height: "12px",
-              borderRadius: "3px",
-              backgroundColor: getColumnColor(id),
-              marginRight: "8px",
-            }}
+            className={styles.columnColorIndicator}
+            style={{ backgroundColor: getColumnColor(id.toString()) }}
           />
           {title}
-          <ColumnCount>{tasks.length}</ColumnCount>
-        </ColumnTitle>
-      </ColumnHeader>
-      <DroppableArea ref={setNodeRef} style={style}>
-        <TasksContainer>
+          <span className={styles.columnCount}>{tasks.length}</span>
+        </h3>
+      </div>
+      <div ref={setNodeRef} className={droppableAreaClasses}>
+        <div className={styles.tasksContainer}>
           <SortableContext
             items={tasks.map((task) => task.id)}
             strategy={verticalListSortingStrategy}
           >
             {tasks.length > 0 ? (
               tasks.map((task) => (
-                <TaskCard key={task.id.toString()} task={task} />
+                <TaskCard
+                  key={task.id.toString()}
+                  task={task}
+                  isOverlay={false}
+                />
               ))
             ) : (
               <EmptyColumn columnId={id} />
             )}
           </SortableContext>
-        </TasksContainer>
-      </DroppableArea>
-    </ColumnWrapper>
+        </div>
+      </div>
+    </div>
   );
 };
 
-export const KanbanBoard: React.FC = () => {
+interface TaskStatus {
+  id: string;
+}
+
+interface MockTask {
+  id: string;
+  name: string;
+  description: string;
+  assignees: Array<{ name: string }>;
+  priority: string;
+  status: TaskStatus;
+}
+
+export const KanbanBoard = () => {
   // Initial state with sample data
   const [columns, setColumns] = useState<Column[]>([]);
+  const [activeTask, setActiveTask] = useState<Task | null>(null);
+  const [activeId, setActiveId] = useState<UniqueIdentifier | null>(null);
 
   useEffect(() => {
-    const groupedTasks: any = {
+    interface GroupedTasks {
+      [key: string]: Task[];
+    }
+
+    const groupedTasks: GroupedTasks = {
       todo: [],
       inProgress: [],
       inReview: [],
       done: [],
     };
 
-    Object.values(mockTasks).forEach((task) => {
+    Object.values(mockTasks as Record<string, MockTask>).forEach((task) => {
       const taskColumnId = task.status.id;
       if (groupedTasks[taskColumnId]) {
         groupedTasks[taskColumnId].push({
@@ -229,24 +262,21 @@ export const KanbanBoard: React.FC = () => {
           title: task.name,
           description: task.description,
           assignee: task.assignees[0]?.name, // Assuming assignee is an optional field
-          priority: task.priority.toLowerCase(), // Normalize priority
+          priority: task.priority.toLowerCase() as Task['priority'], // Normalize priority
         });
       }
     });
 
-    const columnsArray: Column[] = Object.entries(groupedTasks).map(
+    const columnsArray = Object.entries(groupedTasks).map(
       ([status, tasks]) => ({
         id: status,
         title: status.charAt(0).toUpperCase() + status.slice(1), // Capitalize the first letter for title
         tasks,
-      }),
+      })
     );
 
     setColumns(columnsArray);
-  }, [mockTasks]);
-
-  const [activeTask, setActiveTask] = useState<Task | null>(null);
-  const [activeId, setActiveId] = useState<UniqueIdentifier | null>(null);
+  }, []);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -256,7 +286,7 @@ export const KanbanBoard: React.FC = () => {
     }),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
-    }),
+    })
   );
 
   const handleDragStart = (event: DragStartEvent) => {
@@ -264,7 +294,7 @@ export const KanbanBoard: React.FC = () => {
     setActiveId(active.id);
 
     const activeData = active.data.current;
-    if (activeData?.type === "task") {
+    if (activeData?.type === 'task') {
       setActiveTask(activeData.task as Task);
     }
   };
@@ -290,7 +320,7 @@ export const KanbanBoard: React.FC = () => {
       const overData = over.data.current;
 
       // Get columnId from data if available
-      if (overData && overData.type === "column" && overData.columnId) {
+      if (overData && overData.type === 'column' && overData.columnId) {
         targetColumnId = overData.columnId;
       }
       // Direct column id match
@@ -298,8 +328,8 @@ export const KanbanBoard: React.FC = () => {
         targetColumnId = over.id;
       }
       // Empty placeholder id match (format: empty-[columnId])
-      else if (typeof over.id === "string" && over.id.startsWith("empty-")) {
-        targetColumnId = over.id.replace("empty-", "");
+      else if (typeof over.id === 'string' && over.id.startsWith('empty-')) {
+        targetColumnId = over.id.replace('empty-', '');
       }
     }
 
@@ -309,12 +339,13 @@ export const KanbanBoard: React.FC = () => {
     // Move the task between columns
     setColumns((prevColumns) => {
       // Find the source column and the task being dragged
-      const sourceColumn = prevColumns.find(
-        (col) => col.id === sourceColumnId,
-      )!;
+      const sourceColumn = prevColumns.find((col) => col.id === sourceColumnId);
+      if (!sourceColumn) return prevColumns;
+
       const taskToMove = sourceColumn.tasks.find(
-        (task) => task.id === activeId,
-      )!;
+        (task) => task.id === activeId
+      );
+      if (!taskToMove) return prevColumns;
 
       // Create updated columns
       return prevColumns.map((column) => {
@@ -331,7 +362,7 @@ export const KanbanBoard: React.FC = () => {
           // If dropping on a task, add after that task
           if (isTaskId(over.id)) {
             const overTaskIndex = column.tasks.findIndex(
-              (task) => task.id === over.id,
+              (task) => task.id === over.id
             );
             if (overTaskIndex >= 0) {
               const newTasks = [...column.tasks];
@@ -372,16 +403,16 @@ export const KanbanBoard: React.FC = () => {
       if (activeColumnId && overColumnId && activeColumnId === overColumnId) {
         setColumns((prevColumns) => {
           const columnIndex = prevColumns.findIndex(
-            (col) => col.id === activeColumnId,
+            (col) => col.id === activeColumnId
           );
           if (columnIndex < 0) return prevColumns;
 
           const column = prevColumns[columnIndex];
           const oldIndex = column.tasks.findIndex(
-            (task) => task.id === active.id,
+            (task) => task.id === active.id
           );
           const newIndex = column.tasks.findIndex(
-            (task) => task.id === over.id,
+            (task) => task.id === over.id
           );
 
           const newTasks = arrayMove(column.tasks, oldIndex, newIndex);
@@ -402,10 +433,10 @@ export const KanbanBoard: React.FC = () => {
       let targetColumnId: UniqueIdentifier | null = null;
 
       // Get the target column id from the over target
-      if (over.data.current?.type === "column") {
+      if (over.data.current?.type === 'column') {
         targetColumnId = over.data.current.columnId;
-      } else if (typeof over.id === "string" && over.id.startsWith("empty-")) {
-        targetColumnId = over.id.replace("empty-", "");
+      } else if (typeof over.id === 'string' && over.id.startsWith('empty-')) {
+        targetColumnId = over.id.replace('empty-', '');
       } else if (columns.some((col) => col.id === over.id)) {
         targetColumnId = over.id;
       }
@@ -414,11 +445,14 @@ export const KanbanBoard: React.FC = () => {
         setColumns((prevColumns) => {
           // Find the source column and task being moved
           const sourceColumn = prevColumns.find(
-            (col) => col.id === sourceColumnId,
-          )!;
+            (col) => col.id === sourceColumnId
+          );
+          if (!sourceColumn) return prevColumns;
+
           const taskToMove = sourceColumn.tasks.find(
-            (task) => task.id === active.id,
-          )!;
+            (task) => task.id === active.id
+          );
+          if (!taskToMove) return prevColumns;
 
           return prevColumns.map((column) => {
             // Remove from source column
@@ -446,7 +480,7 @@ export const KanbanBoard: React.FC = () => {
 
   // Helper functions
   const findColumnIdByTaskId = (
-    taskId: UniqueIdentifier,
+    taskId: UniqueIdentifier
   ): UniqueIdentifier | undefined => {
     for (const column of columns) {
       if (column.tasks.some((task) => task.id === taskId)) {
@@ -458,7 +492,7 @@ export const KanbanBoard: React.FC = () => {
 
   // Check if an ID belongs to a task
   const isTaskId = (id: UniqueIdentifier): boolean => {
-    return typeof id === "string" && id.startsWith("task-");
+    return typeof id === 'string' && id.startsWith('task-');
   };
 
   return (
@@ -469,9 +503,9 @@ export const KanbanBoard: React.FC = () => {
       onDragOver={handleDragOver}
       onDragEnd={handleDragEnd}
     >
-      <BoardContainer>
-        <BoardTitle>Kanban Board</BoardTitle>
-        <ColumnsContainer>
+      <div className={styles.boardContainer}>
+        <h1 className={styles.boardTitle}>Kanban Board</h1>
+        <div className={styles.columnsContainer}>
           {columns.map((column) => (
             <Column
               key={column.id.toString()}
@@ -479,8 +513,8 @@ export const KanbanBoard: React.FC = () => {
               tasks={column.tasks}
             />
           ))}
-        </ColumnsContainer>
-      </BoardContainer>
+        </div>
+      </div>
       <DragOverlay>
         {activeTask ? <TaskCard task={activeTask} isOverlay={true} /> : null}
       </DragOverlay>
@@ -488,227 +522,4 @@ export const KanbanBoard: React.FC = () => {
   );
 };
 
-const BoardContainer = styled.div`
-  padding: 32px;
-  background-color: #f7f9fb;
-  min-height: 100vh;
-`;
-
-const BoardTitle = styled.h1`
-  margin-bottom: 32px;
-  font-weight: 700;
-  color: #292d34;
-  font-size: 28px;
-  display: flex;
-  align-items: center;
-
-  &:before {
-    content: "";
-    display: inline-block;
-    width: 24px;
-    height: 24px;
-    background-color: #7b68ee;
-    border-radius: 6px;
-    margin-right: 12px;
-  }
-`;
-
-const ColumnsContainer = styled.div`
-  display: flex;
-  gap: 24px;
-  overflow-x: auto;
-  min-height: 80px;
-  padding-bottom: 24px;
-  align-items: flex-start;
-
-  &::-webkit-scrollbar {
-    height: 8px;
-  }
-
-  &::-webkit-scrollbar-track {
-    background: #f0f2f5;
-    border-radius: 10px;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: #c5c9d5;
-    border-radius: 10px;
-  }
-`;
-
-const ColumnWrapper = styled.div`
-  background-color: #ffffff;
-  border-radius: 12px;
-  width: 280px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-  border: 1px solid #ebedf2;
-  overflow: hidden;
-`;
-
-const ColumnHeader = styled.div`
-  font-weight: 600;
-  color: #292d34;
-  padding: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-bottom: 1px solid #f0f2f5;
-`;
-
-const ColumnTitle = styled.h3`
-  margin: 0;
-  font-size: 16px;
-  display: flex;
-  align-items: center;
-`;
-
-const ColumnCount = styled.span`
-  color: #7f8595;
-  font-size: 13px;
-  background-color: #f0f2f5;
-  padding: 2px 8px;
-  border-radius: 12px;
-  margin-left: 8px;
-  font-weight: 500;
-`;
-
-const TasksContainer = styled.div`
-  overflow-y: auto;
-  padding: 12px;
-
-  &::-webkit-scrollbar {
-    width: 6px;
-  }
-
-  &::-webkit-scrollbar-track {
-    background: transparent;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: #e0e4ea;
-    border-radius: 8px;
-  }
-`;
-
-const StyledTaskCard = styled.div<StyledTaskCardProps>`
-  padding: 16px;
-  margin-bottom: 12px;
-  border-radius: 8px;
-  border-left: 3px solid
-    ${(props) =>
-      props.priority === "high"
-        ? "#ff5c5c"
-        : props.priority === "medium"
-          ? "#ffbd3e"
-          : "#4bade8"};
-  background-color: ${(props) => (props.isOverlay ? "#f8faff" : "white")};
-  box-shadow: ${(props) =>
-    props.isOverlay
-      ? "0 8px 24px rgba(0,0,0,0.15)"
-      : props.isDragging
-        ? "0 4px 12px rgba(0,0,0,0.1)"
-        : "0 1px 3px rgba(0,0,0,0.06)"};
-  opacity: ${(props) => (props.isDragging ? 0.7 : 1)};
-  cursor: grab;
-  transition:
-    transform 0.1s,
-    box-shadow 0.1s;
-
-  &:hover {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  }
-`;
-
-const TaskTitle = styled.div`
-  font-weight: 600;
-  color: #292d34;
-  margin-bottom: 8px;
-  font-size: 15px;
-`;
-
-const TaskMeta = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 12px;
-`;
-
-const PriorityBadge = styled.div<PriorityBadgeProps>`
-  font-size: 11px;
-  padding: 2px 8px;
-  border-radius: 12px;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  background-color: ${(props) =>
-    props.priority === "high"
-      ? "#fff0f0"
-      : props.priority === "medium"
-        ? "#fff8e8"
-        : "#ebf7ff"};
-  color: ${(props) =>
-    props.priority === "high"
-      ? "#ff5c5c"
-      : props.priority === "medium"
-        ? "#ffbd3e"
-        : "#4bade8"};
-`;
-
-const TaskDescription = styled.p`
-  font-size: 13px;
-  color: #7f8595;
-  margin-bottom: 12px;
-  line-height: 1.5;
-`;
-
-const TaskFooter = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-const AssigneeContainer = styled.div`
-  display: flex;
-  align-items: center;
-`;
-
-const AssigneeAvatar = styled.div`
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  background-color: #7b68ee;
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 12px;
-  font-weight: 600;
-`;
-
-const AssigneeName = styled.span`
-  margin-left: 8px;
-  font-size: 13px;
-  color: #5e6577;
-  font-weight: 500;
-`;
-
-const DroppableArea = styled.div`
-  flex-grow: 1;
-  min-height: 300px;
-  display: flex;
-  flex-direction: column;
-`;
-
-const EmptyPlaceholder = styled.div`
-  border: 2px dashed #e0e4ea;
-  border-radius: 8px;
-  min-height: 100px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #a3adc2;
-  font-size: 14px;
-  margin: 16px 12px;
-  flex-grow: 1;
-  transition: background-color 0.2s;
-`;
+export default KanbanBoard;

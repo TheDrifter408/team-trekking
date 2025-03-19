@@ -1,7 +1,7 @@
 import { ChangeEvent, FC, FormEvent, useState } from 'react';
 import { Task } from '../../types/Task';
 import { Assignee } from '../../types/Assignee';
-import { Status } from '../../types/Status';
+import { defaultStatuses } from '@utils/data.ts';
 import { Checklist } from '../../types/Checklist';
 
 interface CreateTaskProps {
@@ -27,24 +27,6 @@ export const CreateTask: FC<CreateTaskProps> = ({ onTaskAdd }) => {
     startDate: new Date(),
     endDate: new Date(),
   });
-
-  const defaultStatuses: Status[] = [
-    {
-      id: '1',
-      name: 'Backlog',
-      statusColor: 'bg-gray-400',
-    },
-    {
-      id: '2',
-      name: 'In Progress',
-      statusColor: 'bg-green-400',
-    },
-    {
-      id: '3',
-      name: 'Completed',
-      statusColor: 'bg-emerald-300',
-    },
-  ];
 
   const handleStatusChange = () => {
     // Implement the logic to change the status

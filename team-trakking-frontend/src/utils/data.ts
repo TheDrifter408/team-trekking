@@ -1,4 +1,6 @@
 import { Workspace } from '@/types/Workspace';
+import { Status } from '@/types/Status.ts';
+import { ArrowRightFromLine, Copy, Pencil, Trash } from 'lucide-react';
 
 export const data: Workspace[] = [
   {
@@ -695,5 +697,46 @@ export const data: Workspace[] = [
         ],
       },
     ],
+  },
+];
+
+export const defaultStatuses: Status[] = [
+  {
+    id: '1',
+    name: 'Backlog',
+    statusColor: 'bg-gray-400',
+  },
+  {
+    id: '2',
+    name: 'In Progress',
+    statusColor: 'bg-green-400',
+  },
+  {
+    id: '3',
+    name: 'Completed',
+    statusColor: 'bg-emerald-300',
+  },
+];
+
+export const options: {id: number,name:string,lucideIcon:any} = [
+  {
+    id: 1,
+    name: 'Rename',
+    lucideIcon: <Pencil className="h-5 w-5"/>,
+  },
+  {
+    id: 2,
+    name: 'Delete',
+    lucideIcon: <Trash className="h-5 w-5"/>,
+  },
+  {
+    id: 3,
+    name: 'Duplicate',
+    lucideIcon: <Copy className="h-5 w-5" />,
+  },
+  {
+    id: 4,
+    name: 'Export',
+    lucideIcon: <ArrowRightFromLine className="h-5 w-5" />,
   },
 ];

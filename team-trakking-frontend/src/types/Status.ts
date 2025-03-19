@@ -1,6 +1,6 @@
 export interface Status {
   id: string;
   name: string;
-  serialId: number;
+  serialId?: number;
   statusColor: string;
 }
