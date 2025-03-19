@@ -1,6 +1,5 @@
 import { FC, RefObject, useCallback, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowRightFromLine, Copy, Pencil, Trash } from 'lucide-react';
 import { Text } from '@library/components';
 import { options } from '@utils/data';
 
