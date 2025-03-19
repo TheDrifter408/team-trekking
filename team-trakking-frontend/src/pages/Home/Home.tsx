@@ -1,5 +1,4 @@
 import React, { FormEvent, useEffect, useState } from 'react';
-import { Button } from '@library/components';
 import { Workspace, Space } from '@/types/ApiResponse';
 import {
   useCreateWorkSpaceMutation,
@@ -7,7 +6,8 @@ import {
 } from '@/store/services/main';
 import { WorkspaceCard } from './components/WorkspaceCard';
 import { CreateWorkspaceForm } from './components/CreateWorkspaceForm';
-import { PlusIcon } from '@/assets/icons/Icons';
+import { CheckIcon, ClipboardIcon, MoonIcon, PeopleIcon, PlusIcon } from '@/assets/icons/Icons';
+import { ButtonComponent } from '@/components/Common/Button';
 
 export const Home: React.FC = () => {
   const [submitting, setSubmitting] = useState(false);
@@ -111,20 +111,7 @@ export const Home: React.FC = () => {
           <div className="mt-8 space-y-6">
             <div className="flex items-start">
               <div className="mr-4 rounded-full bg-indigo-500 p-2">
-                <svg
-                  className="h-6 w-6 text-white"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                  ></path>
-                </svg>
+                <CheckIcon />
               </div>
               <div>
                 <h3 className="text-xl font-semibold text-white">
@@ -138,20 +125,7 @@ export const Home: React.FC = () => {
 
             <div className="flex items-start">
               <div className="mr-4 rounded-full bg-indigo-500 p-2">
-                <svg
-                  className="h-6 w-6 text-white"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
-                  ></path>
-                </svg>
+                <PeopleIcon />
               </div>
               <div>
                 <h3 className="text-xl font-semibold text-white">
@@ -165,20 +139,7 @@ export const Home: React.FC = () => {
 
             <div className="flex items-start">
               <div className="mr-4 rounded-full bg-indigo-500 p-2">
-                <svg
-                  className="h-6 w-6 text-white"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
-                  ></path>
-                </svg>
+                <ClipboardIcon />
               </div>
               <div>
                 <h3 className="text-xl font-semibold text-white">
@@ -202,20 +163,7 @@ export const Home: React.FC = () => {
             aria-label="Toggle theme"
           >
             {/* Moon Icon */}
-            <svg
-              className="h-5 w-5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
-              ></path>
-            </svg>
+            <MoonIcon />
           </button>
         </div>
 
@@ -230,7 +178,7 @@ export const Home: React.FC = () => {
 
           {/* Create workspace button */}
           <div className="mb-6 flex justify-end">
-            <Button
+            <ButtonComponent
               onClick={handleCreateNew}
               leftIcons={[
                 {
@@ -240,11 +188,11 @@ export const Home: React.FC = () => {
                   },
                 },
               ]}
-              className="flex items-center rounded-md bg-indigo-600 px-4 py-2 text-white hover:bg-indigo-700"
+              className="w-fit flex items-center rounded-md bg-indigo-600 px-4 py-2 text-white hover:bg-indigo-700"
             >
               {/* Plus Icon */}
               Create Workspace
-            </Button>
+            </ButtonComponent>
           </div>
 
           {/* Workspaces List */}

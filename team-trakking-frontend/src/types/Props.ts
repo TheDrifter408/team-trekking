@@ -1,5 +1,5 @@
 import { Dispatch, FormEvent, SetStateAction } from 'react';
-import { SpaceItem, Workspace } from './ApiResponse';
+import { SpaceItem, Task, Workspace } from './ApiResponse';
 
 export interface CreateWorkspaceFormProps {
   isOpen: boolean;
@@ -29,4 +29,17 @@ export interface SidebarProps {
 export interface SidebarSpaceItemProps {
   spaces: SpaceItem[];
   sidebarOpen: boolean;
+}
+
+export interface PriorityTasksProps {
+  tasks: Task[]
+}
+
+export interface UpcomingDeadlineProps {
+  tasks: Task[];
+}
+
+export interface TaskListProps {
+  tasks: Task[];
+  setTasks: Dispatch<SetStateAction<Task[]>>,
 }
