@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { Task } from './Task';
+import { Task } from './ApiResponse';
 
 export interface Column {
   key: string;

@@ -1,6 +1,5 @@
 import { Workspace } from '@/types/Workspace';
 import { Status } from '@/types/Status.ts';
-import { ArrowRightFromLine, Copy, Pencil, Trash } from 'lucide-react';
 
 export const data: Workspace[] = [
   {
@@ -13,11 +12,13 @@ export const data: Workspace[] = [
         id: '1',
         name: 'John Doe',
         avatar: 'https://randomuser.me/api/portraits/men/1.jpg',
+        email: "",
       },
       {
         id: '2',
         name: 'Jane Smith',
         avatar: 'https://randomuser.me/api/portraits/women/2.jpg',
+        email: ""
       },
     ],
     spaces: [
@@ -350,11 +351,13 @@ export const data: Workspace[] = [
         id: '3',
         name: 'Emily Carter',
         avatar: 'https://randomuser.me/api/portraits/women/3.jpg',
+        email:""
       },
       {
         id: '4',
         name: 'Liam Scott',
         avatar: 'https://randomuser.me/api/portraits/men/4.jpg',
+        email:""
       },
     ],
     spaces: [
@@ -527,11 +530,13 @@ export const data: Workspace[] = [
         id: '5',
         name: 'Sarah Lee',
         avatar: 'https://randomuser.me/api/portraits/women/5.jpg',
+        email:""
       },
       {
         id: '6',
         name: 'Alex Chen',
         avatar: 'https://randomuser.me/api/portraits/men/6.jpg',
+        email:""
       },
     ],
     spaces: [
@@ -718,25 +723,25 @@ export const defaultStatuses: Status[] = [
   },
 ];
 
-export const options: {id: number,name:string,lucideIcon:any} = [
-  {
-    id: 1,
-    name: 'Rename',
-    lucideIcon: <Pencil className="h-5 w-5"/>,
-  },
-  {
-    id: 2,
-    name: 'Delete',
-    lucideIcon: <Trash className="h-5 w-5"/>,
-  },
-  {
-    id: 3,
-    name: 'Duplicate',
-    lucideIcon: <Copy className="h-5 w-5" />,
-  },
-  {
-    id: 4,
-    name: 'Export',
-    lucideIcon: <ArrowRightFromLine className="h-5 w-5" />,
-  },
-];
+// export const options = [
+//   {
+//     id: 1,
+//     name: 'Rename',
+//     lucideIcon: <Pencil className="w-5 h-5" />,
+//   },
+//   {
+//     id: 2,
+//     name: 'Delete',
+//     lucideIcon: <Trash className="h-5 w-5" />,
+//   },
+//   {
+//     id: 3,
+//     name: 'Duplicate',
+//     lucideIcon: <Copy className="h-5 w-5" />,
+//   },
+//   {
+//     id: 4,
+//     name: 'Export',
+//     lucideIcon: <ArrowRightFromLine className="h-5 w-5" />,
+//   },
+// ];

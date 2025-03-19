@@ -3,6 +3,7 @@ import { Task } from '../../types/Task';
 import { Assignee } from '../../types/Assignee';
 import { defaultStatuses } from '@utils/data.ts';
 import { Checklist } from '../../types/Checklist';
+import { Input } from '@library/components';
 
 interface CreateTaskProps {
   // Add props as needed
@@ -57,7 +58,7 @@ export const CreateTask: FC<CreateTaskProps> = ({ onTaskAdd }) => {
               Status:
             </label>
             <div className={`flex items-center gap-0`}>
-              <input
+              <Input
                 type="text"
                 id="status"
                 name="status"
