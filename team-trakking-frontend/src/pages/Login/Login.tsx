@@ -1,17 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Button } from '@/components/index';
-
+import { Button, IconButton, Input } from '@/components/index';
 import { useThemeStore } from '@store/zustand';
-import { useAuth } from '@/hooks/useAuth';
-import {
-  GoogleIcon,
-  GithubIcon,
-  SunIcon,
-  MoonIcon,
-  IllustrationIcon,
-  AuthIcon,
-} from '@/assets/icons/Icons';
+import {useAuth} from '@/hooks/useAuth'
+import {GoogleIcon, GithubIcon, SunIcon, MoonIcon, IllustrationIcon, AuthIcon} from '@/assets/icons/Icons'
+
 
 export function Login() {
   const [isLogin, setIsLogin] = useState(true);
@@ -116,12 +109,12 @@ export function Login() {
                   >
                     Email address
                   </label>
-                  <input
+                  <Input
                     id="email-address"
                     name="email"
                     type="email"
                     required
-                    className={`mt-1 block w-full rounded-md bg-bg-inverted px-3 py-2 text-text-default  shadow-sm focus:border-indigo-500  focus:ring-indigo-500 sm:text-sm`}
+                    className={`block focus-within:border-indigo-500 sm:text-sm`}
                     placeholder="you@example.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
@@ -134,12 +127,12 @@ export function Login() {
                   >
                     Password
                   </label>
-                  <input
+                  <Input
                     id="password"
                     name="password"
                     type="password"
                     required
-                    className={`mt-1 block w-full rounded-md bg-bg-inverted px-3 py-2 text-text-default  shadow-sm focus:border-indigo-500  focus:ring-indigo-500 sm:text-sm`}
+                    className={`block focus-within:border-indigo-500 sm:text-sm`}
                     placeholder="••••••••"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
