@@ -8,12 +8,12 @@ import { WorkspaceCard } from './components/WorkspaceCard';
 import { CreateWorkspaceForm } from './components/CreateWorkspaceForm';
 import { BrandSection } from './components/BrandSection';
 import { PlusIcon } from '@/assets/icons/Icons';
-import { useThemeStore } from '@store/zustand';
+import { useStore } from '@store/zustand';
 import { Button, ThemeToggle } from '@/components';
 
 export const Home: React.FC = () => {
   const [submitting, setSubmitting] = useState(false);
-  const { currentTheme, setTheme } = useThemeStore();
+  const { currentTheme, setTheme } = useStore();
   const { data: workspaceList } = useGetWorkSpacesQuery();
   const [createWorkspace] = useCreateWorkSpaceMutation();
 

@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { LogOut, Bell, ChevronDown, Search } from 'lucide-react';
-import { useThemeStore } from '@store/zustand';
+import { useStore } from '@store/zustand';
 import { ThemeToggle, Button } from '@/components/index';
 import { Text } from '@library/components';
 import { AppIcons } from '@/assets/icons/Icons.tsx';
@@ -9,7 +9,7 @@ import { useAuth } from '@hooks/useAuth.tsx';
 export function Header() {
   const [showNotifications, setShowNotifications] = useState(false);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
-  const { setTheme, currentTheme } = useThemeStore();
+  const { setTheme, currentTheme } = useStore();
   const { handleLogout } = useAuth();
 
   const notificationRef = useRef<HTMLDivElement>(null);
@@ -43,7 +43,7 @@ export function Header() {
   }, []);
 
   return (
-    <header className="fixed top-0 left-0 right-0 h-12 flex items-center justify-between bg-bg-primary px-4 shadow-sm">
+    <header className="fixed top-0 left-0 right-0 h-12 z-2 flex items-center justify-between bg-bg-primary px-4 shadow-sm">
       <div className="flex items-center space-x-2">
         <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-500">
           <AppIcons />
@@ -105,7 +105,7 @@ export function Header() {
           </Button>
 
           {showProfileMenu && (
-            <div className="absolute right-0 mt-2 w-48 rounded-lg border border-gray-300 bg-bg-inverted shadow-lg dark:border-gray-700">
+            <div className="absolute z-40 right-0 mt-2 w-48 rounded-lg border border-gray-300 bg-bg-inverted shadow-lg dark:border-gray-700">
               <div className="py-2">
                 <div
                   onClick={handleThemeToggle}

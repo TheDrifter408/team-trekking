@@ -41,7 +41,7 @@ export function Layout() {
           initial={{ width: '6rem' }}
           animate={{ width: sidebarOpen ? '14rem' : '6rem' }}
           transition={{ ease: 'easeOut', duration: 0.5 }}
-          className="fixed top-12 bottom-0 bg-bg-primary"
+          className="fixed top-12 bottom-0 bg-bg-primary z-2"
         >
           <Sidebar
             sidebarOpen={sidebarOpen}
@@ -67,7 +67,7 @@ export function Layout() {
 
         {/* Main Content */}
         <main
-          className={`mt-14 min-h-[calc(100vh-4rem)] flex-1 p-6 transition-all duration-300 ${
+          className={`mt-4 min-h-[calc(100vh-4rem)] flex-1 py-6 transition-all duration-300 ${
             sidebarOpen ? 'ml-56' : 'ml-24'
           }`}
         >

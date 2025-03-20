@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button, Input } from '@/components/index';
-import { useThemeStore } from '@store/zustand';
+import { useStore } from '@store/zustand';
 import { useAuth } from '@/hooks/useAuth';
 import {
   GoogleIcon,
@@ -17,7 +17,7 @@ export function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [darkMode, setDarkMode] = useState(false);
-  const { currentTheme, setTheme } = useThemeStore();
+  const { currentTheme, setTheme } = useStore();
   const { authenticate, handleSocialAuth } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
