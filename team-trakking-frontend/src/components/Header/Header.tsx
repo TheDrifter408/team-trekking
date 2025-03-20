@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { LogOut, Bell, ChevronDown, Search } from 'lucide-react';
 import { useThemeStore } from '@store/zustand';
 import { ThemeToggle, Button } from '@/components/index';
@@ -12,44 +12,63 @@ export function Header() {
   const { setTheme, currentTheme } = useThemeStore();
   const { handleLogout } = useAuth();
 
+  const notificationRef = useRef<HTMLDivElement>(null);
+  const profileMenuRef = useRef<HTMLDivElement>(null);
+
   const handleThemeToggle = () => {
-    const newTheme = currentTheme === 'light' ? 'dark' : 'light'; // Example of toggling between themes
+    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
     setTheme(newTheme);
   };
 
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        notificationRef.current &&
+        !notificationRef.current.contains(event.target as Node)
+      ) {
+        setShowNotifications(false);
+      }
+      if (
+        profileMenuRef.current &&
+        !profileMenuRef.current.contains(event.target as Node)
+      ) {
+        setShowProfileMenu(false);
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   return (
-    <header className="fixed top-0 left-0 right-0 h-12 flex items-center justify-between  bg-bg-primary px-4 shadow-sm">
-      {/* Logo & App Name */}
+    <header className="fixed top-0 left-0 right-0 h-12 flex items-center justify-between bg-bg-primary px-4 shadow-sm">
       <div className="flex items-center space-x-2">
         <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-500">
-          {/* Added SVG icon */}
           <AppIcons />
         </div>
-        {/* App name now hidden on smaller screens with md:flex class */}
         <Text className="hidden font-semibold text-text-primary md:flex">
           Team Trakking
         </Text>
       </div>
 
-      {/* Search Bar - Responsive */}
       <div className="relative flex hidden w-1/3 max-w-sm items-center md:flex">
         <Search className="absolute left-3 h-4 w-4 text-gray-500" />
         <input
           type="text"
           placeholder="Search tasks, projects..."
-          className="w-full rounded-lg border bg-white py-1 pl-9 pr-3 text-sm text-text-default "
+          className="w-full rounded-lg border bg-white py-1 pl-9 pr-3 text-sm text-text-default"
         />
       </div>
 
-      {/* Right Side Controls */}
       <div className="flex items-center space-x-4">
-        {/* Notifications */}
-        <div className="relative">
+        <div className="relative" ref={notificationRef}>
           <Button
             size={'sm'}
             variant={'outline'}
             onClick={() => setShowNotifications(!showNotifications)}
-            className="relative rounded-lg bg-bg-inverted justify-center  h-auto w-auto text-gray-600 hover:bg-gray-100"
+            className="relative rounded-lg bg-bg-inverted justify-center h-auto w-auto text-gray-600 hover:bg-gray-100"
           >
             <Bell className={'h-3 w-3'} />
             <span className="absolute -right-0.5 -top-0.5 h-3 w-3 rounded-full bg-red-500"></span>
@@ -64,8 +83,7 @@ export function Header() {
           )}
         </div>
 
-        {/* Profile Avatar & Dropdown */}
-        <div className="relative">
+        <div className="relative" ref={profileMenuRef}>
           <Button
             size={'sm'}
             variant={'outline'}
@@ -77,7 +95,7 @@ export function Header() {
               },
             ]}
             onClick={() => setShowProfileMenu(!showProfileMenu)}
-            className=" flex w-auto items-center rounded-lg bg-bg-secondary  hover:bg-gray-700"
+            className="flex w-auto items-center rounded-lg bg-bg-secondary hover:bg-gray-700"
           >
             <img
               src="https://avatar.iran.liara.run/public"
@@ -89,7 +107,6 @@ export function Header() {
           {showProfileMenu && (
             <div className="absolute right-0 mt-2 w-48 rounded-lg border border-gray-300 bg-bg-inverted shadow-lg dark:border-gray-700">
               <div className="py-2">
-                {/* Custom Theme Toggle */}
                 <div
                   onClick={handleThemeToggle}
                   className="flex cursor-pointer items-center justify-between rounded-lg px-4 py-2 text-sm text-text-inverted hover:bg-tertiary hover:text-text-primary"
@@ -98,7 +115,6 @@ export function Header() {
                   <ThemeToggle toggleDarkMode={handleThemeToggle} />
                 </div>
 
-                {/* Custom Logout Button */}
                 <div
                   onClick={handleLogout}
                   className="flex cursor-pointer items-center justify-between rounded-lg px-4 py-2 text-sm text-text-inverted hover:bg-tertiary hover:text-text-primary"
