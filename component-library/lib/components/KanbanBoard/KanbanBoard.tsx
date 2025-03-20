@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import styles from './KanbanBoard.module.css';
+import styles from '../../styles/KanbanBoard.module.css';
 import {
   closestCenter,
   DndContext,

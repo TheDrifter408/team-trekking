@@ -1,4 +1,4 @@
-import {LucideIcon}  from 'lucide-react'
+import { LucideIcon } from 'lucide-react';
 
 export interface User {
   id: string;
@@ -193,21 +193,12 @@ export interface TaskType {
   textColor: string;
 }
 
-// Workspace - the top-level container
-export interface Workspace {
-  id: string;
+export interface Member {
+  id: number;
   name: string;
-  description: string;
-  image: string;
-  coverImage?: string;
-  color?: string;
-  createdAt?: Date;
-  updatedAt?: Date;
-  favorite?: boolean;
-  members: User[];
-  activity?: Activity[];
-  spaces: Space[];
-  taskTypes: TaskType[];
+  avatar?: string;
+  email: string;
+  workspaceId: number;
 }
 
 export interface SpaceItem {
@@ -220,4 +211,15 @@ export interface SpaceItem {
     name: string;
     lists: string[];
   }[];
+}
+
+export interface Workspace {
+  id: number;
+  name: string;
+  description: string;
+  image?: string;
+}
+
+export interface WorkspaceItem extends Workspace {
+  members: Member[];
 }

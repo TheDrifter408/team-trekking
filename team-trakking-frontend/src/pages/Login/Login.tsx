@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button, IconButton, Input } from '@/components/index';
 import { useThemeStore } from '@store/zustand';
 import {useAuth} from '@/hooks/useAuth'
 import {GoogleIcon, GithubIcon, SunIcon, MoonIcon, IllustrationIcon, AuthIcon} from '@/assets/icons/Icons'
-// import { Input } from '@library/components';
 
 
 export function Login() {
@@ -14,14 +13,6 @@ export function Login() {
   const [darkMode, setDarkMode] = useState(false);
   const { currentTheme, setTheme } = useThemeStore();
   const { authenticate, handleSocialAuth } = useAuth();
-
-  // Check system preference for dark mode on component mount
-  useEffect(() => {
-    document.documentElement.setAttribute(
-      'data-theme',
-      currentTheme || 'light'
-    );
-  }, [currentTheme]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -48,7 +39,7 @@ export function Login() {
           </p>
 
           {/* Illustration placeholder */}
-          <div className="mt-12 h-64 bg-indigo-500 rounded-lg flex items-center justify-center">
+          <div className="mt-12 flex h-64 items-center justify-center rounded-lg bg-indigo-500">
             <IllustrationIcon />
           </div>
         </div>
@@ -58,19 +49,20 @@ export function Login() {
       <div className="flex w-full flex-col justify-center p-8 md:w-1/2 md:p-12">
         {/* Dark mode toggle */}
         <div className="absolute right-4 top-4">
-          <IconButton
+          <Button
+            size={'sm'}
+            variant={'ghost'}
             onClick={toggleDarkMode}
-            className={`rounded-5 ${darkMode ? 'bg-gray-700 text-yellow-300' : 'bg-gray-50 text-gray-700'}`}
+            className={`rounded-5 hover:scale-105  ${darkMode ? 'bg-gray-700  text-yellow-300' : 'bg-gray-100 text-text-inverted'}`}
           >
-            <div >{darkMode ? <SunIcon /> : <MoonIcon />} </div>
-          </IconButton>
+            <div>{darkMode ? <SunIcon /> : <MoonIcon />} </div>
+          </Button>
         </div>
 
         <div className="mx-auto w-full max-w-md">
           {/* Logo */}
-          <div className="text-center mb-8">
+          <div className="mb-8 text-center ">
             <AuthIcon />
-            <h2 className="mt-2 text-3xl font-bold">Auth System</h2>
           </div>
 
           {/* Tabs */}
@@ -83,7 +75,7 @@ export function Login() {
               Login
             </Button>
             <Button
-              variant={!isLogin ? 'ghost' : 'ghost'}
+              variant={'ghost'}
               onClick={() => setIsLogin(false)}
               className={`flex-1 py-2 focus:outline-none focus:ring-0 focus:ring-offset-0 ${!isLogin ? 'border-b-2 border-indigo-600' : 'border-b-2 border-gray-500 text-text-muted'}`}
             >
@@ -160,20 +152,30 @@ export function Login() {
                   </div>
                 </div>
 
-                <div className="flex w-full ">
+                <div className="flex w-full gap-2">
                   <Button
                     variant={'outline'}
                     onClick={() => handleSocialAuth()}
-                    leftIcons={[{ icon: <GithubIcon />, onClick: () => handleSocialAuth() }]}
-                    className="p-2 mx-1 w-50 rounded-md flex items-center justify-between  bg-bg-inverted border border-border-primary text-text-default"
+                    leftIcons={[
+                      {
+                        icon: <GithubIcon />,
+                        onClick: () => handleSocialAuth(),
+                      },
+                    ]}
+                    className={'w-50'}
                   >
                     <div className={'ml-2 flex-grow text-left'}>Github</div>
                   </Button>
                   <Button
                     variant={'outline'}
                     onClick={() => handleSocialAuth()}
-                    leftIcons={[{ icon: <GoogleIcon />, onClick: () => handleSocialAuth() }]}
-                    className="p-2 mx-1 w-50 rounded-md flex items-center justify-between  bg-bg-inverted border border-border-primary text-text-default gap-2"
+                    leftIcons={[
+                      {
+                        icon: <GoogleIcon />,
+                        onClick: () => handleSocialAuth(),
+                      },
+                    ]}
+                    className="w-50 "
                   >
                     <div className={'ml-2 flex-grow text-left'}>Google</div>
                   </Button>
