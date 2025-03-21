@@ -1,5 +1,5 @@
 import { Dispatch, FormEvent, SetStateAction } from 'react';
-import { SpaceItem, Task, WorkspaceItem } from './ApiResponse';
+import { Task, WorkspaceItem } from './ApiResponse';
 
 export interface CreateWorkspaceFormProps {
   isOpen: boolean;
@@ -23,12 +23,6 @@ export interface ThemeToggleProps {
 export interface SidebarProps {
   sidebarOpen: boolean;
   name: string;
-  spaces?: SpaceItem[];
-}
-
-export interface SidebarSpaceItemProps {
-  spaces: SpaceItem[];
-  sidebarOpen: boolean;
 }
 
 export interface PriorityTasksProps {

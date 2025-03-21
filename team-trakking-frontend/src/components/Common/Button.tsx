@@ -54,7 +54,7 @@ export const ButtonComponent = ({
       'bg-gray-200 hover:bg-gray-300 text-gray-800 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-200',
     outline:
       'border border-gray-300  bg-bg-inverted border border-border-primary text-text-default',
-    ghost: 'text-indigo-600',
+    ghost: 'text-indigo-500',
     link: 'text-indigo-500 hover:text-indigo-700  p-0',
   };
 

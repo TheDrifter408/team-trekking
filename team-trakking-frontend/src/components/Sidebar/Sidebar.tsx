@@ -1,136 +1,50 @@
-import { FC } from 'react';
-import { Link } from 'react-router-dom';
-import { ChevronRight, Grid2x2, Layers } from 'lucide-react';
-import { getInitials } from '@utils/Common';
-import { SidebarProps } from '@/types/Props.ts';
-import SidebarSpaceItem from './SidebarSpaceItem';
-import { useStore } from '@store/zustand';
+import { FC, useCallback, useState } from 'react';
+import { LayoutDashboard } from 'lucide-react';
+import { useWorkspace } from '@/context/LayoutContext';
+import { SidebarProps } from '@/types/Props';
+import SidebarSpaceItem from '@components/Sidebar/SidebarSpaceItem.tsx';
 
-export const Sidebar: FC<SidebarProps> = ({ sidebarOpen, name, spaces }) => {
-  const { currentWorkspace } = useStore();
-  const secondarySidebarOpen = false;
-  const workspaceName = currentWorkspace ?? 'Dashboard';
+export const Sidebar: FC<SidebarProps> = ({ sidebarOpen }) => {
+  const { workspaceData } = useWorkspace();
+  const [isActivePopup, setIsActivePopup] = useState<number | null>(null);
 
-  // const toggleSecondarySidebar = () => {
-  //   setSecondarySidebarOpen(!secondarySidebarOpen);
-  // };
+  // Close popup when clicking outside
+  const handleClosePopup = useCallback(() => {
+    setIsActivePopup(null);
+  }, []);
 
   return (
     <>
-      {/* Main Sidebar Content */}
-      <div className="flex h-full flex-col ">
-        {/* Sidebar Header */}
+      <div className="flex h-full flex-col overflow-y-auto scrollbar-none">
         <div
-          className={`${sidebarOpen ? 'px-3' : 'flex px-0'}  items-center justify-center py-4`}
+          className={`${sidebarOpen ? 'px-3' : 'flex px-0'} items-center justify-center py-4`}
         >
           {!sidebarOpen ? (
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-500">
-              {getInitials(name)}
+            <div className="flex items-center justify-center rounded-full">
+              <LayoutDashboard size={20} className="text-blue-600" />
             </div>
           ) : (
             <div className="truncate text-lg font-semibold text-text-primary">
-              {workspaceName}
+              Dashboard
             </div>
           )}
         </div>
 
-        {/* Navigation */}
-        <div className="mt-2 flex-grow">
-          <div className="space-y-1">
-            <Link
-              to="/home"
-              className={`flex items-center px-4 py-2 text-sm transition-colors hover:bg-gray-700 ${
-                sidebarOpen ? 'justify-start' : 'justify-center'
-              }`}
-            >
-              {sidebarOpen ? (
-                <>
-                  <Grid2x2 className="mr-3 flex-shrink-0" size={18} />
-                  <span className="truncate">Dashboard</span>
-                </>
-              ) : (
-                <div className="flex w-full justify-center">
-                  <Grid2x2 size={18} />
-                </div>
-              )}
-            </Link>
-
-            <Link
-              to="/workspaces"
-              className="flex items-center px-4 py-2 text-sm transition-colors hover:bg-gray-700"
-            >
-              {sidebarOpen ? (
-                <>
-                  <Layers className="mr-3 flex-shrink-0" size={18} />
-                  <span className="truncate">Workspaces</span>
-                </>
-              ) : (
-                <div className="flex w-full justify-center">
-                  <Layers size={18} />
-                </div>
-              )}
-            </Link>
-
-            {spaces && (
-              <SidebarSpaceItem spaces={spaces} sidebarOpen={sidebarOpen} />
-            )}
+        <div className="mt-2 flex">
+          <div className="space-y-1 w-full mb-5">
+            {sidebarOpen &&
+              workspaceData.map(({ space }) => {
+                if (!space) return null;
+                return <SidebarSpaceItem space={space} />;
+              })}
           </div>
         </div>
 
-        {/* Additional Icon for Secondary Sidebar (Only visible when collapsed) */}
-        {!sidebarOpen && (
-          <div
-            className="flex w-full cursor-pointer justify-center py-4 transition-colors hover:text-blue-400"
-            // onClick={toggleSecondarySidebar}
-          >
-            <ChevronRight
-              size={20}
-              className={`transform transition-transform ${secondarySidebarOpen ? 'rotate-180' : ''}`}
-            />
-          </div>
+        {/* Backdrop to close popup when clicking outside */}
+        {isActivePopup !== null && (
+          <div className="fixed inset-0 z-0" onClick={handleClosePopup}></div>
         )}
       </div>
-
-      {/* Secondary Sidebar - Responsive positioning */}
-      {!sidebarOpen && secondarySidebarOpen && (
-        <>
-          <div
-            className={`fixed top-16 z-20 h-[calc(100vh-4rem)] w-64 bg-gray-700 text-white shadow-lg transition-transform duration-300 ease-in-out`}
-            style={{
-              transform: secondarySidebarOpen
-                ? 'translateX(0)'
-                : 'translateX(-100%)',
-            }}
-          >
-            <div className="flex items-center justify-between border-b border-gray-600 p-4">
-              <h2 className="text-lg font-medium">Secondary Menu</h2>
-            </div>
-            <div className="p-4">
-              <div className="space-y-2">
-                {/* Secondary sidebar content goes here */}
-                <div className="cursor-pointer rounded p-2 transition-colors hover:bg-gray-600">
-                  Item 1
-                </div>
-                <div className="cursor-pointer rounded p-2 transition-colors hover:bg-gray-600">
-                  Item 2
-                </div>
-                <div className="cursor-pointer rounded p-2 transition-colors hover:bg-gray-600">
-                  Item 3
-                </div>
-                <div className="cursor-pointer rounded p-2 transition-colors hover:bg-gray-600">
-                  Item 4
-                </div>
-                <div className="cursor-pointer rounded p-2 transition-colors hover:bg-gray-600">
-                  Item 5
-                </div>
-                <div className="cursor-pointer rounded p-2 transition-colors hover:bg-gray-600">
-                  Item 6
-                </div>
-              </div>
-            </div>
-          </div>
-        </>
-      )}
     </>
   );
 };

@@ -82,10 +82,19 @@
   }
 
   .border-theme {
-    border-color: rgb(var(--color-border));
+    border-color: rgb(var(--color-border-hover));
   }
 
   .border-theme-hover:hover {
     border-color: rgb(var(--color-border-hover));
   }
+}
+
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-none {
+  -ms-overflow-style: none; /* IE & Edge */
+  scrollbar-width: none; /* Firefox */
 }
