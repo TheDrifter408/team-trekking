@@ -53,7 +53,7 @@ export function Layout() {
               {/* Sidebar Toggle Button */}
               <button
                 onClick={() => setSidebarOpen(!sidebarOpen)}
-                className="absolute right-[-12px] top-10 flex h-8 w-8 -translate-y-1/2 transform items-center justify-center rounded-full bg-tertiary text-white shadow-lg"
+                className="absolute right-[-12px] top-10  flex h-8 w-8 -translate-y-1/2 transform items-center justify-center rounded-full bg-tertiary text-white shadow-lg"
               >
                 {sidebarOpen ? (
                   <ChevronLeft className="h-4 w-4" />

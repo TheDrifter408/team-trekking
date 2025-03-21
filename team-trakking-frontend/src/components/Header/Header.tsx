@@ -43,7 +43,7 @@ export function Header() {
   }, []);
 
   return (
-    <header className="fixed top-0 left-0 right-0 h-12 z-2 flex items-center justify-between bg-bg-primary px-4 shadow-sm">
+    <header className="fixed top-0 left-0 right-0 h-12 z-30 flex items-center justify-between bg-bg-primary px-4 shadow-sm">
       <div className="flex items-center space-x-2">
         <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-500">
           <AppIcons />
