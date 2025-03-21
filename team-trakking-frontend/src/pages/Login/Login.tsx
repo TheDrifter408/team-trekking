@@ -12,7 +12,7 @@ import {
   AuthIcon,
 } from '@/assets/icons/Icons';
 
-export function Login() {
+export const Login = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -26,8 +26,7 @@ export function Login() {
   };
 
   const toggleDarkMode = () => {
-    const newTheme = currentTheme === 'light' ? 'dark' : 'light'; // Example of toggling between themes
-    setTheme(newTheme);
+    setTheme(currentTheme === 'light' ? 'dark' : 'light');
     setDarkMode(!darkMode);
   };
 
@@ -207,4 +206,4 @@ export function Login() {
       </div>
     </div>
   );
-}
+};

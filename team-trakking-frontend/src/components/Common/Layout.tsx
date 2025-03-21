@@ -5,7 +5,7 @@ import { Header } from '../Header/Header.tsx';
 import { Sidebar } from '../Sidebar/Sidebar.tsx';
 import { motion } from 'framer-motion';
 
-export function Layout() {
+export const Layout = () => {
   const { state } = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
@@ -76,4 +76,4 @@ export function Layout() {
       </div>
     </div>
   );
-}
+};

@@ -6,7 +6,7 @@ import { Text } from '@library/components';
 import { AppIcons } from '@/assets/icons/Icons.tsx';
 import { useAuth } from '@hooks/useAuth.tsx';
 
-export function Header() {
+export const Header = () => {
   const [showNotifications, setShowNotifications] = useState(false);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const { setTheme, currentTheme } = useThemeStore();
@@ -16,8 +16,7 @@ export function Header() {
   const profileMenuRef = useRef<HTMLDivElement>(null);
 
   const handleThemeToggle = () => {
-    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-    setTheme(newTheme);
+    setTheme(currentTheme === 'light' ? 'dark' : 'light');
   };
 
   useEffect(() => {
@@ -137,4 +136,4 @@ export function Header() {
       </div>
     </header>
   );
-}
+};
