@@ -16,8 +16,7 @@ export function Header() {
   const profileMenuRef = useRef<HTMLDivElement>(null);
 
   const handleThemeToggle = () => {
-    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-    setTheme(newTheme);
+    setTheme(currentTheme === 'light' ? 'dark' : 'light');
   };
 
   useEffect(() => {

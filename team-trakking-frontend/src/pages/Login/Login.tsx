@@ -26,8 +26,7 @@ export function Login() {
   };
 
   const toggleDarkMode = () => {
-    const newTheme = currentTheme === 'light' ? 'dark' : 'light'; // Example of toggling between themes
-    setTheme(newTheme);
+    setTheme(currentTheme === 'light' ? 'dark' : 'light');
     setDarkMode(!darkMode);
   };
 
