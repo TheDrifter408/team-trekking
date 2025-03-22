@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import React, { useCallback, useState } from 'react';
 import { Button } from '@/components';
+import { useWorkspace } from '@/context/LayoutContext.tsx';
 
 interface List {
   id: number;
@@ -37,6 +38,7 @@ interface SidebarSpaceItemProps {
 }
 
 const SidebarSpaceItem = ({ space }: SidebarSpaceItemProps) => {
+  const { isCreateSpace, setIsCreateSpace } = useWorkspace();
   const [expandedSpaceId, setExpandedSpaceId] = useState<number | null>(null);
   const [expandedFolderId, setExpandedFolderId] = useState<number | null>(null);
   const [isActivePopup, setIsActivePopup] = useState<number | null>(null);
@@ -85,7 +87,13 @@ const SidebarSpaceItem = ({ space }: SidebarSpaceItemProps) => {
           ]}
           rightIcons={[
             {
-              icon: <PlusCircleIcon size={14} className="mt-1 -ml-4" />,
+              icon: (
+                <PlusCircleIcon
+                  size={14}
+                  className="mt-1 -ml-4"
+                  onClick={() => setIsCreateSpace(!isCreateSpace)}
+                />
+              ),
             },
             {
               icon: (

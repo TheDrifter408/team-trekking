@@ -1,32 +1,34 @@
 import { createContext, useContext, useState, ReactNode } from 'react';
 
-interface List {
+interface ListItem {
   id: number;
   name: string;
 }
 
-interface Folder {
+interface FolderItem {
   id: number;
   name: string;
   color: string;
-  lists?: List[];
+  lists?: ListItem[];
 }
 
-interface Space {
+interface SpaceItem {
   id: number;
   name: string;
   color: string;
-  lists?: List[];
-  folders?: Folder[];
+  lists?: ListItem[];
+  folders?: FolderItem[];
 }
 
 interface WorkspaceData {
-  space?: Space;
+  space?: SpaceItem;
 }
 
 interface WorkspaceContextType {
   workspaceData: WorkspaceData[];
   setData: (data: WorkspaceData[]) => void;
+  isCreateSpace: boolean;
+  setIsCreateSpace: (isCreateSpace: boolean) => void;
 }
 
 const WorkspaceContext = createContext<WorkspaceContextType | undefined>(
@@ -35,13 +37,16 @@ const WorkspaceContext = createContext<WorkspaceContextType | undefined>(
 
 export const WorkspaceProvider = ({ children }: { children: ReactNode }) => {
   const [workspaceData, setWorkspaceData] = useState<WorkspaceData[]>([]);
+  const [isCreateSpace, setIsCreateSpace] = useState(false);
 
   const setData = (data: WorkspaceData[]) => {
     setWorkspaceData(data);
   };
 
   return (
-    <WorkspaceContext.Provider value={{ workspaceData, setData }}>
+    <WorkspaceContext.Provider
+      value={{ workspaceData, setData, isCreateSpace, setIsCreateSpace }}
+    >
       {children}
     </WorkspaceContext.Provider>
   );
