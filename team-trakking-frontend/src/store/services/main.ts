@@ -16,6 +16,7 @@ import {
   Workspace,
   WorkspaceItem,
   WorkspaceDetails,
+  SpaceDetails,
 } from '@/types/ApiResponse';
 
 export const mainApi = createApi({
@@ -47,7 +48,7 @@ export const mainApi = createApi({
 
         const workspaceDetails = {
           ...workspace,
-          members: workspaceMembers, // Fixed property name from 'member' to 'members'
+          members: workspaceMembers,
           spaces: workspaceSpaces.map((space) => {
             const spaceFolders = folders.filter((f) => f.spaceId === space.id);
             const spacesLists = lists.filter(
@@ -122,6 +123,91 @@ export const mainApi = createApi({
         return { data: workspaceDetails };
       },
     }),
+    getSpace: builder.query<SpaceDetails | null, number>({
+      queryFn: async (spaceId) => {
+        const space = spaces.find((s) => s.id === spaceId);
+        if (!space) return { data: null };
+
+        // Get the workspace that contains this space
+        const workspace = workspaces.find((w) => w.id === space.workspaceId);
+        if (!workspace) return { data: null };
+
+        // Get folders for this space
+        const spaceFolders = folders.filter((f) => f.spaceId === spaceId);
+
+        // Get lists directly under this space
+        const spaceLists = lists.filter(
+          (l) => l.parentId === spaceId && l.parentType === 'space'
+        );
+
+        const spaceDetails = {
+          ...space,
+          workspace: {
+            id: workspace.id,
+            name: workspace.name,
+          },
+          folders: spaceFolders.map((folder) => {
+            const status = folderStatus.find(
+              (fs) => fs.id === folder.folderStatusId
+            );
+            const folderLists = lists.filter(
+              (l) => l.parentId === folder.id && l.parentType === 'folder'
+            );
+
+            return {
+              ...folder,
+              status: status || { id: 0, color: '', name: 'Undefined' },
+              lists: folderLists.map((list) => {
+                const listStatus = statuses.find((s) => s.id === list.statusId);
+                const listTasks = tasks.filter((t) => t.listId === list.id);
+                return {
+                  ...list,
+                  status: listStatus || {
+                    id: 0,
+                    serialId: 0,
+                    name: 'Undefined',
+                    color: '',
+                  },
+                  tasks: listTasks.map((task) => {
+                    const taskChecklist = checklist.filter(
+                      (c) => c.parentId === task.id && c.parentType === 'task'
+                    );
+                    return {
+                      ...task,
+                      checklist: taskChecklist,
+                    };
+                  }),
+                };
+              }),
+            };
+          }),
+          lists: spaceLists.map((list) => {
+            const listStatus = statuses.find((s) => s.id === list.statusId);
+            const listTasks = tasks.filter((t) => t.listId === list.id);
+            return {
+              ...list,
+              status: listStatus || {
+                id: 0,
+                serialId: 0,
+                name: 'Undefined',
+                color: '',
+              },
+              tasks: listTasks.map((task) => {
+                const taskChecklist = checklist.filter(
+                  (c) => c.parentId === task.id && c.parentType === 'task'
+                );
+                return {
+                  ...task,
+                  checklist: taskChecklist,
+                };
+              }),
+            };
+          }),
+        };
+
+        return { data: spaceDetails };
+      },
+    }),
     createWorkSpace: builder.mutation<Workspace | null, Workspace>({
       queryFn: async (workspace) => {
         const newId = data.length + 1;
@@ -134,32 +220,12 @@ export const mainApi = createApi({
         return { data: null };
       },
     }),
-
-    // getWorkspaceItems: builder.query<SpaceItem[], string>({
-    //   queryFn: async (workspaceId: string): Promise<{ data: SpaceItem[] }> => {
-    //     const workspace = data.find((ws) => ws.id === workspaceId);
-    //     if (!workspace) return { data: [] }; // Always return an array
-    //
-    //     const workspaceItems = (workspace.spaces ?? []).map((space) => ({
-    //       workspaceName: workspace.name,
-    //       id: space.id,
-    //       name: space.name,
-    //       statusType: workspace.taskTypes,
-    //       folders: (space.folders ?? []).map((folder) => ({
-    //         id: folder.id,
-    //         name: folder.name,
-    //         lists: (folder.lists ?? []).map((list) => list.name),
-    //       })),
-    //     })) as SpaceItem[];
-    //
-    //     return { data: workspaceItems };
-    //   },
-    // }),
   }),
 });
 
 export const {
   useGetWorkSpacesQuery,
   useGetWorkspaceQuery,
+  useGetSpaceQuery,
   useCreateWorkSpaceMutation,
 } = mainApi;

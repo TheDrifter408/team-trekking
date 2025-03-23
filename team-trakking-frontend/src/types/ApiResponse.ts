@@ -13,19 +13,47 @@ export interface User {
 export interface Space {
   id: number;
   name: string;
+  workspaceId: number;
   folders: Folder[];
   lists?: List[];
+}
+
+export interface SpaceItem {
+  workspaceName: string;
+  id: number;
+  name: string;
+  statusType?: string[];
+  folders: {
+    id: number;
+    name: string;
+    lists: string[];
+  }[];
+}
+
+export interface SpaceDetails extends Space {
+  workspace: {
+    id: number;
+    name: string;
+  };
+  folders: Folder[];
+  lists: List[];
 }
 
 export interface Folder {
   id: number;
   name: string;
+  spaceId: number;
+  folderStatusId: number;
   status: FolderStatus;
   lists?: List[];
 }
 
 export interface List {
   id: number;
+  name: string;
+  parentId: number;
+  parentType: 'space' | 'folder';
+  statusId: number;
   status: Status;
   tasks: Task[];
 }
@@ -33,6 +61,7 @@ export interface List {
 export interface Task {
   id: number;
   name: string;
+  listId: number;
   status: Status;
   dueDate: string;
   startDate: string;
@@ -42,7 +71,7 @@ export interface Task {
   priorityType?: string;
   tags?: string[];
   assignees?: Assignee[];
-  checklists?: Checklist[];
+  checklist?: Checklist[];
 }
 
 export interface Assignee {
@@ -53,6 +82,8 @@ export interface Assignee {
 
 export interface Checklist {
   id: number;
+  parentId: number;
+  parentType: 'task';
   description: string;
   isCompleted: boolean;
 }
@@ -65,6 +96,7 @@ export interface FolderStatus {
 
 export interface Status {
   id: number;
+  serialId: number;
   name: string;
   color: string;
 }
@@ -76,6 +108,7 @@ export interface Member {
   email: string;
   workspaceId: number;
 }
+
 export interface Workspace {
   id: number;
   name: string;

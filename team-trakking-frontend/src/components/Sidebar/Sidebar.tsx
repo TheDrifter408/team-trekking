@@ -1,13 +1,21 @@
 import { FC, useCallback, useState } from 'react';
-import { LayoutDashboard } from 'lucide-react';
+import { HomeIcon, LayoutDashboard } from 'lucide-react';
 import { useWorkspace } from '@/context/LayoutContext';
 import { SidebarProps } from '@/types/Props';
 import SidebarSpaceItem from '@components/Sidebar/SidebarSpaceItem.tsx';
+import { useNavigate } from 'react-router-dom';
 
 export const Sidebar: FC<SidebarProps> = ({ sidebarOpen }) => {
+  const navigate = useNavigate();
   const { workspaceData } = useWorkspace();
+
   const [isActivePopup, setIsActivePopup] = useState<number | null>(null);
 
+  const handleSpaceNavigate = (id: number) => {
+    navigate(`/space/${id}`, {
+      state: { spaceId: id },
+    });
+  };
   // Close popup when clicking outside
   const handleClosePopup = useCallback(() => {
     setIsActivePopup(null);
@@ -17,15 +25,43 @@ export const Sidebar: FC<SidebarProps> = ({ sidebarOpen }) => {
     <>
       <div className="flex h-full flex-col overflow-y-auto scrollbar-none bg-header-primary">
         <div
-          className={`${sidebarOpen ? 'px-3' : 'flex px-0'} items-center justify-center py-4`}
+          className={`${sidebarOpen ? 'px-3' : 'flex px-0'} items-center justify-center pt-3`}
         >
           {!sidebarOpen ? (
             <div className="flex items-center justify-center rounded-full">
-              <LayoutDashboard size={20} className="text-blue-600" />
+              <LayoutDashboard
+                size={20}
+                className="text-blue-600 cursor-pointer"
+                onClick={() => navigate('/home')}
+              />{' '}
             </div>
           ) : (
-            <div className="truncate text-lg font-semibold text-text-primary">
-              Dashboard
+            <div
+              className="truncate text-md font-semibold text-text-primary flex items-center gap-2 cursor-pointer hover:text-text-hover"
+              onClick={() => navigate('/home')}
+            >
+              <LayoutDashboard size={18} className="text-blue-600 " /> Dashboard
+            </div>
+          )}
+        </div>
+
+        <div
+          className={`${sidebarOpen ? 'px-3' : 'flex px-0'} items-center justify-center pt-2 pb-2 `}
+        >
+          {!sidebarOpen ? (
+            <div className="flex items-center justify-center rounded-full">
+              <HomeIcon
+                size={20}
+                className="text-blue-600 cursor-pointer"
+                onClick={() => navigate('/home')}
+              />
+            </div>
+          ) : (
+            <div
+              className="truncate text-md font-semibold text-text-primary flex items-center gap-2 cursor-pointer hover:text-text-hover"
+              onClick={() => navigate('/home')}
+            >
+              <HomeIcon size={18} className="text-blue-600" /> Home
             </div>
           )}
         </div>
@@ -35,7 +71,12 @@ export const Sidebar: FC<SidebarProps> = ({ sidebarOpen }) => {
             {sidebarOpen &&
               workspaceData.map(({ space }) => {
                 if (!space) return null;
-                return <SidebarSpaceItem space={space} />;
+                return (
+                  <SidebarSpaceItem
+                    space={space}
+                    handleSpaceNavigate={handleSpaceNavigate}
+                  />
+                );
               })}
           </div>
         </div>
