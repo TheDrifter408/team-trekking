@@ -64,7 +64,7 @@ export const ButtonComponent = ({
   // Loading styles
   const loadingStyles = 'relative !text-transparent';
   // Width styles
-  const widthStyles = fullWidth ? 'w-full' : 'w-fit';
+  const widthStyles = fullWidth ? 'w-full' : '';
 
   // Combine all styles
   const buttonStyles = `

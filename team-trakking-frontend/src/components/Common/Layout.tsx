@@ -6,7 +6,12 @@ import { Sidebar } from '../Sidebar/Sidebar.tsx';
 import { Modal } from '@library/components';
 import { motion } from 'framer-motion';
 import { useWorkspace } from '@/context/LayoutContext.tsx';
-import { Button, CreateSpace } from '@/components/index';
+import {
+  Button,
+  CreateSpace,
+  CreateFolder,
+  CreateList,
+} from '@/components/index';
 
 export function Layout() {
   const { state } = useLocation();
@@ -93,12 +98,17 @@ export function Layout() {
             leftButtonVariant={'ghost'}
             leftButtonOnClick={handleCloseCreateItem}
             showLeftButton={createItem ? true : false}
+            maxWidth={900}
           >
             {/*  Create a space here */}
             {!createItem && (
-              <div className={'w-ful flex justify-evenly'}>
+              <div className={'w-full flex justify-evenly'}>
                 {['Space', 'Folder', 'List'].map((item, index) => (
-                  <Button key={index} onClick={() => setCreateItem(item)}>
+                  <Button
+                    className={'w-20 text-white'}
+                    key={index}
+                    onClick={() => setCreateItem(item)}
+                  >
                     {item}
                   </Button>
                 ))}
@@ -112,8 +122,18 @@ export function Layout() {
                 />
               </div>
             )}
-            {createItem && createItem === 'Folder' && <div> Folder </div>}
-            {createItem && createItem === 'List' && <div> List </div>}
+            {createItem && createItem === 'Folder' && (
+              <div>
+                {' '}
+                <CreateFolder onFolderAdd={() => {}} />{' '}
+              </div>
+            )}
+            {createItem && createItem === 'List' && (
+              <div>
+                {' '}
+                <CreateList onListAdd={() => {}} />{' '}
+              </div>
+            )}
           </Modal>
           <Outlet />
         </main>
