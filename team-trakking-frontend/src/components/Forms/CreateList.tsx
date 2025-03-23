@@ -1,8 +1,7 @@
-import { ChangeEvent, FC, FormEvent, useState } from 'react';
-import { List } from '../../types/List';
-import { ListItem } from '../../types/ListItem';
+import React, { FC, FormEvent, useState } from 'react';
+import { CreateList as List, CreateListItem as ListItem } from '@/types/Props';
 import { Input } from '@library/components';
-import { ListChecks, Plus, X } from 'lucide-react';
+import { Plus, X } from 'lucide-react';
 
 interface CreateListProps {
   // Add props as needed

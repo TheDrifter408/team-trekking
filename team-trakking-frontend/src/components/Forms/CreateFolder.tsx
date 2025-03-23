@@ -1,12 +1,25 @@
-import { ChangeEvent, FC, FormEvent, useState } from 'react';
-import { Folder } from '../../types/Folder';
-import { Input } from '@library/components';
+import { FC, FormEvent, useState } from 'react';
+import { CreateFolder as Folder } from '@/types/Props';
+import { Input, Badge } from '@library/components';
+import { createFolderColors } from '@/data/mockData.ts';
 import { FolderOpen } from 'lucide-react';
 
 interface CreateFolderProps {
-  // Add props as needed
   onFolderAdd: (e: FormEvent<HTMLFormElement>) => void;
 }
+
+const colors: { [key: string]: string } = createFolderColors;
+
+const getFolderStatus = (color: string) => colors[color] || 'Unknown';
+
+const getBadgeStyles = (color: string) => ({
+  backgroundColor: color,
+  color: '#fff',
+  fontSize: '12px',
+  fontWeight: 'bold',
+  padding: '4px 12px',
+  borderRadius: '4px',
+});
 
 export const CreateFolder: FC<CreateFolderProps> = ({ onFolderAdd }) => {
   const [folder, setFolder] = useState<Folder>({
@@ -21,21 +34,6 @@ export const CreateFolder: FC<CreateFolderProps> = ({ onFolderAdd }) => {
     tags: [],
   });
 
-  // Available colors for folder
-  const colors = [
-    '#ef4444', // red
-    '#f97316', // orange
-    '#f59e0b', // amber
-    '#10b981', // emerald
-    '#06b6d4', // cyan
-    '#3b82f6', // blue
-    '#6366f1', // indigo
-    '#8b5cf6', // violet
-    '#ec4899', // pink
-    '#64748b', // slate
-  ];
-
-  // Handle color selection
   const handleColorChange = (color: string) => {
     setFolder({ ...folder, color });
   };
@@ -78,7 +76,6 @@ export const CreateFolder: FC<CreateFolderProps> = ({ onFolderAdd }) => {
               <option value="space1">Space 1</option>
               <option value="space2">Space 2</option>
               <option value="space3">Space 3</option>
-              {/* Add dynamic spaces as needed */}
             </select>
           </div>
 
@@ -108,11 +105,15 @@ export const CreateFolder: FC<CreateFolderProps> = ({ onFolderAdd }) => {
               Folder Color
             </label>
             <div className="flex flex-wrap gap-2">
-              {colors.map((color) => (
+              {Object.keys(colors).map((color) => (
                 <button
                   key={color}
                   type="button"
-                  className={`w-8 h-8 rounded-full ${folder.color === color ? 'ring-2 ring-offset-2 ring-blue-500' : ''}`}
+                  className={`w-8 h-8 rounded-full ${
+                    folder.color === color
+                      ? 'ring-2 ring-offset-2 ring-blue-500'
+                      : ''
+                  }`}
                   style={{ backgroundColor: color }}
                   onClick={() => handleColorChange(color)}
                 />
@@ -141,14 +142,18 @@ export const CreateFolder: FC<CreateFolderProps> = ({ onFolderAdd }) => {
           </div>
 
           <div className="mt-4 p-3 bg-gray-100 rounded-md">
-            <div className="flex items-center">
+            <div className="flex items-center gap-2">
               <FolderOpen
-                style={{ color: folder.color }}
                 className="h-6 w-6 mr-2"
+                style={{ color: folder.color }}
               />
               <span className="font-medium">
                 {folder.name || 'Folder Preview'}
               </span>
+              <Badge
+                text={getFolderStatus(folder.color)}
+                customStyles={getBadgeStyles(folder.color)}
+              />
             </div>
           </div>
         </div>

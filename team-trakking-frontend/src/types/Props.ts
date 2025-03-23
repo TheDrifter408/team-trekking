@@ -1,5 +1,5 @@
 import { Dispatch, FormEvent, SetStateAction } from 'react';
-import { Task, WorkspaceItem } from './ApiResponse';
+import { WorkspaceItem } from './ApiResponse';
 
 export interface CreateWorkspaceFormProps {
   isOpen: boolean;
@@ -25,15 +25,33 @@ export interface SidebarProps {
   name: string;
 }
 
-export interface PriorityTasksProps {
-  tasks: Task[];
+export interface CreateFolder {
+  id: string;
+  name: string;
+  description?: string;
+  color: string;
+  parentSpaceId: string;
+  isPrivate: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+  tags: string[];
 }
 
-export interface UpcomingDeadlineProps {
-  tasks: Task[];
+export interface CreateList {
+  id: string;
+  name: string;
+  description: string;
+  parentId: string;
+  parentType: 'space' | 'folder';
+  items: CreateListItem[];
+  isArchived: boolean;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
-export interface TaskListProps {
-  tasks: Task[];
-  setTasks: Dispatch<SetStateAction<Task[]>>;
+export interface CreateListItem {
+  id: string;
+  text: string;
+  completed: boolean;
+  createdAt: Date;
 }

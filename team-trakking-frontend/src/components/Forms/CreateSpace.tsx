@@ -1,4 +1,4 @@
-import { Input } from '@library/components';
+import { Input } from '@components/index';
 
 interface CreateSpaceProps {
   spaceName: string;
@@ -14,7 +14,7 @@ export const CreateSpace = ({ spaceName, setSpaceName }: CreateSpaceProps) => {
           placeholder="Enter space name"
           value={spaceName}
           onChange={(e) => setSpaceName(e.target.value)}
-          className="w-full text-sm ml-1"
+          className="w-full text-sm "
         />
       </div>
     </div>
