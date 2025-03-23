@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Container } from 'react-bootstrap';
-import { Button, Modal } from '../lib/main';
+import { Button, Modal, Input } from '../lib/main';
 import CardComponentTesting from './tests/cards.tsx';
 import BadgeComponentTest from './tests/badges.tsx';
 
@@ -56,6 +56,9 @@ const ComponentShowcase: React.FC = () => {
 
   return (
     <Container className="py-3">
+      <div className="">
+        <Input></Input>
+      </div>
       <div className="absolute top-4 right-4">
         <Button
           onClick={() => setIsOpen(true)}

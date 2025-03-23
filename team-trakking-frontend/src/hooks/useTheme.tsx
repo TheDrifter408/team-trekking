@@ -1,10 +1,10 @@
 import { useEffect } from 'react';
 import { useStore } from '@/store/zustand/index';
 
-export function useApplyTheme() {
-  const { currentTheme } = useStore();
+export const useApplyTheme = () => {
+  const { currentTheme } = useThemeStore();
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', currentTheme);
   }, [currentTheme]);
-}
+};
