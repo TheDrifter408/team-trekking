@@ -4,15 +4,11 @@ import { ChevronRight, ChevronLeft } from 'lucide-react';
 import { Header } from '../Header/Header.tsx';
 import { Sidebar } from '../Sidebar/Sidebar.tsx';
 import { motion } from 'framer-motion';
-import { useGetWorkspaceItemsQuery} from '@store/services/main.ts';
 
-export function Layout() {
+export const Layout = () => {
   const { state } = useLocation();
-  const workspaceId = state?.workspaceId || '';
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
-  const {data} = useGetWorkspaceItemsQuery(workspaceId);
-  
   const [isMobile, setIsMobile] = useState(false);
 
   // Check if screen size is mobile
@@ -34,7 +30,7 @@ export function Layout() {
   }, [isMobile]);
 
   return (
-    <div className="flex min-h-screen flex-col bg-bg-secondary">
+    <div className="min-h-screen bg-bg-secondary">
       {/* Header */}
       <Header />
 
@@ -43,14 +39,13 @@ export function Layout() {
         {/* Sidebar */}
         <motion.div
           initial={{ width: '6rem' }}
-          animate={{ width: sidebarOpen ? '16rem' : '6rem' }}
+          animate={{ width: sidebarOpen ? '14rem' : '6rem' }}
           transition={{ ease: 'easeOut', duration: 0.5 }}
-          className="fixed left-0 top-16 h-[calc(100vh-4rem)] bg-bg-primary"
+          className="fixed top-12 bottom-0 bg-bg-primary"
         >
           <Sidebar
             sidebarOpen={sidebarOpen}
             name={state?.name ?? 'Dashboard'}
-            spaces={data}
           />
 
           {!isMobile && (
@@ -72,8 +67,8 @@ export function Layout() {
 
         {/* Main Content */}
         <main
-          className={`mt-16 min-h-[calc(100vh-4rem)] flex-1 p-6 transition-all duration-300 ${
-            sidebarOpen ? 'ml-64' : 'ml-16'
+          className={`mt-14 min-h-[calc(100vh-4rem)] flex-1 p-6 transition-all duration-300 ${
+            sidebarOpen ? 'ml-56' : 'ml-24'
           }`}
         >
           <Outlet />
@@ -81,4 +76,4 @@ export function Layout() {
       </div>
     </div>
   );
-}
+};

@@ -9,7 +9,11 @@ const themes = [
   { label: 'Sunset', value: 'sunset' },
 ];
 
-export function ThemeToggle({ isAuthenticated }: { isAuthenticated: boolean }) {
+export const ThemeToggle = ({
+  isAuthenticated,
+}: {
+  isAuthenticated: boolean;
+}) => {
   useApplyTheme();
   const { currentTheme, setTheme } = useThemeStore();
   const availableThemes = isAuthenticated ? themes : themes.slice(0, 2);
@@ -27,4 +31,4 @@ export function ThemeToggle({ isAuthenticated }: { isAuthenticated: boolean }) {
       ))}
     </select>
   );
-}
+};

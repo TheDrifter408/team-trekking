@@ -17,6 +17,8 @@ export default {
         'text-default': 'rgb(var(--color-text-default) / <alpha-value>)',
         'border-primary': 'rgb(var(--color-border-primary) / <alpha-value>)',
         'border-hover': 'rgb(var(--color-border-hover) / <alpha-value>)',
+        'bg-primary-light':
+          'rgb(var(--color-bg-primary-light) / <alpha-value>)',
       },
     },
   },

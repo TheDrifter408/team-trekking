@@ -1,5 +1,5 @@
 import { MoonIcon, SunIcon } from '@/assets/icons/Icons.tsx';
-import { IconButton } from '@/components';
+import { Button } from '@/components';
 import { ThemeToggleProps } from '@/types/Props.ts';
 import { useThemeStore } from '@store/zustand';
 
@@ -9,13 +9,14 @@ export const ThemeToggle = ({ toggleDarkMode }: ThemeToggleProps) => {
 
   return (
     <>
-      <IconButton
+      <Button
+        variant={'ghost'}
+        size={'sm'}
         onClick={toggleDarkMode}
-        className={`rounded-5 ${darkMode ? 'bg-gray-700 text-yellow-300' : 'bg-gray-50 text-gray-700'}`}
-        ariaLabel={'theme'}
+        className={`rounded-5 hover:scale-105 ${darkMode ? 'bg-bg-primary-light text-yellow-300' : 'bg-gray-100 text-text-inverted'}`}
       >
         {darkMode ? <SunIcon /> : <MoonIcon />}
-      </IconButton>
+      </Button>
     </>
   );
 };

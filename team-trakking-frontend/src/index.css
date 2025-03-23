@@ -17,6 +17,7 @@
     --color-text-default: 48 47 47;
     --color-border-primary: 209 213 219;
     --color-border-hover: 79 70 229;
+    --color-bg-primary-light: 176 171 245;
 
     --color-active: #ed395a;
     --color-planning: #3878c7;
@@ -34,6 +35,7 @@
     --color-primary: 99 102 241;
     --color-secondary: 129 140 248;
     --color-tertiary: 165 180 252;
+    --color-bg-primary-light: 65 64 84;
     --color-bg-primary: 17 24 39;
     --color-bg-secondary: 31 41 55;
     --color-text-primary: 247 245 252;

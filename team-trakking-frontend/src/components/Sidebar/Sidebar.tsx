@@ -23,7 +23,7 @@ export const Sidebar: FC<SidebarProps> = ({ sidebarOpen, name, spaces }) => {
       <div className="flex h-full flex-col ">
         {/* Sidebar Header */}
         <div
-          className={`${sidebarOpen ? 'px-4' : 'flex px-0'}  items-center justify-center py-4`}
+          className={`${sidebarOpen ? 'px-3' : 'flex px-0'}  items-center justify-center py-4`}
         >
           {!sidebarOpen ? (
             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-500">
