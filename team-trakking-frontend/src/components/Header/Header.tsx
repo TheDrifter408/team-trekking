@@ -42,7 +42,7 @@ export const Header = () => {
   }, []);
 
   return (
-    <header className="fixed top-0 left-0 right-0 h-12 z-30 flex items-center justify-between bg-bg-primary px-4 shadow-sm">
+    <header className="fixed top-0 left-0 right-0 h-12 z-30 flex items-center justify-between bg-header-primary px-4 shadow-sm">
       <div className="flex items-center space-x-2">
         <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-500">
           <AppIcons />
@@ -67,9 +67,9 @@ export const Header = () => {
             size={'sm'}
             variant={'outline'}
             onClick={() => setShowNotifications(!showNotifications)}
-            className="relative rounded-lg bg-bg-inverted justify-center h-auto w-auto text-gray-600 hover:bg-gray-100"
+            className="relative rounded-lg bg-bg-inverted border-0 justify-center h-auto w-auto text-gray-600 hover:bg-button-hover"
           >
-            <Bell className={'h-3 w-3'} />
+            <Bell className={'h-3 w-3 text-text-primary'} />
             <span className="absolute -right-0.5 -top-0.5 h-3 w-3 rounded-full bg-red-500"></span>
           </Button>
 
@@ -94,7 +94,7 @@ export const Header = () => {
               },
             ]}
             onClick={() => setShowProfileMenu(!showProfileMenu)}
-            className="flex w-auto items-center rounded-lg bg-bg-secondary hover:bg-gray-700"
+            className="flex w-auto items-center rounded-lg bg-bg-inverted hover:bg-button-hover border-0"
           >
             <img
               src="https://ui-avatars.com/api/?name=jawahiir+nabhan&background=random"
@@ -108,22 +108,22 @@ export const Header = () => {
               <div className="py-2">
                 <div
                   onClick={handleThemeToggle}
-                  className="flex cursor-pointer items-center justify-between rounded-lg px-4 py-2 text-sm text-text-inverted hover:bg-tertiary hover:text-text-primary"
+                  className="flex cursor-pointer items-center justify-between rounded-lg px-4 py-2 text-sm text-text-inverted hover:bg-button-hover hover:text-text-primary"
                 >
-                  <span>Toggle Theme</span>
+                  <span className={'text-text-primary'}>Toggle Theme</span>
                   <ThemeToggle toggleDarkMode={handleThemeToggle} />
                 </div>
 
                 <div
                   onClick={handleLogout}
-                  className="flex cursor-pointer items-center justify-between rounded-lg px-4 py-2 text-sm text-text-inverted hover:bg-tertiary hover:text-text-primary"
+                  className="flex cursor-pointer items-center justify-between rounded-lg px-4 py-2 text-sm text-text-inverted hover:bg-button-hover hover:text-text-primary"
                 >
                   <span className={'text-red-600'}>Logout</span>
                   <Button
                     size={'sm'}
                     variant={'outline'}
                     className={
-                      'rounded-5 bg-bg-primary-light text-text-primary'
+                      'rounded-5 bg-text-secondary text-text-inverted border-0'
                     }
                   >
                     <LogOut className={'h-4 w-4'} />

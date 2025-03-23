@@ -67,8 +67,8 @@ const SidebarSpaceItem = ({ space }: SidebarSpaceItemProps) => {
     <div className="w-full">
       <div key={id} className="relative">
         <Button
-          className="ml-2 w-full flex justify-between"
-          variant="ghost"
+          className="ml-2 w-[94%] flex justify-between bg-bg-secondary"
+          variant="outline"
           leftIcons={[
             {
               icon: !isExpanded ? (
@@ -107,7 +107,9 @@ const SidebarSpaceItem = ({ space }: SidebarSpaceItemProps) => {
             },
           ]}
         >
-          <span className="text-sm truncate flex text-left -pr-2">{name}</span>
+          <span className="text-sm truncate text-text-primary flex text-left -pr-2">
+            {name}
+          </span>
         </Button>
 
         {/* Popup Menu */}
@@ -129,15 +131,15 @@ const SidebarSpaceItem = ({ space }: SidebarSpaceItemProps) => {
         )}
 
         {isExpanded && (lists || folders) && (
-          <div className="ml-6 space-y-1">
+          <div className="ml-6 space-y-1 mt-1">
             {folders?.map((folder) => {
               const { name, id: folderId } = folder;
               const isFolderExpanded = expandedFolderId === folderId;
               return (
                 <div key={folderId}>
                   <Button
-                    className="ml-4 w-auto flex justify-between"
-                    variant="ghost"
+                    className="ml-4 flex justify-between w-[90%] bg-bg-secondary"
+                    variant="outline"
                     leftIcons={[
                       {
                         icon: (
@@ -157,8 +159,8 @@ const SidebarSpaceItem = ({ space }: SidebarSpaceItemProps) => {
                       return (
                         <Button
                           key={id}
-                          className="ml-6 w-auto flex justify-between"
-                          variant="ghost"
+                          className="ml-7 w-[84%] mt-1 flex justify-between bg-bg-secondary"
+                          variant="outline"
                           leftIcons={[
                             {
                               icon: <ListIcon size={14} />,
@@ -177,8 +179,8 @@ const SidebarSpaceItem = ({ space }: SidebarSpaceItemProps) => {
               return (
                 <Button
                   key={id}
-                  className="ml-4 w-auto flex justify-between"
-                  variant="ghost"
+                  className="ml-4 w-[90%] flex justify-between bg-bg-secondary"
+                  variant="outline"
                   leftIcons={[
                     {
                       icon: <ListIcon size={14} />,
