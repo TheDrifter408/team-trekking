@@ -13,7 +13,7 @@ import {
   CreateList,
 } from '@/components/index';
 
-export function Layout() {
+export const Layout = () => {
   const { state } = useLocation();
   const { isCreateSpace, setIsCreateSpace } = useWorkspace();
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -140,4 +140,4 @@ export function Layout() {
       </div>
     </div>
   );
-}
+};

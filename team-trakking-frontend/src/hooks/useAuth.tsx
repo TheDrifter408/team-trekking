@@ -6,7 +6,7 @@ import {
   useLogoutMutation,
 } from '@store/services/auth.ts';
 
-export function useAuth() {
+export const useAuth = () => {
   const navigate = useNavigate();
   const [login] = useLoginMutation();
   const [signup] = useSignupMutation();
@@ -42,4 +42,4 @@ export function useAuth() {
     handleLogout,
     error,
   };
-}
+};
