@@ -3,10 +3,10 @@ import { Provider } from 'react-redux';
 import { store } from '@/store';
 import AppRoutes from '../src/routes/index';
 import { useEffect } from 'react';
-import { useThemeStore } from '@store/zustand';
+import { useStore } from '@store/zustand';
 
 function App() {
-  const { currentTheme } = useThemeStore();
+  const { currentTheme } = useStore();
   useEffect(() => {
     document.documentElement.setAttribute(
       'data-theme',

@@ -1,10 +1,10 @@
 import { MoonIcon, SunIcon } from '@/assets/icons/Icons.tsx';
 import { Button } from '@/components';
 import { ThemeToggleProps } from '@/types/Props.ts';
-import { useThemeStore } from '@store/zustand';
+import { useStore } from '@store/zustand';
 
 export const ThemeToggle = ({ toggleDarkMode }: ThemeToggleProps) => {
-  const { currentTheme } = useThemeStore();
+  const { currentTheme } = useStore();
   const darkMode = currentTheme === 'dark';
 
   return (

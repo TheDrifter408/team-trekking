@@ -2,26 +2,22 @@ import { create } from 'zustand';
 
 type ThemeType = 'light' | 'dark' | 'forest' | 'sunset';
 
-interface ThemeState {
+interface TeamTrakkingState {
   currentTheme: ThemeType;
+  currentWorkspace: string;
   setTheme: (theme: ThemeType) => void;
-  workspace?: {
-    id: string;
-    name: string;
-    description: string;
-    spaces: [
-      id: string,
-      name: string,
-      folders: [id: string, name: string, list: [id: string, name: string]],
-      list: [id: string, name: string],
-    ];
-  };
+  setWorkspaceName: (name: string) => void;
 }
 
-export const useThemeStore = create<ThemeState>((set) => ({
+export const useStore = create<TeamTrakkingState>((set) => ({
   currentTheme: (localStorage.getItem('theme') as ThemeType) || 'light',
+  currentWorkspace: localStorage.getItem('workspaceName') || '', // Initialize workspace name from localStorage
   setTheme: (theme: ThemeType) => {
     localStorage.setItem('theme', theme);
     set({ currentTheme: theme });
+  },
+  setWorkspaceName: (name: string) => {
+    localStorage.setItem('workspaceName', name); // Set workspace name in localStorage
+    set({ currentWorkspace: name });
   },
 }));

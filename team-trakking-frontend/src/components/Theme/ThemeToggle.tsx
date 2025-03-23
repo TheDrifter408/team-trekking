@@ -1,4 +1,4 @@
-import { useThemeStore } from '@/store/zustand/index';
+import { useStore } from '@/store/zustand/index';
 import { useApplyTheme } from '@/hooks/useTheme';
 import { ThemeType } from '@/types/theme.ts';
 
@@ -15,7 +15,7 @@ export const ThemeToggle = ({
   isAuthenticated: boolean;
 }) => {
   useApplyTheme();
-  const { currentTheme, setTheme } = useThemeStore();
+  const { currentTheme, setTheme } = useStore();
   const availableThemes = isAuthenticated ? themes : themes.slice(0, 2);
 
   return (

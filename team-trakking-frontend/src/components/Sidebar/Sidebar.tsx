@@ -1,17 +1,15 @@
 import { FC } from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronRight, Grid2x2, Layers } from 'lucide-react';
-import { Text } from '@library/components';
 import { getInitials } from '@utils/Common';
 import { SidebarProps } from '@/types/Props.ts';
 import SidebarSpaceItem from './SidebarSpaceItem';
+import { useStore } from '@store/zustand';
 
 export const Sidebar: FC<SidebarProps> = ({ sidebarOpen, name, spaces }) => {
+  const { currentWorkspace } = useStore();
   const secondarySidebarOpen = false;
-  const workspaceName =
-    spaces && spaces.length > 0
-      ? spaces[0].workspaceName
-      : 'Workspace Dashboard';
+  const workspaceName = currentWorkspace ?? 'Dashboard';
 
   // const toggleSecondarySidebar = () => {
   //   setSecondarySidebarOpen(!secondarySidebarOpen);
@@ -30,7 +28,7 @@ export const Sidebar: FC<SidebarProps> = ({ sidebarOpen, name, spaces }) => {
               {getInitials(name)}
             </div>
           ) : (
-            <div className="truncate text-lg font-bold text-text-primary">
+            <div className="truncate text-lg font-semibold text-text-primary">
               {workspaceName}
             </div>
           )}
@@ -38,14 +36,6 @@ export const Sidebar: FC<SidebarProps> = ({ sidebarOpen, name, spaces }) => {
 
         {/* Navigation */}
         <div className="mt-2 flex-grow">
-          <div className="mb-2 px-4">
-            {sidebarOpen ? (
-              <Text className="text-sm text-gray-400">Spaces</Text>
-            ) : (
-              ''
-            )}
-          </div>
-
           <div className="space-y-1">
             <Link
               to="/home"

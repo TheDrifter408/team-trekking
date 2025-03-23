@@ -14,13 +14,14 @@ export interface Space {
   id: number;
   name: string;
   folders: Folder[];
+  lists?: List[];
 }
 
 export interface Folder {
   id: number;
   name: string;
-  folderStatus: FolderStatus;
-  lists: List[];
+  status: FolderStatus;
+  lists?: List[];
 }
 
 export interface List {
@@ -86,6 +87,6 @@ export interface WorkspaceItem extends Workspace {
   members: Member[];
 }
 
-export interface WorkspaceDetails extends Workspace {
+export interface WorkspaceDetails extends WorkspaceItem {
   spaces: Space[];
 }
