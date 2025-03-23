@@ -1,164 +1,197 @@
-import { Folder, FolderPlus, ListPlus, MoreVertical } from 'lucide-react';
-import { useState } from 'react';
-import { Modal } from '@library/components';
-import { SidebarSpaceItemProps } from '@/types/Props.ts';
+import {
+  ChevronDownCircleIcon,
+  ChevronRightCircleIcon,
+  Edit,
+  FolderIcon,
+  ListIcon,
+  MoreVertical,
+  PlusCircleIcon,
+  Settings,
+  Trash,
+} from 'lucide-react';
+import React, { useCallback, useState } from 'react';
+import { Button } from '@/components';
+import { useWorkspace } from '@/context/LayoutContext.tsx';
 
-const SidebarSpaceItem = ({ spaces, sidebarOpen }: SidebarSpaceItemProps) => {
-  const [expandedSpaces, setExpandedSpaces] = useState<string[]>([]);
-  const [expandedFolders, setExpandedFolders] = useState<string[]>([]);
-  const [activePopup, setActivePopup] = useState<string | null>(null);
-  const [taskTypes, setTaskTypes] = useState([]);
-  const [open, setOpen] = useState(false);
+interface List {
+  id: number;
+  name: string;
+}
 
-  const toggleSpace = (spaceId: string) => {
-    setExpandedSpaces((prev) =>
-      prev.includes(spaceId)
-        ? prev.filter((id) => id !== spaceId)
-        : [...prev, spaceId]
-    );
-  };
+interface Folder {
+  id: number;
+  name: string;
+  color: string;
+  lists?: List[];
+}
 
-  const toggleFolder = (folderId: string) => {
-    setExpandedFolders((prev) =>
-      prev.includes(folderId)
-        ? prev.filter((id) => id !== folderId)
-        : [...prev, folderId]
-    );
-  };
+interface Space {
+  id: number;
+  name: string;
+  color: string;
+  lists?: List[];
+  folders?: Folder[];
+}
 
-  const togglePopup = (spaceId: string) => {
-    setActivePopup(activePopup === spaceId ? null : spaceId);
-  };
+interface SidebarSpaceItemProps {
+  space: Space;
+}
 
-  const handleViewSpace = (space: any) => {
-    console.log('view space', space);
-    setTaskTypes(space.statusType);
-    setOpen(true);
-  };
+const SidebarSpaceItem = ({ space }: SidebarSpaceItemProps) => {
+  const { isCreateSpace, setIsCreateSpace } = useWorkspace();
+  const [expandedSpaceId, setExpandedSpaceId] = useState<number | null>(null);
+  const [expandedFolderId, setExpandedFolderId] = useState<number | null>(null);
+  const [isActivePopup, setIsActivePopup] = useState<number | null>(null);
+
+  const handleSpaceExpand = useCallback((id: number) => {
+    setExpandedSpaceId((prevId) => (prevId === id ? null : id));
+    setExpandedFolderId(null);
+  }, []);
+
+  const handleFolderExpand = useCallback((id: number) => {
+    setExpandedFolderId((prevId) => (prevId === id ? null : id));
+  }, []);
+
+  // Fixed event handling
+  const handlePopup = useCallback(
+    (spaceId: number, event: React.MouseEvent) => {
+      event.stopPropagation();
+      setIsActivePopup((prevState) => (prevState === spaceId ? null : spaceId));
+    },
+    [] // No dependencies needed when using functional updates
+  );
+  const { id, name, lists, folders } = space;
+  const isExpanded = expandedSpaceId === id;
 
   return (
-    <div
-      className="items-center space-y-2"
-      key={spaces?.[0].workspaceName ?? 'Dashboard'}
-    >
-      {spaces &&
-        spaces.map((space) => (
-          <div className={'flex flex-col'} key={space.id}>
-            <div
-              className={` ${sidebarOpen ? `flex flex-row space-x-2 px-4 py-2 text-sm` : `flex w-full justify-center`}`}
-            >
-              <Folder size={18} />{' '}
-              {sidebarOpen && (
-                <div
-                  className={
-                    'justify-content-between relative flex w-full flex-col'
-                  }
+    <div className="w-full">
+      <div key={id} className="relative">
+        <Button
+          className="ml-2 w-full flex justify-between"
+          variant="ghost"
+          leftIcons={[
+            {
+              icon: !isExpanded ? (
+                <ChevronRightCircleIcon
+                  size={14}
+                  onClick={() => handleSpaceExpand(id)}
+                  className={'hover:scale-105 hover:text-tertiary'}
+                />
+              ) : (
+                <ChevronDownCircleIcon
+                  size={14}
+                  onClick={() => handleSpaceExpand(id)}
+                />
+              ),
+            },
+          ]}
+          rightIcons={[
+            {
+              icon: (
+                <PlusCircleIcon
+                  size={14}
+                  className="mt-1 -ml-4"
+                  onClick={() => setIsCreateSpace(!isCreateSpace)}
+                />
+              ),
+            },
+            {
+              icon: (
+                <span
+                  onClick={(e) => handlePopup(id, e)}
+                  className="flex items-center justify-center cursor-pointer focus:outline-none"
                 >
-                  <div
-                    onClick={() => toggleSpace(space.id)}
-                    className="justify-content-between relative flex w-full cursor-pointer flex-row "
-                  >
-                    <span className={'truncate'}>{space.name}</span>
-                    <div className="relative mt-1">
-                      <MoreVertical
-                        size={15}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          togglePopup(space.id);
-                        }}
-                      />
-                      {activePopup === space.id && (
-                        <div className="absolute  top-6 z-50 w-48 rounded-lg border border-gray-200 bg-white py-1 shadow-lg">
-                          <button className="w-full px-4 py-2 text-left text-text-inverted hover:bg-gray-50">
-                            Rename Space
-                          </button>
-                          <button
-                            onClick={() => handleViewSpace(space)}
-                            className="w-full px-4 py-2 text-left text-text-inverted hover:bg-gray-50"
-                          >
-                            Status types
-                          </button>
-                          <button className="w-full px-4 py-2 text-left text-red-600 hover:bg-gray-50">
-                            Delete Space
-                          </button>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                  {expandedSpaces.includes(space.id) && sidebarOpen && (
-                    <div className={'ml-4 mt-1 flex flex-col space-y-2 '}>
-                      {space.folders.map((folder) => (
-                        <div
-                          className={'flex cursor-pointer flex-col  '}
-                          onClick={() => toggleFolder(folder.id)}
-                        >
-                          <div className="flex flex-row items-center gap-2">
-                            <FolderPlus size={17} /> {folder.name}
-                          </div>
-                          <div className={''}>
-                            {expandedFolders.includes(folder.id) && (
-                              <div
-                                className={
-                                  'flex flex-col justify-center  space-y-2'
-                                }
-                              >
-                                {folder.lists.map((item) => (
-                                  <div
-                                    className={
-                                      'ml-4 mt-1 flex flex-row items-center gap-2'
-                                    }
-                                  >
-                                    <ListPlus size={16} /> {item}
-                                  </div>
-                                ))}
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              )}
+                  <MoreVertical size={14} className="mt-1 mr-2" />
+                </span>
+              ),
+            },
+          ]}
+        >
+          <span className="text-sm truncate flex text-left -pr-2">{name}</span>
+        </Button>
+
+        {/* Popup Menu */}
+        {isActivePopup === id && (
+          <div className="absolute right-2 mt-1 w-36 bg-white rounded-md shadow-lg z-10 py-1 border border-gray-200">
+            <div className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-600 transition-colors duration-150 flex items-center cursor-pointer">
+              <Edit size={14} className="mr-2" />
+              Edit
+            </div>
+            <div className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-600 transition-colors duration-150 flex items-center cursor-pointer">
+              <Settings size={14} className="mr-2" />
+              Settings
+            </div>
+            <div className="w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-gray-100 hover:text-red-600 transition-colors duration-150 flex items-center cursor-pointer">
+              <Trash size={14} className="mr-2" />
+              Delete
             </div>
           </div>
-        ))}
-      <Modal
-        title={'Status Types'}
-        isOpen={open}
-        onClose={() => setOpen(false)}
-        maxWidth={700}
-      >
-        <div
-          className="flex flex-row"
-          style={{ height: 180, marginBottom: 20 }}
-        >
-          <div className="w-1/2"></div>
+        )}
 
-          <div className="w-1/2  space-y-2">
-            {taskTypes &&
-              taskTypes.length > 0 &&
-              taskTypes.map((task: any) => (
-                <div
-                  key={task.id}
-                  className={`rounded-lg  bg-gray-50  px-2 py-1 shadow-md`}
-                >
-                  <div className="flex w-full flex-row items-center space-x-4 py-1">
-                    <div className="">
-                      <button
-                        className={'h-4 w-4 rounded-lg'}
-                        style={{ background: `${task.color}` }}
-                      ></button>
-                    </div>
-                    <div>
-                      <p className={`text-sm font-semibold`}>{task.name}</p>
-                    </div>
-                  </div>
+        {isExpanded && (lists || folders) && (
+          <div className="ml-6 space-y-1">
+            {folders?.map((folder) => {
+              const { name, id: folderId } = folder;
+              const isFolderExpanded = expandedFolderId === folderId;
+              return (
+                <div key={folderId}>
+                  <Button
+                    className="ml-4 w-auto flex justify-between"
+                    variant="ghost"
+                    leftIcons={[
+                      {
+                        icon: (
+                          <FolderIcon
+                            size={14}
+                            onClick={() => handleFolderExpand(folderId)}
+                          />
+                        ),
+                      },
+                    ]}
+                  >
+                    <span className="text-sm truncate">{name}</span>
+                  </Button>
+                  {isFolderExpanded &&
+                    lists?.map((list) => {
+                      const { id, name } = list;
+                      return (
+                        <Button
+                          key={id}
+                          className="ml-6 w-auto flex justify-between"
+                          variant="ghost"
+                          leftIcons={[
+                            {
+                              icon: <ListIcon size={14} />,
+                            },
+                          ]}
+                        >
+                          <span className="text-sm truncate">{name}</span>
+                        </Button>
+                      );
+                    })}
                 </div>
-              ))}
+              );
+            })}
+            {lists?.map((list) => {
+              const { id, name } = list;
+              return (
+                <Button
+                  key={id}
+                  className="ml-4 w-auto flex justify-between"
+                  variant="ghost"
+                  leftIcons={[
+                    {
+                      icon: <ListIcon size={14} />,
+                    },
+                  ]}
+                >
+                  <span className="text-sm">{name}</span>
+                </Button>
+              );
+            })}
           </div>
-        </div>
-      </Modal>
+        )}
+      </div>
     </div>
   );
 };

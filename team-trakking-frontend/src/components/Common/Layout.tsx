@@ -1,41 +1,53 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import { ChevronRight, ChevronLeft } from 'lucide-react';
 import { Header } from '../Header/Header.tsx';
 import { Sidebar } from '../Sidebar/Sidebar.tsx';
+import { Modal } from '@library/components';
 import { motion } from 'framer-motion';
+import { useWorkspace } from '@/context/LayoutContext.tsx';
+import {
+  Button,
+  CreateSpace,
+  CreateFolder,
+  CreateList,
+} from '@/components/index';
 
 export const Layout = () => {
   const { state } = useLocation();
+  const { isCreateSpace, setIsCreateSpace } = useWorkspace();
+
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [createItem, setCreateItem] = useState('');
+  const [spaceName, setSpaceName] = useState('');
 
-  const [isMobile, setIsMobile] = useState(false);
-
-  // Check if screen size is mobile
-  useEffect(() => {
-    const checkScreenSize = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-
-    checkScreenSize();
-    window.addEventListener('resize', checkScreenSize);
-
-    return () => {
-      window.removeEventListener('resize', checkScreenSize);
-    };
+  // Function to check screen size
+  const checkScreenSize = useCallback(() => {
+    setIsMobile(window.innerWidth < 768);
   }, []);
+
+  useEffect(() => {
+    window.addEventListener('resize', checkScreenSize);
+    return () => window.removeEventListener('resize', checkScreenSize);
+  }, [checkScreenSize]);
 
   useEffect(() => {
     if (isMobile) setSidebarOpen(false);
   }, [isMobile]);
 
+  const handleCloseCreateItem = useCallback(() => setCreateItem(''), []);
+  const handleClose = useCallback(() => {
+    handleCloseCreateItem();
+    setIsCreateSpace(false);
+  }, [handleCloseCreateItem]);
+
   return (
     <div className="min-h-screen bg-bg-secondary">
-      {/* Header */}
       <Header />
 
-      {/* Sidebar & Main Content Container */}
-      <div className="flex flex-row">
+      {/* Sidebar & Main Content */}
+      <div className="flex">
         {/* Sidebar */}
         <motion.div
           initial={{ width: '6rem' }}
@@ -49,28 +61,61 @@ export const Layout = () => {
           />
 
           {!isMobile && (
-            <>
-              {/* Sidebar Toggle Button */}
-              <button
-                onClick={() => setSidebarOpen(!sidebarOpen)}
-                className="absolute right-[-12px] top-10  flex h-8 w-8 -translate-y-1/2 transform items-center justify-center rounded-full bg-tertiary text-white shadow-lg"
-              >
-                {sidebarOpen ? (
-                  <ChevronLeft className="h-4 w-4" />
-                ) : (
-                  <ChevronRight className="h-4 w-4" />
-                )}
-              </button>
-            </>
+            <button
+              onClick={() => setSidebarOpen((prev) => !prev)}
+              className="absolute right-[-12px] top-10 flex h-8 w-8 -translate-y-1/2 transform items-center justify-center rounded-full bg-tertiary text-white shadow-lg"
+            >
+              {sidebarOpen ? (
+                <ChevronLeft className="h-4 w-4" />
+              ) : (
+                <ChevronRight className="h-4 w-4" />
+              )}
+            </button>
           )}
         </motion.div>
 
         {/* Main Content */}
         <main
-          className={`mt-4 min-h-[calc(100vh-4rem)] flex-1 py-6 transition-all duration-300 ${
-            sidebarOpen ? 'ml-56' : 'ml-24'
-          }`}
+          className={`mt-4 min-h-[calc(100vh-4rem)] flex-1 py-6 transition-all duration-300 ${sidebarOpen ? 'ml-56' : 'ml-24'}`}
         >
+          <Modal
+            title={`Add New ${createItem}`}
+            isOpen={isCreateSpace}
+            onClose={handleClose}
+            leftButtonText="Cancel"
+            leftButtonVariant="ghost"
+            leftButtonOnClick={handleCloseCreateItem}
+            showLeftButton={!!createItem}
+            maxWidth={900}
+          >
+            {!createItem ? (
+              <div className="w-full flex justify-center gap-2">
+                {['Space', 'Folder', 'List'].map((item) => (
+                  <Button
+                    key={item}
+                    className="w-20"
+                    variant="outline"
+                    onClick={() => setCreateItem(item)}
+                  >
+                    {item}
+                  </Button>
+                ))}
+              </div>
+            ) : (
+              <div>
+                {createItem === 'Space' && (
+                  <CreateSpace
+                    setSpaceName={setSpaceName}
+                    spaceName={spaceName}
+                  />
+                )}
+                {createItem === 'Folder' && (
+                  <CreateFolder onFolderAdd={() => {}} />
+                )}
+                {createItem === 'List' && <CreateList onListAdd={() => {}} />}
+              </div>
+            )}
+          </Modal>
           <Outlet />
         </main>
       </div>

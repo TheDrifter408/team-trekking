@@ -335,3 +335,16 @@ export const members: Array<Member> = [
     workspaceId: 2,
   },
 ];
+
+export const createFolderColors = {
+  '#ef4444': 'Focus',
+  '#f97316': 'In Progress',
+  '#f59e0b': 'Pending',
+  '#10b981': 'Completed',
+  '#06b6d4': 'Review',
+  '#3b82f6': 'Planned',
+  '#6366f1': 'Active',
+  '#8b5cf6': 'Waiting',
+  '#ec4899': 'Archived',
+  '#64748b': 'Open',
+};
