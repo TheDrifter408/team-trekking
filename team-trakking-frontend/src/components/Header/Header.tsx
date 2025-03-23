@@ -97,9 +97,9 @@ export const Header = () => {
             className="flex w-auto items-center rounded-lg bg-bg-secondary hover:bg-gray-700"
           >
             <img
-              src="https://avatar.iran.liara.run/public"
+              src="https://ui-avatars.com/api/?name=jawahiir+nabhan&background=random"
               alt="Avatar"
-              className="h-5 w-5 rounded-5"
+              className="h-5 w-5 rounded-full"
             />
           </Button>
 
