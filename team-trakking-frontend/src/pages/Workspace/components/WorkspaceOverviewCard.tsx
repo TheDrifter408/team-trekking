@@ -8,7 +8,7 @@ interface Item {
 }
 
 interface WorkspaceOverviewCardProps {
-  icon: React.ReactNode;
+  icon: React.ReactElement;
   title: string;
   description: string;
   count: number;
@@ -34,13 +34,16 @@ export const WorkspaceOverviewCard = ({
   viewAllLabel = 'View all',
   onViewAll,
 }: WorkspaceOverviewCardProps) => {
+  // Create a copy of the icon with the desired className
+  const iconWithClass = React.cloneElement(icon, {
+    className: `mr-2 h-5 w-5 text-${color}-500`,
+  });
+
   return (
     <div className="bg-white rounded-lg shadow border border-gray-100">
       <div className="p-4 border-b border-gray-100">
         <div className="flex items-center mb-1">
-          {React.cloneElement(icon as React.ReactElement, {
-            className: `mr-2 h-5 w-5 text-${color}-500`,
-          })}
+          {iconWithClass}
           <h3 className="text-lg text-text-primary font-medium">{title}</h3>
         </div>
         <p className="text-sm text-text-light">{description}</p>

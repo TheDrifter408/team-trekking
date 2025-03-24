@@ -10,6 +10,7 @@ import {
   Trash,
 } from 'lucide-react';
 import React, { useCallback, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components';
 import { useWorkspace } from '@/context/LayoutContext.tsx';
 
@@ -35,9 +36,14 @@ interface Space {
 
 interface SidebarSpaceItemProps {
   space: Space;
+  handleSpaceNavigate: (id: number) => void;
 }
 
-const SidebarSpaceItem = ({ space }: SidebarSpaceItemProps) => {
+const SidebarSpaceItem = ({
+  space,
+  handleSpaceNavigate,
+}: SidebarSpaceItemProps) => {
+  const navigate = useNavigate();
   const { isCreateSpace, setIsCreateSpace } = useWorkspace();
   const [expandedSpaceId, setExpandedSpaceId] = useState<number | null>(null);
   const [expandedFolderId, setExpandedFolderId] = useState<number | null>(null);
@@ -60,6 +66,7 @@ const SidebarSpaceItem = ({ space }: SidebarSpaceItemProps) => {
     },
     [] // No dependencies needed when using functional updates
   );
+
   const { id, name, lists, folders } = space;
   const isExpanded = expandedSpaceId === id;
 
@@ -107,7 +114,10 @@ const SidebarSpaceItem = ({ space }: SidebarSpaceItemProps) => {
             },
           ]}
         >
-          <span className="text-sm truncate text-text-primary flex text-left -pr-2">
+          <span
+            onClick={() => handleSpaceNavigate(id)}
+            className="text-sm truncate text-text-primary flex text-left -pr-2"
+          >
             {name}
           </span>
         </Button>
