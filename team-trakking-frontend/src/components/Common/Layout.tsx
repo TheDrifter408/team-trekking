@@ -1,6 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
-import { ChevronRight, ChevronLeft } from 'lucide-react';
 import { Header } from '../Header/Header.tsx';
 import { Sidebar } from '../Sidebar/Sidebar.tsx';
 import { Modal } from '@library/components';
@@ -58,19 +57,6 @@ export const Layout = () => {
             sidebarOpen={sidebarOpen}
             name={state?.name ?? 'Dashboard'}
           />
-
-          {/*{!isMobile && (*/}
-          {/*  <button*/}
-          {/*    onClick={() => setSidebarOpen((prev) => !prev)}*/}
-          {/*    className="absolute right-[-12px] top-10 flex h-8 w-8 -translate-y-1/2 transform items-center justify-center rounded-full bg-tertiary text-white shadow-lg"*/}
-          {/*  >*/}
-          {/*    {sidebarOpen ? (*/}
-          {/*      <ChevronLeft className="h-4 w-4" />*/}
-          {/*    ) : (*/}
-          {/*      <ChevronRight className="h-4 w-4" />*/}
-          {/*    )}*/}
-          {/*  </button>*/}
-          {/*)}*/}
         </motion.div>
 
         {/* Main Content */}
