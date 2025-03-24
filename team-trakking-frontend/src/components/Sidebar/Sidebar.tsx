@@ -1,13 +1,13 @@
 import { FC, useCallback, useState } from 'react';
 import { HomeIcon, LayoutDashboard } from 'lucide-react';
-import { useWorkspace } from '@/context/LayoutContext';
 import { SidebarProps } from '@/types/Props';
 import SidebarSpaceItem from '@components/Sidebar/SidebarSpaceItem.tsx';
 import { useNavigate } from 'react-router-dom';
+import { useStore } from '@store/zustand';
 
 export const Sidebar: FC<SidebarProps> = ({ sidebarOpen }) => {
   const navigate = useNavigate();
-  const { workspaceData } = useWorkspace();
+  const { workspaceData } = useStore();
 
   const [isActivePopup, setIsActivePopup] = useState<number | null>(null);
 

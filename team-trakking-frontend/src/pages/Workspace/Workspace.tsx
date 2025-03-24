@@ -4,7 +4,6 @@ import { useGetWorkspaceQuery } from '@store/services/main.ts';
 import { WorkspaceHeader } from './components/WorkspaceHeader.tsx';
 import { Breadcrumbs } from '@/components';
 import { useStore } from '@store/zustand/index';
-import { useWorkspace } from '@/context/LayoutContext.tsx';
 import {
   mockActivities,
   taskCompletionData,
@@ -18,8 +17,7 @@ import { ActivityFeed } from './components/ActivityFeed.tsx';
 export const WorkspacePage = () => {
   const params = useParams();
   const navigate = useNavigate();
-  const { setData } = useWorkspace();
-  const { setWorkspaceName } = useStore();
+  const { setWorkspaceName, setWorkspaceData } = useStore();
   const { workspaceId } = params;
   const { data: workspaceDetails } = useGetWorkspaceQuery(Number(workspaceId));
   const [spaceCount, setSpaceCount] = useState(0);
@@ -58,7 +56,7 @@ export const WorkspacePage = () => {
       });
 
       // Set the transformed data to the context
-      setData(transformedData);
+      setWorkspaceData(transformedData);
 
       // Calculate counts for overview metrics
       const spaces = workspaceDetails.spaces || [];

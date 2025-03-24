@@ -12,7 +12,7 @@ import {
 import React, { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components';
-import { useWorkspace } from '@/context/LayoutContext.tsx';
+import { useStore } from '@store/zustand/index';
 
 interface List {
   id: number;
@@ -44,7 +44,7 @@ const SidebarSpaceItem = ({
   handleSpaceNavigate,
 }: SidebarSpaceItemProps) => {
   const navigate = useNavigate();
-  const { isCreateSpace, setIsCreateSpace } = useWorkspace();
+  const { isCreateSpace, setIsCreateSpace } = useStore();
   const [expandedSpaceId, setExpandedSpaceId] = useState<number | null>(null);
   const [expandedFolderId, setExpandedFolderId] = useState<number | null>(null);
   const [isActivePopup, setIsActivePopup] = useState<number | null>(null);
