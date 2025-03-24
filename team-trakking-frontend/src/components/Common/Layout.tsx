@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import { Header } from '../Header/Header.tsx';
 import { Sidebar } from '../Sidebar/Sidebar.tsx';
 import { Modal } from '@library/components';
@@ -10,6 +9,7 @@ import {
   CreateFolder,
   CreateList,
 } from '@/components/index';
+import { motion } from 'framer-motion';
 import { useStore } from '@/store/zustand/index';
 import { useData } from '@/hooks/useData';
 import { Folder, List } from '@/types/ApiResponse.ts';
@@ -105,7 +105,10 @@ export const Layout = () => {
   return (
     <div className="min-h-screen bg-bg-primary-light">
       <Header />
+
+      {/* Sidebar & Main Content */}
       <div className="flex">
+        {/* Sidebar */}
         <motion.div
           initial={{ width: '6rem' }}
           animate={{ width: sidebarOpen ? '14rem' : '6rem' }}
@@ -118,6 +121,7 @@ export const Layout = () => {
           />
         </motion.div>
 
+        {/* Main Content */}
         <main
           className={`mt-4 min-h-[calc(100vh-4rem)] flex-1 py-6 transition-all duration-300 ${sidebarOpen ? 'ml-56' : 'ml-24'}`}
         >
