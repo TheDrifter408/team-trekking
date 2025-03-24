@@ -16,7 +16,6 @@ import {
 export const Layout = () => {
   const { state } = useLocation();
   const { isCreateSpace, setIsCreateSpace } = useWorkspace();
-
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [createItem, setCreateItem] = useState('');

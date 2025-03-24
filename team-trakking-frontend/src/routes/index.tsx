@@ -27,14 +27,6 @@ const AppRoutes = () => {
           }
         >
           <Route path={'/workspace/:workspaceId'} element={<Workspace />} />
-        </Route>
-        <Route
-          element={
-            <WorkspaceProvider>
-              <Layout />
-            </WorkspaceProvider>
-          }
-        >
           <Route path={'/space/:spaceId'} element={<Space />} />
         </Route>
       </Route>
