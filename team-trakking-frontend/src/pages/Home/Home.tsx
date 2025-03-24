@@ -105,7 +105,7 @@ export const Home: React.FC = () => {
           {/* Header */}
           <div className="mb-8">
             <h2 className="mb-2 text-3xl font-bold">My Workspaces</h2>
-            <p className="text-gray-500">
+            <p className="text-text-light text-sm">
               Select a workspace to view and manage tasks
             </p>
           </div>

@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Button, Input } from '@/components/index';
+import { Button, Input, ThemeToggle } from '@/components/index';
 import { useStore } from '@store/zustand';
 import { useAuth } from '@/hooks/useAuth';
 import {
   GoogleIcon,
   GithubIcon,
-  SunIcon,
-  MoonIcon,
   IllustrationIcon,
   AuthIcon,
 } from '@/assets/icons/Icons';
@@ -54,14 +52,7 @@ export const Login = () => {
       <div className="flex w-full flex-col justify-center p-8 md:w-1/2 md:p-12">
         {/* Dark mode toggle */}
         <div className="absolute right-4 top-4">
-          <Button
-            size={'sm'}
-            variant={'ghost'}
-            onClick={toggleDarkMode}
-            className={`rounded-5 hover:scale-105  ${darkMode ? 'bg-gray-700  text-yellow-300' : 'bg-gray-100 text-text-inverted'}`}
-          >
-            <div>{darkMode ? <SunIcon /> : <MoonIcon />} </div>
-          </Button>
+          <ThemeToggle toggleDarkMode={toggleDarkMode} />
         </div>
 
         <div className="mx-auto w-full max-w-md">
@@ -138,7 +129,7 @@ export const Login = () => {
                 </div>
               </div>
 
-              <Button fullWidth>
+              <Button fullWidth className={'bg-bg-primary'}>
                 {isLogin ? 'Sign in' : 'Create account'}
               </Button>
 

@@ -4,20 +4,26 @@
 
 @layer base {
   :root {
-    --color-primary: 79 70 229;
-    --color-secondary: 99 102 241;
-    --color-tertiary: 129 140 248;
-    --color-bg-primary: 255 255 255;
-    --color-bg-secondary: 243 244 246;
-    --color-text-primary: 51 50 54;
-    --color-text-secondary: 55 65 81;
-    --color-text-muted: 107 114 128;
+    --color-bg-primary:  252 252 252;
+    --color-bg-secondary: 237 239 242;
+    --color-bg-primary-light: 242 242 252;
     --color-bg-inverted: 255 255 255;
-    --color-text-inverted: 48 47 47;
-    --color-text-default: 48 47 47;
+
+    --color-text-primary: 33 33 33;
+    --color-text-secondary: 55 65 81;
+    --color-text-light: 60 61 64;
+    --color-text-muted: 107 114 128;
+    --color-text-inverted: 245 245 245;
+    --color-text-hover: 92 92 255;
+
+    --color-button-hover: 92 92 130;
+    --color-link-primary: 93 93 232;
+
     --color-border-primary: 209 213 219;
     --color-border-hover: 79 70 229;
-    --color-bg-primary-light: 176 171 245;
+
+    --color-primary-header: 149 149 245;
+    --color-secondary-header: 189 189 240;
 
     --color-active: #ed395a;
     --color-planning: #3878c7;
@@ -32,11 +38,12 @@
   }
 
   [data-theme='dark'] {
-    --color-primary: 99 102 241;
+    --color-primary: 50 48 69;
     --color-secondary: 129 140 248;
     --color-tertiary: 165 180 252;
+    --color-text-light: 228 231 242;
     --color-bg-primary-light: 65 64 84;
-    --color-bg-primary: 17 24 39;
+    --color-bg-primary: 17 24 50;
     --color-bg-secondary: 31 41 55;
     --color-text-primary: 247 245 252;
     --color-text-secondary: 229 231 235;

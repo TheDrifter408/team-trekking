@@ -43,7 +43,7 @@ export const Layout = () => {
   }, [handleCloseCreateItem]);
 
   return (
-    <div className="min-h-screen bg-bg-secondary">
+    <div className="min-h-screen bg-bg-primary-light">
       <Header />
 
       {/* Sidebar & Main Content */}

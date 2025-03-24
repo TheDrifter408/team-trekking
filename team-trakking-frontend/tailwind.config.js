@@ -19,6 +19,12 @@ export default {
         'border-hover': 'rgb(var(--color-border-hover) / <alpha-value>)',
         'bg-primary-light':
           'rgb(var(--color-bg-primary-light) / <alpha-value>)',
+        'text-light': 'rgb(var(--color-text-light) / <alpha-value>)',
+        'header-primary': 'rgb(var(--color-primary-header) / <alpha-value>)',
+        'header-secondary':
+          'rgb(var(--color-secondary-header) / <alpha-value>)',
+        'button-hover': 'rgb(var(--color-button-hover) / <alpha-value>)',
+        'text-hover': 'rgb(var(--color-text-hover) / <alpha-value>)',
       },
     },
   },

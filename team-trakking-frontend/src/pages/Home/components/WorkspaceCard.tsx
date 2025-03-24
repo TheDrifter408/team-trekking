@@ -29,12 +29,16 @@ export const WorkspaceCard: FC<WorkspaceCardProps> = ({ workspace }) => {
           </div>
 
           <div>
-            <h5 className="mb-1 font-medium hover:underline">
+            <h5 className="mb-1  ">
               <div onClick={() => handlePressWorkspace(workspace.id)}>
-                {workspace.name}
+                <span
+                  className={'text-text-primary hover:underline font-medium'}
+                >
+                  {workspace.name}
+                </span>
               </div>
             </h5>
-            <p className="text-sm text-text-muted">{workspace.description}</p>
+            <p className="text-sm text-text-light">{workspace.description}</p>
           </div>
         </div>
 

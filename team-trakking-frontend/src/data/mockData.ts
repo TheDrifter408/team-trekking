@@ -348,3 +348,61 @@ export const createFolderColors = {
   '#ec4899': 'Archived',
   '#64748b': 'Open',
 };
+
+// Mock activities data
+export const mockActivities = [
+  {
+    id: 1,
+    userName: 'Jane Cooper',
+    userAvatar: '/api/placeholder/24/24',
+    action: 'created',
+    itemName: 'Marketing Campaign',
+    itemType: 'task',
+    timestamp: '10 minutes ago',
+  },
+  {
+    id: 2,
+    userName: 'Robert Fox',
+    userAvatar: '/api/placeholder/24/24',
+    action: 'completed',
+    itemName: 'Website Redesign',
+    itemType: 'task',
+    timestamp: '45 minutes ago',
+  },
+  {
+    id: 3,
+    userName: 'Esther Howard',
+    userAvatar: '/api/placeholder/24/24',
+    action: 'added',
+    itemName: 'New Product Launch',
+    itemType: 'folder',
+    timestamp: '2 hours ago',
+  },
+  {
+    id: 4,
+    userName: 'Leslie Alexander',
+    userAvatar: '/api/placeholder/24/24',
+    action: 'assigned',
+    itemName: 'Budget Review',
+    itemType: 'task',
+    timestamp: '3 hours ago',
+  },
+];
+
+// Mock stats data
+export const taskCompletionData = [
+  { name: 'Mon', completed: 5, total: 8 },
+  { name: 'Tue', completed: 7, total: 10 },
+  { name: 'Wed', completed: 4, total: 6 },
+  { name: 'Thu', completed: 8, total: 12 },
+  { name: 'Fri', completed: 6, total: 8 },
+  { name: 'Sat', completed: 3, total: 5 },
+  { name: 'Sun', completed: 2, total: 3 },
+];
+
+export const workloadData = [
+  { name: 'Marketing', tasks: 24 },
+  { name: 'Development', tasks: 35 },
+  { name: 'Design', tasks: 18 },
+  { name: 'Operations', tasks: 29 },
+];
