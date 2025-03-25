@@ -1,4 +1,12 @@
-import { Workspace, Member, Folder, List } from '@/types/ApiResponse.ts';
+import {
+  Workspace,
+  Member,
+  Folder,
+  List,
+  UserType,
+  SubTask,
+  ChecklistItem,
+} from '@/types/ApiResponse.ts';
 
 export const workspaces: Array<Workspace> = [
   {
@@ -406,3 +414,71 @@ export const workloadData = [
   { name: 'Design', tasks: 18 },
   { name: 'Operations', tasks: 29 },
 ];
+
+export const mockUsers: UserType[] = [
+  {
+    id: '1',
+    name: 'John Doe',
+    avatar:
+      'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
+  },
+  {
+    id: '2',
+    name: 'Jane Smith',
+    avatar:
+      'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop',
+  },
+];
+
+export const mockSubtasks: SubTask[] = [
+  {
+    id: '1',
+    title: 'Design UI components',
+    progress: 75,
+    dueDate: '2024-03-25T15:00:00.000Z',
+    estimatedTime: 4,
+    priority: 'high',
+    status: 'in_progress',
+  },
+  {
+    id: '2',
+    title: 'Implement API integration',
+    progress: 30,
+    dueDate: '2024-03-28T15:00:00.000Z',
+    estimatedTime: 6,
+    priority: 'normal',
+    status: 'todo',
+  },
+];
+
+export const mockChecklist: ChecklistItem[] = [
+  {
+    id: '1',
+    content: 'Review requirements document',
+    completed: true,
+  },
+  {
+    id: '2',
+    content: 'Set up development environment',
+    completed: true,
+  },
+  {
+    id: '3',
+    content: 'Create component structure',
+    completed: false,
+  },
+];
+
+export const statusColors: Record<string, string> = {
+  todo: 'bg-gray-500',
+  in_progress: 'bg-blue-500',
+  review: 'bg-purple-500',
+  done: 'bg-green-500',
+};
+
+export const priorityColors: Record<string, string> = {
+  urgent: 'bg-red-500',
+  high: 'bg-orange-500',
+  normal: 'bg-blue-500',
+  low: 'bg-gray-500',
+};
