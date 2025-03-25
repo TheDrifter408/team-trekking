@@ -69,13 +69,13 @@ export const Header = () => {
             onClick={() => setShowNotifications(!showNotifications)}
             className="relative rounded-lg bg-bg-inverted border-0 justify-center h-auto w-auto text-gray-600 hover:bg-button-hover"
           >
-            <Bell className={'h-3 w-3 text-text-primary'} />
+            <Bell className={'h-3 w-3 text-text-default'} />
             <span className="absolute -right-0.5 -top-0.5 h-3 w-3 rounded-full bg-red-500"></span>
           </Button>
 
           {showNotifications && (
             <div className="absolute right-0 mt-2 w-64 rounded-lg bg-bg-inverted shadow-lg">
-              <div className="p-3 text-sm text-text-muted">
+              <div className="p-3 text-sm text-text-light">
                 No new notifications
               </div>
             </div>
@@ -110,7 +110,7 @@ export const Header = () => {
                   onClick={handleThemeToggle}
                   className="flex cursor-pointer items-center justify-between rounded-lg px-4 py-2 text-sm text-text-inverted hover:bg-button-hover hover:text-text-primary"
                 >
-                  <span className={'text-text-primary'}>Toggle Theme</span>
+                  <span className={'text-text-default'}>Toggle Theme</span>
                   <ThemeToggle toggleDarkMode={handleThemeToggle} />
                 </div>
 
@@ -122,9 +122,7 @@ export const Header = () => {
                   <Button
                     size={'sm'}
                     variant={'outline'}
-                    className={
-                      'rounded-5 bg-text-secondary text-text-inverted border-0'
-                    }
+                    className={'rounded-5 bg-bg-secondary  border-0'}
                   >
                     <LogOut className={'h-4 w-4'} />
                   </Button>

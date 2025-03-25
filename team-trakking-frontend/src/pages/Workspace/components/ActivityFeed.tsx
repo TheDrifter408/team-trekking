@@ -22,11 +22,11 @@ export const ActivityFeed = ({ activities, onViewAll }: ActivityFeedProps) => {
       <div className="p-4 border-b border-gray-100">
         <div className="flex items-center mb-1">
           <Clock className="mr-2 h-5 w-5 text-blue-500" />
-          <h3 className="text-lg text-text-primary font-medium">
+          <h3 className="text-lg text-text-default font-medium">
             Recent Activity
           </h3>
         </div>
-        <p className="text-sm text-text-muted">
+        <p className="text-sm text-text-light">
           Latest actions in this workspace
         </p>
       </div>
@@ -49,14 +49,16 @@ export const ActivityFeed = ({ activities, onViewAll }: ActivityFeedProps) => {
                   <span className="font-medium text-text-light">
                     {activity.userName}{' '}
                   </span>
-                  <span className="text-text-muted text-sm">
+                  <span className="text-text-light italic font-monospace text-sm">
                     {activity.action}{' '}
                   </span>
                   <span className="text-text-light text-sm">
                     {activity.itemName}
                   </span>
                 </p>
-                <p className="text-xs text-text-muted">{activity.timestamp}</p>
+                <p className="text-xs font-light text-text-light">
+                  {activity.timestamp}
+                </p>
               </div>
             </div>
           ))}

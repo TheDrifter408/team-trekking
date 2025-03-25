@@ -51,10 +51,10 @@ const SidebarSpaceItem = ({
 
   const isExpanded = expandedSpaceId === id;
   return (
-    <div className="w-full">
+    <div className="w-full ">
       <div key={id} className="relative">
         <Button
-          className="ml-2 w-[94%] flex justify-between bg-bg-secondary"
+          className="ml-2 w-[94%] flex justify-between bg-bg-primary hover:bg-button-hover-secondary"
           variant="outline"
           leftIcons={[
             {
@@ -62,12 +62,17 @@ const SidebarSpaceItem = ({
                 <ChevronRightCircleIcon
                   size={14}
                   onClick={() => handleSpaceExpand(id)}
-                  className={'hover:scale-105 hover:text-tertiary'}
+                  className={
+                    'hover:scale-105 text-text-secondary hover:text-tertiary'
+                  }
                 />
               ) : (
                 <ChevronDownCircleIcon
                   size={14}
                   onClick={() => handleSpaceExpand(id)}
+                  className={
+                    'hover:scale-105 text-text-secondary hover:text-tertiary'
+                  }
                 />
               ),
             },
@@ -77,7 +82,7 @@ const SidebarSpaceItem = ({
               icon: (
                 <PlusCircleIcon
                   size={14}
-                  className="mt-1 -ml-4"
+                  className="mt-1 -ml-4 hover:scale-105 text-text-secondary hover:text-tertiary"
                   onClick={() => setIsCreateSpace(!isCreateSpace)}
                 />
               ),
@@ -86,7 +91,7 @@ const SidebarSpaceItem = ({
               icon: (
                 <span
                   onClick={(e) => handlePopup(id, e)}
-                  className="flex items-center justify-center cursor-pointer focus:outline-none"
+                  className="flex items-center justify-center cursor-pointer focus:outline-none hover:scale-105 text-text-secondary hover:text-tertiary"
                 >
                   <MoreVertical size={14} className="mt-1 mr-2" />
                 </span>
@@ -96,7 +101,7 @@ const SidebarSpaceItem = ({
         >
           <span
             onClick={() => handleSpaceNavigate(id)}
-            className="text-sm truncate text-text-primary flex text-left -pr-2"
+            className="text-sm truncate hover:text-text-default text-text-secondary flex text-left -pr-2"
           >
             {name}
           </span>
@@ -128,7 +133,7 @@ const SidebarSpaceItem = ({
               return (
                 <div key={folderId}>
                   <Button
-                    className="ml-4 flex justify-between w-[90%] bg-bg-secondary"
+                    className="ml-4 flex justify-between w-[90%] bg-bg-primary"
                     variant="outline"
                     leftIcons={[
                       {
@@ -142,7 +147,9 @@ const SidebarSpaceItem = ({
                       },
                     ]}
                   >
-                    <span className="text-sm truncate">{name}</span>
+                    <span className="text-sm text-text-secondary truncate">
+                      {name}
+                    </span>
                   </Button>
                   {isFolderExpanded &&
                     lists?.map((list) => {
@@ -151,7 +158,7 @@ const SidebarSpaceItem = ({
                       return (
                         <Button
                           key={id}
-                          className="ml-7 w-[84%] mt-1 flex justify-between bg-bg-secondary"
+                          className="ml-7 w-[84%] mt-1 flex justify-between bg-bg-primary"
                           variant="outline"
                           leftIcons={[
                             {
@@ -159,7 +166,9 @@ const SidebarSpaceItem = ({
                             },
                           ]}
                         >
-                          <span className="text-sm truncate">{name}</span>
+                          <span className="text-sm truncate text-text-secondary">
+                            {name}
+                          </span>
                         </Button>
                       );
                     })}
@@ -171,15 +180,17 @@ const SidebarSpaceItem = ({
               return (
                 <Button
                   key={id}
-                  className="ml-4 w-[90%] flex justify-between bg-bg-secondary"
+                  className="ml-4 w-[90%] flex justify-between bg-bg-primary"
                   variant="outline"
                   leftIcons={[
                     {
-                      icon: <ListIcon size={14} />,
+                      icon: (
+                        <ListIcon size={14} className={'text-text-secondary'} />
+                      ),
                     },
                   ]}
                 >
-                  <span className="text-sm">{name}</span>
+                  <span className="text-sm text-text-secondary">{name}</span>
                 </Button>
               );
             })}

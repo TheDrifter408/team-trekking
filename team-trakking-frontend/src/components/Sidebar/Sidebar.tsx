@@ -22,7 +22,7 @@ export const Sidebar: FC<SidebarProps> = ({ sidebarOpen }) => {
 
   return (
     <>
-      <div className="flex h-full flex-col overflow-y-auto scrollbar-none bg-header-primary">
+      <div className="flex h-full flex-col overflow-y-auto scrollbar-none bg-sidebar">
         <div
           className={`${sidebarOpen ? 'px-3' : 'flex px-0'} items-center justify-center pt-3`}
         >

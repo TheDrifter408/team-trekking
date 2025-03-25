@@ -13,7 +13,7 @@ export const ThemeToggle = ({ toggleDarkMode }: ThemeToggleProps) => {
         variant={'ghost'}
         size={'sm'}
         onClick={toggleDarkMode}
-        className={` rounded-5 h-4 w-4 hover:scale-105 ${darkMode ? 'bg-gray-700 text-yellow-400' : 'bg-gray-100 text-text-inverted'}`}
+        className={` rounded-5 h-4 w-4 hover:scale-105 ${darkMode ? 'bg-gray-700 text-yellow-400' : 'bg-bg-secondary text-text-inverted'}`}
       >
         {darkMode ? <SunIcon /> : <MoonIcon />}
       </Button>

@@ -14,7 +14,7 @@ export const Breadcrumbs = ({
   spaceId,
 }: BreadcrumbProps) => {
   return (
-    <div className="py-1 h-full flex items-center px-6 bg-header-secondary">
+    <div className="py-1 h-full flex items-center px-6 bg-accent-header">
       <Link
         to={`/workspace/${workspaceId}`}
         className="text-sm ml-1 text-text-primary hover:text-text-hover"
