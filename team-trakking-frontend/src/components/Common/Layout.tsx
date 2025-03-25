@@ -26,7 +26,7 @@ export const Layout = () => {
     setCreateItem,
     spaceName,
     setSpaceName,
-    resetModal,
+    onResetModal,
     currentWorkspaceId,
     workspaceData,
   } = useStore();
@@ -77,17 +77,17 @@ export const Layout = () => {
   const handleConfirm = async () => {
     if (createItem === 'Space') {
       await handleCreateSpace(currentWorkspaceId, spaceName);
-      resetModal();
+      onResetModal();
     } else if (createItem === 'Folder') {
       await handleCreateFolder(
         Number(folderItem.spaceId),
         folderItem.name,
         folderItem.color
       );
-      resetModal();
+      onResetModal();
     } else if (createItem === 'List') {
       await handleCreateList(Number(list.parentId), list.parentType, list.name);
-      resetModal();
+      onResetModal();
       setList({
         id: '0',
         name: '',
@@ -124,7 +124,7 @@ export const Layout = () => {
           <Modal
             title={`Add New ${createItem}`}
             isOpen={isCreateSpace}
-            onClose={resetModal}
+            onClose={onResetModal}
             leftButtonText="Cancel"
             leftButtonVariant="ghost"
             leftButtonOnClick={() => setCreateItem('')}
