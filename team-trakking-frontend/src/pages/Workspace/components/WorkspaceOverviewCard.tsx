@@ -8,7 +8,7 @@ interface Item {
 }
 
 interface WorkspaceOverviewCardProps {
-  icon: React.ReactElement;
+  icon: React.ReactNode;
   title: string;
   description: string;
   count: number;
@@ -34,23 +34,20 @@ export const WorkspaceOverviewCard = ({
   viewAllLabel = 'View all',
   onViewAll,
 }: WorkspaceOverviewCardProps) => {
-  // Create a copy of the icon with the desired className
-  const iconWithClass = React.cloneElement(icon, {
-    className: `mr-2 h-5 w-5 text-${color}-500`,
-  });
-
   return (
     <div className="bg-white rounded-lg shadow border border-gray-100">
       <div className="p-4 border-b border-gray-100">
         <div className="flex items-center mb-1">
-          {iconWithClass}
-          <h3 className="text-lg text-text-primary font-medium">{title}</h3>
+          {React.cloneElement(icon as React.ReactElement, {
+            className: `mr-2 h-5 w-5 text-${color}-800`,
+          })}
+          <h3 className="text-lg text-text-default font-medium">{title}</h3>
         </div>
         <p className="text-sm text-text-light">{description}</p>
       </div>
       <div className="p-4">
         <div className="flex justify-between items-center mb-2">
-          <span className="text-2xl text-text-secondary font-medium">
+          <span className="text-2xl text-text-default font-medium">
             {count}
           </span>
           <span className="text-text-light text-sm">{countLabel}</span>
@@ -61,10 +58,10 @@ export const WorkspaceOverviewCard = ({
               key={item.id}
               className="flex items-center justify-between py-1 border-b border-gray-100"
             >
-              <span className="text-sm text-text-light">
+              <span className="text-sm text-text-default">
                 {item[itemLabelKey]}
               </span>
-              <span className="text-xs text-text-muted">
+              <span className="text-xs text-text-light">
                 {item[itemValueKey]}
               </span>
             </div>

@@ -14,7 +14,7 @@ export const WorkspaceCard: FC<WorkspaceCardProps> = ({ workspace }) => {
   };
 
   return (
-    <div className="w-full cursor-pointer rounded-lg border bg-bg-secondary shadow-sm transition-shadow duration-200 hover:shadow-md">
+    <div className="w-full bg-bg-primary cursor-pointer rounded-lg border shadow-sm transition-shadow duration-200 hover:shadow-md">
       <div className="flex items-center justify-between p-4">
         <div className="flex items-center">
           {/* Workspace Icon/Initials */}
@@ -38,7 +38,7 @@ export const WorkspaceCard: FC<WorkspaceCardProps> = ({ workspace }) => {
                 </span>
               </div>
             </h5>
-            <p className="text-sm text-text-light">{workspace.description}</p>
+            <p className="text-sm text-text-muted">{workspace.description}</p>
           </div>
         </div>
 
@@ -50,7 +50,7 @@ export const WorkspaceCard: FC<WorkspaceCardProps> = ({ workspace }) => {
               .map((member: Member, index: number) => (
                 <div
                   key={member.id}
-                  className="flex items-center justify-center rounded-full bg-gray-50 text-text-inverted overflow-hidden border"
+                  className="flex items-center justify-center rounded-full bg-gray-50 text-text-default overflow-hidden border"
                   style={{
                     width: '30px',
                     height: '30px',

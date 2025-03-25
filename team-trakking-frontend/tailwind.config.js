@@ -24,7 +24,11 @@ export default {
         'header-secondary':
           'rgb(var(--color-secondary-header) / <alpha-value>)',
         'button-hover': 'rgb(var(--color-button-hover) / <alpha-value>)',
+        'button-hover-secondary':
+          'rgb(var(--color-button-hover-secondary) / <alpha-value>)',
         'text-hover': 'rgb(var(--color-text-hover) / <alpha-value>)',
+        'accent-header': 'rgb(var(--color-accent-header) / <alpha-value>)',
+        sidebar: 'rgb(var(--color-sidebar) / <alpha-value>)',
       },
     },
   },

@@ -69,7 +69,7 @@ export const Home: React.FC = () => {
   };
 
   return (
-    <div className="flex min-h-screen flex-col bg-bg-primary md:flex-row">
+    <div className="flex min-h-screen flex-col bg-bg-primary-light md:flex-row">
       {/* Left side - Brand/Instructions */}
       <BrandSection />
       <div className="absolute right-4 top-4">
@@ -81,8 +81,10 @@ export const Home: React.FC = () => {
         <div className="mx-auto w-full max-w-3xl">
           {/* Header */}
           <div className="mb-8">
-            <h2 className="mb-2 text-3xl font-bold">My Workspaces</h2>
-            <p className="text-text-light text-sm">
+            <h2 className="mb-2 text-3xl text-text-primary font-bold">
+              My Workspaces
+            </h2>
+            <p className="text-text-muted text-sm">
               Select a workspace to view and manage tasks
             </p>
           </div>

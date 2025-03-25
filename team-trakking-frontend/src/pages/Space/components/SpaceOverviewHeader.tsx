@@ -23,7 +23,7 @@ export const SpaceOverviewHeader = ({
         <h1 className="text-2xl font-bold">
           {spaceDetails?.name || 'Space Overview'}
         </h1>
-        <p className="text-gray-600">
+        <p className="text-gray-muted">
           Workspace: {spaceDetails?.workspace?.name || currentWorkspace}
         </p>
       </div>
@@ -61,7 +61,9 @@ export const SpaceOverviewHeader = ({
       </div>
 
       {/* Folder Overview Cards */}
-      <h2 className="text-xl font-semibold mb-4">Folder Overview</h2>
+      <h2 className="text-xl text-text-primary font-semibold mb-4">
+        Folder Overview
+      </h2>
       <div className="folder-cards grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
         {folderStats.map((folder) => (
           <FolderCard key={folder.id} folder={folder} />

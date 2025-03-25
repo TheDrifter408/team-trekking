@@ -35,10 +35,10 @@ export const WorkspaceStatistics = ({
   return (
     <div className="bg-white rounded-lg shadow border border-gray-100">
       <div className="p-4 border-b border-gray-100">
-        <h3 className="text-lg text-text-primary font-medium">
+        <h3 className="text-lg text-text-default font-medium">
           Workspace Statistics
         </h3>
-        <p className="text-sm text-muted">
+        <p className="text-sm text-text-light">
           Task completion and workload distribution
         </p>
       </div>
@@ -95,25 +95,25 @@ export const WorkspaceStatistics = ({
         {/* Summary Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
           <div className="bg-gray-50 p-4 rounded-lg">
-            <div className="text-sm text-text-primary">Total Tasks</div>
+            <div className="text-sm text-text-default">Total Tasks</div>
             <div className="text-2xl text-text-light font-semibold">
               {taskCount}
             </div>
           </div>
           <div className="bg-gray-50 p-4 rounded-lg">
-            <div className="text-sm text-text-light">Completed</div>
-            <div className="text-2xl text-text-primary font-semibold">
+            <div className="text-sm text-text-default">Completed</div>
+            <div className="text-2xl text-text-light font-semibold">
               {Math.floor(taskCount * 0.65)}
             </div>
           </div>
           <div className="bg-gray-50 p-4 rounded-lg">
-            <div className="text-sm text-text-light">In Progress</div>
-            <div className="text-2xl text-text-primary font-semibold">
+            <div className="text-sm text-text-default">In Progress</div>
+            <div className="text-2xl text-text-light font-semibold">
               {Math.floor(taskCount * 0.25)}
             </div>
           </div>
           <div className="bg-gray-50 p-4 rounded-lg">
-            <div className="text-sm text-text-light">Overdue</div>
+            <div className="text-sm text-text-default">Overdue</div>
             <div className="text-2xl font-semibold text-red-500">
               {Math.floor(taskCount * 0.1)}
             </div>
