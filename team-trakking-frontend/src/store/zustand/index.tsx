@@ -1,23 +1,77 @@
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 
 type ThemeType = 'light' | 'dark' | 'forest' | 'sunset';
 
-interface TeamTrakkingState {
-  currentTheme: ThemeType;
-  currentWorkspace: string;
-  setTheme: (theme: ThemeType) => void;
-  setWorkspaceName: (name: string) => void;
+interface ListItem {
+  id: number;
+  name: string;
 }
 
-export const useStore = create<TeamTrakkingState>((set) => ({
-  currentTheme: (localStorage.getItem('theme') as ThemeType) || 'light',
-  currentWorkspace: localStorage.getItem('workspaceName') || '', // Initialize workspace name from localStorage
-  setTheme: (theme: ThemeType) => {
-    localStorage.setItem('theme', theme);
-    set({ currentTheme: theme });
-  },
-  setWorkspaceName: (name: string) => {
-    localStorage.setItem('workspaceName', name); // Set workspace name in localStorage
-    set({ currentWorkspace: name });
-  },
-}));
+interface FolderItem {
+  id: number;
+  name: string;
+  color: string;
+  lists?: ListItem[];
+}
+
+interface SpaceItem {
+  id: number;
+  name: string;
+  color: string;
+  lists?: ListItem[];
+  folders?: FolderItem[];
+}
+
+interface WorkspaceData {
+  space?: SpaceItem;
+}
+
+interface TeamTrackingState {
+  currentTheme: ThemeType;
+  currentWorkspace: string;
+  sidebarOpen: boolean;
+  isCreateSpace: boolean;
+  createItem: string;
+  spaceName: string;
+  workspaceData: WorkspaceData[];
+
+  setTheme: (theme: ThemeType) => void;
+  setWorkspaceName: (name: string) => void;
+  setSidebarOpen: (value: boolean) => void;
+  toggleSidebar: () => void;
+  setIsCreateSpace: (value: boolean) => void;
+  setCreateItem: (item: string) => void;
+  setSpaceName: (name: string) => void;
+  onResetModal: () => void;
+  setWorkspaceData: (data: WorkspaceData[]) => void;
+}
+
+export const useStore = create<TeamTrackingState>()(
+  persist(
+    (set) => ({
+      currentTheme: 'light',
+      currentWorkspace: '',
+      sidebarOpen: true,
+      isCreateSpace: false,
+      createItem: '',
+      spaceName: '',
+      workspaceData: [],
+
+      setTheme: (theme) => set({ currentTheme: theme }),
+      setWorkspaceName: (name) => set({ currentWorkspace: name }),
+      setSidebarOpen: (value) => set({ sidebarOpen: value }),
+      toggleSidebar: () =>
+        set((state) => ({ sidebarOpen: !state.sidebarOpen })),
+      setIsCreateSpace: (value) => set({ isCreateSpace: value }),
+      setCreateItem: (item) => set({ createItem: item }),
+      setSpaceName: (name) => set({ spaceName: name }),
+      onResetModal: () =>
+        set({ isCreateSpace: false, createItem: '', spaceName: '' }),
+      setWorkspaceData: (data: WorkspaceData[]) => set({ workspaceData: data }),
+    }),
+    {
+      name: 'team-tracking-storage',
+    }
+  )
+);

@@ -4,7 +4,6 @@ import {
   useGetSpaceQuery,
   useGetWorkspaceQuery,
 } from '@store/services/main.ts';
-import { useWorkspace } from '@/context/LayoutContext.tsx';
 import { useStore } from '@store/zustand';
 import { Breadcrumbs } from '@/components';
 import { SpaceHeader } from './components/SpaceHeader';
@@ -13,8 +12,7 @@ import { SpaceOverviewHeader } from '@pages/Space/components/SpaceOverviewHeader
 export const Space = () => {
   const params = useParams();
   const { spaceId } = params;
-  const { setData } = useWorkspace();
-  const { currentWorkspace } = useStore();
+  const { currentWorkspace, setWorkspaceData } = useStore();
   const { data: spaceDetails } = useGetSpaceQuery(Number(spaceId));
   const workspaceId = spaceDetails?.workspaceId ?? 0;
   const { data: workspaceDetails } = useGetWorkspaceQuery(Number(workspaceId));
@@ -45,7 +43,7 @@ export const Space = () => {
       });
 
       // Set the transformed data to the context
-      setData(transformedData);
+      setWorkspaceData(transformedData);
     }
   }, [workspaceDetails]);
 

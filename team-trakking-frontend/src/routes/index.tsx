@@ -19,13 +19,7 @@ const AppRoutes = () => {
       {/* All components under this layout will be rendered without page refresh.
       Include space x folder x list */}
       <Route element={<PrivateRoute />}>
-        <Route
-          element={
-            <WorkspaceProvider>
-              <Layout />
-            </WorkspaceProvider>
-          }
-        >
+        <Route element={<Layout />}>
           <Route path={'/workspace/:workspaceId'} element={<Workspace />} />
           <Route path={'/space/:spaceId'} element={<Space />} />
         </Route>

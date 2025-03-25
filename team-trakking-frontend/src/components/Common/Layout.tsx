@@ -1,52 +1,50 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { Header } from '../Header/Header.tsx';
 import { Sidebar } from '../Sidebar/Sidebar.tsx';
 import { Modal } from '@library/components';
-import { motion } from 'framer-motion';
-import { useWorkspace } from '@/context/LayoutContext.tsx';
 import {
   Button,
   CreateSpace,
   CreateFolder,
   CreateList,
 } from '@/components/index';
+import { useStore } from '@/store/zustand/index';
 
 export const Layout = () => {
   const { state } = useLocation();
-  const { isCreateSpace, setIsCreateSpace } = useWorkspace();
-  const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
-  const [createItem, setCreateItem] = useState('');
-  const [spaceName, setSpaceName] = useState('');
-
-  // Function to check screen size
-  const checkScreenSize = useCallback(() => {
-    setIsMobile(window.innerWidth < 768);
-  }, []);
+  const {
+    sidebarOpen,
+    toggleSidebar,
+    isCreateSpace,
+    setIsCreateSpace,
+    createItem,
+    setCreateItem,
+    spaceName,
+    setSpaceName,
+    onResetModal,
+  } = useStore();
+  const isMobile = window.innerWidth < 768;
 
   useEffect(() => {
+    const checkScreenSize = () => {
+      if (window.innerWidth < 768) {
+        setIsCreateSpace(false);
+      }
+    };
     window.addEventListener('resize', checkScreenSize);
     return () => window.removeEventListener('resize', checkScreenSize);
-  }, [checkScreenSize]);
+  }, [setIsCreateSpace]);
 
   useEffect(() => {
-    if (isMobile) setSidebarOpen(false);
-  }, [isMobile]);
-
-  const handleCloseCreateItem = useCallback(() => setCreateItem(''), []);
-  const handleClose = useCallback(() => {
-    handleCloseCreateItem();
-    setIsCreateSpace(false);
-  }, [handleCloseCreateItem]);
+    if (isMobile) toggleSidebar();
+  }, [isMobile, toggleSidebar]);
 
   return (
     <div className="min-h-screen bg-bg-primary-light">
       <Header />
-
-      {/* Sidebar & Main Content */}
       <div className="flex">
-        {/* Sidebar */}
         <motion.div
           initial={{ width: '6rem' }}
           animate={{ width: sidebarOpen ? '14rem' : '6rem' }}
@@ -59,17 +57,16 @@ export const Layout = () => {
           />
         </motion.div>
 
-        {/* Main Content */}
         <main
           className={`mt-4 min-h-[calc(100vh-4rem)] flex-1 py-6 transition-all duration-300 ${sidebarOpen ? 'ml-56' : 'ml-24'}`}
         >
           <Modal
             title={`Add New ${createItem}`}
             isOpen={isCreateSpace}
-            onClose={handleClose}
+            onClose={onResetModal}
             leftButtonText="Cancel"
             leftButtonVariant="ghost"
-            leftButtonOnClick={handleCloseCreateItem}
+            leftButtonOnClick={() => setCreateItem('')}
             showLeftButton={!!createItem}
             maxWidth={900}
           >
