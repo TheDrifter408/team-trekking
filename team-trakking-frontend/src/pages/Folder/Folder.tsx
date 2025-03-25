@@ -1,16 +1,26 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useGetFolderQuery } from '@store/services/main.ts';
 import { FolderHeader } from './components/FolderHeader';
 import { FolderOverview } from './components/FolderOverview';
 import { FolderList } from './components/FolderList';
 import { Breadcrumbs } from '@/components';
+import { List } from '@/types/ApiResponse';
+import { Modal } from '@library/components';
 
 export const Folder = () => {
   const params = useParams();
   const { data: folderDetails } = useGetFolderQuery(Number(params.folderId));
+  const [listStatistics, setListStatistics] = useState<List[]>([]);
+  const [selectedList, setSelectedList] = useState<List | null>(null);
+  const [showModal, setShowModal] = useState(false);
+  const handleListClick = (list:List) => {
+    setSelectedList(list);
+    console.log(list);
+    setShowModal(true);
+  }
 
-  // Compute statistics for summary cards
+  // Compute statistics for summar6y cards
   const folderStats = useMemo(() => {
     if (!folderDetails)
       return {
@@ -39,17 +49,21 @@ export const Folder = () => {
     };
   }, [folderDetails]);
 
-  // Compute list statistics
-  const listStatistics = useMemo(() => {
-    if (!folderDetails) return [];
+  // Compute list statistics and set it in state
+  useEffect(() => {
+    if (!folderDetails) {
+      setListStatistics([]);
+      return;
+    }
 
-    return folderDetails.lists.map((list) => {
+    const computedListStatistics = folderDetails.lists.map((list) => {
       const listTasks = folderDetails.tasks.filter(
         (task) => task.listId === list.id
       );
 
       return {
         ...list,
+        tasks:list.tasks,
         totalTasks: listTasks.length,
         completedTasks: listTasks.filter((task) => task.progress === 100)
           .length,
@@ -62,6 +76,7 @@ export const Folder = () => {
         ).length,
       };
     });
+    setListStatistics(computedListStatistics);
   }, [folderDetails]);
 
   // Render loading or empty state if no data
@@ -91,7 +106,23 @@ export const Folder = () => {
           folderDetails={folderDetails}
           folderStats={folderStats}
         />
-        <FolderList listStatistics={listStatistics} />
+        <FolderList listStatistics={listStatistics} onListClick={handleListClick} />
+      </div>
+      {/* Modal Container */}
+      <div>
+        { 
+          selectedList !== null && (
+            <Modal title="Tasks" isOpen={showModal} onClose={() => setShowModal(false)}>
+                <ul>
+                  {
+                    selectedList.tasks?.map((task) => (
+                      <li key={task.id}>{task.name}</li>
+                    ))
+                  }
+                </ul>
+            </Modal>
+          )
+        }
       </div>
     </div>
   );
