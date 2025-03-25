@@ -43,7 +43,7 @@ interface TeamTrackingState {
   setIsCreateSpace: (value: boolean) => void;
   setCreateItem: (item: string) => void;
   setSpaceName: (name: string) => void;
-  resetModal: () => void;
+  onResetModal: () => void;
   setWorkspaceData: (data: WorkspaceData[]) => void;
 }
 
@@ -66,7 +66,7 @@ export const useStore = create<TeamTrackingState>()(
       setIsCreateSpace: (value) => set({ isCreateSpace: value }),
       setCreateItem: (item) => set({ createItem: item }),
       setSpaceName: (name) => set({ spaceName: name }),
-      resetModal: () =>
+      onResetModal: () =>
         set({ isCreateSpace: false, createItem: '', spaceName: '' }),
       setWorkspaceData: (data: WorkspaceData[]) => set({ workspaceData: data }),
     }),

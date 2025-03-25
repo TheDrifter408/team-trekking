@@ -23,7 +23,7 @@ export const Layout = () => {
     setCreateItem,
     spaceName,
     setSpaceName,
-    resetModal,
+    onResetModal,
   } = useStore();
   const isMobile = window.innerWidth < 768;
 
@@ -63,7 +63,7 @@ export const Layout = () => {
           <Modal
             title={`Add New ${createItem}`}
             isOpen={isCreateSpace}
-            onClose={resetModal}
+            onClose={onResetModal}
             leftButtonText="Cancel"
             leftButtonVariant="ghost"
             leftButtonOnClick={() => setCreateItem('')}
@@ -104,40 +104,3 @@ export const Layout = () => {
     </div>
   );
 };
-
-{
-  /*{!isMobile && (*/
-}
-{
-  /*  <button*/
-}
-{
-  /*    onClick={() => setSidebarOpen((prev) => !prev)}*/
-}
-{
-  /*    className="absolute right-[-12px] top-10 flex h-8 w-8 -translate-y-1/2 transform items-center justify-center rounded-full bg-tertiary text-white shadow-lg"*/
-}
-{
-  /*  >*/
-}
-{
-  /*    {sidebarOpen ? (*/
-}
-{
-  /*      <ChevronLeft className="h-4 w-4" />*/
-}
-{
-  /*    ) : (*/
-}
-{
-  /*      <ChevronRight className="h-4 w-4" />*/
-}
-{
-  /*    )}*/
-}
-{
-  /*  </button>*/
-}
-{
-  /*)}*/
-}
