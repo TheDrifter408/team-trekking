@@ -1,9 +1,6 @@
 import React, { FormEvent, useState } from 'react';
-import { Workspace, WorkspaceItem } from '@/types/ApiResponse';
-import {
-  useCreateWorkSpaceMutation,
-  useGetWorkSpacesQuery,
-} from '@/store/services/main';
+import { WorkspaceItem } from '@/types/ApiResponse';
+import { useGetWorkSpacesQuery } from '@/store/services/main';
 import { WorkspaceCard } from './components/WorkspaceCard';
 import { CreateWorkspaceForm } from './components/CreateWorkspaceForm';
 import { BrandSection } from './components/BrandSection';
@@ -15,7 +12,6 @@ export const Home: React.FC = () => {
   const [submitting, setSubmitting] = useState(false);
   const { currentTheme, setTheme } = useStore();
   const { data: workspaceList } = useGetWorkSpacesQuery();
-  const [createWorkspace] = useCreateWorkSpaceMutation();
 
   const [steps, setSteps] = useState(1);
   const [darkMode, setDarkMode] = useState(false);
@@ -49,36 +45,17 @@ export const Home: React.FC = () => {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const formdata = new FormData(e.currentTarget);
     setWorkspaceModal(false);
     setSteps(1);
-
-    // Create the workspace object from the form data
-    const workspaceToCreate: Workspace = {
-      id: 1,
+    setSubmitting(true);
+    // Reset on successful submission - using WorkspaceItem type with empty arrays
+    setWorkspace({
+      id: 0,
       image: '',
-      name:
-        (formdata.get('name') as string) || workspace.name || 'Workspace Name',
-      description: workspace.description || '',
-    };
-
-    try {
-      setSubmitting(true);
-      await createWorkspace(workspaceToCreate);
-
-      // Reset on successful submission - using WorkspaceItem type with empty arrays
-      setWorkspace({
-        id: 0,
-        image: '',
-        name: '',
-        description: '',
-        members: [],
-      });
-    } catch (e) {
-      console.error(e);
-    } finally {
-      setSubmitting(false);
-    }
+      name: '',
+      description: '',
+      members: [],
+    });
   };
 
   const handleCreateNew = () => {

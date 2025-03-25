@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Header } from '../Header/Header.tsx';
@@ -11,6 +11,9 @@ import {
   CreateList,
 } from '@/components/index';
 import { useStore } from '@/store/zustand/index';
+import { useData } from '@/hooks/useData';
+import { Folder, List } from '@/types/ApiResponse.ts';
+import { CreateListItem as ListItem } from '@/types/Props.ts';
 
 export const Layout = () => {
   const { state } = useLocation();
@@ -24,7 +27,37 @@ export const Layout = () => {
     spaceName,
     setSpaceName,
     resetModal,
+    currentWorkspaceId,
+    workspaceData,
   } = useStore();
+  const { handleCreateSpace, handleCreateFolder, handleCreateList } = useData();
+  const [folderItem, setFolder] = useState<Folder>({
+    id: '0',
+    name: '',
+    description: '',
+    color: '#6366f1', // Default indigo color
+    spaceId: 0, // Change spaceId to parentSpaceId to match CreateFolder
+    isPrivate: false,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    tags: [],
+  });
+  const [list, setList] = useState<List>({
+    id: '0',
+    name: '',
+    description: '',
+    parentId: 0,
+    parentType: 'space',
+    items: [] as ListItem[],
+    isArchived: false,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  });
+
+  const handleColorChange = (color: string) => {
+    setFolder({ ...folderItem, color });
+  };
+
   const isMobile = window.innerWidth < 768;
 
   useEffect(() => {
@@ -40,6 +73,34 @@ export const Layout = () => {
   useEffect(() => {
     if (isMobile) toggleSidebar();
   }, [isMobile, toggleSidebar]);
+
+  const handleConfirm = async () => {
+    if (createItem === 'Space') {
+      await handleCreateSpace(currentWorkspaceId, spaceName);
+      resetModal();
+    } else if (createItem === 'Folder') {
+      await handleCreateFolder(
+        Number(folderItem.spaceId),
+        folderItem.name,
+        folderItem.color
+      );
+      resetModal();
+    } else if (createItem === 'List') {
+      await handleCreateList(Number(list.parentId), list.parentType, list.name);
+      resetModal();
+      setList({
+        id: '0',
+        name: '',
+        description: '',
+        parentId: 1,
+        parentType: 'space',
+        items: [] as ListItem[],
+        isArchived: false,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      });
+    }
+  };
 
   return (
     <div className="min-h-screen bg-bg-primary-light">
@@ -67,7 +128,9 @@ export const Layout = () => {
             leftButtonText="Cancel"
             leftButtonVariant="ghost"
             leftButtonOnClick={() => setCreateItem('')}
+            rightButtonOnClick={handleConfirm}
             showLeftButton={!!createItem}
+            showRightButton={!!createItem}
             maxWidth={900}
           >
             {!createItem ? (
@@ -92,9 +155,22 @@ export const Layout = () => {
                   />
                 )}
                 {createItem === 'Folder' && (
-                  <CreateFolder onFolderAdd={() => {}} />
+                  <CreateFolder
+                    onFolderAdd={handleCreateFolder}
+                    folder={folderItem}
+                    setFolder={setFolder}
+                    handleColorChange={handleColorChange}
+                    spaces={workspaceData}
+                  />
                 )}
-                {createItem === 'List' && <CreateList onListAdd={() => {}} />}
+                {createItem === 'List' && (
+                  <CreateList
+                    onListAdd={handleCreateList}
+                    spaces={workspaceData}
+                    list={list}
+                    setList={setList}
+                  />
+                )}
               </div>
             )}
           </Modal>
@@ -104,40 +180,3 @@ export const Layout = () => {
     </div>
   );
 };
-
-{
-  /*{!isMobile && (*/
-}
-{
-  /*  <button*/
-}
-{
-  /*    onClick={() => setSidebarOpen((prev) => !prev)}*/
-}
-{
-  /*    className="absolute right-[-12px] top-10 flex h-8 w-8 -translate-y-1/2 transform items-center justify-center rounded-full bg-tertiary text-white shadow-lg"*/
-}
-{
-  /*  >*/
-}
-{
-  /*    {sidebarOpen ? (*/
-}
-{
-  /*      <ChevronLeft className="h-4 w-4" />*/
-}
-{
-  /*    ) : (*/
-}
-{
-  /*      <ChevronRight className="h-4 w-4" />*/
-}
-{
-  /*    )}*/
-}
-{
-  /*  </button>*/
-}
-{
-  /*)}*/
-}

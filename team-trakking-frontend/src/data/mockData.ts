@@ -1,4 +1,4 @@
-import { Workspace, Member } from '@/types/ApiResponse.ts';
+import { Workspace, Member, Folder, List } from '@/types/ApiResponse.ts';
 
 export const workspaces: Array<Workspace> = [
   {
@@ -23,22 +23,23 @@ export const spaces = [
   { id: 4, workspaceId: 2, name: 'E-Commerce Platform' },
 ];
 
-export const folders = [
+export const folders: Folder[] = [
   { id: 1, spaceId: 1, name: 'Going Moon', folderStatusId: 1 },
   { id: 2, spaceId: 1, name: 'Space adventure', folderStatusId: 2 },
   { id: 3, spaceId: 1, name: 'Trade crypto', folderStatusId: 3 },
-  { id: 4, spaceId: 3, name: 'Meme posting', folderStatusId: 4 },
-  { id: 5, spaceId: 4, name: 'Agent builder', folderStatusId: 1 },
+  { id: 4, spaceId: 4, name: 'Meme posting', folderStatusId: 4 },
+  { id: 5, spaceId: 3, name: 'Agent builder', folderStatusId: 1 },
 ];
 
-export const lists = [
-  { id: 0, statusId: 1 },
-  { id: 1, parentId: 1, parentType: 'folder', statusId: 1 },
-  { id: 2, parentId: 1, parentType: 'folder', statusId: 2 },
-  { id: 3, parentId: 1, parentType: 'folder', statusId: 3 },
-  { id: 5, parentId: 1, parentType: 'space', statusId: 4 },
-  { id: 4, parentId: 4, parentType: 'folder', statusId: 5 },
-  { id: 6, parentId: 5, parentType: 'space', statusId: 6 },
+export const lists: List[] = [
+  { id: 0, statusId: 1, name: 'List', parentId: 0, parentType: 'space' },
+  { id: 1, parentId: 1, parentType: 'folder', statusId: 1, name: 'List' },
+  { id: 2, parentId: 1, parentType: 'folder', statusId: 2, name: 'List' },
+  { id: 3, parentId: 1, parentType: 'folder', statusId: 3, name: 'List' },
+  { id: 5, parentId: 1, parentType: 'space', statusId: 4, name: 'List' },
+  { id: 4, parentId: 4, parentType: 'folder', statusId: 5, name: 'List' },
+  { id: 6, parentId: 3, parentType: 'space', statusId: 5, name: 'List' },
+  { id: 7, parentId: 4, parentType: 'folder', statusId: 3, name: 'Memer' },
 ];
 
 export const folderStatus = [

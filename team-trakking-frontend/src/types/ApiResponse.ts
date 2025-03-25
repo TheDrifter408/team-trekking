@@ -13,21 +13,10 @@ export interface User {
 export interface Space {
   id: number;
   name: string;
+  color?: string;
   workspaceId: number;
-  folders: Folder[];
+  folders?: Folder[];
   lists?: List[];
-}
-
-export interface SpaceItem {
-  workspaceName: string;
-  id: number;
-  name: string;
-  statusType?: string[];
-  folders: {
-    id: number;
-    name: string;
-    lists: string[];
-  }[];
 }
 
 export interface SpaceDetails extends Space {
@@ -43,8 +32,9 @@ export interface Folder {
   id: number;
   name: string;
   spaceId: number;
-  folderStatusId: number;
-  status: FolderStatus;
+  folderStatusId?: number;
+  color?: string;
+  status?: FolderStatus;
   lists?: List[];
 }
 
@@ -53,9 +43,9 @@ export interface List {
   name: string;
   parentId: number;
   parentType: 'space' | 'folder';
-  statusId: number;
-  status: Status;
-  tasks: Task[];
+  statusId?: number;
+  status?: Status;
+  tasks?: Task[];
 }
 
 export interface Task {

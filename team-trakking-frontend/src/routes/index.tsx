@@ -2,7 +2,6 @@ import { Routes, Route, Navigate } from 'react-router';
 import { Home, Login, Workspace, Space } from '@/pages/index';
 import { Layout } from '@/components/Common/Layout';
 import PrivateRoute from '@/routes/privateRoute.tsx';
-import { WorkspaceProvider } from '@/context/LayoutContext.tsx';
 
 const AppRoutes = () => {
   return (

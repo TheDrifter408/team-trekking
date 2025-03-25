@@ -1,13 +1,17 @@
-import { FC, FormEvent, useState } from 'react';
-import { CreateFolder as Folder } from '@/types/Props';
-import { Input, Badge } from '@library/components';
+import React, { FC } from 'react';
+import { Badge, Input } from '@library/components';
 import { createFolderColors } from '@/data/mockData.ts';
 import { FolderOpen } from 'lucide-react';
+import { Space } from '@/types/ApiResponse.ts';
+import { WorkspaceData } from '@store/zustand';
 
 interface CreateFolderProps {
-  onFolderAdd: (e: FormEvent<HTMLFormElement>) => void;
+  onFolderAdd: (spaceId: number, folderName: string, color: string) => void;
+  spaces: WorkspaceData[];
+  folder: any;
+  handleColorChange: (color: string) => void;
+  setFolder: (folder: any) => void;
 }
-
 const colors: { [key: string]: string } = createFolderColors;
 
 const getFolderStatus = (color: string) => colors[color] || 'Unknown';
@@ -21,25 +25,31 @@ const getBadgeStyles = (color: string) => ({
   borderRadius: '4px',
 });
 
-export const CreateFolder: FC<CreateFolderProps> = ({ onFolderAdd }) => {
-  const [folder, setFolder] = useState<Folder>({
-    id: '0',
-    name: '',
-    description: '',
-    color: '#6366f1', // Default indigo color
-    parentSpaceId: '',
-    isPrivate: false,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    tags: [],
-  });
-
-  const handleColorChange = (color: string) => {
-    setFolder({ ...folder, color });
+export const CreateFolder: FC<CreateFolderProps> = ({
+  onFolderAdd,
+  spaces,
+  folder,
+  setFolder,
+  handleColorChange,
+}) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    onFolderAdd(Number(folder.spaceId), folder.name, folder.color);
+    setFolder({
+      id: '0',
+      name: '',
+      description: '',
+      color: '#6366f1',
+      spaceId: 0,
+      isPrivate: false,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      tags: [],
+    });
   };
 
   return (
-    <form onSubmit={onFolderAdd} className="w-[100%] space-y-4 border-none">
+    <form onSubmit={handleSubmit} className="w-[100%] space-y-4 border-none">
       <div className="flex justify-between">
         <div className="items-left flex flex-col gap-2 w-1/2 pr-2">
           <div className="flex flex-col">
@@ -64,18 +74,24 @@ export const CreateFolder: FC<CreateFolderProps> = ({ onFolderAdd }) => {
             <select
               id="parentSpace"
               name="parentSpace"
-              value={folder.parentSpaceId}
+              value={folder.spaceId}
               onChange={(e) =>
-                setFolder({ ...folder, parentSpaceId: e.target.value })
+                setFolder({ ...folder, spaceId: e.target.value })
               }
               className="rounded-md border p-2"
             >
               <option value="" disabled>
                 Select a space
               </option>
-              <option value="space1">Space 1</option>
-              <option value="space2">Space 2</option>
-              <option value="space3">Space 3</option>
+              {spaces &&
+                spaces.map((item: any) => {
+                  const space: Space = item.space;
+                  return (
+                    <option key={space.id} value={space.id}>
+                      {space.name}
+                    </option>
+                  );
+                })}
             </select>
           </div>
 

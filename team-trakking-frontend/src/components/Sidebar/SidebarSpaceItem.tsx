@@ -10,32 +10,13 @@ import {
   Trash,
 } from 'lucide-react';
 import React, { useCallback, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components';
 import { useStore } from '@store/zustand/index';
-
-interface List {
-  id: number;
-  name: string;
-}
-
-interface Folder {
-  id: number;
-  name: string;
-  color: string;
-  lists?: List[];
-}
-
-interface Space {
-  id: number;
-  name: string;
-  color: string;
-  lists?: List[];
-  folders?: Folder[];
-}
+import { Space } from '@/types/ApiResponse';
 
 interface SidebarSpaceItemProps {
   space: Space;
+  currentWorkspaceId: number;
   handleSpaceNavigate: (id: number) => void;
 }
 
@@ -43,7 +24,6 @@ const SidebarSpaceItem = ({
   space,
   handleSpaceNavigate,
 }: SidebarSpaceItemProps) => {
-  const navigate = useNavigate();
   const { isCreateSpace, setIsCreateSpace } = useStore();
   const [expandedSpaceId, setExpandedSpaceId] = useState<number | null>(null);
   const [expandedFolderId, setExpandedFolderId] = useState<number | null>(null);
@@ -64,12 +44,12 @@ const SidebarSpaceItem = ({
       event.stopPropagation();
       setIsActivePopup((prevState) => (prevState === spaceId ? null : spaceId));
     },
-    [] // No dependencies needed when using functional updates
+    []
   );
 
   const { id, name, lists, folders } = space;
-  const isExpanded = expandedSpaceId === id;
 
+  const isExpanded = expandedSpaceId === id;
   return (
     <div className="w-full">
       <div key={id} className="relative">
@@ -144,7 +124,7 @@ const SidebarSpaceItem = ({
           <div className="ml-6 space-y-1 mt-1">
             {folders?.map((folder) => {
               const { name, id: folderId } = folder;
-              const isFolderExpanded = expandedFolderId === folderId;
+              const isFolderExpanded = folderId === expandedFolderId;
               return (
                 <div key={folderId}>
                   <Button
@@ -156,6 +136,7 @@ const SidebarSpaceItem = ({
                           <FolderIcon
                             size={14}
                             onClick={() => handleFolderExpand(folderId)}
+                            color={folder.color}
                           />
                         ),
                       },
@@ -166,6 +147,7 @@ const SidebarSpaceItem = ({
                   {isFolderExpanded &&
                     lists?.map((list) => {
                       const { id, name } = list;
+                      console.log(list, 'list ');
                       return (
                         <Button
                           key={id}
