@@ -113,3 +113,8 @@ export interface WorkspaceItem extends Workspace {
 export interface WorkspaceDetails extends WorkspaceItem {
   spaces: Space[];
 }
+
+export interface FolderDetails extends Folder {
+  lists: List[];
+  tasks: Task[];
+}

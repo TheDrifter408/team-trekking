@@ -41,114 +41,6 @@ export const lists: List[] = [
   { id: 6, parentId: 3, parentType: 'space', statusId: 5, name: 'List' },
   { id: 7, parentId: 4, parentType: 'folder', statusId: 3, name: 'Memer' },
 ];
-
-export const folderStatus = [
-  { id: 1, color: 'var(--color-active)', name: 'Active' },
-  { id: 2, color: 'var(--color-planning)', name: 'Planning' },
-  { id: 3, color: 'var(--color-completed)', name: 'Completed' },
-  { id: 4, color: 'var(--color-inactive)', name: 'Inactive' },
-];
-
-export const statuses = [
-  { id: 1, serialId: 1, name: 'Backlog', color: 'var(--color-backlog)' },
-  {
-    id: 2,
-    serialId: 2,
-    name: 'Sprint Backlog',
-    color: 'var(--color-sprint-backlog)',
-  },
-  {
-    id: 3,
-    serialId: 3,
-    name: 'In Progress',
-    color: 'var(--color-in-progress)',
-  },
-  { id: 4, serialId: 4, name: 'Completed', color: 'var(--color-completed)' },
-  { id: 5, serialId: 5, name: 'Reviewing', color: 'var(--color-reviewing)' },
-  { id: 6, serialId: 6, name: 'Rejected', color: 'var(--color-rejected)' },
-  { id: 7, serialId: 7, name: 'Cancelled', color: 'var(--color-cancelled)' },
-];
-
-export const checklist = [
-  {
-    id: 1,
-    parentId: 1,
-    parentType: 'task',
-    isCompleted: false,
-    description: 'Create x',
-  },
-  {
-    id: 2,
-    parentId: 1,
-    parentType: 'task',
-    isCompleted: false,
-    description: 'Create x',
-  },
-  {
-    id: 3,
-    parentId: 1,
-    parentType: 'task',
-    isCompleted: false,
-    description: 'Create x',
-  },
-  {
-    id: 4,
-    parentId: 2,
-    parentType: 'task',
-    isCompleted: false,
-    description: 'Create x',
-  },
-  {
-    id: 5,
-    parentId: 2,
-    parentType: 'task',
-    isCompleted: false,
-    description: 'Create x',
-  },
-  {
-    id: 6,
-    parentId: 3,
-    parentType: 'task',
-    isCompleted: false,
-    description: 'Create x',
-  },
-  {
-    id: 7,
-    parentId: 3,
-    parentType: 'task',
-    isCompleted: false,
-    description: 'Create x',
-  },
-  {
-    id: 8,
-    parentId: 1,
-    parentType: 'subtask',
-    isCompleted: false,
-    description: 'Create x',
-  },
-  {
-    id: 9,
-    parentId: 1,
-    parentType: 'subtask',
-    isCompleted: false,
-    description: 'Create x',
-  },
-  {
-    id: 10,
-    parentId: 1,
-    parentType: 'subtask',
-    isCompleted: false,
-    description: 'Create x',
-  },
-  {
-    id: 11,
-    parentId: 1,
-    parentType: 'subtask',
-    isCompleted: false,
-    description: 'Create x',
-  },
-];
-
 export const tasks = [
   {
     id: 0,
@@ -276,6 +168,113 @@ export const tasks = [
       },
     ],
   })),
+];
+
+export const folderStatus = [
+  { id: 1, color: 'var(--color-active)', name: 'Active' },
+  { id: 2, color: 'var(--color-planning)', name: 'Planning' },
+  { id: 3, color: 'var(--color-completed)', name: 'Completed' },
+  { id: 4, color: 'var(--color-inactive)', name: 'Inactive' },
+];
+
+export const statuses = [
+  { id: 1, serialId: 1, name: 'Backlog', color: 'var(--color-backlog)' },
+  {
+    id: 2,
+    serialId: 2,
+    name: 'Sprint Backlog',
+    color: 'var(--color-sprint-backlog)',
+  },
+  {
+    id: 3,
+    serialId: 3,
+    name: 'In Progress',
+    color: 'var(--color-in-progress)',
+  },
+  { id: 4, serialId: 4, name: 'Completed', color: 'var(--color-completed)' },
+  { id: 5, serialId: 5, name: 'Reviewing', color: 'var(--color-reviewing)' },
+  { id: 6, serialId: 6, name: 'Rejected', color: 'var(--color-rejected)' },
+  { id: 7, serialId: 7, name: 'Cancelled', color: 'var(--color-cancelled)' },
+];
+
+export const checklist = [
+  {
+    id: 1,
+    parentId: 1,
+    parentType: 'task',
+    isCompleted: false,
+    description: 'Create x',
+  },
+  {
+    id: 2,
+    parentId: 1,
+    parentType: 'task',
+    isCompleted: false,
+    description: 'Create x',
+  },
+  {
+    id: 3,
+    parentId: 1,
+    parentType: 'task',
+    isCompleted: false,
+    description: 'Create x',
+  },
+  {
+    id: 4,
+    parentId: 2,
+    parentType: 'task',
+    isCompleted: false,
+    description: 'Create x',
+  },
+  {
+    id: 5,
+    parentId: 2,
+    parentType: 'task',
+    isCompleted: false,
+    description: 'Create x',
+  },
+  {
+    id: 6,
+    parentId: 3,
+    parentType: 'task',
+    isCompleted: false,
+    description: 'Create x',
+  },
+  {
+    id: 7,
+    parentId: 3,
+    parentType: 'task',
+    isCompleted: false,
+    description: 'Create x',
+  },
+  {
+    id: 8,
+    parentId: 1,
+    parentType: 'subtask',
+    isCompleted: false,
+    description: 'Create x',
+  },
+  {
+    id: 9,
+    parentId: 1,
+    parentType: 'subtask',
+    isCompleted: false,
+    description: 'Create x',
+  },
+  {
+    id: 10,
+    parentId: 1,
+    parentType: 'subtask',
+    isCompleted: false,
+    description: 'Create x',
+  },
+  {
+    id: 11,
+    parentId: 1,
+    parentType: 'subtask',
+    isCompleted: false,
+    description: 'Create x',
+  },
 ];
 
 export const members: Array<Member> = [

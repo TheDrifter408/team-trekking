@@ -1,9 +1,10 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { folders, spaces, workspaces, lists } from '@/data/mockData';
+import { folders, spaces, workspaces, lists, tasks } from '@/data/mockData';
 import {
   WorkspaceItem,
   WorkspaceDetails,
   SpaceDetails,
+  FolderDetails,
   Folder,
   List,
 } from '@/types/ApiResponse';
@@ -68,6 +69,34 @@ export const mainApi = createApi({
         return { data: space };
       },
     }),
+    getFolder: builder.query<FolderDetails | null, number>({
+      queryFn: async (folderId) => {
+        const folder = folders.find((item) => item.id === folderId);
+        if (!folder) return { data: null };
+        const listData = [];
+        const taskData = [];
+        for (let i = 0; i < lists.length; i++) {
+          const list = lists[i];
+          const listId = list.parentId;
+          if (listId !== folderId) continue;
+          listData.push(list);
+        }
+        for (let i = 0; i < listData.length; i++) {
+          const listId = listData[i].id;
+          for (let j = 0; j < tasks.length; j++) {
+            const task = tasks[j];
+            if (task.listId !== listId) continue;
+            taskData.push(task);
+          }
+        }
+        const folderData = {
+          ...folder,
+          lists: listData,
+          tasks: taskData,
+        };
+        return { data: folderData };
+      },
+    }),
     createSpace: builder.mutation<SpaceDetails, CreateSpaceResponse>({
       queryFn: async ({ workspaceId, spaceName }: CreateSpaceResponse) => {
         const newSpace = {
@@ -115,6 +144,7 @@ export const {
   useGetWorkSpacesQuery,
   useGetWorkspaceQuery,
   useGetSpaceQuery,
+  useGetFolderQuery,
   useCreateSpaceMutation,
   useCreateFolderMutation,
   useCreateListMutation,
