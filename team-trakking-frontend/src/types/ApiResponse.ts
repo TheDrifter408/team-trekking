@@ -118,3 +118,25 @@ export interface FolderDetails extends Folder {
   lists: List[];
   tasks: Task[];
 }
+
+export interface UserType {
+  id: string;
+  name: string;
+  avatar: string;
+}
+
+export interface SubTask {
+  id: string;
+  title: string;
+  progress: number;
+  dueDate: string;
+  estimatedTime: number;
+  priority: string;
+  status: string;
+}
+
+export interface ChecklistItem {
+  id: string;
+  content: string;
+  completed: boolean;
+}
