@@ -43,7 +43,7 @@ export const Home: React.FC = () => {
     }));
   };
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+  const onHandleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setWorkspaceModal(false);
     setSteps(1);
@@ -120,7 +120,7 @@ export const Home: React.FC = () => {
         memberEmail={memberEmail}
         setMemberEmail={setMemberEmail}
         setFormSteps={setSteps}
-        onSubmit={handleSubmit}
+        onSubmit={onHandleSubmit}
         isOpen={workspaceModal}
         onClose={handleCloseModal}
         state={workspace}

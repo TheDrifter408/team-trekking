@@ -147,7 +147,6 @@ const SidebarSpaceItem = ({
                   {isFolderExpanded &&
                     lists?.map((list) => {
                       const { id, name } = list;
-                      console.log(list, 'list ');
                       return (
                         <Button
                           key={id}
