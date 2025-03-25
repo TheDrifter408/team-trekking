@@ -1,7 +1,12 @@
 import { Task } from '@/types/ApiResponse';
 import { FC } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const TaskTable:FC<{ tasks: Task[] | undefined }> = ({ tasks }) => {
+  const navigate = useNavigate();
+  const handleTaskClick = (task:Task) => {
+    navigate(`/Task/${task.id}`)
+  }
   return (
     <div className="overflow-x-auto">
       <table className="w-full border-collapse">
@@ -18,7 +23,7 @@ const TaskTable:FC<{ tasks: Task[] | undefined }> = ({ tasks }) => {
         </thead>
         <tbody>
           { tasks !== undefined ? tasks.map((task) => (
-            <tr key={task.id} className="border-b hover:bg-gray-50">
+            <tr key={task.id} className="border-b hover:bg-gray-50" onClick={() => handleTaskClick(task)}>
               <td className="p-3">{task.name}</td>
               <td className="p-3 font-medium">{task.name}</td>
               <td className="p-3">{task.statusId}</td>
