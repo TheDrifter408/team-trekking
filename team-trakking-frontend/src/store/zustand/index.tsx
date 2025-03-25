@@ -1,35 +1,17 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { Space } from '@/types/ApiResponse.ts';
 
 type ThemeType = 'light' | 'dark' | 'forest' | 'sunset';
 
-interface ListItem {
-  id: number;
-  name: string;
-}
-
-interface FolderItem {
-  id: number;
-  name: string;
-  color: string;
-  lists?: ListItem[];
-}
-
-interface SpaceItem {
-  id: number;
-  name: string;
-  color: string;
-  lists?: ListItem[];
-  folders?: FolderItem[];
-}
-
-interface WorkspaceData {
-  space?: SpaceItem;
+export interface WorkspaceData {
+  space?: Space;
 }
 
 interface TeamTrackingState {
   currentTheme: ThemeType;
   currentWorkspace: string;
+  currentWorkspaceId: number;
   sidebarOpen: boolean;
   isCreateSpace: boolean;
   createItem: string;
@@ -45,6 +27,7 @@ interface TeamTrackingState {
   setSpaceName: (name: string) => void;
   onResetModal: () => void;
   setWorkspaceData: (data: WorkspaceData[]) => void;
+  setWorkspaceId: (workspaceId: number) => void;
 }
 
 export const useStore = create<TeamTrackingState>()(
@@ -52,6 +35,7 @@ export const useStore = create<TeamTrackingState>()(
     (set) => ({
       currentTheme: 'light',
       currentWorkspace: '',
+      currentWorkspaceId: 0,
       sidebarOpen: true,
       isCreateSpace: false,
       createItem: '',
@@ -69,6 +53,7 @@ export const useStore = create<TeamTrackingState>()(
       onResetModal: () =>
         set({ isCreateSpace: false, createItem: '', spaceName: '' }),
       setWorkspaceData: (data: WorkspaceData[]) => set({ workspaceData: data }),
+      setWorkspaceId: (id: number) => set({ currentWorkspaceId: id }),
     }),
     {
       name: 'team-tracking-storage',

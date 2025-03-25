@@ -7,8 +7,7 @@ import { useStore } from '@store/zustand';
 
 export const Sidebar: FC<SidebarProps> = ({ sidebarOpen }) => {
   const navigate = useNavigate();
-  const { workspaceData } = useStore();
-
+  const { workspaceData, currentWorkspaceId } = useStore();
   const [isActivePopup, setIsActivePopup] = useState<number | null>(null);
 
   const handleSpaceNavigate = (id: number) => {
@@ -67,12 +66,13 @@ export const Sidebar: FC<SidebarProps> = ({ sidebarOpen }) => {
         </div>
 
         <div className="mt-2 flex">
-          <div className="space-y-1 w-full mb-5">
+          <div className="space-y-1 w-full ">
             {sidebarOpen &&
               workspaceData.map(({ space }) => {
                 if (!space) return null;
                 return (
                   <SidebarSpaceItem
+                    currentWorkspaceId={currentWorkspaceId}
                     space={space}
                     handleSpaceNavigate={handleSpaceNavigate}
                   />

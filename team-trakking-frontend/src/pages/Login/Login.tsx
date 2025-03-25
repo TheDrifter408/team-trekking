@@ -18,7 +18,7 @@ export const Login = () => {
   const { currentTheme, setTheme } = useStore();
   const { authenticate, handleSocialAuth } = useAuth();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const onHandleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     await authenticate(isLogin, email, password);
   };
@@ -88,7 +88,7 @@ export const Login = () => {
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.2 }}
               className="space-y-6"
-              onSubmit={handleSubmit}
+              onSubmit={onHandleSubmit}
             >
               <div className="space-y-4">
                 <div>

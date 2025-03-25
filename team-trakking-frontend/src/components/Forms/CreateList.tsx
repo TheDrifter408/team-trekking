@@ -1,27 +1,51 @@
-import React, { FC, FormEvent, useState } from 'react';
-import { CreateList as List, CreateListItem as ListItem } from '@/types/Props';
+import React, { FC, useState } from 'react';
+import { CreateListItem as ListItem } from '@/types/Props';
 import { Input } from '@library/components';
 import { Plus, X } from 'lucide-react';
+import { WorkspaceData } from '@store/zustand';
+import { Space, Folder } from '@/types/ApiResponse.ts';
 
 interface CreateListProps {
-  // Add props as needed
-  onListAdd: (e: FormEvent<HTMLFormElement>) => void;
+  onListAdd: (parentId: number, parentType: string, listName: string) => void;
+  spaces: WorkspaceData[];
+  list: any;
+  setList: (list: any) => void;
 }
 
-export const CreateList: FC<CreateListProps> = ({ onListAdd }) => {
-  const [list, setList] = useState<List>({
-    id: '0',
-    name: '',
-    description: '',
-    parentId: '',
-    parentType: 'space',
-    items: [] as ListItem[],
-    isArchived: false,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  });
-
+export const CreateList: FC<CreateListProps> = ({
+  onListAdd,
+  spaces,
+  list,
+  setList,
+}) => {
   const [newItemText, setNewItemText] = useState<string>('');
+
+  const getAllFolders = () => {
+    const allFolders: {
+      id: number;
+      name: string;
+      spaceId: number;
+      spaceName: string;
+    }[] = [];
+
+    spaces.forEach((item: any) => {
+      const space = item.space;
+      if (space.folders && space.folders.length > 0) {
+        space.folders.forEach((folder: Folder) => {
+          allFolders.push({
+            id: folder.id,
+            name: folder.name,
+            spaceId: space.id,
+            spaceName: space.name,
+          });
+        });
+      }
+    });
+
+    return allFolders;
+  };
+
+  const allFolders = getAllFolders();
 
   // Handle adding a new list item
   const handleAddItem = () => {
@@ -64,8 +88,25 @@ export const CreateList: FC<CreateListProps> = ({ onListAdd }) => {
     setList({ ...list, items: updatedItems });
   };
 
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    onListAdd(Number(list.parentId), list.parentType, list.name);
+    setList({
+      id: '0',
+      name: '',
+      description: '',
+      parentId: 0,
+      parentType: 'space',
+      items: [] as ListItem[],
+      isArchived: false,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    });
+  };
+
   return (
-    <form onSubmit={onListAdd} className="w-[100%] space-y-4 border-none">
+    <form onSubmit={handleSubmit} className="w-[100%] space-y-4 border-none">
       <div className="flex justify-between">
         <div className="items-left flex flex-col gap-2 w-1/2 pr-2">
           <div className="flex flex-col">
@@ -126,23 +167,30 @@ export const CreateList: FC<CreateListProps> = ({ onListAdd }) => {
               onChange={(e) => setList({ ...list, parentId: e.target.value })}
               className="rounded-md border p-2"
             >
-              <option value="" disabled>
+              <option value="0" disabled>
                 Select a {list.parentType}
               </option>
               {list.parentType === 'space' ? (
                 <>
-                  <option value="space1">Space 1</option>
-                  <option value="space2">Space 2</option>
-                  <option value="space3">Space 3</option>
+                  {spaces &&
+                    spaces.map((item: any) => {
+                      const space: Space = item.space;
+                      return (
+                        <option key={space.id} value={space.id}>
+                          {space.name}
+                        </option>
+                      );
+                    })}
                 </>
               ) : (
                 <>
-                  <option value="folder1">Folder 1</option>
-                  <option value="folder2">Folder 2</option>
-                  <option value="folder3">Folder 3</option>
+                  {allFolders.map((folder) => (
+                    <option key={folder.id} value={folder.id}>
+                      {folder.name} (in {folder.spaceName})
+                    </option>
+                  ))}
                 </>
               )}
-              {/* Add dynamic options as needed */}
             </select>
           </div>
         </div>
@@ -215,7 +263,7 @@ export const CreateList: FC<CreateListProps> = ({ onListAdd }) => {
         <div className="mt-4">
           <h3 className="font-semibold mb-2">Items:</h3>
           <div className="space-y-2 bg-gray-100 p-3 rounded-md">
-            {list.items.map((item, index) => (
+            {list.items.map((item: any, index: number) => (
               <div key={index} className="flex items-center justify-between">
                 <div className="flex items-center">
                   <input

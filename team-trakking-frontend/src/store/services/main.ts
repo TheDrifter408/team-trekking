@@ -1,23 +1,23 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { data } from '@utils/data2.ts';
+import { folders, spaces, workspaces, lists } from '@/data/mockData';
 import {
-  workspaces,
-  members,
-  spaces,
-  folders,
-  lists,
-  folderStatus,
-  statuses,
-  tasks,
-  checklist,
-} from '@/data/mockData';
-import {
-  SpaceItem,
-  Workspace,
   WorkspaceItem,
   WorkspaceDetails,
   SpaceDetails,
+  Folder,
+  List,
 } from '@/types/ApiResponse';
+import {
+  enrichSpace,
+  enrichWorkspace,
+  getListWithTasks,
+  getFolderWithLists,
+} from '@utils/Common.ts';
+import {
+  CreateSpaceResponse,
+  CreateFolderResponse,
+  CreateListResponse,
+} from '@/types/ApiRequest.ts';
 
 export const mainApi = createApi({
   reducerPath: 'mainApi',
@@ -25,97 +25,34 @@ export const mainApi = createApi({
   endpoints: (builder) => ({
     getWorkSpaces: builder.query<WorkspaceItem[], void>({
       queryFn: async () => {
-        const enrichedWorkspaces = workspaces.map((workspace) => ({
-          ...workspace,
-          members: members.filter(
-            (member) => member.workspaceId === workspace.id
-          ),
-        }));
+        const enrichedWorkspaces = workspaces
+          .map((workspace) => {
+            const enriched = enrichWorkspace(workspace.id);
+            return enriched ? { ...enriched, members: enriched.members } : null;
+          })
+          .filter(Boolean);
         return { data: enrichedWorkspaces };
       },
     }),
     getWorkspace: builder.query<WorkspaceDetails | null, number>({
       queryFn: async (workspaceId) => {
-        const workspace = workspaces.find((w) => w.id === workspaceId);
+        const workspace = enrichWorkspace(workspaceId);
         if (!workspace) return { data: null };
-
-        const workspaceMembers = members.filter(
-          (m) => m.workspaceId === workspaceId
-        );
-        const workspaceSpaces = spaces.filter(
-          (s) => s.workspaceId === workspaceId
-        );
 
         const workspaceDetails = {
           ...workspace,
-          members: workspaceMembers,
-          spaces: workspaceSpaces.map((space) => {
-            const spaceFolders = folders.filter((f) => f.spaceId === space.id);
-            const spacesLists = lists.filter(
-              (l) => l.parentId === space.id && l.parentType === 'space'
-            );
-            return {
-              ...space,
-              folders: spaceFolders.map((folder) => {
-                const status = folderStatus.find(
-                  (fs) => fs.id === folder.folderStatusId
-                );
-                const folderLists = lists.filter(
-                  (l) => l.parentId === folder.id && l.parentType === 'folder'
-                );
+          spaces: workspace.spaces.map((space) => {
+            const enrichedSpace = enrichSpace(space.id);
+            if (!enrichedSpace) return null;
 
-                return {
-                  ...folder,
-                  status: status || { id: 0, color: '', name: 'Undefined' },
-                  lists: folderLists.map((list) => {
-                    const listStatus = statuses.find(
-                      (s) => s.id === list.statusId
-                    );
-                    const listTasks = tasks.filter((t) => t.listId === list.id);
-                    return {
-                      ...list,
-                      status: listStatus || {
-                        id: 0,
-                        serialId: 0,
-                        name: 'Undefined',
-                        color: '',
-                      },
-                      tasks: listTasks.map((task) => {
-                        const taskChecklist = checklist.filter(
-                          (c) =>
-                            c.parentId === task.id && c.parentType === 'task'
-                        );
-                        return {
-                          ...task,
-                          checklist: taskChecklist,
-                        };
-                      }),
-                    };
-                  }),
-                };
-              }),
-              lists: spacesLists.map((list) => {
-                const listStatus = statuses.find((s) => s.id === list.statusId);
-                const listTasks = tasks.filter((t) => t.listId === list.id);
-                return {
-                  ...list,
-                  status: listStatus || {
-                    id: 0,
-                    serialId: 0,
-                    name: 'Undefined',
-                    color: '',
-                  },
-                  tasks: listTasks.map((task) => {
-                    const taskChecklist = checklist.filter(
-                      (c) => c.parentId === task.id && c.parentType === 'task'
-                    );
-                    return {
-                      ...task,
-                      checklist: taskChecklist,
-                    };
-                  }),
-                };
-              }),
+            return {
+              ...enrichedSpace,
+              folders: enrichedSpace.folders.map((folder) =>
+                getFolderWithLists(folder.id)
+              ),
+              lists: enrichedSpace.lists.map((list) =>
+                getListWithTasks(list.id)
+              ),
             };
           }),
         };
@@ -125,99 +62,50 @@ export const mainApi = createApi({
     }),
     getSpace: builder.query<SpaceDetails | null, number>({
       queryFn: async (spaceId) => {
-        const space = spaces.find((s) => s.id === spaceId);
+        const space = enrichSpace(spaceId);
         if (!space) return { data: null };
 
-        // Get the workspace that contains this space
-        const workspace = workspaces.find((w) => w.id === space.workspaceId);
-        if (!workspace) return { data: null };
-
-        // Get folders for this space
-        const spaceFolders = folders.filter((f) => f.spaceId === spaceId);
-
-        // Get lists directly under this space
-        const spaceLists = lists.filter(
-          (l) => l.parentId === spaceId && l.parentType === 'space'
-        );
-
-        const spaceDetails = {
-          ...space,
-          workspace: {
-            id: workspace.id,
-            name: workspace.name,
-          },
-          folders: spaceFolders.map((folder) => {
-            const status = folderStatus.find(
-              (fs) => fs.id === folder.folderStatusId
-            );
-            const folderLists = lists.filter(
-              (l) => l.parentId === folder.id && l.parentType === 'folder'
-            );
-
-            return {
-              ...folder,
-              status: status || { id: 0, color: '', name: 'Undefined' },
-              lists: folderLists.map((list) => {
-                const listStatus = statuses.find((s) => s.id === list.statusId);
-                const listTasks = tasks.filter((t) => t.listId === list.id);
-                return {
-                  ...list,
-                  status: listStatus || {
-                    id: 0,
-                    serialId: 0,
-                    name: 'Undefined',
-                    color: '',
-                  },
-                  tasks: listTasks.map((task) => {
-                    const taskChecklist = checklist.filter(
-                      (c) => c.parentId === task.id && c.parentType === 'task'
-                    );
-                    return {
-                      ...task,
-                      checklist: taskChecklist,
-                    };
-                  }),
-                };
-              }),
-            };
-          }),
-          lists: spaceLists.map((list) => {
-            const listStatus = statuses.find((s) => s.id === list.statusId);
-            const listTasks = tasks.filter((t) => t.listId === list.id);
-            return {
-              ...list,
-              status: listStatus || {
-                id: 0,
-                serialId: 0,
-                name: 'Undefined',
-                color: '',
-              },
-              tasks: listTasks.map((task) => {
-                const taskChecklist = checklist.filter(
-                  (c) => c.parentId === task.id && c.parentType === 'task'
-                );
-                return {
-                  ...task,
-                  checklist: taskChecklist,
-                };
-              }),
-            };
-          }),
-        };
-
-        return { data: spaceDetails };
+        return { data: space };
       },
     }),
-    createWorkSpace: builder.mutation<Workspace | null, Workspace>({
-      queryFn: async (workspace) => {
-        const newId = data.length + 1;
-        workspace.id = newId;
-        data.push(workspace as Workspace);
-        const newWorkspace = data.find((w) => w.id === newId);
-        if (newWorkspace) {
-          return { data: newWorkspace };
-        }
-        return { data: null };
+    createSpace: builder.mutation<SpaceDetails, CreateSpaceResponse>({
+      queryFn: async ({ workspaceId, spaceName }: CreateSpaceResponse) => {
+        const newSpace = {
+          id: spaces.length + 1, // New ID based on the current length of spaces
+          workspaceId: workspaceId,
+          name: spaceName,
+          color: '',
+        };
+        spaces.push(newSpace);
+
+        return { data: newSpace };
+      },
+    }),
+    createFolder: builder.mutation<Folder, CreateFolderResponse>({
+      queryFn: async (body: CreateFolderResponse) => {
+        const maxId = Math.max(...folders.map((folder) => folder.id), 0);
+        const newFolder: Folder = {
+          id: maxId + 1,
+          name: body.folderName,
+          spaceId: body.spaceId,
+          color: body.color,
+          folderStatusId: 1,
+        };
+        folders.push(newFolder);
+        return { data: newFolder };
+      },
+    }),
+    createList: builder.mutation<List, CreateListResponse>({
+      queryFn: async (body: CreateListResponse) => {
+        const maxId = Math.max(...lists.map((list) => list.id), 0);
+        const newList: List = {
+          id: maxId,
+          name: body.listName,
+          parentId: Number(body.parentId),
+          parentType: body.parentType === 'space' ? 'space' : 'folder',
+        };
+        lists.push(newList);
+        return { data: newList };
       },
     }),
   }),
@@ -227,5 +115,7 @@ export const {
   useGetWorkSpacesQuery,
   useGetWorkspaceQuery,
   useGetSpaceQuery,
-  useCreateWorkSpaceMutation,
+  useCreateSpaceMutation,
+  useCreateFolderMutation,
+  useCreateListMutation,
 } = mainApi;

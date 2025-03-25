@@ -17,7 +17,7 @@ import { ActivityFeed } from './components/ActivityFeed.tsx';
 export const WorkspacePage = () => {
   const params = useParams();
   const navigate = useNavigate();
-  const { setWorkspaceName, setWorkspaceData } = useStore();
+  const { setWorkspaceName, setWorkspaceData, setWorkspaceId } = useStore();
   const { workspaceId } = params;
   const { data: workspaceDetails } = useGetWorkspaceQuery(Number(workspaceId));
   const [spaceCount, setSpaceCount] = useState(0);
@@ -31,6 +31,7 @@ export const WorkspacePage = () => {
   useEffect(() => {
     if (workspaceDetails) {
       setWorkspaceName(workspaceDetails.name ?? '');
+      setWorkspaceId(workspaceDetails.id);
 
       // Transform the API data to match the WorkspaceData structure
       const transformedData = workspaceDetails.spaces.map((space) => {
