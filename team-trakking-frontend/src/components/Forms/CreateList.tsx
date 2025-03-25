@@ -90,7 +90,6 @@ export const CreateList: FC<CreateListProps> = ({
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(list);
 
     onListAdd(Number(list.parentId), list.parentType, list.name);
     setList({

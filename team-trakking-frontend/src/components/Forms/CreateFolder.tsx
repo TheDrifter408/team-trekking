@@ -32,7 +32,7 @@ export const CreateFolder: FC<CreateFolderProps> = ({
   setFolder,
   handleColorChange,
 }) => {
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const onHandleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     onFolderAdd(Number(folder.spaceId), folder.name, folder.color);
     setFolder({
@@ -49,7 +49,7 @@ export const CreateFolder: FC<CreateFolderProps> = ({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="w-[100%] space-y-4 border-none">
+    <form onSubmit={onHandleSubmit} className="w-[100%] space-y-4 border-none">
       <div className="flex justify-between">
         <div className="items-left flex flex-col gap-2 w-1/2 pr-2">
           <div className="flex flex-col">

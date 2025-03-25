@@ -88,7 +88,7 @@ export const mainApi = createApi({
           id: maxId + 1,
           name: body.folderName,
           spaceId: body.spaceId,
-          color: body.color || '#6366f1',
+          color: body.color,
           folderStatusId: 1,
         };
         folders.push(newFolder);

@@ -15,7 +15,6 @@ export const useData = () => {
   const handleCreateSpace = async (workspaceId: number, spaceName: string) => {
     try {
       const response = await createSpace({ workspaceId, spaceName }).unwrap();
-      console.log('Space created successfully:', response);
 
       const newSpace: Space = response;
       const updatedWorkspaceData = [...workspaceData];
@@ -38,8 +37,6 @@ export const useData = () => {
         folderName,
         color,
       }).unwrap();
-
-      console.log('Folder created successfully:', response);
 
       // Create a deep copy of the workspace data to avoid direct mutation
       const updatedWorkspaceData = JSON.parse(JSON.stringify(workspaceData));
