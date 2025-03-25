@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useGetFolderQuery } from '@store/services/main.ts';
 import { FolderHeader } from './components/FolderHeader';
@@ -20,7 +21,16 @@ export const Folder = () => {
     console.log(list);
     setShowModal(true);
   }
+  const [listStatistics, setListStatistics] = useState<List[]>([]);
+  const [selectedList, setSelectedList] = useState<List | null>(null);
+  const [showModal, setShowModal] = useState(false);
+  const handleListClick = (list:List) => {
+    setSelectedList(list);
+    console.log(list);
+    setShowModal(true);
+  }
 
+  // Compute statistics for summar6y cards
   // Compute statistics for summar6y cards
   const folderStats = useMemo(() => {
     if (!folderDetails)
@@ -58,6 +68,14 @@ export const Folder = () => {
     }
 
     const computedListStatistics = folderDetails.lists.map((list) => {
+  // Compute list statistics and set it in state
+  useEffect(() => {
+    if (!folderDetails) {
+      setListStatistics([]);
+      return;
+    }
+
+    const computedListStatistics = folderDetails.lists.map((list) => {
       const listTasks = folderDetails.tasks.filter(
         (task) => task.listId === list.id
       );
@@ -77,6 +95,7 @@ export const Folder = () => {
         ).length,
       };
     });
+    setListStatistics(computedListStatistics);
     setListStatistics(computedListStatistics);
   }, [folderDetails]);
 
