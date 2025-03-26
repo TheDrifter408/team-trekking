@@ -186,23 +186,23 @@ export const folderStatus = [
 ];
 
 export const statuses = [
-  { id: 1, serialId: 1, name: 'Backlog', color: 'var(--color-backlog)' },
+  { id: 1, serialId: 1, name: 'Backlog', color: '#bdc3c9' },
   {
     id: 2,
     serialId: 2,
     name: 'Sprint Backlog',
-    color: 'var(--color-sprint-backlog)',
+    color: '#f39c12',
   },
   {
     id: 3,
     serialId: 3,
     name: 'In Progress',
-    color: 'var(--color-in-progress)',
+    color: '#3498db',
   },
-  { id: 4, serialId: 4, name: 'Completed', color: 'var(--color-completed)' },
-  { id: 5, serialId: 5, name: 'Reviewing', color: 'var(--color-reviewing)' },
-  { id: 6, serialId: 6, name: 'Rejected', color: 'var(--color-rejected)' },
-  { id: 7, serialId: 7, name: 'Cancelled', color: 'var(--color-cancelled)' },
+  { id: 4, serialId: 4, name: 'Completed', color: '#38c748' },
+  { id: 5, serialId: 5, name: 'Reviewing', color: '#9b59b6' },
+  { id: 6, serialId: 6, name: 'Rejected', color: '#e74c3c' },
+  { id: 7, serialId: 7, name: 'Cancelled', color: '#95a5a6' },
 ];
 
 export const checklist = [
