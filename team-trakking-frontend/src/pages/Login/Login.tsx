@@ -148,7 +148,7 @@ export const Login = () => {
                   </div>
                 </div>
 
-                <div className="flex w-full gap-2">
+                <div className="flex w-full grid-cols-2 gap-2">
                   <Button
                     variant={'outline'}
                     onClick={() => handleSocialAuth()}
@@ -158,7 +158,7 @@ export const Login = () => {
                         onClick: () => handleSocialAuth(),
                       },
                     ]}
-                    className={'w-50'}
+                    className={'w-full'}
                   >
                     <div className={'ml-2 flex-grow text-left'}>Github</div>
                   </Button>
@@ -171,7 +171,7 @@ export const Login = () => {
                         onClick: () => handleSocialAuth(),
                       },
                     ]}
-                    className="w-50 "
+                    className={'w-full'}
                   >
                     <div className={'ml-2 flex-grow text-left'}>Google</div>
                   </Button>

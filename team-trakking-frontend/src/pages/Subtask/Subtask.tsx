@@ -33,7 +33,6 @@ import {
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import { SortableChecklistRow } from '@pages/Task/components/SortableChecklistRow.tsx';
-import { SortableTaskRow } from '@pages/Task/components/SortableTaskRow.tsx';
 import { AddSubtask } from '@pages/Task/components/AddSubtask.tsx';
 import { Subtask } from '@pages/Task/components/Subtask.tsx';
 import type { Priority, Status, Task as TaskType } from '../types';
@@ -42,7 +41,7 @@ import { IconButton } from '@/components';
 import { Modal } from '@library/components';
 import { v4 as uuidv4 } from 'uuid';
 
-export const Task: React.FC = () => {
+export const SubtaskPage: React.FC = () => {
   const [selectedSubtasks, setSelectedSubtasks] = useState<Set<string>>(
     new Set()
   );
@@ -51,7 +50,7 @@ export const Task: React.FC = () => {
   >(new Set());
   const [task, setTask] = useState<TaskType>({
     id: '1',
-    title: 'Implement new feature',
+    title: 'New feature subtasks creation',
     description:
       'Create a new component for the dashboard that displays user statistics',
     status: 'in_progress',
@@ -238,7 +237,13 @@ export const Task: React.FC = () => {
     <div className=" w-full  bg-white rounded-lg shadow-lg p-6">
       <div className="space-y-6">
         {/* Header */}
-        <h1 className={'text-4xl font-bold'}>Task View</h1>
+        <h1 className={'text-4xl font-bold w-full justify-between'}>
+          <>Subtask View </>
+          <span className={'text-xl font-medium mt-1'}>
+            <span className={'text-lg font-normal'}>Task name:</span> Implement
+            new feature
+          </span>
+        </h1>
         <div className="flex items-center justify-between mt-4 ">
           <input
             type="text"

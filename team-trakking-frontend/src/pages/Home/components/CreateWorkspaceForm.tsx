@@ -62,6 +62,9 @@ export const CreateWorkspaceForm: FC<CreateWorkspaceFormProps> = ({
   const handleNext = () => {
     if (formSteps < 4) {
       setFormSteps((prev) => prev + 1);
+    } else {
+      onClose();
+      setFormSteps(1);
     }
   };
 
@@ -181,7 +184,7 @@ export const CreateWorkspaceForm: FC<CreateWorkspaceFormProps> = ({
       isOpen={isOpen}
       onClose={onClose}
       rightButtonText={rightButtonTitle()}
-      rightButtonOnClick={formSteps < 4 ? handleNext : () => onSubmit}
+      rightButtonOnClick={formSteps < 5 ? handleNext : () => onSubmit}
       showRightButton={formSteps < 5}
       showLeftButton={true}
       leftButtonText="Back"
@@ -195,14 +198,6 @@ export const CreateWorkspaceForm: FC<CreateWorkspaceFormProps> = ({
           onKeyDown={(e) => e.key === 'Enter' && e.preventDefault()}
         >
           {renderStepContent()}
-          {formSteps === 4 && (
-            <Button
-              type="submit"
-              className="rounded-md bg-blue-500 px-4 py-2 text-white"
-            >
-              {isSubmitting ? 'Creating...' : 'Create'}
-            </Button>
-          )}
         </form>
       </div>
     </Modal>

@@ -41,11 +41,29 @@ export const folders: Folder[] = [
 
 export const lists: List[] = [
   { id: 0, statusId: 1, name: 'List', parentId: 0, parentType: 'space' },
-  { id: 1, parentId: 1, parentType: 'folder', statusId: 1, name: 'List' },
-  { id: 2, parentId: 1, parentType: 'folder', statusId: 2, name: 'List' },
-  { id: 3, parentId: 1, parentType: 'folder', statusId: 3, name: 'List' },
-  { id: 5, parentId: 1, parentType: 'space', statusId: 4, name: 'List' },
-  { id: 4, parentId: 4, parentType: 'folder', statusId: 5, name: 'List' },
+  {
+    id: 1,
+    parentId: 1,
+    parentType: 'folder',
+    statusId: 1,
+    name: 'Initiatives',
+  },
+  {
+    id: 2,
+    parentId: 1,
+    parentType: 'folder',
+    statusId: 2,
+    name: 'Ubuntu loaders',
+  },
+  { id: 3, parentId: 1, parentType: 'folder', statusId: 3, name: 'Welcome' },
+  { id: 5, parentId: 1, parentType: 'space', statusId: 4, name: 'Going Home' },
+  {
+    id: 4,
+    parentId: 4,
+    parentType: 'folder',
+    statusId: 5,
+    name: 'Return Office',
+  },
   { id: 6, parentId: 3, parentType: 'space', statusId: 5, name: 'List' },
   { id: 7, parentId: 4, parentType: 'folder', statusId: 3, name: 'Memer' },
 ];
