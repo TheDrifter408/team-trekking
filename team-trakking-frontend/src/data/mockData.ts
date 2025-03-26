@@ -1,4 +1,12 @@
-import { Workspace, Member, Folder, List } from '@/types/ApiResponse.ts';
+import {
+  Workspace,
+  Member,
+  Folder,
+  List,
+  UserType,
+  SubTask,
+  ChecklistItem,
+} from '@/types/ApiResponse.ts';
 
 export const workspaces: Array<Workspace> = [
   {
@@ -41,114 +49,6 @@ export const lists: List[] = [
   { id: 6, parentId: 3, parentType: 'space', statusId: 5, name: 'List' },
   { id: 7, parentId: 4, parentType: 'folder', statusId: 3, name: 'Memer' },
 ];
-
-export const folderStatus = [
-  { id: 1, color: 'var(--color-active)', name: 'Active' },
-  { id: 2, color: 'var(--color-planning)', name: 'Planning' },
-  { id: 3, color: 'var(--color-completed)', name: 'Completed' },
-  { id: 4, color: 'var(--color-inactive)', name: 'Inactive' },
-];
-
-export const statuses = [
-  { id: 1, serialId: 1, name: 'Backlog', color: 'var(--color-backlog)' },
-  {
-    id: 2,
-    serialId: 2,
-    name: 'Sprint Backlog',
-    color: 'var(--color-sprint-backlog)',
-  },
-  {
-    id: 3,
-    serialId: 3,
-    name: 'In Progress',
-    color: 'var(--color-in-progress)',
-  },
-  { id: 4, serialId: 4, name: 'Completed', color: 'var(--color-completed)' },
-  { id: 5, serialId: 5, name: 'Reviewing', color: 'var(--color-reviewing)' },
-  { id: 6, serialId: 6, name: 'Rejected', color: 'var(--color-rejected)' },
-  { id: 7, serialId: 7, name: 'Cancelled', color: 'var(--color-cancelled)' },
-];
-
-export const checklist = [
-  {
-    id: 1,
-    parentId: 1,
-    parentType: 'task',
-    isCompleted: false,
-    description: 'Create x',
-  },
-  {
-    id: 2,
-    parentId: 1,
-    parentType: 'task',
-    isCompleted: false,
-    description: 'Create x',
-  },
-  {
-    id: 3,
-    parentId: 1,
-    parentType: 'task',
-    isCompleted: false,
-    description: 'Create x',
-  },
-  {
-    id: 4,
-    parentId: 2,
-    parentType: 'task',
-    isCompleted: false,
-    description: 'Create x',
-  },
-  {
-    id: 5,
-    parentId: 2,
-    parentType: 'task',
-    isCompleted: false,
-    description: 'Create x',
-  },
-  {
-    id: 6,
-    parentId: 3,
-    parentType: 'task',
-    isCompleted: false,
-    description: 'Create x',
-  },
-  {
-    id: 7,
-    parentId: 3,
-    parentType: 'task',
-    isCompleted: false,
-    description: 'Create x',
-  },
-  {
-    id: 8,
-    parentId: 1,
-    parentType: 'subtask',
-    isCompleted: false,
-    description: 'Create x',
-  },
-  {
-    id: 9,
-    parentId: 1,
-    parentType: 'subtask',
-    isCompleted: false,
-    description: 'Create x',
-  },
-  {
-    id: 10,
-    parentId: 1,
-    parentType: 'subtask',
-    isCompleted: false,
-    description: 'Create x',
-  },
-  {
-    id: 11,
-    parentId: 1,
-    parentType: 'subtask',
-    isCompleted: false,
-    description: 'Create x',
-  },
-];
-
 export const tasks = [
   {
     id: 0,
@@ -276,6 +176,113 @@ export const tasks = [
       },
     ],
   })),
+];
+
+export const folderStatus = [
+  { id: 1, color: 'var(--color-active)', name: 'Active' },
+  { id: 2, color: 'var(--color-planning)', name: 'Planning' },
+  { id: 3, color: 'var(--color-completed)', name: 'Completed' },
+  { id: 4, color: 'var(--color-inactive)', name: 'Inactive' },
+];
+
+export const statuses = [
+  { id: 1, serialId: 1, name: 'Backlog', color: '#bdc3c9' },
+  {
+    id: 2,
+    serialId: 2,
+    name: 'Sprint Backlog',
+    color: '#f39c12',
+  },
+  {
+    id: 3,
+    serialId: 3,
+    name: 'In Progress',
+    color: '#3498db',
+  },
+  { id: 4, serialId: 4, name: 'Completed', color: '#38c748' },
+  { id: 5, serialId: 5, name: 'Reviewing', color: '#9b59b6' },
+  { id: 6, serialId: 6, name: 'Rejected', color: '#e74c3c' },
+  { id: 7, serialId: 7, name: 'Cancelled', color: '#95a5a6' },
+];
+
+export const checklist = [
+  {
+    id: 1,
+    parentId: 1,
+    parentType: 'task',
+    isCompleted: false,
+    description: 'Create x',
+  },
+  {
+    id: 2,
+    parentId: 1,
+    parentType: 'task',
+    isCompleted: false,
+    description: 'Create x',
+  },
+  {
+    id: 3,
+    parentId: 1,
+    parentType: 'task',
+    isCompleted: false,
+    description: 'Create x',
+  },
+  {
+    id: 4,
+    parentId: 2,
+    parentType: 'task',
+    isCompleted: false,
+    description: 'Create x',
+  },
+  {
+    id: 5,
+    parentId: 2,
+    parentType: 'task',
+    isCompleted: false,
+    description: 'Create x',
+  },
+  {
+    id: 6,
+    parentId: 3,
+    parentType: 'task',
+    isCompleted: false,
+    description: 'Create x',
+  },
+  {
+    id: 7,
+    parentId: 3,
+    parentType: 'task',
+    isCompleted: false,
+    description: 'Create x',
+  },
+  {
+    id: 8,
+    parentId: 1,
+    parentType: 'subtask',
+    isCompleted: false,
+    description: 'Create x',
+  },
+  {
+    id: 9,
+    parentId: 1,
+    parentType: 'subtask',
+    isCompleted: false,
+    description: 'Create x',
+  },
+  {
+    id: 10,
+    parentId: 1,
+    parentType: 'subtask',
+    isCompleted: false,
+    description: 'Create x',
+  },
+  {
+    id: 11,
+    parentId: 1,
+    parentType: 'subtask',
+    isCompleted: false,
+    description: 'Create x',
+  },
 ];
 
 export const members: Array<Member> = [
@@ -407,3 +414,71 @@ export const workloadData = [
   { name: 'Design', tasks: 18 },
   { name: 'Operations', tasks: 29 },
 ];
+
+export const mockUsers: UserType[] = [
+  {
+    id: '1',
+    name: 'John Doe',
+    avatar:
+      'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
+  },
+  {
+    id: '2',
+    name: 'Jane Smith',
+    avatar:
+      'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop',
+  },
+];
+
+export const mockSubtasks: SubTask[] = [
+  {
+    id: '1',
+    title: 'Design UI components',
+    progress: 75,
+    dueDate: '2024-03-25T15:00:00.000Z',
+    estimatedTime: 4,
+    priority: 'high',
+    status: 'in_progress',
+  },
+  {
+    id: '2',
+    title: 'Implement API integration',
+    progress: 30,
+    dueDate: '2024-03-28T15:00:00.000Z',
+    estimatedTime: 6,
+    priority: 'normal',
+    status: 'todo',
+  },
+];
+
+export const mockChecklist: ChecklistItem[] = [
+  {
+    id: '1',
+    content: 'Review requirements document',
+    completed: true,
+  },
+  {
+    id: '2',
+    content: 'Set up development environment',
+    completed: true,
+  },
+  {
+    id: '3',
+    content: 'Create component structure',
+    completed: false,
+  },
+];
+
+export const statusColors: Record<string, string> = {
+  todo: 'bg-gray-500',
+  in_progress: 'bg-blue-500',
+  review: 'bg-purple-500',
+  done: 'bg-green-500',
+};
+
+export const priorityColors: Record<string, string> = {
+  urgent: 'bg-red-500',
+  high: 'bg-orange-500',
+  normal: 'bg-blue-500',
+  low: 'bg-gray-500',
+};

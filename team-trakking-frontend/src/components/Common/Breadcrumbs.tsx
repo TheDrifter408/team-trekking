@@ -5,6 +5,8 @@ interface BreadcrumbProps {
   workspaceName: string;
   spaceName?: string;
   spaceId?: number;
+  folderName?: string;
+  folderId?: number;
 }
 
 export const Breadcrumbs = ({
@@ -12,6 +14,8 @@ export const Breadcrumbs = ({
   workspaceName,
   spaceName,
   spaceId,
+  folderId,
+  folderName,
 }: BreadcrumbProps) => {
   return (
     <div className="py-1 h-full flex items-center px-6 bg-accent-header">
@@ -26,10 +30,21 @@ export const Breadcrumbs = ({
         <>
           <span className="mx-2 text-text-secondary">/</span>
           <Link
-            to={`/workspace/${workspaceId}/space/${spaceId}`}
+            to={`/space/${spaceId}`}
             className="text-sm text-text-primary hover:text-text-hover"
           >
             {spaceName}
+          </Link>
+        </>
+      )}
+      {folderName && folderId && (
+        <>
+          <span className="mx-2 text-text-secondary">/</span>
+          <Link
+            to={`/folder/${folderId}`}
+            className="text-sm text-text-primary hover:text-text-hover"
+          >
+            {folderName}
           </Link>
         </>
       )}

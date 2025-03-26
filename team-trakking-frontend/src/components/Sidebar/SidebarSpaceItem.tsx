@@ -18,11 +18,13 @@ interface SidebarSpaceItemProps {
   space: Space;
   currentWorkspaceId: number;
   handleSpaceNavigate: (id: number) => void;
+  onPressFolder: (id: number) => void;
 }
 
 const SidebarSpaceItem = ({
   space,
   handleSpaceNavigate,
+  onPressFolder,
 }: SidebarSpaceItemProps) => {
   const { isCreateSpace, setIsCreateSpace } = useStore();
   const [expandedSpaceId, setExpandedSpaceId] = useState<number | null>(null);
@@ -147,7 +149,10 @@ const SidebarSpaceItem = ({
                       },
                     ]}
                   >
-                    <span className="text-sm text-text-secondary truncate">
+                    <span
+                      onClick={() => onPressFolder(folderId)}
+                      className="text-sm truncate hover:text-text-default text-text-secondary flex text-left -pr-2"
+                    >
                       {name}
                     </span>
                   </Button>

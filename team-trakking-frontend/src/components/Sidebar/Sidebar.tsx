@@ -15,6 +15,10 @@ export const Sidebar: FC<SidebarProps> = ({ sidebarOpen }) => {
       state: { spaceId: id },
     });
   };
+
+  const onPressFolder = (id: number) => {
+    navigate(`/folder/${id}`);
+  };
   // Close popup when clicking outside
   const handleClosePopup = useCallback(() => {
     setIsActivePopup(null);
@@ -75,6 +79,7 @@ export const Sidebar: FC<SidebarProps> = ({ sidebarOpen }) => {
                     currentWorkspaceId={currentWorkspaceId}
                     space={space}
                     handleSpaceNavigate={handleSpaceNavigate}
+                    onPressFolder={onPressFolder}
                   />
                 );
               })}

@@ -82,6 +82,9 @@ const getListWithTasks = (listId: number) => {
     })),
   };
 };
+const formatTime = (hours: number): string => {
+  return `${Math.floor(hours)}h ${Math.round((hours % 1) * 60)}m`;
+};
 
 export {
   getInitials,
@@ -89,4 +92,5 @@ export {
   enrichWorkspace,
   getFolderWithLists,
   getListWithTasks,
+  formatTime,
 };

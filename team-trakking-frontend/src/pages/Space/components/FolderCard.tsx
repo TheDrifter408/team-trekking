@@ -3,11 +3,8 @@ export const FolderCard = ({ folder }) => (
     <div className="flex justify-between items-center mb-3">
       <h3 className="font-bold text-text-default text-lg">{folder.name}</h3>
       <span
-        className="status-badge px-2 py-1 text-xs rounded"
-        style={{
-          backgroundColor: folder.statusColor || '#e2e8f0',
-          color: '#1a202c',
-        }}
+        className={'text-xs font-medium p-1.5 rounded-5 text-center'}
+        style={{ backgroundColor: folder.statusColor.color }}
       >
         {folder.status}
       </span>
