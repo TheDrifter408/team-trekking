@@ -36,6 +36,7 @@ import {
 import { SortableChecklistRow } from '@pages/Task/components/SortableChecklistRow.tsx';
 import { SortableTaskRow } from '@pages/Task/components/SortableTaskRow.tsx';
 import { AddSubtask } from '@pages/Task/components/AddSubtask.tsx';
+import { Subtask } from '@pages/Task/components/Subtask.tsx';
 import type { Priority, Status, Task as TaskType } from '../types';
 import { formatTime } from '@utils/Common.ts';
 import { IconButton } from '@/components';
@@ -74,11 +75,13 @@ export const Task: React.FC = () => {
     checklist: mockChecklist,
   });
   const [name, setName] = useState('');
+  const [complete, setIsComplete] = useState(false);
   const [priority, setPriority] = useState<Priority>('normal');
   const [status, setStatus] = useState<Status>('todo');
   const [dueDate, setDueDate] = useState('');
   const [estimatedTime, setEstimatedTime] = useState('');
   const [isAddTask, setIsAddTask] = useState<boolean>(false);
+  const [isAddChecklist, setIsAddChecklist] = useState<boolean>(false);
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -215,12 +218,29 @@ export const Task: React.FC = () => {
     // Close the modal
     setIsAddTask(false);
   };
+  const onPressAddChecklist = () => {
+    setIsAddChecklist(true);
+  };
+
+  const onAddChecklist = () => {
+    const newChecklistItem = {
+      id: uuidv4(),
+      content: name,
+      completed: complete,
+    };
+    setTask((prevTask) => ({
+      ...prevTask,
+      checklist: [...prevTask.checklist, newChecklistItem],
+    }));
+    setIsAddChecklist(false);
+  };
+
   return (
     <div className=" w-full  bg-white rounded-lg shadow-lg p-6">
       <div className="space-y-6">
         {/* Header */}
         <h1 className={'text-4xl font-bold'}>Task View</h1>
-        <div className="flex items-center justify-between mt-4">
+        <div className="flex items-center justify-between mt-4 ">
           <input
             type="text"
             value={task.title}
@@ -326,82 +346,28 @@ export const Task: React.FC = () => {
         </div>
 
         {/* Subtasks */}
-        <div className="space-y-4 bg-gray-50 p-6 rounded-lg shadow-sm">
+        <Subtask
+          task={task}
+          handleSelectAllSubtasks={handleSelectAllSubtasks}
+          selectedSubtasks={selectedSubtasks}
+          handleSubtaskDragEnd={handleSubtaskDragEnd}
+          onPressAddSubtask={onPressAddSubtask}
+          sensors={sensors}
+          handleSubtaskSelect={handleSubtaskSelect}
+        />
+
+        {/* Checklist */}
+        <div className="space-y-4 bg-gray-50 p-6 rounded-lg shadow-sm mt-6">
           <div className="flex justify-content-between">
-            <h3 className="text-lg font-medium text-gray-900">Subtasks</h3>
+            <h3 className="text-lg font-medium text-gray-900">Checklist</h3>
             <IconButton
               className={'bg-indigo-600 h-6 w-6 rounded-1 mr-1'}
-              onClick={onPressAddSubtask}
+              onClick={onPressAddChecklist}
             >
               <Plus color={'white'} size={18} />
             </IconButton>
           </div>
-          <div className="bg-white rounded-lg shadow overflow-x-auto">
-            <DndContext
-              sensors={sensors}
-              collisionDetection={closestCenter}
-              onDragEnd={handleSubtaskDragEnd}
-            >
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="sticky left-0 bg-gray-50 px-6 py-3 text-left z-10 border-r">
-                      <input
-                        type="checkbox"
-                        onChange={handleSelectAllSubtasks}
-                        checked={selectedSubtasks.size === task.subtasks.length}
-                        className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                      />
-                    </th>
-                    <th className="sticky left-[68px] bg-gray-50 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider z-10 border-r">
-                      Task
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Status
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Progress
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Due Date
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Est. Time
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Priority
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
-                  <SortableContext
-                    items={task.subtasks.map((st) => st.id)}
-                    strategy={verticalListSortingStrategy}
-                  >
-                    {task.subtasks.map((subtask) => (
-                      <SortableTaskRow
-                        key={subtask.id}
-                        id={subtask.id}
-                        selected={selectedSubtasks.has(subtask.id)}
-                        onSelect={() => handleSubtaskSelect(subtask.id)}
-                        subtask={subtask}
-                      />
-                    ))}
-                  </SortableContext>
-                </tbody>
-              </table>
-            </DndContext>
-          </div>
-        </div>
 
-        {/* Checklist */}
-        <div className="space-y-4 bg-gray-50 p-6 rounded-lg shadow-sm mt-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2">
-              <CheckSquare className="w-5 h-5 text-gray-500" />
-              <h3 className="text-lg font-medium text-gray-900">Checklist</h3>
-            </div>
-          </div>
           <div className="bg-white rounded-lg shadow overflow-hidden">
             <DndContext
               sensors={sensors}
@@ -525,6 +491,32 @@ export const Task: React.FC = () => {
           setStatus={setStatus}
           onClose={() => setIsAddTask(false)}
         />
+      </Modal>
+      <Modal
+        isOpen={isAddChecklist}
+        onClose={() => setIsAddChecklist(false)}
+        title={'Add Checklist Item'}
+        rightButtonOnClick={onAddChecklist}
+      >
+        <div className="flex items-center justify-between p-3  bg-white">
+          <div className="flex items-center gap-3 w-full">
+            <input
+              type="checkbox"
+              checked={complete}
+              onChange={() => setIsComplete(!complete)}
+              className="h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+            />
+            <input
+              id="checklistItemName"
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+              placeholder="Enter checklist item description"
+              required
+            />
+          </div>
+        </div>
       </Modal>
     </div>
   );
