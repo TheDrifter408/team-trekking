@@ -1,7 +1,10 @@
+import { List } from "@/types/ApiResponse";
+
 interface FolderListProps {
   listStatistics: any;
+  onListClick: (list:List) => void,
 }
-export const FolderList = ({ listStatistics }: FolderListProps) => {
+export const FolderList = ({ listStatistics, onListClick }: FolderListProps) => {
   return (
     <div className="bg-white rounded-lg shadow overflow-hidden">
       <table className="w-full">
@@ -17,7 +20,7 @@ export const FolderList = ({ listStatistics }: FolderListProps) => {
         </thead>
         <tbody>
           {listStatistics.map((list: any) => (
-            <tr key={list.id} className="border-b hover:bg-gray-50">
+            <tr key={list.id} className="border-b hover:bg-gray-50" onClick={() => onListClick(list)}>
               <td className="p-3 font-medium">{list.name}</td>
               <td className="p-3 text-center">{list.totalTasks}</td>
               <td className="p-3 text-center text-green-600">
