@@ -19,12 +19,14 @@ interface SidebarSpaceItemProps {
   currentWorkspaceId: number;
   handleSpaceNavigate: (id: number) => void;
   onPressFolder: (id: number) => void;
+  onPressList: (id: number) => void;
 }
 
 const SidebarSpaceItem = ({
   space,
   handleSpaceNavigate,
   onPressFolder,
+  onPressList,
 }: SidebarSpaceItemProps) => {
   const { isCreateSpace, setIsCreateSpace } = useStore();
   const [expandedSpaceId, setExpandedSpaceId] = useState<number | null>(null);
@@ -170,7 +172,7 @@ const SidebarSpaceItem = ({
                             },
                           ]}
                         >
-                          <span className="text-sm truncate text-text-secondary">
+                          <span className="text-sm truncate text-text-secondary" onClick={() => onPressList(id)}>
                             {name}
                           </span>
                         </Button>
@@ -194,7 +196,7 @@ const SidebarSpaceItem = ({
                     },
                   ]}
                 >
-                  <span className="text-sm text-text-secondary">{name}</span>
+                  <span className="text-sm text-text-secondary" onClick={() => onPressList(id)}>{name}</span>
                 </Button>
               );
             })}

@@ -1,24 +1,21 @@
 import { useEffect, useMemo, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useGetFolderQuery } from '@store/services/main.ts';
 import { FolderHeader } from './components/FolderHeader';
 import { FolderOverview } from './components/FolderOverview';
 import { FolderList } from './components/FolderList';
 import { Breadcrumbs } from '@/components';
 import { List } from '@/types/ApiResponse';
-import { Modal } from '@library/components';
-import TaskTable from '@/components/ListComponents/TaskTable';
 
 export const Folder = () => {
   const params = useParams();
+  const navigate = useNavigate();
   const { data: folderDetails } = useGetFolderQuery(Number(params.folderId));
   const [listStatistics, setListStatistics] = useState<List[]>([]);
-  const [selectedList, setSelectedList] = useState<List | null>(null);
-  const [showModal, setShowModal] = useState(false);
   const handleListClick = (list:List) => {
-    setSelectedList(list);
-    console.log(list);
-    setShowModal(true);
+    navigate(`/list/${list.id}`);
+    // setSelectedList(list);
+    // setShowModal(false);
   }
 
   // Compute statistics for summar6y cards
@@ -109,16 +106,6 @@ export const Folder = () => {
           folderStats={folderStats}
         />
         <FolderList listStatistics={listStatistics} onListClick={handleListClick} />
-      </div>
-      {/* Modal Container */}
-      <div>
-        { 
-          selectedList !== null && (
-            <Modal title="Tasks" isOpen={showModal} onClose={() => setShowModal(false)} maxWidth={900}>
-                <TaskTable tasks={selectedList.tasks} />
-            </Modal>
-          )
-        }
       </div>
     </div>
   );

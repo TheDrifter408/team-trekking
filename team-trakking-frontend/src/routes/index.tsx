@@ -1,5 +1,5 @@
 import { Routes, Route, Navigate } from 'react-router';
-import { Home, Login, Workspace, Space, Folder, Task } from '@/pages/index';
+import { Home, Login, Workspace, Space, Folder, Task, List } from '@/pages/index';
 import { Layout } from '@/components/Common/Layout';
 import PrivateRoute from '@/routes/privateRoute.tsx';
 
@@ -23,6 +23,7 @@ const AppRoutes = () => {
           <Route path={'/space/:spaceId'} element={<Space />} />
           <Route path={'/folder/:folderId'} element={<Folder />} />
           <Route path={'/Task/:taskId'} element={<Task />} />
+          <Route path={'/List/:listId'} element={<List />} />
         </Route>
       </Route>
 

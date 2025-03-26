@@ -2,14 +2,14 @@ import { Task } from '@/types/ApiResponse';
 import { FC } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const TaskTable:FC<{ tasks: Task[] | undefined }> = ({ tasks }) => {
+const TaskTable:FC<{ tasks: Task[] }> = ({ tasks }) => {
   const navigate = useNavigate();
   const handleTaskClick = (task:Task) => {
     navigate(`/Task/${task.id}`)
   }
   return (
-    <div className="overflow-x-auto">
-      <table className="w-full border-collapse">
+    <div className="bg-white rounded-lg shadow overflow-hidden overflow-x-auto">
+      <table className="w-full border-collapse shadow rounded-lg">
         <thead>
           <tr className="bg-gray-100 border-b">
             <th className="p-3 text-left">Task Name</th>
@@ -22,7 +22,7 @@ const TaskTable:FC<{ tasks: Task[] | undefined }> = ({ tasks }) => {
           </tr>
         </thead>
         <tbody>
-          { tasks !== undefined ? tasks.map((task) => (
+          { tasks.length > 0 ? tasks.map((task) => (
             <tr key={task.id} className="border-b hover:bg-gray-50" onClick={() => handleTaskClick(task)}>
               <td className="p-3">{task.name}</td>
               <td className="p-3 font-medium">{task.name}</td>
@@ -64,8 +64,8 @@ const TaskTable:FC<{ tasks: Task[] | undefined }> = ({ tasks }) => {
               <td className="p-3">{new Date(task.dueDate).toLocaleDateString()}</td>
             </tr>
           )) : 
-          <tr>
-            <td>No Tasks in this List</td>
+          <tr className="border-b hover:bg-gray-50">
+            <td colSpan={5} className="p-3 font-medium">No Tasks in this List</td>
           </tr>
         }
         </tbody>
