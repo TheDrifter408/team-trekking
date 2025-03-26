@@ -16,6 +16,7 @@ import {
   Tags,
   Timer,
   User,
+  Plus,
 } from 'lucide-react';
 import {
   closestCenter,
@@ -34,8 +35,12 @@ import {
 } from '@dnd-kit/sortable';
 import { SortableChecklistRow } from '@pages/Task/components/SortableChecklistRow.tsx';
 import { SortableTaskRow } from '@pages/Task/components/SortableTaskRow.tsx';
+import { AddSubtask } from '@pages/Task/components/AddSubtask.tsx';
 import type { Priority, Status, Task as TaskType } from '../types';
 import { formatTime } from '@utils/Common.ts';
+import { IconButton } from '@/components';
+import { Modal } from '@library/components';
+import { v4 as uuidv4 } from 'uuid';
 
 export const Task: React.FC = () => {
   const [selectedSubtasks, setSelectedSubtasks] = useState<Set<string>>(
@@ -68,6 +73,12 @@ export const Task: React.FC = () => {
     subtasks: mockSubtasks,
     checklist: mockChecklist,
   });
+  const [name, setName] = useState('');
+  const [priority, setPriority] = useState<Priority>('normal');
+  const [status, setStatus] = useState<Status>('todo');
+  const [dueDate, setDueDate] = useState('');
+  const [estimatedTime, setEstimatedTime] = useState('');
+  const [isAddTask, setIsAddTask] = useState<boolean>(false);
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -92,6 +103,10 @@ export const Task: React.FC = () => {
 
   const handlePriorityChange = (priority: Priority) => {
     setTask({ ...task, priority });
+  };
+
+  const onPressAddSubtask = () => {
+    setIsAddTask(true);
   };
 
   const handleChecklistToggle = (itemId: string) => {
@@ -167,6 +182,39 @@ export const Task: React.FC = () => {
     setSelectedChecklistItems(newSelected);
   };
 
+  const onAddSubtask = () => {
+    // Basic validation
+    if (!name || !dueDate || !estimatedTime) {
+      alert('Please fill in all required fields');
+      return;
+    }
+
+    const newSubtask = {
+      id: uuidv4(),
+      title: name,
+      priority,
+      status,
+      dueDate,
+      progress: 0,
+      estimatedTime: parseFloat(estimatedTime),
+    };
+
+    // Update the task's subtasks
+    setTask((prevTask) => ({
+      ...prevTask,
+      subtasks: [...prevTask.subtasks, newSubtask],
+    }));
+
+    // Reset form fields
+    setName('');
+    setPriority('normal');
+    setStatus('todo');
+    setDueDate('');
+    setEstimatedTime('');
+
+    // Close the modal
+    setIsAddTask(false);
+  };
   return (
     <div className=" w-full  bg-white rounded-lg shadow-lg p-6">
       <div className="space-y-6">
@@ -279,7 +327,15 @@ export const Task: React.FC = () => {
 
         {/* Subtasks */}
         <div className="space-y-4 bg-gray-50 p-6 rounded-lg shadow-sm">
-          <h3 className="text-lg font-medium text-gray-900">Subtasks</h3>
+          <div className="flex justify-content-between">
+            <h3 className="text-lg font-medium text-gray-900">Subtasks</h3>
+            <IconButton
+              className={'bg-indigo-600 h-6 w-6 rounded-1 mr-1'}
+              onClick={onPressAddSubtask}
+            >
+              <Plus color={'white'} size={18} />
+            </IconButton>
+          </div>
           <div className="bg-white rounded-lg shadow overflow-x-auto">
             <DndContext
               sensors={sensors}
@@ -448,6 +504,28 @@ export const Task: React.FC = () => {
           </div>
         </div>
       </div>
+      <Modal
+        isOpen={isAddTask}
+        onClose={() => setIsAddTask(false)}
+        title={'Add new subtask'}
+        rightButtonOnClick={onAddSubtask}
+      >
+        <AddSubtask
+          onAddSubtask={() => {}}
+          isOpen={isAddTask}
+          name={name}
+          setName={setName}
+          priority={priority}
+          setPriority={setPriority}
+          dueDate={dueDate}
+          setDueDate={setDueDate}
+          estimatedTime={estimatedTime}
+          setEstimatedTime={setEstimatedTime}
+          status={status}
+          setStatus={setStatus}
+          onClose={() => setIsAddTask(false)}
+        />
+      </Modal>
     </div>
   );
 };

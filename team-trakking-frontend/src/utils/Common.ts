@@ -86,6 +86,20 @@ const formatTime = (hours: number): string => {
   return `${Math.floor(hours)}h ${Math.round((hours % 1) * 60)}m`;
 };
 
+const generateRandomSubtask = () => {
+  const priorities = ['Low', 'Medium', 'High'];
+
+  return {
+    id: Math.floor(Math.random() * 100).toString(),
+    name: '',
+    status: 'Open',
+    progress: 0,
+    dueDate: new Date(),
+    estimatedTime: `${0}h`, // 1-5 hours
+    priority: priorities[Math.floor(Math.random() * priorities.length)],
+  };
+};
+
 export {
   getInitials,
   enrichSpace,
@@ -93,4 +107,5 @@ export {
   getFolderWithLists,
   getListWithTasks,
   formatTime,
+  generateRandomSubtask,
 };
