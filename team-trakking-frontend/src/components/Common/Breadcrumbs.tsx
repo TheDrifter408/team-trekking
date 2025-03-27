@@ -18,7 +18,7 @@ export const Breadcrumbs = ({
   folderName,
 }: BreadcrumbProps) => {
   return (
-    <div className="py-1 h-full debug flex items-center px-6 bg-accent-header">
+    <div className="py-1 h-full flex items-center px-6 bg-accent-header">
       <Link
         to={`/workspace/${workspaceId}`}
         className="text-sm ml-1 text-text-primary hover:text-text-hover"

@@ -8,6 +8,7 @@ import {
   Task,
   List,
   Subtask,
+  Board,
 } from '@/pages/index';
 import { Layout } from '@/components/Common/Layout';
 import PrivateRoute from '@/routes/privateRoute.tsx';
@@ -34,6 +35,7 @@ const AppRoutes = () => {
           <Route path={'/Task/:taskId'} element={<Task />} />
           <Route path={'/List/:listId'} element={<List />} />
           <Route path={'/subtask/:subtaskId'} element={<Subtask />} />
+          <Route path={'/board/:boardId'} element={<Board />} />
         </Route>
       </Route>
 

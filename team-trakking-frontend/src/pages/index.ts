@@ -6,3 +6,4 @@ export { Folder } from '@pages/Folder/Folder.tsx';
 export { Task } from '@pages/Task/Task.tsx';
 export { SubtaskPage as Subtask } from '@pages/Subtask/Subtask.tsx';
 export { List } from '@pages/List/List.tsx';
+export { Board } from '@pages/Board/Board';
