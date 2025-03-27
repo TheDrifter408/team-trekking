@@ -1,25 +1,10 @@
 import { CheckCircle2, Clock, ListTodo } from 'lucide-react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
+import { ColummTask } from '@/types/ApiResponse';
 
-export type ColumnType =
-  | 'todo'
-  | 'in-progress'
-  | 'completed'
-  | 'reviewing'
-  | 'cancelled'
-  | 'rejected'
-  | 'sprint-backlog'
-  | 'backlog';
-
-export interface ColumnTask {
-  id: string;
-  title: string;
-  description: string;
-  category: ColumnType;
-}
 interface TaskCardProps {
-  task: ColumnTask;
+  task: ColummTask;
 }
 const categoryIcons = {
   todo: ListTodo,

@@ -140,3 +140,20 @@ export interface ChecklistItem {
   content: string;
   completed: boolean;
 }
+
+export interface ColummTask {
+  id: string;
+  title: string;
+  description: string;
+  category: ColumnType;
+}
+
+export type ColumnType = 'todo' | 'in-progress' | 'done';
+
+export interface Column {
+  id: ColumnType;
+  title: string;
+  tasks: Task[];
+  color: string;
+  icon: string;
+}

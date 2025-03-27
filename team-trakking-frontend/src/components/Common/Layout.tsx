@@ -107,7 +107,7 @@ export const Layout = () => {
       <Header />
 
       {/* Sidebar & Main Content */}
-      <div className="flex">
+      <div className="flex overflow-x-auto">
         {/* Sidebar */}
         <motion.div
           initial={{ width: '6rem' }}

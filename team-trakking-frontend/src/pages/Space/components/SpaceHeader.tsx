@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 export const SpaceHeader: React.FC = () => {
   const navigate = useNavigate();
   return (
-    <div className="sticky top-12 py-2 z-20 border-b border-border-primary shadow-sm bg-accent-header">
+    <div className="sticky top-8 py-2 z-20 border-b border-border-primary shadow-sm bg-accent-header">
       <div className="flex flex-row gap-2 mb-1 px-6">
         <Button
           size={'sm'}
