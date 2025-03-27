@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
   DndContext,
   DragEndEvent,
@@ -12,8 +12,11 @@ import {
 import { arrayMove } from '@dnd-kit/sortable';
 import { BoardColumn } from './components/Column';
 import { TaskCard } from './components/TaskCard';
-import { Column as ColumnType, Task, ColumnType as ColumnId } from './types';
-import { ListTodo, Clock, CheckCircle2 } from 'lucide-react';
+import {
+  Column as ColumnType,
+  ColummTask as Task,
+  ColumnType as ColumnId,
+} from '@/types/ApiResponse';
 import { mockColumns } from '@/data/mockData';
 
 export const Board = () => {
@@ -26,7 +29,7 @@ export const Board = () => {
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
-        distance: 8,
+        distance: 20,
       },
     })
   );
@@ -134,53 +137,38 @@ export const Board = () => {
     setIsAddingTask(true);
   };
 
-  const handleAddTaskSubmit = (title: string, description: string) => {
-    const newTask: Task = {
-      id: Date.now().toString(),
-      title,
-      description,
-      category: selectedColumn,
-    };
-
-    setColumns((columns) =>
-      columns.map((col) => {
-        if (col.id === selectedColumn) {
-          return {
-            ...col,
-            tasks: [...col.tasks, newTask],
-          };
-        }
-        return col;
-      })
-    );
-
-    setIsAddingTask(false);
-  };
-
   return (
-    <div className="min-h-screen bg-gray-100 p-8">
-      <div className="max-w-7xl mx-auto">
-        <h1 className="text-3xl font-bold text-gray-900 mb-8">Task Board</h1>
+    <div className=" relative w-full mt-12">
+      {/* Hero Section */}
+      <div className="max-w-7xl mx-auto px-8">
+        <h1 className="text-4xl font-bold text-gray-900 mb-4">Board View</h1>
+      </div>
 
-        <DndContext
-          sensors={sensors}
-          onDragStart={handleDragStart}
-          onDragOver={handleDragOver}
-          onDragEnd={handleDragEnd}
-        >
-          <div className="flex gap-6">
-            {columns.map((column) => (
-              <BoardColumn
-                key={column.id}
-                column={column}
-                onAddTask={handleAddTask}
-              />
-            ))}
+      {/* Horizontal Scroll Section */}
+      <div className="relative overflow-hidden">
+        <div className="overflow-x-auto scrollbar-none">
+          <div className="flex px-8">
+            <DndContext
+              sensors={sensors}
+              onDragStart={handleDragStart}
+              onDragOver={handleDragOver}
+              onDragEnd={handleDragEnd}
+            >
+              <div className="flex gap-6 min-w-max">
+                {columns.map((column) => (
+                  <BoardColumn
+                    key={column.id}
+                    column={column}
+                    onAddTask={handleAddTask}
+                  />
+                ))}
+              </div>
+              <DragOverlay>
+                {activeTask ? <TaskCard task={activeTask} /> : null}
+              </DragOverlay>
+            </DndContext>
           </div>
-          <DragOverlay>
-            {activeTask ? <TaskCard task={activeTask} /> : null}
-          </DragOverlay>
-        </DndContext>
+        </div>
       </div>
     </div>
   );

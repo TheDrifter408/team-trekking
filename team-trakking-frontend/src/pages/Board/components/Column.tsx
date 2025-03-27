@@ -4,29 +4,14 @@ import {
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import { LucideIcon, Plus } from 'lucide-react';
-import { ColumnTask } from '@pages/Board/Board.tsx';
+import { Column } from '@/types/ApiResponse';
 import { TaskCard } from '@pages/Board/components/TaskCard.tsx';
 
-export type ColumnType =
-  | 'todo'
-  | 'in-progress'
-  | 'completed'
-  | 'reviewing'
-  | 'cancelled'
-  | 'rejected'
-  | 'sprint-backlog'
-  | 'backlog';
+export type ColumnType = 'todo' | 'in-progress' | 'completeds';
 
 interface BoardColumnProps {
   column: Column;
   onAddTask: (columnId: Column['id']) => void;
-}
-export interface Column {
-  id: ColumnType;
-  title: string;
-  tasks: ColumnTask[];
-  color: string;
-  icon: LucideIcon;
 }
 
 export const BoardColumn = ({ column, onAddTask }: BoardColumnProps) => {
@@ -62,10 +47,13 @@ export const BoardColumn = ({ column, onAddTask }: BoardColumnProps) => {
           onClick={() => onAddTask(column.id)}
           className={`p-1 rounded-md hover:bg-white transition-colors ${column.color}`}
         >
-          <Plus size={20} />
+          <Plus size={20} className="w-5 h-5" />
         </button>
       </div>
-      <div ref={setNodeRef} className="p-4 space-y-3 flex-1 min-h-[200px]">
+      <div
+        ref={setNodeRef}
+        className="p-4 space-y-3 flex-1 min-h-[200px] max-h-[500px] overflow-y-auto"
+      >
         <SortableContext
           items={column.tasks.map((task) => task.id)}
           strategy={verticalListSortingStrategy}
