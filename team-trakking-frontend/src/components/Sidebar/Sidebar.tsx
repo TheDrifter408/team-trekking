@@ -54,27 +54,6 @@ export const Sidebar: FC<SidebarProps> = ({ sidebarOpen }) => {
             </div>
           )}
         </div>
-
-        {/*<div*/}
-        {/*  className={`${sidebarOpen ? 'px-3' : 'flex px-0'} items-center justify-center pt-2 pb-2 `}*/}
-        {/*>*/}
-        {/*  {!sidebarOpen ? (*/}
-        {/*    <div className="flex items-center justify-center rounded-full">*/}
-        {/*      <HomeIcon*/}
-        {/*        size={20}*/}
-        {/*        className="text-blue-600 cursor-pointer"*/}
-        {/*        onClick={() => navigate('/home')}*/}
-        {/*      />*/}
-        {/*    </div>*/}
-        {/*  ) : (*/}
-        {/*    <div*/}
-        {/*      className="truncate text-md font-semibold text-text-primary flex items-center gap-2 cursor-pointer hover:text-text-hover"*/}
-        {/*      onClick={() => navigate('/home')}*/}
-        {/*    >*/}
-        {/*      <HomeIcon size={18} className="text-blue-600" /> Home*/}
-        {/*    </div>*/}
-        {/*  )}*/}
-        {/*</div>*/}
         <div className=" mx-2 flex justify-between">
           <h1 className={'text-text-primary font-semibold mt-1'}>Spaces</h1>
           <IconButton size={'sm'} onClick={() => setIsCreateSpace(true)}>

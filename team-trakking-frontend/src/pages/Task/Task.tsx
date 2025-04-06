@@ -89,29 +89,29 @@ export const Task: React.FC = () => {
     })
   );
 
-  const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const OnHandleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTask({ ...task, title: e.target.value });
   };
 
-  const handleDescriptionChange = (
+  const OnHandleDescriptionChange = (
     e: React.ChangeEvent<HTMLTextAreaElement>
   ) => {
     setTask({ ...task, description: e.target.value });
   };
 
-  const handleStatusChange = (status: Status) => {
+  const OnHandleStatusChange = (status: Status) => {
     setTask({ ...task, status });
   };
 
-  const handlePriorityChange = (priority: Priority) => {
+  const OnHandlePriorityChange = (priority: Priority) => {
     setTask({ ...task, priority });
   };
 
-  const onPressAddSubtask = () => {
+  const OnPressAddSubtask = () => {
     setIsAddTask(true);
   };
 
-  const handleChecklistToggle = (itemId: string) => {
+  const OnHandleChecklistToggle = (itemId: string) => {
     setTask({
       ...task,
       checklist: task.checklist.map((item) =>
@@ -120,7 +120,7 @@ export const Task: React.FC = () => {
     });
   };
 
-  const handleSubtaskDragEnd = (event: DragEndEvent) => {
+  const OnHandleSubtaskDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
     if (over && active.id !== over.id) {
       setTask((task) => {
@@ -134,7 +134,7 @@ export const Task: React.FC = () => {
     }
   };
 
-  const handleChecklistDragEnd = (event: DragEndEvent) => {
+  const OnHandleChecklistDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
     if (over && active.id !== over.id) {
       setTask((task) => {
@@ -148,7 +148,9 @@ export const Task: React.FC = () => {
     }
   };
 
-  const handleSelectAllSubtasks = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const OnHandleSelectAllSubtasks = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     if (e.target.checked) {
       setSelectedSubtasks(new Set(task.subtasks.map((st) => st.id)));
     } else {
@@ -156,7 +158,9 @@ export const Task: React.FC = () => {
     }
   };
 
-  const handleSelectAllChecklist = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const OnHandleSelectAllChecklist = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     if (e.target.checked) {
       setSelectedChecklistItems(new Set(task.checklist.map((item) => item.id)));
     } else {
@@ -164,7 +168,7 @@ export const Task: React.FC = () => {
     }
   };
 
-  const handleSubtaskSelect = (id: string) => {
+  const OnHandleSubtaskSelect = (id: string) => {
     const newSelected = new Set(selectedSubtasks);
     if (newSelected.has(id)) {
       newSelected.delete(id);
@@ -174,7 +178,7 @@ export const Task: React.FC = () => {
     setSelectedSubtasks(newSelected);
   };
 
-  const handleChecklistSelect = (id: string) => {
+  const OnHandleChecklistSelect = (id: string) => {
     const newSelected = new Set(selectedChecklistItems);
     if (newSelected.has(id)) {
       newSelected.delete(id);
@@ -184,7 +188,7 @@ export const Task: React.FC = () => {
     setSelectedChecklistItems(newSelected);
   };
 
-  const onAddSubtask = () => {
+  const OnAddSubtask = () => {
     // Basic validation
     if (!name || !dueDate || !estimatedTime) {
       alert('Please fill in all required fields');
@@ -217,11 +221,11 @@ export const Task: React.FC = () => {
     // Close the modal
     setIsAddTask(false);
   };
-  const onPressAddChecklist = () => {
+  const OnPressAddChecklist = () => {
     setIsAddChecklist(true);
   };
 
-  const onAddChecklist = () => {
+  const OnAddChecklist = () => {
     const newChecklistItem = {
       id: uuidv4(),
       content: name,
@@ -243,7 +247,7 @@ export const Task: React.FC = () => {
           <input
             type="text"
             value={task.title}
-            onChange={handleTitleChange}
+            onChange={OnHandleTitleChange}
             className="text-xl font-semibold w-full bg-transparent focus:outline-none focus:ring-2 focus:ring-blue-500 rounded px-2"
           />
         </div>
@@ -338,7 +342,7 @@ export const Task: React.FC = () => {
           <h3 className="text-sm font-medium text-gray-700">Description</h3>
           <textarea
             value={task.description}
-            onChange={handleDescriptionChange}
+            onChange={OnHandleDescriptionChange}
             className="w-full min-h-[100px] p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Add a description..."
           />
@@ -347,12 +351,12 @@ export const Task: React.FC = () => {
         {/* Subtasks */}
         <Subtask
           task={task}
-          handleSelectAllSubtasks={handleSelectAllSubtasks}
+          handleSelectAllSubtasks={OnHandleSelectAllSubtasks}
           selectedSubtasks={selectedSubtasks}
-          handleSubtaskDragEnd={handleSubtaskDragEnd}
-          onPressAddSubtask={onPressAddSubtask}
+          handleSubtaskDragEnd={OnHandleSubtaskDragEnd}
+          onPressAddSubtask={OnPressAddSubtask}
           sensors={sensors}
-          handleSubtaskSelect={handleSubtaskSelect}
+          handleSubtaskSelect={OnHandleSubtaskSelect}
         />
 
         {/* Checklist */}
@@ -361,7 +365,7 @@ export const Task: React.FC = () => {
             <h3 className="text-lg font-medium text-gray-900">Checklist</h3>
             <IconButton
               className={'bg-indigo-600 h-6 w-6 rounded-1 mr-1'}
-              onClick={onPressAddChecklist}
+              onClick={OnPressAddChecklist}
             >
               <Plus color={'white'} size={18} />
             </IconButton>
@@ -371,7 +375,7 @@ export const Task: React.FC = () => {
             <DndContext
               sensors={sensors}
               collisionDetection={closestCenter}
-              onDragEnd={handleChecklistDragEnd}
+              onDragEnd={OnHandleChecklistDragEnd}
             >
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
@@ -379,7 +383,7 @@ export const Task: React.FC = () => {
                     <th className="px-6 py-3 text-left">
                       <input
                         type="checkbox"
-                        onChange={handleSelectAllChecklist}
+                        onChange={OnHandleSelectAllChecklist}
                         checked={
                           selectedChecklistItems.size === task.checklist.length
                         }
@@ -404,9 +408,9 @@ export const Task: React.FC = () => {
                         key={item.id}
                         id={item.id}
                         selected={selectedChecklistItems.has(item.id)}
-                        onSelect={() => handleChecklistSelect(item.id)}
+                        onSelect={() => OnHandleChecklistSelect(item.id)}
                         item={item}
-                        onToggle={() => handleChecklistToggle(item.id)}
+                        onToggle={() => OnHandleChecklistToggle(item.id)}
                       />
                     ))}
                   </SortableContext>
@@ -473,7 +477,7 @@ export const Task: React.FC = () => {
         isOpen={isAddTask}
         onClose={() => setIsAddTask(false)}
         title={'Add new subtask'}
-        rightButtonOnClick={onAddSubtask}
+        rightButtonOnClick={OnAddSubtask}
       >
         <AddSubtask
           onAddSubtask={() => {}}
@@ -495,7 +499,7 @@ export const Task: React.FC = () => {
         isOpen={isAddChecklist}
         onClose={() => setIsAddChecklist(false)}
         title={'Add Checklist Item'}
-        rightButtonOnClick={onAddChecklist}
+        rightButtonOnClick={OnAddChecklist}
       >
         <div className="flex items-center justify-between p-3  bg-white">
           <div className="flex items-center gap-3 w-full">
