@@ -10,7 +10,7 @@ const getRandomKey = (obj: Record<string, string>) => {
 
 const TaskTable: FC<{ tasks: Task[] }> = ({ tasks }) => {
   const navigate = useNavigate();
-  const handleTaskClick = (task: Task) => {
+  const onHandleTaskClick = (task: Task) => {
     navigate(`/Task/${task.id}`);
   };
 
@@ -36,7 +36,7 @@ const TaskTable: FC<{ tasks: Task[] }> = ({ tasks }) => {
                 <tr
                   key={task.id}
                   className="border-b hover:bg-gray-50"
-                  onClick={() => handleTaskClick(task)}
+                  onClick={() => onHandleTaskClick(task)}
                 >
                   <td className="p-3">{task.name}</td>
                   <td className="p-3">

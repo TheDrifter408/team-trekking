@@ -17,13 +17,12 @@ export const Home: React.FC = () => {
   const [darkMode, setDarkMode] = useState(false);
   const [workspaceModal, setWorkspaceModal] = useState(false);
 
-  const toggleDarkMode = () => {
+  const onToggleDarkMode = () => {
     const newTheme = currentTheme === 'light' ? 'dark' : 'light';
     setTheme(newTheme);
     setDarkMode(!darkMode);
   };
 
-  // Changed from Workspace to WorkspaceItem to include members array
   const [workspace, setWorkspace] = useState<WorkspaceItem>({
     id: 0,
     image: '',
@@ -32,11 +31,12 @@ export const Home: React.FC = () => {
     members: [],
   });
 
-  // state to temporarily store the email of the member being added
   const [memberEmail, setMemberEmail] = useState('');
 
-  // Updated to handle both Workspace and WorkspaceItem properties
-  const handleWorkspaceChange = (property: keyof WorkspaceItem, value: any) => {
+  const onHandleWorkspaceChange = (
+    property: keyof WorkspaceItem,
+    value: any
+  ) => {
     setWorkspace((prev) => ({
       ...prev,
       [property]: value,
@@ -48,7 +48,6 @@ export const Home: React.FC = () => {
     setWorkspaceModal(false);
     setSteps(1);
     setSubmitting(true);
-    // Reset on successful submission - using WorkspaceItem type with empty arrays
     setWorkspace({
       id: 0,
       image: '',
@@ -58,28 +57,24 @@ export const Home: React.FC = () => {
     });
   };
 
-  const handleCreateNew = () => {
+  const onHandleCreateNew = () => {
     setWorkspaceModal(true);
   };
 
-  const handleCloseModal = () => {
+  const onHandleCloseModal = () => {
     setWorkspaceModal(false);
-    // Reset form state when closing modal
     setSteps(1);
   };
 
   return (
     <div className="flex min-h-screen flex-col bg-bg-primary-light md:flex-row">
-      {/* Left side - Brand/Instructions */}
       <BrandSection />
       <div className="absolute right-4 top-4">
-        <ThemeToggle toggleDarkMode={toggleDarkMode} />
+        <ThemeToggle toggleDarkMode={onToggleDarkMode} />
       </div>
 
-      {/* Right side - Workspace List */}
       <div className="flex w-full flex-col p-8 md:w-2/3 md:p-12">
         <div className="mx-auto w-full max-w-3xl">
-          {/* Header */}
           <div className="mb-8">
             <h2 className="mb-2 text-3xl text-text-primary font-bold">
               My Workspaces
@@ -89,16 +84,13 @@ export const Home: React.FC = () => {
             </p>
           </div>
 
-          {/* Create workspace button */}
           <div className="mb-6 flex justify-end">
             <Button
-              onClick={handleCreateNew}
+              onClick={onHandleCreateNew}
               leftIcons={[
                 {
                   icon: <PlusIcon />,
-                  onClick: () => {
-                    setWorkspaceModal(true);
-                  },
+                  onClick: () => setWorkspaceModal(true),
                 },
               ]}
               className="w-fit flex items-center rounded-md bg-indigo-600 px-4 py-2 text-white hover:bg-indigo-700"
@@ -107,7 +99,6 @@ export const Home: React.FC = () => {
             </Button>
           </div>
 
-          {/*Workspaces List */}
           <div className="space-y-4">
             {workspaceList?.map((workspace: WorkspaceItem) => (
               <WorkspaceCard key={workspace.id} workspace={workspace} />
@@ -116,7 +107,6 @@ export const Home: React.FC = () => {
         </div>
       </div>
 
-      {/* Create workspace modal */}
       <CreateWorkspaceForm
         formSteps={steps}
         memberEmail={memberEmail}
@@ -124,9 +114,9 @@ export const Home: React.FC = () => {
         setFormSteps={setSteps}
         onSubmit={onHandleSubmit}
         isOpen={workspaceModal}
-        onClose={handleCloseModal}
+        onClose={onHandleCloseModal}
         state={workspace}
-        setState={handleWorkspaceChange}
+        setState={onHandleWorkspaceChange}
         isSubmitting={submitting}
       />
     </div>

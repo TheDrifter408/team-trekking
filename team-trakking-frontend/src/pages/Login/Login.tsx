@@ -23,14 +23,33 @@ export const Login = () => {
     await authenticate(isLogin, email, password);
   };
 
-  const toggleDarkMode = () => {
+  const onToggleDarkMode = () => {
     setTheme(currentTheme === 'light' ? 'dark' : 'light');
     setDarkMode(!darkMode);
   };
 
+  const onHandleSwitchAuthTab = (value: boolean) => {
+    setIsLogin(value);
+  };
+
+  const onHandleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(e.target.value);
+  };
+
+  const onHandlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPassword(e.target.value);
+  };
+
+  const onHandleSocialAuth = () => {
+    handleSocialAuth();
+  };
+
+  const onHandleSwitchMode = () => {
+    setIsLogin(!isLogin);
+  };
+
   return (
     <div className={`flex min-h-screen flex-col bg-bg-primary md:flex-row`}>
-      {/* Left side - Brand/Illustration */}
       <div className="hidden items-center justify-center bg-indigo-600 p-12 md:flex md:w-1/2">
         <div className="max-w-md">
           <h1 className="mb-6 text-4xl font-bold text-white">
@@ -40,46 +59,39 @@ export const Login = () => {
             Streamline your workflow and boost productivity with our powerful
             tools.
           </p>
-
-          {/* Illustration placeholder */}
           <div className="mt-12 flex h-64 items-center justify-center rounded-lg bg-indigo-500">
             <IllustrationIcon />
           </div>
         </div>
       </div>
 
-      {/* Right side - Auth Form */}
       <div className="flex w-full flex-col justify-center p-8 md:w-1/2 md:p-12">
-        {/* Dark mode toggle */}
         <div className="absolute right-4 top-4">
-          <ThemeToggle toggleDarkMode={toggleDarkMode} />
+          <ThemeToggle toggleDarkMode={onToggleDarkMode} />
         </div>
 
         <div className="mx-auto w-full max-w-md">
-          {/* Logo */}
           <div className="mb-8 text-center ">
             <AuthIcon />
           </div>
 
-          {/* Tabs */}
           <div className="mb-8 flex ">
             <Button
               variant={'ghost'}
-              onClick={() => setIsLogin(true)}
+              onClick={() => onHandleSwitchAuthTab(true)}
               className={`flex-1 py-2 focus:outline-none focus:ring-0 focus:ring-offset-0 ${isLogin ? 'border-b-2 border-indigo-600' : 'border-b-2 border-text-muted text-text-muted'}`}
             >
               Login
             </Button>
             <Button
               variant={'ghost'}
-              onClick={() => setIsLogin(false)}
+              onClick={() => onHandleSwitchAuthTab(false)}
               className={`flex-1 py-2 focus:outline-none focus:ring-0 focus:ring-offset-0 ${!isLogin ? 'border-b-2 border-indigo-600' : 'border-b-2 border-text-muted text-text-muted'}`}
             >
               Sign Up
             </Button>
           </div>
 
-          {/* Form */}
           <AnimatePresence mode="wait">
             <motion.form
               key={isLogin ? 'login' : 'signup'}
@@ -106,7 +118,7 @@ export const Login = () => {
                     className={`block text-text-default focus-within:border-indigo-500 sm:text-sm`}
                     placeholder="you@example.com"
                     value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    onChange={onHandleEmailChange}
                   />
                 </div>
                 <div>
@@ -124,7 +136,7 @@ export const Login = () => {
                     className={`block text-text-default focus-within:border-indigo-500 sm:text-sm`}
                     placeholder="••••••••"
                     value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                    onChange={onHandlePasswordChange}
                   />
                 </div>
               </div>
@@ -133,7 +145,6 @@ export const Login = () => {
                 {isLogin ? 'Sign in' : 'Create account'}
               </Button>
 
-              {/* Social auth */}
               <div>
                 <div className="relative my-4">
                   <div className="absolute inset-0 flex items-center">
@@ -151,11 +162,11 @@ export const Login = () => {
                 <div className="flex w-full grid-cols-2 gap-2">
                   <Button
                     variant={'outline'}
-                    onClick={() => handleSocialAuth()}
+                    onClick={onHandleSocialAuth}
                     leftIcons={[
                       {
                         icon: <GithubIcon />,
-                        onClick: () => handleSocialAuth(),
+                        onClick: onHandleSocialAuth,
                       },
                     ]}
                     className={'w-full'}
@@ -164,11 +175,11 @@ export const Login = () => {
                   </Button>
                   <Button
                     variant={'outline'}
-                    onClick={() => handleSocialAuth()}
+                    onClick={onHandleSocialAuth}
                     leftIcons={[
                       {
                         icon: <GoogleIcon />,
-                        onClick: () => handleSocialAuth(),
+                        onClick: onHandleSocialAuth,
                       },
                     ]}
                     className={'w-full'}
@@ -178,12 +189,11 @@ export const Login = () => {
                 </div>
               </div>
 
-              {/* Switch between login and signup */}
               <div className="mt-6 text-center">
                 <Button
                   variant={'link'}
                   fullWidth
-                  onClick={() => setIsLogin(!isLogin)}
+                  onClick={onHandleSwitchMode}
                   className={`flex text-sm font-medium`}
                 >
                   {isLogin
