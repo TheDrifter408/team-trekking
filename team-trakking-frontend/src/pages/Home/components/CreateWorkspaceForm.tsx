@@ -16,13 +16,13 @@ export const CreateWorkspaceForm: FC<CreateWorkspaceFormProps> = ({
   setMemberEmail,
 }) => {
   const [selectedButton, setSelectedButton] = useState<string>('');
+  const totalSteps = 5;
 
-  const handleButtonClick = (title: string) => {
+  const onHandleButtonClick = (title: string) => {
     setSelectedButton(title);
   };
 
-  const handleAddEmail = () => {
-    // Don't add if email is empty or already exists
+  const onPressAddEmail = () => {
     if (
       !memberEmail ||
       state.members.some((member) => member.email === memberEmail)
@@ -30,48 +30,44 @@ export const CreateWorkspaceForm: FC<CreateWorkspaceFormProps> = ({
       return;
     }
 
-    // Create a new member with a unique ID and the entered email
     const newMember: Member = {
-      id: Date.now(), // Using timestamp as a simple unique ID
+      id: Date.now(),
       email: memberEmail,
       name: '',
       workspaceId: 0,
     };
 
-    // Update members array with the new member
     setState('members', [...state.members, newMember]);
-
-    // Clear the input field
     setMemberEmail('');
   };
 
-  const handleWorkspaceNameChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const onChangeWorkspaceName = (e: ChangeEvent<HTMLInputElement>) => {
     setState('name', e.currentTarget.value);
   };
 
-  const handleRemoveEmail = (emailToRemove: string) => {
-    // Filter out the member with the matching email
+  const onRemoveEmail = (emailToRemove: string) => {
     const updatedMembers = state.members.filter(
       (member) => member.email !== emailToRemove
     );
-
-    // Update the members array
     setState('members', updatedMembers);
   };
 
-  const handleNext = () => {
+  const onClickNext = () => {
     if (formSteps < 4) {
       setFormSteps((prev) => prev + 1);
+    } else {
+      onClose();
+      setFormSteps(1);
     }
   };
 
-  const handlePrev = () => {
+  const onClickPrev = () => {
     if (formSteps > 1) {
       setFormSteps((prev) => prev - 1);
     }
   };
 
-  const renderModalTitle = () => {
+  const onRenderModalTitle = () => {
     const titles = [
       'What will you use this workspace for?',
       'What would you like to manage?',
@@ -81,13 +77,13 @@ export const CreateWorkspaceForm: FC<CreateWorkspaceFormProps> = ({
     return titles[formSteps - 1] || titles[0];
   };
 
-  const rightButtonTitle = () => {
+  const onGetRightButtonTitle = () => {
     if (formSteps === 3) return 'Done';
     else if (formSteps === 4) return 'Confirm';
     else return 'Next';
   };
 
-  const renderStepContent = () => {
+  const onRenderStepContent = () => {
     switch (formSteps) {
       case 1:
       case 2: {
@@ -111,7 +107,7 @@ export const CreateWorkspaceForm: FC<CreateWorkspaceFormProps> = ({
                 type="button"
                 className={`cursor-pointer text-black shadow-md transition-all duration-300 ease-in-out hover:scale-105 
                       ${selectedButton === title ? 'bg-blue-500 text-white shadow-lg' : 'bg-white text-black shadow-md'}`}
-                onClick={() => handleButtonClick(title)}
+                onClick={() => onHandleButtonClick(title)}
               >
                 {title}
               </Button>
@@ -127,14 +123,14 @@ export const CreateWorkspaceForm: FC<CreateWorkspaceFormProps> = ({
                 type="email"
                 value={memberEmail}
                 onChange={(e) => setMemberEmail(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && handleAddEmail()}
+                onKeyDown={(e) => e.key === 'Enter' && onPressAddEmail()}
                 placeholder="Enter email(s)"
                 className="w-full rounded-md border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
               <Button
                 type="button"
                 className="rounded-md bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
-                onClick={handleAddEmail}
+                onClick={onPressAddEmail}
               >
                 Add
               </Button>
@@ -148,7 +144,7 @@ export const CreateWorkspaceForm: FC<CreateWorkspaceFormProps> = ({
                   <span>{member.name || member.email}</span>
                   <Button
                     type="button"
-                    onClick={() => handleRemoveEmail(member.email)}
+                    onClick={() => onRemoveEmail(member.email)}
                     className="ml-2 text-red-500 hover:text-red-700"
                   >
                     &times;
@@ -164,7 +160,7 @@ export const CreateWorkspaceForm: FC<CreateWorkspaceFormProps> = ({
             <input
               type="text"
               value={state.name}
-              onChange={handleWorkspaceNameChange}
+              onChange={onChangeWorkspaceName}
               placeholder="Workspace Name"
               className="w-full rounded-md border border-gray-300 px-4 py-2"
             />
@@ -177,15 +173,15 @@ export const CreateWorkspaceForm: FC<CreateWorkspaceFormProps> = ({
 
   return (
     <Modal
-      title={renderModalTitle()}
+      title={onRenderModalTitle()}
       isOpen={isOpen}
       onClose={onClose}
-      rightButtonText={rightButtonTitle()}
-      rightButtonOnClick={formSteps < 4 ? handleNext : () => onSubmit}
-      showRightButton={formSteps < 5}
+      rightButtonText={onGetRightButtonTitle()}
+      rightButtonOnClick={formSteps < totalSteps ? onClickNext : () => onSubmit}
+      showRightButton={formSteps < totalSteps}
       showLeftButton={true}
       leftButtonText="Back"
-      leftButtonOnClick={handlePrev}
+      leftButtonOnClick={onClickPrev}
       leftButtonDisabled={formSteps === 1}
     >
       <div className="p-4">
@@ -194,15 +190,7 @@ export const CreateWorkspaceForm: FC<CreateWorkspaceFormProps> = ({
           onSubmit={onSubmit}
           onKeyDown={(e) => e.key === 'Enter' && e.preventDefault()}
         >
-          {renderStepContent()}
-          {formSteps === 4 && (
-            <Button
-              type="submit"
-              className="rounded-md bg-blue-500 px-4 py-2 text-white"
-            >
-              {isSubmitting ? 'Creating...' : 'Create'}
-            </Button>
-          )}
+          {onRenderStepContent()}
         </form>
       </div>
     </Modal>

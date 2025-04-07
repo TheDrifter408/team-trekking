@@ -4,7 +4,6 @@ import { CSS } from '@dnd-kit/utilities';
 import { GripVertical } from 'lucide-react';
 import { SubTask } from '@/types/ApiResponse.ts';
 import { statusColors, priorityColors } from '@/data/mockData.ts';
-import { useNavigate } from 'react-router-dom';
 
 interface SortableTaskRowProps {
   id: string;
@@ -23,7 +22,6 @@ export const SortableTaskRow: React.FC<SortableTaskRowProps> = ({
   onSelect,
   subtask,
 }) => {
-  const navigate = useNavigate();
   const {
     attributes,
     listeners,
@@ -62,10 +60,7 @@ export const SortableTaskRow: React.FC<SortableTaskRowProps> = ({
           >
             <GripVertical className="w-4 h-4" />
           </button>
-          <span
-            className="text-sm font-medium text-gray-900 hover:underline cursor-pointer"
-            onClick={() => navigate('/subtask/1')}
-          >
+          <span className="text-sm font-medium text-gray-900">
             {subtask.title}
           </span>
         </div>
