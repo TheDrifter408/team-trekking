@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { SidebarToggleButton } from '@components/Sidebar/Sidebar.tsx';
 
 interface BreadcrumbProps {
   workspaceId: string;
@@ -19,6 +20,7 @@ export const Breadcrumbs = ({
 }: BreadcrumbProps) => {
   return (
     <div className="py-1 h-full flex items-center px-6 bg-accent-header">
+      <SidebarToggleButton />
       <Link
         to={`/workspace/${workspaceId}`}
         className="text-sm ml-1 text-text-primary hover:text-text-hover"

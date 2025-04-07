@@ -7,6 +7,4 @@
   "bracketSpacing": true,
   "jsxBracketSameLine": false,
   "useTabs": false,
-  "tailwindFunctions": ["cn", "clsx", "classnames"],
-  "plugins": ["prettier-plugin-tailwindcss"]
 }

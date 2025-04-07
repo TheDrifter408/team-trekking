@@ -4,6 +4,7 @@ import { store } from '@/store';
 import AppRoutes from '../src/routes/index';
 import { useEffect } from 'react';
 import { useStore } from '@store/zustand';
+import { SidebarProvider } from '@/context/SidebarContext.tsx';
 
 function App() {
   const { currentTheme } = useStore();
@@ -17,7 +18,9 @@ function App() {
   return (
     <Provider store={store}>
       <Router>
-        <AppRoutes />
+        <SidebarProvider>
+          <AppRoutes />
+        </SidebarProvider>
       </Router>
     </Provider>
   );

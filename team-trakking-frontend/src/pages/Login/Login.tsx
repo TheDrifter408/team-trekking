@@ -29,7 +29,7 @@ export const Login = () => {
   };
 
   return (
-    <div className={`flex min-h-screen flex-col bg-bg-primary md:flex-row`}>
+    <div className={`bg-bg-primary flex min-h-screen flex-col md:flex-row`}>
       {/* Left side - Brand/Illustration */}
       <div className="hidden items-center justify-center bg-indigo-600 p-12 md:flex md:w-1/2">
         <div className="max-w-md">
@@ -66,14 +66,14 @@ export const Login = () => {
             <Button
               variant={'ghost'}
               onClick={() => setIsLogin(true)}
-              className={`flex-1 py-2 focus:outline-none focus:ring-0 focus:ring-offset-0 ${isLogin ? 'border-b-2 border-indigo-600' : 'border-b-2 border-text-muted text-text-muted'}`}
+              className={`flex-1 py-2 focus:outline-none focus:ring-0 focus:ring-offset-0 ${isLogin ? 'border-b-2 border-indigo-600' : 'border-text-muted text-text-muted border-b-2'}`}
             >
               Login
             </Button>
             <Button
               variant={'ghost'}
               onClick={() => setIsLogin(false)}
-              className={`flex-1 py-2 focus:outline-none focus:ring-0 focus:ring-offset-0 ${!isLogin ? 'border-b-2 border-indigo-600' : 'border-b-2 border-text-muted text-text-muted'}`}
+              className={`flex-1 py-2 focus:outline-none focus:ring-0 focus:ring-offset-0 ${!isLogin ? 'border-b-2 border-indigo-600' : 'border-text-muted text-text-muted border-b-2'}`}
             >
               Sign Up
             </Button>
@@ -94,7 +94,7 @@ export const Login = () => {
                 <div>
                   <label
                     htmlFor="email-address"
-                    className={`block text-sm font-medium text-text-muted`}
+                    className={`text-text-muted font-base block py-1 text-sm`}
                   >
                     Email address
                   </label>
@@ -103,7 +103,7 @@ export const Login = () => {
                     name="email"
                     type="email"
                     required
-                    className={`block text-text-default focus-within:border-indigo-500 sm:text-sm`}
+                    className={` block focus-within:border-indigo-500 sm:text-sm`}
                     placeholder="you@example.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
@@ -112,7 +112,7 @@ export const Login = () => {
                 <div>
                   <label
                     htmlFor="password"
-                    className={`block text-sm font-medium text-text-muted`}
+                    className={`text-text-muted font-base mb-1 block py-1 text-sm`}
                   >
                     Password
                   </label>
@@ -121,7 +121,7 @@ export const Login = () => {
                     name="password"
                     type="password"
                     required
-                    className={`block text-text-default focus-within:border-indigo-500 sm:text-sm`}
+                    className={` block focus-within:border-indigo-500 sm:text-sm`}
                     placeholder="••••••••"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
@@ -142,7 +142,7 @@ export const Login = () => {
                     ></div>
                   </div>
                   <div className="relative flex justify-center text-sm">
-                    <span className={`bg-bg-primary px-2 text-text-primary`}>
+                    <span className={`bg-bg-primary text-text-primary px-2`}>
                       Or continue with
                     </span>
                   </div>

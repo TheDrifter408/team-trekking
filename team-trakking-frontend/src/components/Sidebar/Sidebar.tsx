@@ -1,15 +1,16 @@
-import React, { FC, useCallback, useState } from 'react';
-import { HomeIcon, LayoutDashboard, PlusCircleIcon } from 'lucide-react';
-import { SidebarProps } from '@/types/Props';
+import React, { useCallback, useState } from 'react';
+import { LayoutDashboard, PlusCircleIcon, SidebarIcon } from 'lucide-react';
 import SidebarSpaceItem from '@components/Sidebar/SidebarSpaceItem.tsx';
 import { useNavigate } from 'react-router-dom';
 import { useStore } from '@store/zustand';
 import { IconButton } from '@/components';
+import { useSidebarContext } from '@/context/SidebarContext';
 
-export const Sidebar: FC<SidebarProps> = ({ sidebarOpen }) => {
+const Sidebar = () => {
   const navigate = useNavigate();
-  const { workspaceData, currentWorkspaceId, isCreateSpace, setIsCreateSpace } =
-    useStore();
+  const { sidebarOpen } = useSidebarContext();
+
+  const { workspaceData, currentWorkspaceId, setIsCreateSpace } = useStore();
   const [isActivePopup, setIsActivePopup] = useState<number | null>(null);
 
   const handleSpaceNavigate = (id: number) => {
@@ -54,27 +55,6 @@ export const Sidebar: FC<SidebarProps> = ({ sidebarOpen }) => {
             </div>
           )}
         </div>
-
-        {/*<div*/}
-        {/*  className={`${sidebarOpen ? 'px-3' : 'flex px-0'} items-center justify-center pt-2 pb-2 `}*/}
-        {/*>*/}
-        {/*  {!sidebarOpen ? (*/}
-        {/*    <div className="flex items-center justify-center rounded-full">*/}
-        {/*      <HomeIcon*/}
-        {/*        size={20}*/}
-        {/*        className="text-blue-600 cursor-pointer"*/}
-        {/*        onClick={() => navigate('/home')}*/}
-        {/*      />*/}
-        {/*    </div>*/}
-        {/*  ) : (*/}
-        {/*    <div*/}
-        {/*      className="truncate text-md font-semibold text-text-primary flex items-center gap-2 cursor-pointer hover:text-text-hover"*/}
-        {/*      onClick={() => navigate('/home')}*/}
-        {/*    >*/}
-        {/*      <HomeIcon size={18} className="text-blue-600" /> Home*/}
-        {/*    </div>*/}
-        {/*  )}*/}
-        {/*</div>*/}
         <div className=" mx-2 flex justify-between">
           <h1 className={'text-text-primary font-semibold mt-1'}>Spaces</h1>
           <IconButton size={'sm'} onClick={() => setIsCreateSpace(true)}>
@@ -107,3 +87,25 @@ export const Sidebar: FC<SidebarProps> = ({ sidebarOpen }) => {
     </>
   );
 };
+
+interface SidebarToggleButtonProps {
+  className?: string;
+}
+
+const SidebarToggleButton: React.FC<SidebarToggleButtonProps> = ({
+  className,
+}) => {
+  const { toggleSidebar } = useSidebarContext();
+
+  return (
+    <button
+      onClick={toggleSidebar}
+      className={`p-2 rounded-md hover:bg-gray-100 focus:outline-none ${className}`}
+      aria-label="Toggle Sidebar"
+    >
+      <SidebarIcon size={20} />
+    </button>
+  );
+};
+
+export { Sidebar, SidebarToggleButton };

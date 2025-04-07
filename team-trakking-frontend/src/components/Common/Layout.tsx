@@ -10,15 +10,14 @@ import {
   CreateList,
 } from '@/components/index';
 import { motion } from 'framer-motion';
-import { useStore } from '@/store/zustand/index';
+import { useStore } from '@store/zustand';
 import { useData } from '@/hooks/useData';
 import { Folder, List } from '@/types/ApiResponse.ts';
 import { CreateListItem as ListItem } from '@/types/Props.ts';
+import { useSidebarContext } from '@/context/SidebarContext.tsx';
 
 export const Layout = () => {
-  const { state } = useLocation();
   const {
-    sidebarOpen,
     toggleSidebar,
     isCreateSpace,
     setIsCreateSpace,
@@ -31,6 +30,7 @@ export const Layout = () => {
     workspaceData,
   } = useStore();
   const { handleCreateSpace, handleCreateFolder, handleCreateList } = useData();
+  const { sidebarOpen } = useSidebarContext();
   const [folderItem, setFolder] = useState<Folder>({
     id: '0',
     name: '',
@@ -112,13 +112,10 @@ export const Layout = () => {
         <motion.div
           initial={{ width: '6rem' }}
           animate={{ width: sidebarOpen ? '14rem' : '6rem' }}
-          transition={{ ease: 'easeOut', duration: 0.5 }}
+          transition={{ ease: 'easeOut', duration: 0.1 }}
           className="z-2 fixed bottom-0 top-12 bg-bg-primary"
         >
-          <Sidebar
-            sidebarOpen={sidebarOpen}
-            name={state?.name ?? 'Dashboard'}
-          />
+          <Sidebar />
         </motion.div>
 
         {/* Main Content */}

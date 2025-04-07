@@ -12,11 +12,11 @@ export const Folder = () => {
   const navigate = useNavigate();
   const { data: folderDetails } = useGetFolderQuery(Number(params.folderId));
   const [listStatistics, setListStatistics] = useState<List[]>([]);
-  const handleListClick = (list:List) => {
+  const handleListClick = (list: List) => {
     navigate(`/list/${list.id}`);
     // setSelectedList(list);
     // setShowModal(false);
-  }
+  };
 
   // Compute statistics for summar6y cards
   const folderStats = useMemo(() => {
@@ -61,7 +61,7 @@ export const Folder = () => {
 
       return {
         ...list,
-        tasks:listTasks,
+        tasks: listTasks,
         totalTasks: listTasks.length,
         completedTasks: listTasks.filter((task) => task.progress === 100)
           .length,
@@ -105,7 +105,10 @@ export const Folder = () => {
           folderDetails={folderDetails}
           folderStats={folderStats}
         />
-        <FolderList listStatistics={listStatistics} onListClick={handleListClick} />
+        <FolderList
+          listStatistics={listStatistics}
+          onListClick={handleListClick}
+        />
       </div>
     </div>
   );
