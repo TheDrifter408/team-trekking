@@ -12,7 +12,7 @@ export const Folder = () => {
   const navigate = useNavigate();
   const { data: folderDetails } = useGetFolderQuery(Number(params.folderId));
   const [listStatistics, setListStatistics] = useState<List[]>([]);
-  const handleListClick = (list: List) => {
+  const onHandleListClick = (list: List) => {
     navigate(`/list/${list.id}`);
     // setSelectedList(list);
     // setShowModal(false);
@@ -107,7 +107,7 @@ export const Folder = () => {
         />
         <FolderList
           listStatistics={listStatistics}
-          onListClick={handleListClick}
+          onListClick={onHandleListClick}
         />
       </div>
     </div>

@@ -8,7 +8,6 @@ import { Modal } from '@library/components';
 import { WorkspaceHeader } from '@pages/Workspace/components/WorkspaceHeader.tsx';
 import { v4 as uuidv4 } from 'uuid';
 
-// Define a more structured Task type
 interface Task {
   id: string;
   name: string;
@@ -26,7 +25,6 @@ export const List = () => {
   const [allTasks, setAllTasks] = useState<Task[]>([]);
   const [showModal, setShowModal] = useState(false);
 
-  // State for form fields with more precise typing
   const [taskForm, setTaskForm] = useState({
     name: '',
     dueDate: '',
@@ -37,8 +35,7 @@ export const List = () => {
     tags: [],
   });
 
-  // Handle input changes
-  const handleInputChange = (
+  const onHandleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
@@ -48,11 +45,9 @@ export const List = () => {
     }));
   };
 
-  // Handle form submission
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const onHandleSubmitForm = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    // Validate form fields
     if (
       !taskForm.name ||
       !taskForm.startDate ||
@@ -63,39 +58,38 @@ export const List = () => {
       return;
     }
 
-    // Create new task
     const newTask: Task = {
-      id: uuidv4(), // Generate unique ID
+      id: uuidv4(),
       ...taskForm,
-      listId: Number(params.listId), // Use current list ID
+      listId: Number(params.listId),
     };
 
-    // Update tasks state
     setAllTasks((prevTasks) => [...prevTasks, newTask]);
 
-    // Reset form and close modal
     setTaskForm({
       name: '',
       dueDate: '',
       startDate: '',
       estimatedTime: '',
       priorityType: '',
+      statusType: '',
       tags: [],
     });
     setShowModal(false);
   };
 
-  // Open modal for adding task
-  const handleAddTask = () => {
+  const onHandleAddTaskClick = () => {
     setShowModal(true);
   };
 
-  // Simulate API call to get tasks for current list
   useEffect(() => {
-    const filteredTasks = tasks.filter(
-      (task) => task.listId === Number(params.listId)
-    );
-    setAllTasks(filteredTasks);
+    const onFetchListTasks = () => {
+      const filteredTasks = tasks.filter(
+        (task) => task.listId === Number(params.listId)
+      );
+      setAllTasks(filteredTasks);
+    };
+    onFetchListTasks();
   }, [params]);
 
   return (
@@ -109,7 +103,6 @@ export const List = () => {
         folderName={'Going Moon'}
       />
       <WorkspaceHeader />
-      {/* Task Table Container */}
       <div className="px-4 rounded-lg">
         <div className="flex justify-end items-center my-2">
           <Button
@@ -117,7 +110,7 @@ export const List = () => {
             size="sm"
             leftIcons={[{ icon: <PlusIcon /> }]}
             className="w-auto"
-            onClick={handleAddTask}
+            onClick={onHandleAddTaskClick}
           >
             Add Task
           </Button>
@@ -125,7 +118,6 @@ export const List = () => {
         <TaskTable tasks={allTasks} />
       </div>
 
-      {/* Modal Container */}
       <Modal
         title="Create Task"
         isOpen={showModal}
@@ -134,7 +126,7 @@ export const List = () => {
         maxWidth={800}
       >
         <form
-          onSubmit={handleSubmit}
+          onSubmit={onHandleSubmitForm}
           className="bg-white p-6 rounded-lg w-full space-y-4"
         >
           <div className="flex flex-col">
@@ -146,7 +138,7 @@ export const List = () => {
               id="name"
               type="text"
               value={taskForm.name}
-              onChange={handleInputChange}
+              onChange={onHandleInputChange}
               className="p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
               required
             />
@@ -163,7 +155,7 @@ export const List = () => {
               name="startDate"
               type="date"
               value={taskForm.startDate}
-              onChange={handleInputChange}
+              onChange={onHandleInputChange}
               className="p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
               required
             />
@@ -177,7 +169,7 @@ export const List = () => {
               name="dueDate"
               type="date"
               value={taskForm.dueDate}
-              onChange={handleInputChange}
+              onChange={onHandleInputChange}
               className="p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
               required
             />
@@ -194,7 +186,7 @@ export const List = () => {
               name="estimatedTime"
               type="number"
               value={taskForm.estimatedTime}
-              onChange={handleInputChange}
+              onChange={onHandleInputChange}
               className="p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
               placeholder="Enter estimated time"
             />
@@ -210,7 +202,7 @@ export const List = () => {
             <select
               name="priorityType"
               value={taskForm.priorityType}
-              onChange={handleInputChange}
+              onChange={onHandleInputChange}
               className="p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
               required
             >
@@ -232,7 +224,7 @@ export const List = () => {
             <select
               name="statusType"
               value={taskForm.statusType}
-              onChange={handleInputChange}
+              onChange={onHandleInputChange}
               className="p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
               required
             >

@@ -10,9 +10,9 @@ import { SortableTaskRow } from '@pages/Task/components/SortableTaskRow.tsx';
 interface SubtaskProps {
   onPressAddSubtask: (task: any) => void;
   sensors: any;
-  handleSubtaskSelect: (task: any) => void;
-  handleSubtaskDragEnd: (task: any) => void;
-  handleSelectAllSubtasks: (task: any) => void;
+  onHandleSubtaskSelect: (task: any) => void;
+  onHandleSubtaskDragEnd: (task: any) => void;
+  onHandleSelectAllSubtasks: (task: any) => void;
   selectedSubtasks: (task: any) => void;
   task: any;
 }
@@ -20,11 +20,11 @@ interface SubtaskProps {
 export const Subtask = ({
   onPressAddSubtask,
   sensors,
-  handleSubtaskDragEnd,
-  handleSelectAllSubtasks,
+  onHandleSubtaskDragEnd,
+  onHandleSelectAllSubtasks,
   selectedSubtasks,
   task,
-  handleSubtaskSelect,
+  onHandleSubtaskSelect,
 }: SubtaskProps) => {
   return (
     <div className="space-y-4 bg-gray-50 p-6 rounded-lg shadow-sm">
@@ -41,7 +41,7 @@ export const Subtask = ({
         <DndContext
           sensors={sensors}
           collisionDetection={closestCenter}
-          onDragEnd={handleSubtaskDragEnd}
+          onDragEnd={onHandleSubtaskDragEnd}
         >
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
@@ -49,7 +49,7 @@ export const Subtask = ({
                 <th className="sticky left-0 bg-gray-50 px-6 py-3 text-left z-10 border-r">
                   <input
                     type="checkbox"
-                    onChange={handleSelectAllSubtasks}
+                    onChange={onHandleSelectAllSubtasks}
                     checked={selectedSubtasks.size === task.subtasks.length}
                     className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                   />
@@ -84,7 +84,7 @@ export const Subtask = ({
                     key={subtask.id}
                     id={subtask.id}
                     selected={selectedSubtasks.has(subtask.id)}
-                    onSelect={() => handleSubtaskSelect(subtask.id)}
+                    onSelect={() => onHandleSubtaskSelect(subtask.id)}
                     subtask={subtask}
                   />
                 ))}

@@ -46,7 +46,7 @@ export const AddSubtask: React.FC<AddSubtaskModalProps> = ({
   setEstimatedTime,
   onAddSubtask,
 }) => {
-  const handleSubmit = (e: React.FormEvent) => {
+  const onHandleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
     // Basic validation
@@ -83,7 +83,7 @@ export const AddSubtask: React.FC<AddSubtaskModalProps> = ({
       <div className=" w-full max-w-md p-6 relative">
         <h2 className="text-xl font-semibold mb-4">Add New Subtask</h2>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={onHandleSubmit} className="space-y-4">
           <div>
             <label
               htmlFor="name"

@@ -13,7 +13,7 @@ const Sidebar = () => {
   const { workspaceData, currentWorkspaceId, setIsCreateSpace } = useStore();
   const [isActivePopup, setIsActivePopup] = useState<number | null>(null);
 
-  const handleSpaceNavigate = (id: number) => {
+  const onHandleSpaceNavigate = (id: number) => {
     navigate(`/space/${id}`, {
       state: { spaceId: id },
     });
@@ -28,7 +28,7 @@ const Sidebar = () => {
   };
 
   // Close popup when clicking outside
-  const handleClosePopup = useCallback(() => {
+  const onHandleClosePopup = useCallback(() => {
     setIsActivePopup(null);
   }, []);
 
@@ -70,7 +70,7 @@ const Sidebar = () => {
                   <SidebarSpaceItem
                     currentWorkspaceId={currentWorkspaceId}
                     space={space}
-                    handleSpaceNavigate={handleSpaceNavigate}
+                    handleSpaceNavigate={onHandleSpaceNavigate}
                     onPressFolder={onPressFolder}
                     onPressList={onPressList}
                   />
@@ -81,7 +81,7 @@ const Sidebar = () => {
 
         {/* Backdrop to close popup when clicking outside */}
         {isActivePopup !== null && (
-          <div className="fixed inset-0 z-0" onClick={handleClosePopup}></div>
+          <div className="fixed inset-0 z-0" onClick={onHandleClosePopup}></div>
         )}
       </div>
     </>

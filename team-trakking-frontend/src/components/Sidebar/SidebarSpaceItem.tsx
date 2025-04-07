@@ -33,17 +33,17 @@ const SidebarSpaceItem = ({
   const [isActivePopup, setIsActivePopup] = useState<number | null>(null);
   const [folderId, setFolderId] = useState<number | null>(null);
 
-  const handleSpaceExpand = useCallback((id: number) => {
+  const onHandleSpaceExpand = useCallback((id: number) => {
     setExpandedSpaceId((prevId) => (prevId === id ? null : id));
     setExpandedFolderId(null);
   }, []);
 
-  const handleFolderExpand = useCallback((id: number) => {
+  const onHandleFolderExpand = useCallback((id: number) => {
     setExpandedFolderId((prevId) => (prevId === id ? null : id));
   }, []);
 
   // Fixed event handling
-  const handlePopup = useCallback(
+  const onHandlePopup = useCallback(
     (spaceId: number, event: React.MouseEvent) => {
       event.stopPropagation();
       setIsActivePopup((prevState) => (prevState === spaceId ? null : spaceId));
@@ -64,7 +64,7 @@ const SidebarSpaceItem = ({
               icon: !isExpanded ? (
                 <ChevronRightCircleIcon
                   size={14}
-                  onClick={() => handleSpaceExpand(id)}
+                  onClick={() => onHandleSpaceExpand(id)}
                   className={
                     'hover:scale-105 text-text-secondary hover:text-tertiary'
                   }
@@ -72,7 +72,7 @@ const SidebarSpaceItem = ({
               ) : (
                 <ChevronDownCircleIcon
                   size={14}
-                  onClick={() => handleSpaceExpand(id)}
+                  onClick={() => onHandleSpaceExpand(id)}
                   className={
                     'hover:scale-105 text-text-secondary hover:text-tertiary'
                   }
@@ -84,7 +84,7 @@ const SidebarSpaceItem = ({
             {
               icon: (
                 <span
-                  onClick={(e) => handlePopup(id, e)}
+                  onClick={(e) => onHandlePopup(id, e)}
                   className="flex items-center justify-center cursor-pointer focus:outline-none hover:scale-105 text-text-secondary hover:text-tertiary"
                 >
                   <MoreVertical size={14} className="mt-1 mr-2" />
@@ -134,7 +134,7 @@ const SidebarSpaceItem = ({
                         icon: !isFolderExpanded ? (
                           <ChevronRightCircleIcon
                             size={14}
-                            onClick={() => handleFolderExpand(id)}
+                            onClick={() => onHandleFolderExpand(id)}
                             className={
                               'hover:scale-105 text-text-secondary hover:text-tertiary'
                             }
@@ -142,7 +142,7 @@ const SidebarSpaceItem = ({
                         ) : (
                           <ChevronDownCircleIcon
                             size={14}
-                            onClick={() => handleFolderExpand(id)}
+                            onClick={() => onHandleFolderExpand(id)}
                             className={
                               'hover:scale-105 text-text-secondary hover:text-tertiary'
                             }
@@ -153,7 +153,7 @@ const SidebarSpaceItem = ({
                         icon: (
                           <FolderIcon
                             size={14}
-                            onClick={() => handleFolderExpand(folderId)}
+                            onClick={() => onHandleFolderExpand(folderId)}
                             color={folder.color}
                           />
                         ),

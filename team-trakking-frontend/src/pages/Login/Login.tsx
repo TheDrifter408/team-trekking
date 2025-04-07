@@ -23,12 +23,33 @@ export const Login = () => {
     await authenticate(isLogin, email, password);
   };
 
-  const toggleDarkMode = () => {
+  const onToggleDarkMode = () => {
     setTheme(currentTheme === 'light' ? 'dark' : 'light');
     setDarkMode(!darkMode);
   };
 
+  const onHandleSwitchAuthTab = (value: boolean) => {
+    setIsLogin(value);
+  };
+
+  const onHandleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(e.target.value);
+  };
+
+  const onHandlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPassword(e.target.value);
+  };
+
+  const onHandleSocialAuth = () => {
+    handleSocialAuth();
+  };
+
+  const onHandleSwitchMode = () => {
+    setIsLogin(!isLogin);
+  };
+
   return (
+    <div className={`flex min-h-screen flex-col bg-bg-primary md:flex-row`}>
     <div className={`bg-bg-primary flex min-h-screen flex-col md:flex-row`}>
       {/* Left side - Brand/Illustration */}
       <div className="hidden items-center justify-center bg-indigo-600 p-12 md:flex md:w-1/2">
@@ -65,15 +86,15 @@ export const Login = () => {
           <div className="mb-8 flex ">
             <Button
               variant={'ghost'}
-              onClick={() => setIsLogin(true)}
-              className={`flex-1 py-2 focus:outline-none focus:ring-0 focus:ring-offset-0 ${isLogin ? 'border-b-2 border-indigo-600' : 'border-text-muted text-text-muted border-b-2'}`}
+              onClick={() => onHandleSwitchAuthTab(true)}
+              className={`flex-1 py-2 focus:outline-none focus:ring-0 focus:ring-offset-0 ${isLogin ? 'border-b-2 border-indigo-600' : 'border-b-2 border-text-muted text-text-muted'}`}
             >
               Login
             </Button>
             <Button
               variant={'ghost'}
-              onClick={() => setIsLogin(false)}
-              className={`flex-1 py-2 focus:outline-none focus:ring-0 focus:ring-offset-0 ${!isLogin ? 'border-b-2 border-indigo-600' : 'border-text-muted text-text-muted border-b-2'}`}
+              onClick={() => onHandleSwitchAuthTab(false)}
+              className={`flex-1 py-2 focus:outline-none focus:ring-0 focus:ring-offset-0 ${!isLogin ? 'border-b-2 border-indigo-600' : 'border-b-2 border-text-muted text-text-muted'}`}
             >
               Sign Up
             </Button>
@@ -106,7 +127,7 @@ export const Login = () => {
                     className={` block focus-within:border-indigo-500 sm:text-sm`}
                     placeholder="you@example.com"
                     value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    onChange={onHandleEmailChange}
                   />
                 </div>
                 <div>
@@ -124,7 +145,7 @@ export const Login = () => {
                     className={` block focus-within:border-indigo-500 sm:text-sm`}
                     placeholder="••••••••"
                     value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                    onChange={onHandlePasswordChange}
                   />
                 </div>
               </div>
@@ -151,11 +172,11 @@ export const Login = () => {
                 <div className="flex w-full grid-cols-2 gap-2">
                   <Button
                     variant={'outline'}
-                    onClick={() => handleSocialAuth()}
+                    onClick={onHandleSocialAuth}
                     leftIcons={[
                       {
                         icon: <GithubIcon />,
-                        onClick: () => handleSocialAuth(),
+                        onClick: onHandleSocialAuth,
                       },
                     ]}
                     className={'w-full'}
@@ -164,11 +185,11 @@ export const Login = () => {
                   </Button>
                   <Button
                     variant={'outline'}
-                    onClick={() => handleSocialAuth()}
+                    onClick={onHandleSocialAuth}
                     leftIcons={[
                       {
                         icon: <GoogleIcon />,
-                        onClick: () => handleSocialAuth(),
+                        onClick: onHandleSocialAuth,
                       },
                     ]}
                     className={'w-full'}
@@ -183,7 +204,7 @@ export const Login = () => {
                 <Button
                   variant={'link'}
                   fullWidth
-                  onClick={() => setIsLogin(!isLogin)}
+                  onClick={onHandleSwitchMode}
                   className={`flex text-sm font-medium`}
                 >
                   {isLogin
