@@ -1,8 +1,8 @@
 import { ListIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button.tsx';
 import { cn } from '@/lib/utils.ts';
-import { IconDots } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';
+import { SidebarActionsMenu } from '@/components/layout/sidebar-action-menu.tsx';
 
 interface Props {
   listItem: any;
@@ -13,7 +13,7 @@ export const SidebarListItems = ({ listItem }: Props) => {
   return (
     <div
       key={listItem.id}
-      className="flex items-center justify-between px-1 bg-secondary rounded-md hover:bg-gray-200 transition-all duration-200"
+      className="flex items-center justify-between px-1 rounded-md hover:bg-gray-200 transition-all duration-200"
     >
       <div className="flex items-center gap-2">
         <ListIcon className="h-3 w-3 text-blue-700" />
@@ -28,13 +28,7 @@ export const SidebarListItems = ({ listItem }: Props) => {
           <span className={cn('text-xs truncate')}>{listItem.name}</span>
         </Button>
       </div>
-      <Button
-        variant="ghost"
-        size="icon"
-        className="h-5 w-5 text-gray-500 hover:text-gray-700 hover:bg-gray-200"
-      >
-        <IconDots className="h-3 w-3" />
-      </Button>
+      <SidebarActionsMenu showAddMenu={false} />
     </div>
   );
 };

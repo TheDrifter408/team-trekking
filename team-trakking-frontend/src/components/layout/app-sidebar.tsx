@@ -9,7 +9,7 @@ import {
   SidebarRail,
   useSidebar,
 } from '@/components/ui/sidebar';
-import { Plus } from 'lucide-react';
+import { Plus, UserPlus, CompassIcon } from 'lucide-react';
 import { NavGroup } from '@/components/layout/nav-group';
 import { NavUser } from '@/components/layout/nav-user';
 import { TeamSwitcher } from '@/components/layout/team-switcher';
@@ -20,17 +20,26 @@ import { Collapsible } from '@/components/ui/collapsible.tsx';
 import { Button } from '@/components/ui/button';
 import { CreateSpace } from '@/components/create-space.tsx';
 import { SidebarListItems } from '@/components/layout/sidebar-list-items.tsx';
+import {
+  TooltipProvider,
+  TooltipTrigger,
+  Tooltip,
+  TooltipContent,
+} from '@/components/ui/tooltip.tsx';
+import { InviteUser } from '@/components/invite-user.tsx';
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { state } = useSidebar();
 
   const [createSpaceOpen, setCreateSpaceOpen] = useState(false);
+  const [inviteUserOpen, setInviteUserOpen] = useState(false);
   // Form states
   const [spaceName, setSpaceName] = useState('');
   const [description, setDescription] = useState('');
   const [selectedIcon, setSelectedIcon] = useState<React.ReactNode | null>(
     null
   );
+  const [enterSpaceGroup, setEnterSpaceGroup] = useState<boolean>(false);
   const [privateAccess, setPrivateAccess] = useState(false);
   // Derived state
   const [initials, setInitials] = useState('');
@@ -52,21 +61,14 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   }, [spaceName]);
 
   const onCreateSpace = () => {
-    // Process the space creation with all form data
-    console.log({
-      name: spaceName,
-      description,
-      icon: selectedIcon,
-      privateAccess,
-    });
-
-    // Reset the form
     setSpaceName('');
     setDescription('');
     setSelectedIcon(null);
     setPrivateAccess(false);
     setCreateSpaceOpen(false);
   };
+
+  const onInviteUsers = (emails: string[]) => {};
 
   const isOpen = state !== 'collapsed';
 
@@ -82,17 +84,33 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         {isOpen ? (
           <Collapsible className="group/collapsible">
             <SidebarGroup className="gap-1">
-              <div className="justify-between flex items-center">
+              <div
+                className="justify-between flex items-center"
+                onMouseEnter={() => setEnterSpaceGroup(true)}
+                onMouseLeave={() => setEnterSpaceGroup(false)}
+              >
                 <SidebarGroupLabel className="text-xs font-medium  tracking-wider">
                   Spaces
                 </SidebarGroupLabel>
-                <Button
-                  size={'icon'}
-                  onClick={() => setCreateSpaceOpen(true)}
-                  className={'h-5 w-5'}
-                >
-                  <Plus size={14} />
-                </Button>
+                <div className="flex gap-2">
+                  {enterSpaceGroup && (
+                    <Button
+                      size={'icon'}
+                      variant={'ghost'}
+                      className={'h-5 w-5'}
+                      onClick={() => setInviteUserOpen(true)}
+                    >
+                      <UserPlus size={14} />
+                    </Button>
+                  )}
+                  <Button
+                    size={'icon'}
+                    onClick={() => setCreateSpaceOpen(true)}
+                    className={'h-5 w-5'}
+                  >
+                    <Plus size={14} />
+                  </Button>
+                </div>
               </div>
               {spaceData.map((space) => (
                 <SidebarSpaceItems key={space.id} name={space.name}>
@@ -111,8 +129,18 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             </SidebarGroup>
           </Collapsible>
         ) : (
-          // <SpacesDrawer />
-          <></>
+          <SidebarGroup className="justify-between flex items-center">
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger>
+                  <CompassIcon className={'text-indigo-600'} size={20} />
+                </TooltipTrigger>
+                <TooltipContent side="right" align="center">
+                  Spaces
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </SidebarGroup>
         )}
       </SidebarContent>
       <SidebarFooter>
@@ -133,6 +161,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         setPrivateAccess={setPrivateAccess}
         initials={initials}
         onCreateSpace={onCreateSpace}
+      />
+      <InviteUser
+        inviteUserOpen={inviteUserOpen}
+        setInviteUserOpen={setInviteUserOpen}
+        onInvite={onInviteUsers}
+        maxInvites={10}
       />
     </Sidebar>
   );
