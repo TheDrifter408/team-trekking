@@ -7,7 +7,7 @@ import {
   useSidebar,
 } from '@/components/ui/sidebar';
 import { Header } from '@/components/layout/header.tsx';
-import { HeaderItems } from '@/components/layout/headerItems';
+import { HeaderItems } from '@/components/layout/header-items.tsx';
 import { TaskSidebar } from './task-sidebar';
 
 // Create a wrapper component that handles the layout adjustments

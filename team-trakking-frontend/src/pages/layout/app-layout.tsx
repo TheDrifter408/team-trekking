@@ -5,7 +5,7 @@ import { SidebarProvider } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/components/layout/app-sidebar';
 import { cn } from '@/lib/utils';
 import { Header } from '@/components/layout/header.tsx';
-import { HeaderItems } from '@/components/layout/headerItems';
+import { HeaderItems } from '@/components/layout/header-items.tsx';
 import { PageHeaderRenderer } from '@/components/layout/page-header-renderer.tsx';
 
 export const AppLayout: React.FC = () => {
