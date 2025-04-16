@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 import { useBreadcrumbNavigation } from '@/lib/hooks/use-breadcrumb';
 import { usePageHeader } from '@/lib/context/page-header-context';
-import { Main } from '@/components/layout/main';
+import { Main } from '@/components/layout/main.tsx';
 import { PageHeader } from '@/components/layout/page-header.tsx';
 import { Folder, List, Users } from 'lucide-react';
 import { TaskStatusTable } from '@/pages/dashboard/components/task-table.tsx';

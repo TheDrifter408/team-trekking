@@ -17,7 +17,7 @@ import {
   AdjustmentsHorizontalIcon,
 } from '@heroicons/react/24/outline';
 import { useBreadcrumbNavigation } from '@/lib/hooks/use-breadcrumb.tsx';
-import { Main } from '@/components/layout/main';
+import { Main } from '@/components/layout/main.tsx';
 
 // Add these imports at the top where other imports are
 import { DragEvent } from 'react';

@@ -3,7 +3,7 @@ import { ViewMode, Task } from '@/types/props/public-types.ts';
 import { Gantt } from '@/components/ganttChart/gantt/gantt.tsx';
 import { ViewSwitcher } from './components/view-switcher';
 import 'gantt-task-react/dist/index.css';
-import { Main } from '@/components/layout/main';
+import { Main } from '@/components/layout/main.tsx';
 import { usePageHeader } from '@/lib/context/page-header-context.tsx';
 import { useBreadcrumbNavigation } from '@/lib/hooks/use-breadcrumb.tsx';
 

@@ -9,7 +9,7 @@ import { Folder } from '@/pages/folder';
 import { List } from '@/pages/list';
 import { Task } from '@/pages/task';
 import { Calendar } from '@/pages/calendar';
-import PrivateRoute from '@/routes/PrivateRoute.tsx';
+import PrivateRoute from '@/routes/privateRoute.tsx';
 
 const AppRoutes = () => {
   return (

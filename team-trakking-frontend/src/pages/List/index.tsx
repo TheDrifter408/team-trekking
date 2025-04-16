@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button';
 import { usePageHeader } from '@/lib/context/page-header-context.tsx';
 import { useEffect, useState } from 'react';
 import { useBreadcrumbNavigation } from '@/lib/hooks/use-breadcrumb.tsx';
-import { Main } from '@/components/layout/main';
+import { Main } from '@/components/layout/main.tsx';
 import { DataTable } from '@/components/dataTable/data-table.tsx';
 import { columns } from '@/pages/dashboard/components/columns.tsx';
 import * as Task from '@/mock/task.ts';
