@@ -30,8 +30,7 @@ export const Dashboard = () => {
     foldersData: any[] = [],
     listsData: any[] = [];
 
-  let spaceCount = 0,
-    folderCount = 0,
+  let folderCount = 0,
     listCount = 0;
 
   for (const space of spaceData) {
@@ -60,43 +59,17 @@ export const Dashboard = () => {
     for (const list of space.lists) {
       listsData.push(list);
     }
-    ++spaceCount;
   }
 
-  const handleViewAllSpaces = () => {
-    // Implement navigation or modal to view all spaces
-    console.log('View all spaces clicked');
-  };
+  const handleViewAllFolders = () => {};
 
-  const handleViewAllFolders = () => {
-    // Implement navigation or modal to view all folders
-    console.log('View all folders clicked');
-  };
-
-  const handleViewAllLists = () => {
-    // Implement navigation or modal to view all lists
-    console.log('View all lists clicked');
-  };
+  const handleViewAllLists = () => {};
 
   return (
     <Main>
-      <div className="px-6 pt-4 flex-grow">
+      <div className="px-4 pt-12 flex-grow">
         {/* Overview Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-          {/* Spaces Card */}
-          <PageHeader
-            icon={<Users />}
-            title="Spaces"
-            description="Departments or teams in this workspace"
-            count={spaceCount}
-            countLabel="Total Spaces"
-            items={spacesData}
-            itemLabelKey="name"
-            color="blue"
-            viewAllLabel="View all spaces"
-            onViewAll={handleViewAllSpaces}
-          />
-
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
           {/* Folders Card */}
           <PageHeader
             icon={<Folder />}
@@ -126,12 +99,12 @@ export const Dashboard = () => {
           />
         </div>
       </div>
-      <div className="overflow-x-auto w-full px-6">
+      <div className="overflow-x-auto w-full px-4">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="md:col-span-2 ">
             <TaskStatusTable tasks={myTasks} />
           </div>
-          <div className={'h-[320px]'}>
+          <div className={'h-[500px]'}>
             <ActivityFeed activities={mockActivities} onViewAll={() => {}} />
           </div>
         </div>

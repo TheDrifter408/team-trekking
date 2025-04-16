@@ -173,7 +173,7 @@ export function TaskStatusTable({ tasks }: { tasks: Task[] }) {
   };
 
   return (
-    <Card className="shadow-sm">
+    <Card className="shadow-sm h-[500px]">
       <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle>Assigned to me</CardTitle>
         <div className="flex items-center space-x-2">
