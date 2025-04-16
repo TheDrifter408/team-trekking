@@ -4,10 +4,10 @@ import {
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import { LucideIcon, Plus } from 'lucide-react';
-import { Column } from '@/types/ApiResponse';
-import { TaskCard } from '@pages/Board/components/TaskCard.tsx';
+import { Column } from '@/types/props/commonTypes';
+import { TaskCard } from '@/pages/Board/components/TaskCard.tsx';
 
-export type ColumnType = 'todo' | 'in-progress' | 'completeds';
+export type ColumnType = 'todo' | 'in-progress' | 'completed';
 
 interface BoardColumnProps {
   column: Column;

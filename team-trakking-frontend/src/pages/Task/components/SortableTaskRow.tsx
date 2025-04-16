@@ -2,15 +2,14 @@ import React from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { GripVertical } from 'lucide-react';
-import { SubTask } from '@/types/ApiResponse.ts';
-import { statusColors, priorityColors } from '@/data/mockData.ts';
+import { statusColors, priorityColors } from '@/mock';
 import { useNavigate } from 'react-router-dom';
 
 interface SortableTaskRowProps {
   id: string;
   selected: boolean;
   onSelect: () => void;
-  subtask: SubTask;
+  subtask: any;
 }
 
 const formatTime = (hours: number): string => {

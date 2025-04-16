@@ -1,27 +1,23 @@
-import { BrowserRouter as Router } from 'react-router-dom';
+import { FontProvider } from '@/lib/context/font-context';
+import { ThemeProvider } from '@/lib/context/theme-context.tsx';
 import { Provider } from 'react-redux';
-import { store } from '@/store';
-import AppRoutes from '../src/routes/index';
-import { useEffect } from 'react';
-import { useStore } from '@store/zustand';
-import { SidebarProvider } from '@/context/SidebarContext.tsx';
+import { store } from '@/stores';
+import AppRoutes from '@/routes';
+import { BrowserRouter as Router } from 'react-router-dom';
+import { PageHeaderContextProvider } from '@/lib/context/page-header-context.tsx';
 
 function App() {
-  const { currentTheme } = useStore();
-  useEffect(() => {
-    document.documentElement.setAttribute(
-      'data-theme',
-      currentTheme || 'light'
-    );
-  }, [currentTheme]);
-
   return (
     <Provider store={store}>
-      <Router>
-        <SidebarProvider>
-          <AppRoutes />
-        </SidebarProvider>
-      </Router>
+      <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
+        <FontProvider>
+          <PageHeaderContextProvider>
+            <Router>
+              <AppRoutes />
+            </Router>
+          </PageHeaderContextProvider>
+        </FontProvider>
+      </ThemeProvider>
     </Provider>
   );
 }

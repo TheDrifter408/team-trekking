@@ -1,11 +1,11 @@
-import { IconButton } from '@/components';
+import { Button } from '@/components/ui/button.tsx';
 import { Plus } from 'lucide-react';
 import { closestCenter, DndContext } from '@dnd-kit/core';
 import {
   SortableContext,
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
-import { SortableTaskRow } from '@pages/Task/components/SortableTaskRow.tsx';
+import { SortableTaskRow } from '@/pages/task/components/SortableTaskRow.tsx';
 
 interface SubtaskProps {
   onPressAddSubtask: (task: any) => void;
@@ -27,15 +27,16 @@ export const Subtask = ({
   onHandleSubtaskSelect,
 }: SubtaskProps) => {
   return (
-    <div className="space-y-4 bg-gray-50 p-6 rounded-lg shadow-sm">
-      <div className="flex justify-content-between">
+    <div className="space-y-4 bg-gray-50 rounded-lg shadow-sm">
+      <div className="flex justify-between px-2 py-6 ">
         <h3 className="text-lg font-medium text-gray-900">Subtasks</h3>
-        <IconButton
+        <Button
+          size={'icon'}
           className={'bg-indigo-600 h-6 w-6 rounded-1 mr-1'}
           onClick={onPressAddSubtask}
         >
           <Plus color={'white'} size={18} />
-        </IconButton>
+        </Button>
       </div>
       <div className="bg-white rounded-lg shadow overflow-x-auto">
         <DndContext

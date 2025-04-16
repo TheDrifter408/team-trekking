@@ -1,46 +1,41 @@
-import { Routes, Route, Navigate } from 'react-router';
-import {
-  Home,
-  Login,
-  Workspace,
-  Space,
-  Folder,
-  Task,
-  List,
-  Subtask,
-  Board,
-} from '@/pages/index';
-import { Layout } from '@/components/Common/Layout';
-import PrivateRoute from '@/routes/privateRoute.tsx';
+import { Navigate, Route, Routes } from 'react-router-dom';
+import { AppLayout } from '@/pages/layout/app-layout.tsx';
+import { HeaderLayout } from '@/pages/layout/header-layout.tsx';
+import { Login } from '@/pages/login';
+import { Dashboard } from '@/pages/dashboard';
+import { Board } from '@/pages/Board';
+import { Space } from '@/pages/space';
+import { Folder } from '@/pages/folder';
+import { List } from '@/pages/list';
+import { Task } from '@/pages/task';
+import { Calendar } from '@/pages/calendar';
+import { GanttChart } from '@/pages/gantt-chart';
+import PrivateRoute from '@/routes/PrivateRoute.tsx';
 
 const AppRoutes = () => {
   return (
     <Routes>
-      {/* Set default route to Login always */}
-      <Route path="/" element={<Navigate to={'/login'} replace />} />
+      {/* Public Route */}
+      <Route path="/" element={<Login />} />
 
-      <Route path={'/login'} element={<Login />} />
-
+      {/* Private Routes */}
       <Route element={<PrivateRoute />}>
-        <Route path={'/home'} element={<Home />} />
-      </Route>
-
-      {/* All components under this layout will be rendered without page refresh.
-      Include space x folder x list */}
-      <Route element={<PrivateRoute />}>
-        <Route element={<Layout />}>
-          <Route path={'/workspace/:workspaceId'} element={<Workspace />} />
-          <Route path={'/space/:spaceId'} element={<Space />} />
-          <Route path={'/folder/:folderId'} element={<Folder />} />
-          <Route path={'/Task/:taskId'} element={<Task />} />
-          <Route path={'/List/:listId'} element={<List />} />
-          <Route path={'/subtask/:subtaskId'} element={<Subtask />} />
-          <Route path={'/board/:boardId'} element={<Board />} />
+        <Route element={<AppLayout />}>
+          <Route path="home" element={<Dashboard />} />
+          <Route path="board" element={<Board />} />
+          <Route path="space" element={<Space />} />
+          <Route path="folder" element={<Folder />} />
+          <Route path="list" element={<List />} />
+          <Route path="calendar" element={<Calendar />} />
+          <Route path="gantt" element={<GanttChart />} />
+        </Route>
+        <Route element={<HeaderLayout />}>
+          <Route path="task" element={<Task />} />
         </Route>
       </Route>
 
-      {/* All unknown routes redirects to login ** Shall be replaced with 404 page later...*/}
-      <Route path="*" element={<Navigate to={'/login'} replace />} />
+      {/* Redirect unknown routes to login */}
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 };

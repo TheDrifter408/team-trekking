@@ -1,6 +1,6 @@
 import React from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import { statusColors, priorityColors } from '@/data/mockData.ts';
+import { statusColors, priorityColors } from '@/mock';
 
 // Type definitions for subtask
 type Priority = 'low' | 'normal' | 'high' | 'urgent';
@@ -18,7 +18,7 @@ interface Subtask {
 interface AddSubtaskModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onAddSubtask: (subtask: Subtask) => void;
+  onAddSubtask: (subtask: any) => void;
   name: string;
   status: Status;
   dueDate: string;

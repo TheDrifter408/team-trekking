@@ -1,7 +1,7 @@
 import { CheckCircle2, Clock, ListTodo } from 'lucide-react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { ColummTask } from '@/types/ApiResponse';
+import { ColummTask } from '@/types/props/commonTypes';
 
 interface TaskCardProps {
   task: ColummTask;

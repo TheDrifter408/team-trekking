@@ -1,14 +1,12 @@
-import { Task } from '@/types/ApiResponse';
-import { FC } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { statusColors, priorityColors } from '@/data/mockData.ts';
+import { statusColors, priorityColors } from '@/mock';
 
 const getRandomKey = (obj: Record<string, string>) => {
   const keys = Object.keys(obj);
   return keys[Math.floor(Math.random() * keys.length)];
 };
 
-const TaskTable: FC<{ tasks: Task[] }> = ({ tasks }) => {
+const TaskTable = ({ tasks }) => {
   const navigate = useNavigate();
   const onHandleTaskClick = (task: Task) => {
     navigate(`/Task/${task.id}`);

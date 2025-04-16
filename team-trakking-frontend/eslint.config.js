@@ -5,32 +5,31 @@ import reactRefresh from 'eslint-plugin-react-refresh';
 import tseslint from 'typescript-eslint';
 import prettier from 'eslint-config-prettier';
 import prettierPlugin from 'eslint-plugin-prettier';
-
 export default tseslint.config(
-  { ignores: ['dist'] },
-  {
-    extends: [
-      js.configs.recommended,
-      ...tseslint.configs.recommended,
-      prettier, // Disables conflicting ESLint rules
-    ],
-    files: ['**/*.{ts,tsx}'],
-    languageOptions: {
-      ecmaVersion: 2020,
-      globals: globals.browser,
-    },
-    plugins: {
-      'react-hooks': reactHooks,
-      'react-refresh': reactRefresh,
-      prettier: prettierPlugin,
-    },
-    rules: {
-      ...reactHooks.configs.recommended.rules,
-      'react-refresh/only-export-components': [
-        'warn',
-        { allowConstantExport: true },
-      ],
-      'prettier/prettier': 'warn', // Enables Prettier rule enforcement
-    },
-  }
+    { ignores: ['dist'] }, // Ignore build output folder
+    {
+        extends: [
+            js.configs.recommended, // Recommended JavaScript rules
+            ...tseslint.configs.recommended, // Recommended TypeScript rules
+            prettier, // Disable conflicting ESLint rules
+        ],
+        files: ['**/*.{ts,tsx}'], // Apply to TypeScript files
+        languageOptions: {
+            ecmaVersion: 2020, // ECMAScript 2020 syntax
+            globals: globals.browser, // Enable browser global variables
+        },
+        plugins: {
+            'react-hooks': reactHooks, // React hooks rules
+            'react-refresh': reactRefresh, // React Fast Refresh rules
+            prettier: prettierPlugin, // Integrate Prettier into ESLint
+        },
+        rules: {
+            ...reactHooks.configs.recommended.rules, // Apply recommended React Hooks rules
+            'react-refresh/only-export-components': [
+                'warn',
+                { allowConstantExport: true }, // React Fast Refresh rule
+            ],
+            'prettier/prettier': 'warn', // Enforce Prettier formatting
+        },
+    }
 );

@@ -10,13 +10,14 @@ export const Main = ({ fixed, ...props }: MainProps) => {
   return (
     <main
       className={cn(
-        'peer-[.header-fixed]/header:mt-16',
-        !fixed && 'flex flex-row', // Apply row layout when not fixed
-        fixed && 'fixed-main flex flex-col overflow-hidden' // Apply column layout when fixed
+        'peer-[.header-fixed]/header:mt-20',
+        'px-4 py-6',
+        fixed && 'fixed-main flex flex-grow flex-col overflow-hidden',
+        'border rounded-sm',
+        'w-full overflow-x-auto'
       )}
       {...props}
     />
   );
 };
-
 Main.displayName = 'Main';

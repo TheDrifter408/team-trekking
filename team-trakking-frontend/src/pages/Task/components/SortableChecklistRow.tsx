@@ -2,13 +2,12 @@ import React from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { GripVertical } from 'lucide-react';
-import { ChecklistItem } from '@/types/ApiResponse.ts';
 
 interface SortableChecklistRowProps {
   id: string;
   selected: boolean;
   onSelect: () => void;
-  item: ChecklistItem;
+  item: any;
   onToggle: () => void;
 }
 
