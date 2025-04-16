@@ -8,13 +8,12 @@ import { SidebarTrigger } from '@/components/ui/sidebar.tsx';
 export const HeaderItems = () => {
   return (
     <div className="justify-between w-full flex items-center ">
-      <SidebarTrigger variant="outline" className="scale-125 sm:scale-100" />
-      <div className="flex space-x-4 items-center">
+      <div className="flex space-x-4 justify-center w-full items-center">
         <div className="flex">
           <Input
             type="text"
             placeholder="Search..."
-            className="px-3  border rounded-l-md"
+            className="w-60 border rounded-l-md"
           />
         </div>
         <Button size={'sm'} className=" h-6 px-3 rounded-md ">

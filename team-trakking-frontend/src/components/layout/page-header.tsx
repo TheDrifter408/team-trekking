@@ -7,6 +7,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
+import { SidebarTrigger } from '@/components/ui/sidebar.tsx';
 
 interface Item {
   id: number;
