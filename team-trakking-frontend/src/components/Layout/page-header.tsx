@@ -27,7 +27,7 @@ interface WorkspaceOverviewCardProps {
   onViewAll?: () => void;
 }
 
-export const WorkspaceOverviewCard = ({
+export const PageHeader = ({
   icon,
   title,
   description,

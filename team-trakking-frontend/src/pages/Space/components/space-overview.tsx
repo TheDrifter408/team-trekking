@@ -6,7 +6,7 @@ interface Props {
   foldersData: any[];
 }
 
-export const SpaceOverviewHeader = ({ foldersData }: Props) => {
+export const SpaceOverview = ({ foldersData }: Props) => {
   const navigate = useNavigate();
   const colors = ['red', 'blue', 'gray', 'yellow'];
 

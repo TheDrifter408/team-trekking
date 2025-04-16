@@ -22,7 +22,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Input } from '@/components/ui/input';
-import { DataTableViewOptions } from '@/components/dataTable/DataTableViewOptions.tsx';
+import { DataTableViewOptions } from '@/components/dataTable/data-table-view-options.tsx';
 import {
   DndContext,
   closestCenter,

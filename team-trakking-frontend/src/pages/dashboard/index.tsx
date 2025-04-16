@@ -4,11 +4,11 @@ import { useEffect } from 'react';
 import { useBreadcrumbNavigation } from '@/lib/hooks/use-breadcrumb';
 import { usePageHeader } from '@/lib/context/page-header-context';
 import { Main } from '@/components/layout/main';
-import { WorkspaceOverviewCard } from '@/pages/dashboard/components/WorkspaceOverviewCard.tsx';
+import { PageHeader } from '@/components/layout/page-header.tsx';
 import { Folder, List, Users } from 'lucide-react';
-import { TaskStatusTable } from '@/pages/dashboard/components/TaskTable.tsx';
+import { TaskStatusTable } from '@/pages/dashboard/components/task-table.tsx';
 import { mockActivities, spaceData, myTasks } from '@/mock';
-import { ActivityFeed } from '@/pages/dashboard/components/ActivityFeed.tsx';
+import { ActivityFeed } from '@/pages/dashboard/components/activity-feed.tsx';
 
 export const Dashboard = () => {
   const { setCurrentView } = usePageHeader();
@@ -80,7 +80,7 @@ export const Dashboard = () => {
         {/* Overview Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
           {/* Spaces Card */}
-          <WorkspaceOverviewCard
+          <PageHeader
             icon={<Users />}
             title="Spaces"
             description="Departments or teams in this workspace"
@@ -94,7 +94,7 @@ export const Dashboard = () => {
           />
 
           {/* Folders Card */}
-          <WorkspaceOverviewCard
+          <PageHeader
             icon={<Folder />}
             title="Folders"
             description="Projects organized in this workspace"
@@ -108,7 +108,7 @@ export const Dashboard = () => {
           />
 
           {/* Lists Card */}
-          <WorkspaceOverviewCard
+          <PageHeader
             icon={<List />}
             title="Task Lists"
             description="Organized task collections"

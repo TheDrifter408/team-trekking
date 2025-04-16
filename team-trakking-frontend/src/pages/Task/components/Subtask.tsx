@@ -5,7 +5,7 @@ import {
   SortableContext,
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
-import { SortableTaskRow } from '@/pages/task/components/SortableTaskRow.tsx';
+import { SortableTaskRow } from '@/pages/task/components/sortable-task-row.tsx';
 
 interface SubtaskProps {
   onPressAddSubtask: (task: any) => void;

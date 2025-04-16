@@ -1,13 +1,7 @@
 import React from 'react';
-import {
-  Grid,
-  LayoutDashboard,
-  List,
-  Calendar,
-  ChartGantt,
-} from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Separator } from '@/components/ui/separator';
+import { Grid, LayoutDashboard, List, Calendar } from 'lucide-react';
+import { Button } from '@/components/ui/button.tsx';
+import { Separator } from '@/components/ui/separator.tsx';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -15,8 +9,8 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from '@/components/ui/breadcrumb';
-import { usePageHeader, ViewType } from '@/lib/context/page-header-context';
+} from '@/components/ui/breadcrumb.tsx';
+import { usePageHeader, ViewType } from '@/lib/context/page-header-context.tsx';
 import { useNavigate } from 'react-router';
 
 const viewConfig = {
@@ -40,11 +34,6 @@ const viewConfig = {
     label: 'Calendar',
     path: '/calendar',
   },
-  gantt: {
-    icon: ChartGantt,
-    label: 'Gantt',
-    path: '/gantt',
-  },
 };
 
 export const WorkspaceHeader = () => {
@@ -59,7 +48,6 @@ export const WorkspaceHeader = () => {
     'board',
     'list',
     'calendar',
-    'gantt',
   ];
 
   const onViewChange = (view: ViewType) => {

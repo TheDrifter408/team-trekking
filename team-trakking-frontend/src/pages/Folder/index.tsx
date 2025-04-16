@@ -2,7 +2,7 @@ import { useBreadcrumbNavigation } from '@/lib/hooks/use-breadcrumb.tsx';
 import { Main } from '@/components/layout/main.tsx';
 import { List } from 'lucide-react';
 import { usePageHeader } from '@/lib/context/page-header-context';
-import { WorkspaceOverviewCard } from '@/pages/dashboard/components/WorkspaceOverviewCard.tsx';
+import { PageHeader } from '@/components/layout/page-header.tsx';
 import { spaceData } from '@/mock';
 
 export const Folder = () => {
@@ -37,7 +37,7 @@ export const Folder = () => {
     <Main>
       <div className="flex-grow grid grid-cols-1 md:grid-cols-1 pt-6 gap-4 mb-6">
         {/* Lists Card */}
-        <WorkspaceOverviewCard
+        <PageHeader
           icon={<List />}
           title="Task Lists"
           description="Organized task collections"

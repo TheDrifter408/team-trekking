@@ -1,7 +1,7 @@
 'use client';
 
 import { ColumnDef } from '@tanstack/react-table';
-import { Task } from '@/types/props/commonTypes';
+import { Task } from '@/types/props/common.ts';
 import {
   ArrowUpDown,
   Ban,

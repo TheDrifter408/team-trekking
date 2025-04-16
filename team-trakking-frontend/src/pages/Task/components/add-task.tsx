@@ -31,7 +31,7 @@ interface AddSubtaskModalProps {
   setPriority: (priority: Priority) => void;
 }
 
-export const AddSubtask: React.FC<AddSubtaskModalProps> = ({
+export const AddTask: React.FC<AddSubtaskModalProps> = ({
   isOpen,
   onClose,
   name,

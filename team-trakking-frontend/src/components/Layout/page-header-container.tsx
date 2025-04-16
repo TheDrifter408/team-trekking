@@ -3,7 +3,7 @@ import { Header } from '@/components/layout/header';
 
 import React from 'react';
 
-export const PageHeader = ({
+export const PageHeaderContainer = ({
   children,
   className,
 }: {

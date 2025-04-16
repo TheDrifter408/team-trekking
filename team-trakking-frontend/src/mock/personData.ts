@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import { Assignee, Task, TaskStatus } from '@/types/props/commonTypes';
+import { Assignee, Task, TaskStatus } from '@/types/props/common.ts';
 
 const range = (len: number) => {
   const arr: number[] = [];

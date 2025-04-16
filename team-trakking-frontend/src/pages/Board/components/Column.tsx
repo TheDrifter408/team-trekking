@@ -4,8 +4,8 @@ import {
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import { LucideIcon, Plus } from 'lucide-react';
-import { Column } from '@/types/props/commonTypes';
-import { TaskCard } from '@/pages/Board/components/TaskCard.tsx';
+import { Column } from '@/types/props/common.ts';
+import { TaskCard } from '@/pages/board/components/task-card.tsx';
 
 export type ColumnType = 'todo' | 'in-progress' | 'completed';
 

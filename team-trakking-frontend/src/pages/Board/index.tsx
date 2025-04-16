@@ -10,13 +10,13 @@ import {
   useSensors,
 } from '@dnd-kit/core';
 import { arrayMove } from '@dnd-kit/sortable';
-import { BoardColumn } from './components/Column';
-import { TaskCard } from './components/TaskCard';
+import { BoardColumn } from './components/column.tsx';
+import { TaskCard } from './components/task-card.tsx';
 import {
   Column as ColumnType,
   ColummTask as Task,
   ColumnType as ColumnId,
-} from '@/types/props/commonTypes';
+} from '@/types/props/common.ts';
 import { usePageHeader } from '@/lib/context/page-header-context';
 import { useBreadcrumbNavigation } from '@/lib/hooks/use-breadcrumb';
 import { mockColumns } from '@/mock';

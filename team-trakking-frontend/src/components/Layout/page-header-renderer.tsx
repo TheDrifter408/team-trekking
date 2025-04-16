@@ -1,5 +1,5 @@
-import { PageHeader } from '@/components/layout/pageHeader';
-import { WorkspaceHeader } from '@/pages/dashboard/components/WorkspaceHeader';
+import { PageHeaderContainer } from '@/components/layout/page-header-container.tsx';
+import { WorkspaceHeader } from '@/pages/dashboard/components/workspace-header.tsx';
 import { usePageHeader } from '@/lib/context/page-header-context';
 
 export const PageHeaderRenderer = () => {
@@ -10,8 +10,8 @@ export const PageHeaderRenderer = () => {
 
   // Render PageHeader with WorkspaceHeader as its child
   return (
-    <PageHeader>
+    <PageHeaderContainer>
       <WorkspaceHeader />
-    </PageHeader>
+    </PageHeaderContainer>
   );
 };

@@ -4,7 +4,7 @@ import { useState, useMemo } from 'react';
 import { ChevronDown, ChevronRight, Flag, Filter } from 'lucide-react';
 import { format, formatDistanceToNow } from 'date-fns';
 import { ColumnDef } from '@tanstack/react-table';
-import { DataTable } from '@/components/dataTable/DataTable';
+import { DataTable } from '@/components/dataTable/data-table.tsx';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {

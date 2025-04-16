@@ -3,13 +3,12 @@ import { AppLayout } from '@/pages/layout/app-layout.tsx';
 import { HeaderLayout } from '@/pages/layout/header-layout.tsx';
 import { Login } from '@/pages/login';
 import { Dashboard } from '@/pages/dashboard';
-import { Board } from '@/pages/Board';
+import { Board } from '@/pages/board';
 import { Space } from '@/pages/space';
 import { Folder } from '@/pages/folder';
 import { List } from '@/pages/list';
 import { Task } from '@/pages/task';
 import { Calendar } from '@/pages/calendar';
-import { GanttChart } from '@/pages/gantt-chart';
 import PrivateRoute from '@/routes/PrivateRoute.tsx';
 
 const AppRoutes = () => {
@@ -27,7 +26,6 @@ const AppRoutes = () => {
           <Route path="folder" element={<Folder />} />
           <Route path="list" element={<List />} />
           <Route path="calendar" element={<Calendar />} />
-          <Route path="gantt" element={<GanttChart />} />
         </Route>
         <Route element={<HeaderLayout />}>
           <Route path="task" element={<Task />} />

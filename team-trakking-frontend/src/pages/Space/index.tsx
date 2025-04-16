@@ -2,8 +2,8 @@ import { useBreadcrumbNavigation } from '@/lib/hooks/use-breadcrumb.tsx';
 import { Main } from '@/components/layout/main.tsx';
 import { Folder, List } from 'lucide-react';
 import { usePageHeader } from '@/lib/context/page-header-context';
-import { SpaceOverviewHeader } from './components/SpaceOverviewHeader.tsx';
-import { WorkspaceOverviewCard } from '@/pages/dashboard/components/WorkspaceOverviewCard.tsx';
+import { SpaceOverview } from './components/space-overview.tsx';
+import { PageHeader } from '@/components/layout/page-header.tsx';
 import { spaceData } from '@/mock';
 
 export const Space = () => {
@@ -47,7 +47,7 @@ export const Space = () => {
     <Main>
       <div className="flex-grow grid grid-cols-1 md:grid-cols-2 pt-6 gap-4 mb-6">
         {/* Folders Card */}
-        <WorkspaceOverviewCard
+        <PageHeader
           icon={<Folder />}
           title="Folders"
           description="Projects organized in this workspace"
@@ -60,7 +60,7 @@ export const Space = () => {
           onViewAll={() => {}}
         />
         {/* Lists Card */}
-        <WorkspaceOverviewCard
+        <PageHeader
           icon={<List />}
           title="Task Lists"
           description="Organized task collections"
@@ -74,7 +74,7 @@ export const Space = () => {
         />
       </div>
       <div className="">
-        <SpaceOverviewHeader foldersData={foldersData} />
+        <SpaceOverview foldersData={foldersData} />
       </div>
     </Main>
   );

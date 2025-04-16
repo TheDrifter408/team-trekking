@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { Space } from '@/types/props/commonTypes';
+import { Space } from '@/types/props/common.ts';
 
 type ThemeType = 'light' | 'dark';
 
