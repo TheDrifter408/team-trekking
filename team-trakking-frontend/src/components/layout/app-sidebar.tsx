@@ -9,7 +9,7 @@ import {
   SidebarRail,
   useSidebar,
 } from '@/components/ui/sidebar';
-import { Plus } from 'lucide-react';
+import { Plus, CompassIcon } from 'lucide-react';
 import { NavGroup } from '@/components/layout/nav-group';
 import { NavUser } from '@/components/layout/nav-user';
 import { TeamSwitcher } from '@/components/layout/team-switcher';
@@ -111,8 +111,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             </SidebarGroup>
           </Collapsible>
         ) : (
-          // <SpacesDrawer />
-          <></>
+          <div className={'justify-between w-full flex items-center'}>
+            <CompassIcon size={20} />
+          </div>
         )}
       </SidebarContent>
       <SidebarFooter>

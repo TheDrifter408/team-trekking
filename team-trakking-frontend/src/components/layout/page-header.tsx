@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import {
@@ -40,7 +40,7 @@ export const PageHeader = ({
   onViewAll,
 }: WorkspaceOverviewCardProps) => {
   // Flatten lists data if it's nested (when lists data is passed as arrays of lists)
-  const flattenedItems = React.useMemo(() => {
+  const flattenedItems = useMemo(() => {
     if (title === 'Task Lists' && Array.isArray(items[0])) {
       return items.flat().slice(0, 5);
     }

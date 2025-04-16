@@ -15,7 +15,7 @@ import {
 const CardComponentTesting = () => {
   const [clickedCard, setClickedCard] = useState('');
 
-  const handleCardClick = (cardName: any) => {
+  const onHandleCardClick = (cardName: any) => {
     setClickedCard(cardName);
     setTimeout(() => setClickedCard(''), 1000);
   };
@@ -57,7 +57,7 @@ const CardComponentTesting = () => {
           <Card
             interactive
             hoverable
-            onClick={() => handleCardClick('Interactive Card')}
+            onClick={() => onHandleCardClick('Interactive Card')}
             className={
               clickedCard === 'Interactive Card' ? 'ring-2 ring-blue-500' : ''
             }
@@ -297,7 +297,7 @@ const CardComponentTesting = () => {
           <Card
             interactive
             hoverable
-            onClick={() => handleCardClick('Feature Card')}
+            onClick={() => onHandleCardClick('Feature Card')}
             className={`bg-gradient-to-br from-purple-500 to-indigo-600 text-white ${clickedCard === 'Feature Card' ? 'ring-2 ring-white' : ''}`}
           >
             <Card.Header>

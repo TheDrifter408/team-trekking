@@ -31,13 +31,13 @@ export const SidebarSpaceItems = ({ name, children }: Props) => {
   return (
     <Collapsible>
       <div
-        className="flex items-center justify-between rounded-lg bg-secondary hover:bg-muted transition-colors duration-200 group/space"
+        className="flex h-[36px] items-center justify-between rounded-lg hover:bg-muted transition-colors duration-200 group/space"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
         <div className="flex items-center flex-1  ">
           {!isHovered ? (
-            <div className="h-6 w-6 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center text-xs font-medium">
+            <div className="h-7 w-7 ml-1 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center text-xs font-medium">
               {initials}
             </div>
           ) : (

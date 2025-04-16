@@ -8,21 +8,17 @@ export const Modal = ({
   title,
   children,
   maxWidth = 500,
-  scrollbarTheme = 'custom',
-  // Simplified button props
   showLeftButton = false,
   leftButtonText = 'Cancel',
   leftButtonOnClick,
   leftButtonDisabled = false,
   leftButtonVariant = 'ghost',
-
   showRightButton = true,
   rightButtonText = 'Confirm',
   rightButtonOnClick,
   rightButtonDisabled = false,
   rightButtonVariant = 'primary',
 }: ModalProps) => {
-  // Close modal with escape key
   useEffect(() => {
     const handleEscape = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
@@ -32,29 +28,14 @@ export const Modal = ({
 
     if (isOpen) {
       document.addEventListener('keydown', handleEscape);
-      // Prevent body scrolling when modal is open
       document.body.style.overflow = 'hidden';
     }
 
     return () => {
       document.removeEventListener('keydown', handleEscape);
-      // Re-enable body scrolling when modal is closed
       document.body.style.overflow = 'auto';
     };
   }, [isOpen, onClose]);
-
-  // Determine which scrollbar class to use
-  const getScrollbarClass = () => {
-    switch (scrollbarTheme) {
-      case 'dark':
-        return styles.darkScrollbar;
-      case 'primary':
-        return styles.primaryScrollbar;
-      case 'custom':
-      default:
-        return styles.customScrollbar;
-    }
-  };
 
   if (!isOpen) return null;
 
@@ -83,9 +64,7 @@ export const Modal = ({
             </svg>
           </button>
         </div>
-        <div className={`${styles.modalBody} ${getScrollbarClass()}`}>
-          {children}
-        </div>
+        <div className={`${styles.modalBody}`}>{children}</div>
         <div className={styles.modalFooter}>
           <div>
             {showLeftButton && (

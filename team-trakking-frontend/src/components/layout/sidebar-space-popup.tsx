@@ -39,13 +39,10 @@ export const SidebarSpacePopup = () => {
   const [listName, setListName] = useState('');
 
   const onCreateList = () => {
-    console.log('Creating list:', listName);
     setListName('');
     setCreateListOpen(false);
   };
   const onCreateFolder = () => {
-    // Here you would implement the logic to create a new folder
-    console.log('Creating folder:', folderName);
     // Reset and close dialog
     setFolderName('');
     setCreateFolderOpen(false);
