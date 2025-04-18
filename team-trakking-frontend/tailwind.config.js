@@ -1,15 +1,16 @@
 import tailwindCssAnimate from 'tailwindcss-animate';
 import defaultTheme from 'tailwindcss/defaultTheme';
 import { fonts } from './src/lib/config/fonts';
+import defaultTheme from 'tailwindcss/defaultTheme';
 
 // Use destructuring with fallback to ensure fontFamily is defined
-const { fontFamily = { sans: ['sans-serif'] } } = defaultTheme || {};
+const { fontFamily = { sans: ['apple-system', 'sans-serif'] } } =
+  defaultTheme || {};
 
 /** @type {import('tailwindcss').Config} */
 export default {
   darkMode: ['class'],
   content: ['./index.html', './src/**/*.{ts,tsx,js,jsx}'],
-  safelist: fonts.map((font) => `font-${font}`),
   theme: {
     container: {
       center: 'true',
@@ -19,10 +20,6 @@ export default {
       },
     },
     extend: {
-      fontFamily: {
-        inter: ['Inter', ...fontFamily.sans],
-        manrope: ['Manrope', ...fontFamily.sans],
-      },
       fontSize: {
         xs: '0.625rem', // 10px
         sm: '0.75rem', // 12px
@@ -93,6 +90,18 @@ export default {
           ring: 'hsl(var(--sidebar-ring))',
         },
       },
+    },
+    fontFamily: {
+      sans: [
+        '-apple-system',
+        'system-ui',
+        'BlinkMacSystemFont',
+        '"Segoe UI"',
+        'Roboto',
+        '"Helvetica Neue"',
+        'Arial',
+        'sans-serif',
+      ],
     },
   },
   plugins: [tailwindCssAnimate],

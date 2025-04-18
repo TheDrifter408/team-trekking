@@ -1,1 +1,1 @@
-export const fonts = ['mulish', 'inter'] as const;
+export const fonts = ['system', 'sans', 'serif', 'mono'];

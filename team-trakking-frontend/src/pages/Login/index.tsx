@@ -109,10 +109,12 @@ export const Login = () => {
                       </div>
 
                       <Button
-                        type="submit"
+                        size={'lg'}
                         className="w-full bg-indigo-600 hover:bg-indigo-700"
                       >
-                        {activeTab === 'login' ? 'Sign in' : 'Create account'}
+                        <span className={'text-base font-bold'}>
+                          {activeTab === 'login' ? 'Log In' : 'Create account'}
+                        </span>
                       </Button>
 
                       <div>
