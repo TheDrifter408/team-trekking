@@ -2,19 +2,13 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Form } from '@/components/ui/form';
 import { LockKeyhole, Mail } from 'lucide-react';
-import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useNavigate } from 'react-router-dom';
 import { AuthLayout } from './components/auth-layout.tsx';
 import { AuthCard } from './components/auth-card';
 import { FormInputField } from './components/form-input.tsx';
-
-// Define form schema with Zod
-const loginSchema = z.object({
-  email: z.string().email({ message: 'Please enter a valid email address' }),
-  password: z.string().min(2, { message: 'Please enter your password' }),
-});
+import { loginSchema } from '@/lib/config/validation-schema.tsx';
 
 export const Login = () => {
   const navigate = useNavigate();
