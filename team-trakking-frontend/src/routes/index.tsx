@@ -1,7 +1,8 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { AppLayout } from '@/pages/layout/app-layout.tsx';
 import { HeaderLayout } from '@/pages/layout/header-layout.tsx';
-import { Login } from '@/pages/login';
+import { Login } from '@/pages/login/sign-in.tsx';
+import { SignUp } from '@/pages/login/sign-up';
 import { Dashboard } from '@/pages/dashboard';
 import { Board } from '@/pages/board';
 import { Space } from '@/pages/space';
@@ -15,7 +16,8 @@ const AppRoutes = () => {
   return (
     <Routes>
       {/* Public Route */}
-      <Route path="/" element={<Login />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/signup" element={<SignUp />} />
 
       {/* Private Routes */}
       <Route element={<PrivateRoute />}>
@@ -32,8 +34,8 @@ const AppRoutes = () => {
         </Route>
       </Route>
 
-      {/* Redirect unknown routes to login */}
-      <Route path="*" element={<Navigate to="/" replace />} />
+      {/* Redirect unknown routes to login. will be changed to a 404 page later */}
+      <Route path="*" element={<Navigate to="/login" replace />} />
     </Routes>
   );
 };
