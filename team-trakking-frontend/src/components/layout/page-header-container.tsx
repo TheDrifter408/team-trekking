@@ -30,7 +30,7 @@ export const PageHeaderContainer = ({
         offset > 10
           ? 'shadow-[0_6px_8px_-2px_rgba(0,0,0,0.1)]'
           : 'shadow-[0_2px_2px_-2px_rgba(0,0,0,0.1)]',
-        'z-40 fixed top-8 h-auto w-[inherit]  ',
+        ' fixed top-8 h-auto w-[inherit]  ',
         className
       )}
     >
