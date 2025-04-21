@@ -7,9 +7,11 @@ import { cn } from '@/lib/utils';
 import {
   Sidebar,
   SidebarContent,
+  SidebarFooter,
   SidebarGroup,
   SidebarGroupLabel,
   SidebarHeader,
+  SidebarRail,
   useSidebar,
 } from '@/components/ui/sidebar';
 import { sidebarData, spaceData } from '@/mock';
@@ -28,6 +30,7 @@ import {
 } from '@/components/ui/tooltip.tsx';
 import { CreateSpace } from '@/components/create-space.tsx';
 import { InviteUser } from '@/components/invite-user.tsx';
+import { NavUser } from '@/components/layout/nav-user.tsx';
 
 export const AppSidebar = ({
   ...props
@@ -153,6 +156,10 @@ export const AppSidebar = ({
           </SidebarGroup>
         )}
       </SidebarContent>
+      <SidebarFooter>
+        <NavUser user={sidebarData.user} />
+      </SidebarFooter>
+      <SidebarRail />
       <CreateSpace
         createSpaceOpen={createSpaceOpen}
         setCreateSpaceOpen={setCreateSpaceOpen}

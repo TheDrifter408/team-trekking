@@ -14,7 +14,7 @@ export const AuthLayout = ({
   const navigate = useNavigate();
 
   return (
-    <div className="px-8 min-h-screen bg-gray-50">
+    <div className="px-8 min-h-screen bg-accent">
       {/* Header */}
       <div className="flex sticky top-0 justify-between items-center h-24">
         <div className="flex flex-col">
