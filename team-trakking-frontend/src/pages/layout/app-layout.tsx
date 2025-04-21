@@ -1,36 +1,20 @@
-import React from 'react';
 import { Outlet } from 'react-router-dom';
-import Cookies from 'js-cookie';
-import { SidebarProvider } from '@/components/ui/sidebar';
-import { AppSidebar } from '@/components/layout/app-sidebar';
-import { cn } from '@/lib/utils';
-import { Header } from '@/components/layout/header.tsx';
-import { HeaderItems } from '@/components/layout/header-items.tsx';
-import { PageHeaderRenderer } from '@/components/layout/page-header-renderer.tsx';
+import { AppSidebar } from '@/pages/layout/components/app-sidebar.tsx';
+import { AppHeader } from '@/pages/layout/components/app-header';
+import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
 
-export const AppLayout: React.FC = () => {
-  const defaultOpen = Cookies.get('sidebar:state') !== 'false';
+export const AppLayout = () => {
   return (
-    <SidebarProvider defaultOpen={defaultOpen}>
-      <AppSidebar />
-      <div
-        id="content"
-        className={cn(
-          'ml-auto w-full max-w-full',
-          'peer-data-[state=collapsed]:w-[calc(100%-var(--sidebar-width-icon))]',
-          'peer-data-[state=expanded]:w-[calc(100%-var(--sidebar-width))]',
-          'transition-[width] duration-200 ease-linear',
-          'flex h-svh flex-col',
-          'group-data-[scroll-locked=1]/body:h-full',
-          'group-data-[scroll-locked=1]/body:has-[main.fixed-main]:h-svh'
-        )}
-      >
-        <Header fixed={true}>
-          <HeaderItems />
-        </Header>
-        <PageHeaderRenderer />
-        <Outlet />
-      </div>
-    </SidebarProvider>
+    <div className="[--header-height:calc(theme(spacing.14))]">
+      <SidebarProvider className="flex flex-col">
+        <AppHeader />
+        <div className="flex flex-1">
+          <AppSidebar />
+          <SidebarInset>
+            <Outlet />
+          </SidebarInset>
+        </div>
+      </SidebarProvider>
+    </div>
   );
 };

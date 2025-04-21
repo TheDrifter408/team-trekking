@@ -23,6 +23,7 @@ export const HeaderItems = () => {
       <div className="flex items-center ">
         <ThemeSwitch />
         <ProfileDropdown />
+        <SidebarTrigger />
       </div>
     </div>
   );
