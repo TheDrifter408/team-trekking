@@ -18,20 +18,20 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
-} from '@/components/ui/sidebar';
-import { Textarea } from '@/components/ui/textarea';
-import { Button, ButtonProps } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
-import { Separator } from '@/components/ui/separator';
-import { SearchBox } from '../task/components/search-activity';
-import { TaskActivityNotifications } from '../task/components/task-activity-notifications.tsx';
+} from '@/components/ui/sidebar.tsx';
+import { Textarea } from '@/components/ui/textarea.tsx';
+import { Button, ButtonProps } from '@/components/ui/button.tsx';
+import { cn } from '@/lib/utils.ts';
+import { Separator } from '@/components/ui/separator.tsx';
+import { SearchBox } from '../../Task/components/search-activity.tsx';
+import { TaskActivityNotifications } from '../../Task/components/task-activity-notifications.tsx';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+} from '@/components/ui/dropdown-menu.tsx';
 import { filterOptions, taskNotificationUsers } from '@/mock';
-import { TaskActivityFilters } from '@/pages/task/components/task-activity-filters.tsx';
+import { TaskActivityFilters } from '@/pages/Task/components/task-activity-filters.tsx';
 
 // This is sample activity data
 const activityData: any[] = [];

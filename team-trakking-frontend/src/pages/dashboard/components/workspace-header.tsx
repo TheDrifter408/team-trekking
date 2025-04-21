@@ -62,7 +62,7 @@ export const WorkspaceHeader = () => {
   return (
     <div className="w-full mt-2 mb-1">
       <div className="flex flex-col">
-        <div className="my-1 mt-2">
+        <div className="mt-4 mb-1">
           <Breadcrumb>
             <BreadcrumbList>
               <SidebarTrigger
@@ -91,7 +91,7 @@ export const WorkspaceHeader = () => {
             </BreadcrumbList>
           </Breadcrumb>
         </div>
-        <Separator className={'mt-2'} />
+        <Separator className={'mt-1'} />
         <div className="pt-1 flex justify-between rounded-lg">
           <div className="flex">
             {availableViews.map((view) => {
