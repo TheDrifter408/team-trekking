@@ -37,7 +37,6 @@ export function NavGroup({ title, items }: NavGroup) {
   const { state } = useSidebar();
   const location = useLocation();
   const href = `${location.pathname}${location.search}`;
-
   return (
     <SidebarGroup>
       <SidebarGroupLabel>{title}</SidebarGroupLabel>
@@ -175,13 +174,13 @@ const SidebarMenuCollapsedDropdown = ({
   );
 };
 
-function checkIsActive(href: string, item: NavItem, mainNav = false) {
-  return (
-    href === item.url || // /endpint?search=param
-    href.split('?')[0] === item.url || // endpoint
-    !!item?.items?.filter((i) => i.url === href).length || // if child nav is active
-    (mainNav &&
-      href.split('/')[1] !== '' &&
-      href.split('/')[1] === item?.url?.split('/')[1])
-  );
+function checkIsActive(path: string, item: NavItem): boolean {
+  if (!item.url) return false;
+
+  if (path === item.url) return true;
+
+  if (item.items?.some((sub) => path === sub.url || path.startsWith(sub.url)))
+    return true;
+
+  return path.startsWith(item.url);
 }

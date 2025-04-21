@@ -8,7 +8,13 @@ import { Button } from '@/components/ui/button.tsx';
 import { IconCaretRightFilled } from '@tabler/icons-react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { SidebarSpacePopup } from '@/components/layout/sidebar-space-popup.tsx';
+import { SidebarActionsMenu } from '@/components/layout/sidebar-action-menu';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 
 interface Props {
   name: string;
@@ -52,19 +58,28 @@ export const SidebarSpaceItems = ({ name, children }: Props) => {
             </CollapsibleTrigger>
           )}
           <div className="flex flex-1 items-center">
-            <Button
-              variant={'link'}
-              size={'sm'}
-              onClick={() => navigate('/space')}
-              className={
-                ' hover:text-primary hover:underline underline-gray-600 decoration-1 underline-offset-4 transition-colors duration-600'
-              }
-            >
-              <span className="text-xs truncate max-w-[95px] ">{name}</span>
-            </Button>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => navigate('/space')}
+                    className="hover:text-primary transition-colors duration-600"
+                  >
+                    <span className="text-sm font-medium truncate max-w-[120px]">
+                      {name}
+                    </span>
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>{name}</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           </div>
         </div>
-        <SidebarSpacePopup />
+        <SidebarActionsMenu />
       </div>
 
       <CollapsibleContent>

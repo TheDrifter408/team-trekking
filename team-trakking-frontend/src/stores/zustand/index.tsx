@@ -3,6 +3,7 @@ import { persist } from 'zustand/middleware';
 
 interface TeamTrackingState {
   currentPage: string;
+  setCurrentPage: (currentPage: string) => void;
 }
 
 export const useTMTStore = create<TeamTrackingState>()(

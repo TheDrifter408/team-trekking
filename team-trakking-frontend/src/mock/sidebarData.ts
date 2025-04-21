@@ -41,17 +41,17 @@ export const sidebarData: SidebarData = {
         },
         {
           title: 'Inbox',
-          url: '/home',
+          url: '/inbox',
           icon: IconMailFilled,
         },
         {
           title: 'Docs',
-          url: '/home',
+          url: '/docs',
           icon: IconFileTypeDoc,
         },
         {
           title: 'More',
-          url: '/home',
+          url: '/more',
           icon: IconDotsCircleHorizontal,
         },
       ],

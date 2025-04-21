@@ -12,6 +12,7 @@ import {
 } from '@/components/ui/breadcrumb.tsx';
 import { usePageHeader, ViewType } from '@/lib/context/page-header-context.tsx';
 import { useNavigate } from 'react-router';
+import { SidebarTrigger } from '@/components/ui/sidebar.tsx';
 
 const viewConfig = {
   overview: {
@@ -59,11 +60,16 @@ export const WorkspaceHeader = () => {
   };
 
   return (
-    <div className="w-full">
+    <div className="w-full mt-2 mb-1">
       <div className="flex flex-col">
-        <div className="my-1">
+        <div className="my-1 mt-2">
           <Breadcrumb>
             <BreadcrumbList>
+              <SidebarTrigger
+                variant="outline"
+                className="scale-125 sm:scale-100"
+              />
+
               {header.breadcrumbs?.map((item, index) => {
                 const isLast = index === header.breadcrumbs!.length - 1;
 
@@ -85,8 +91,8 @@ export const WorkspaceHeader = () => {
             </BreadcrumbList>
           </Breadcrumb>
         </div>
-        <Separator />
-        <div className="pt-2 flex justify-between">
+        <Separator className={'mt-2'} />
+        <div className="pt-1 flex justify-between rounded-lg">
           <div className="flex">
             {availableViews.map((view) => {
               const ViewIcon =

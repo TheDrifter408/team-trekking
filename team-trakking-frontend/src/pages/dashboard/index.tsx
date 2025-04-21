@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
+import { useTMTStore } from '@/stores/zustand';
 import { useBreadcrumbNavigation } from '@/lib/hooks/use-breadcrumb';
 import { usePageHeader } from '@/lib/context/page-header-context';
 import { Main } from '@/components/layout/main.tsx';
@@ -12,6 +13,8 @@ import { ActivityFeed } from '@/pages/dashboard/components/activity-feed.tsx';
 
 export const Dashboard = () => {
   const { setCurrentView } = usePageHeader();
+  const { setCurrentPage } = useTMTStore();
+
   // Set up breadcrumbs for this page
   useBreadcrumbNavigation({
     currentTitle: 'My Workspace',
@@ -20,6 +23,7 @@ export const Dashboard = () => {
 
   useEffect(() => {
     setCurrentView('overview');
+    setCurrentPage('Home');
   }, []);
 
   const spacesData: any[] = [],
