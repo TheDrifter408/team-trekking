@@ -5,7 +5,7 @@ import { LockKeyhole, Mail } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useNavigate } from 'react-router-dom';
-import { AuthLayout } from './components/auth-layout.tsx';
+import { AuthLayout } from './components/auth-layout';
 import { AuthCard } from './components/auth-card';
 import { FormInputField } from './components/form-input.tsx';
 import { loginSchema } from '@/lib/config/validation-schema.tsx';

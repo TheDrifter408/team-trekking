@@ -87,7 +87,7 @@ export const AppSidebar = ({
       )}
       {...props}
     >
-      <SidebarHeader>
+      <SidebarHeader className={'border py-0'}>
         <TeamSwitcher teams={sidebarData.teams} />
       </SidebarHeader>
       <SidebarContent>

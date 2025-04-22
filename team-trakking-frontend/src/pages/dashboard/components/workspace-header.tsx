@@ -60,9 +60,9 @@ export const WorkspaceHeader = () => {
   };
 
   return (
-    <div className="w-full mt-2 mb-1">
+    <div className="w-[inherit] border border-blue-900 bg-gray-200 ">
       <div className="flex flex-col">
-        <div className="mt-4 mb-1">
+        <div className="py-2.5  border border-b-gray-800 mb-1 px-2">
           <Breadcrumb>
             <BreadcrumbList>
               <SidebarTrigger
@@ -91,8 +91,7 @@ export const WorkspaceHeader = () => {
             </BreadcrumbList>
           </Breadcrumb>
         </div>
-        <Separator className={'mt-1'} />
-        <div className="pt-1 flex justify-between rounded-lg">
+        <div className="pt-1 flex justify-between rounded-lg px-2">
           <div className="flex">
             {availableViews.map((view) => {
               const ViewIcon =

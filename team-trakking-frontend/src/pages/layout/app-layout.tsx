@@ -6,7 +6,7 @@ import { PageHeaderRenderer } from '@/components/layout/page-header-renderer.tsx
 
 export const AppLayout = () => {
   return (
-    <div className="[--header-height:calc(theme(spacing.14))]">
+    <div className="[--header-height:calc(theme(spacing.10))]">
       <SidebarProvider className="flex flex-col">
         <AppHeader />
         <div className="flex flex-1">
