@@ -18,27 +18,19 @@ import {
   arrayMove,
   sortableKeyboardCoordinates,
 } from '@dnd-kit/sortable';
-
 import { Main } from '@/components/layout/main.tsx';
 import { usePageHeader } from '@/lib/context/page-header-context';
 import { useBreadcrumbNavigation } from '@/lib/hooks/use-breadcrumb';
 import { mockColumns, Column, Task } from '@/mock';
 import { BoardColumn } from './components/column.tsx';
 import { TaskCard } from './components/task-card.tsx';
+import { HeaderType } from '@/types/props/common.ts';
+import { PageHeader } from '@/components/layout/page-header.tsx';
 
 export const Board = () => {
   const [columns, setColumns] = useState<Column[]>(mockColumns);
   const [activeTask, setActiveTask] = useState<Task | null>(null);
   const [activeColumnId, setActiveColumnId] = useState<string | null>(null);
-  const { header, setCurrentView } = usePageHeader();
-
-  const breadcrumbs = header?.breadcrumbs ?? [];
-
-  useBreadcrumbNavigation({
-    currentTitle: header?.title || 'ProjecX Moon',
-    workspace: breadcrumbs[1] ?? { label: 'Workspace', href: '/home' },
-    space: breadcrumbs[2] ?? { label: 'Space', href: '/space' },
-  });
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -50,11 +42,6 @@ export const Board = () => {
       coordinateGetter: sortableKeyboardCoordinates,
     })
   );
-
-  useEffect(() => {
-    setCurrentView('board');
-  }, [setCurrentView]);
-
   const handleDragStart = (event: DragStartEvent) => {
     const { active } = event;
     const taskId = active.id as string;
@@ -254,43 +241,54 @@ export const Board = () => {
     return null;
   };
 
-  return (
-    <Main>
-      <div className="relative w-full mt-12 overflow-x-auto min-h-screen">
-        <DndContext
-          sensors={sensors}
-          collisionDetection={closestCenter}
-          onDragStart={handleDragStart}
-          onDragOver={handleDragOver}
-          onDragEnd={handleDragEnd}
-          onDragCancel={handleDragCancel}
-        >
-          <div className="flex gap-4 p-4">
-            {columns.map((column) => (
-              <SortableContext
-                key={column.id}
-                items={column.tasks.map((task) => task.id)}
-                strategy={verticalListSortingStrategy}
-              >
-                <BoardColumn
-                  column={column}
-                  className="flex-shrink-0 self-start"
-                  isActiveColumn={column.id === activeColumnId}
-                />
-              </SortableContext>
-            ))}
-          </div>
+  const currentPage = {
+    type: 'FOLDER' as HeaderType,
+    label: 'Space Shuttle',
+  };
+  const parents = [
+    { meta: 'SPACE' as HeaderType, label: 'ProjecX Moon', link: '/space' },
+  ];
 
-          {/* Drag Overlay - This ensures the dragged task appears on top */}
-          <DragOverlay>
-            {activeTask ? (
-              <div className="w-[300px]">
-                <TaskCard task={activeTask} isDragOverlay={true} />
-              </div>
-            ) : null}
-          </DragOverlay>
-        </DndContext>
-      </div>
-    </Main>
+  return (
+    <>
+      <PageHeader currentPage={currentPage} parents={parents} />
+      <Main>
+        <div className="relative w-full overflow-x-auto min-h-screen">
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragStart={handleDragStart}
+            onDragOver={handleDragOver}
+            onDragEnd={handleDragEnd}
+            onDragCancel={handleDragCancel}
+          >
+            <div className="flex gap-4 px-4">
+              {columns.map((column) => (
+                <SortableContext
+                  key={column.id}
+                  items={column.tasks.map((task) => task.id)}
+                  strategy={verticalListSortingStrategy}
+                >
+                  <BoardColumn
+                    column={column}
+                    className="flex-shrink-0 self-start"
+                    isActiveColumn={column.id === activeColumnId}
+                  />
+                </SortableContext>
+              ))}
+            </div>
+
+            {/* Drag Overlay - This ensures the dragged task appears on top */}
+            <DragOverlay>
+              {activeTask ? (
+                <div className="w-[300px]">
+                  <TaskCard task={activeTask} isDragOverlay={true} />
+                </div>
+              ) : null}
+            </DragOverlay>
+          </DndContext>
+        </div>
+      </Main>
+    </>
   );
 };

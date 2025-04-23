@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import {
   IconHomeFilled,
   IconFolderFilled,
@@ -15,8 +16,12 @@ import {
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
 import { HeaderType } from '@/types/props/common.ts';
+import { Button } from '@/components/ui/button.tsx';
+import { ViewType } from '@/lib/context/page-header-context.tsx';
+import { Calendar, Grid, LayoutDashboard, List } from 'lucide-react';
+import { LucideIcon } from 'lucide-react';
 
-export interface BreadcrumbItem {
+interface BreadcrumbItem {
   meta: HeaderType;
   label: string;
   link: string;
@@ -30,7 +35,19 @@ interface Props {
   };
   // Optional parent items (will be constructed automatically when missing)
   parents?: BreadcrumbItem[];
+  // Optional available views (defaults to all views)
+  availableViews?: Array<ViewType>;
 }
+
+interface ViewConfigItem {
+  icon: LucideIcon;
+  label: string;
+  path: string;
+}
+
+type ViewConfigType = {
+  [key in ViewType]: ViewConfigItem;
+};
 
 // Map header types to their respective UI components
 const BreadcrumbTypeIcons: Record<HeaderType, React.ReactNode> = {
@@ -87,7 +104,6 @@ const buildBreadcrumbHierarchy = (
     ];
   }
 
-  // Otherwise, build based on hierarchy: HOME > SPACE > FOLDER > LIST > TASK
   const hierarchy: HeaderType[] = ['HOME', 'SPACE', 'FOLDER', 'LIST', 'TASK'];
   const currentIndex = hierarchy.indexOf(currentPage.type);
 
@@ -143,8 +159,64 @@ const buildBreadcrumbHierarchy = (
   return breadcrumbs;
 };
 
-export const PageHeader = ({ currentPage, parents }: Props) => {
+// Define the view configuration with proper typing
+const viewConfig: ViewConfigType = {
+  overview: {
+    icon: LayoutDashboard,
+    label: 'Overview',
+    path: '/home',
+  },
+  board: {
+    icon: Grid,
+    label: 'Board',
+    path: '/board',
+  },
+  list: {
+    icon: List,
+    label: 'List',
+    path: '/list',
+  },
+  calendar: {
+    icon: Calendar,
+    label: 'Calendar',
+    path: '/calendar',
+  },
+};
+
+// Default available views
+const defaultViews: ViewType[] = ['overview', 'board', 'list', 'calendar'];
+
+export const PageHeader = ({
+  currentPage,
+  parents,
+  availableViews = defaultViews,
+}: Props) => {
+  const navigate = useNavigate();
+  const location = useLocation();
   const breadcrumbs = buildBreadcrumbHierarchy(currentPage, parents);
+
+  // Determine current view based on current path
+  const getCurrentView = (): ViewType => {
+    const path = location.pathname;
+    const foundView = Object.entries(viewConfig).find(
+      ([_, config]) => config.path === path
+    );
+    return (foundView?.[0] as ViewType) || 'overview';
+  };
+
+  const [currentView, setCurrentView] = useState<ViewType>(getCurrentView());
+
+  // Update the current view when the path changes
+  useEffect(() => {
+    setCurrentView(getCurrentView());
+  }, [location.pathname]);
+
+  // Handle view button click
+  const handleViewChange = (view: ViewType) => {
+    const viewPath = viewConfig[view].path;
+    navigate(viewPath);
+    setCurrentView(view);
+  };
 
   return (
     <div className="w-full sticky top-[--header-height] bg-background z-10">
@@ -178,6 +250,36 @@ export const PageHeader = ({ currentPage, parents }: Props) => {
             })}
           </BreadcrumbList>
         </Breadcrumb>
+      </div>
+
+      {/* View Tabs */}
+      <div className="flex pl-4 border-b border-border">
+        <div className="flex">
+          {availableViews.map((view) => {
+            const ViewIcon = viewConfig[view].icon;
+            const viewLabel = viewConfig[view].label;
+            const isActive = view === currentView;
+
+            return (
+              <Button
+                key={view}
+                variant="ghost"
+                onClick={() => handleViewChange(view)}
+                className={`relative rounded-none h-10 px-4 ${
+                  isActive ? 'text-primary' : 'text-muted-foreground'
+                }`}
+              >
+                <div className="flex items-center gap-2">
+                  {ViewIcon && <ViewIcon className="h-4 w-4" />}
+                  <span>{viewLabel}</span>
+                </div>
+                {isActive && (
+                  <div className="absolute bottom-0 center w-full h-0.5 bg-primary" />
+                )}
+              </Button>
+            );
+          })}
+        </div>
       </div>
     </div>
   );
