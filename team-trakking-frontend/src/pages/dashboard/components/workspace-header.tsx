@@ -1,7 +1,6 @@
 import React from 'react';
 import { Grid, LayoutDashboard, List, Calendar } from 'lucide-react';
 import { Button } from '@/components/ui/button.tsx';
-import { Separator } from '@/components/ui/separator.tsx';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -12,7 +11,6 @@ import {
 } from '@/components/ui/breadcrumb.tsx';
 import { usePageHeader, ViewType } from '@/lib/context/page-header-context.tsx';
 import { useNavigate } from 'react-router';
-import { SidebarTrigger } from '@/components/ui/sidebar.tsx';
 
 const viewConfig = {
   overview: {
@@ -60,16 +58,11 @@ export const WorkspaceHeader = () => {
   };
 
   return (
-    <div className="w-[inherit] border border-blue-900 bg-gray-200 ">
+    <div className="w-[inherit] sticky top-[--header-height] bg-background ">
       <div className="flex flex-col">
-        <div className="py-2.5  border border-b-gray-800 mb-1 px-2">
+        <div className="py-2.5  border border-gray-200  mb-1 px-2">
           <Breadcrumb>
             <BreadcrumbList>
-              <SidebarTrigger
-                variant="outline"
-                className="scale-125 sm:scale-100"
-              />
-
               {header.breadcrumbs?.map((item, index) => {
                 const isLast = index === header.breadcrumbs!.length - 1;
 
@@ -91,26 +84,28 @@ export const WorkspaceHeader = () => {
             </BreadcrumbList>
           </Breadcrumb>
         </div>
-        <div className="pt-1 flex justify-between rounded-lg px-2">
-          <div className="flex">
+        <div className="pt-2 flex justify-between rounded-lg px-2">
+          <div className="flex gap-2">
             {availableViews.map((view) => {
               const ViewIcon =
                 viewConfig[view as keyof typeof viewConfig]?.icon;
               const viewLabel =
                 viewConfig[view as keyof typeof viewConfig]?.label || view;
+              const isActive = view === currentView;
 
               return (
                 <Button
                   key={view}
-                  size="sm"
                   variant="ghost"
-                  onClick={() => onViewChange(view)}
-                  className={`flex items-center px-3 text-sm rounded-md font-medium ${
-                    currentView === view ? 'border-b-2 border-primary' : ''
-                  }`}
+                  size="sm"
+                  onClick={() => onViewChange(view as ViewType)}
+                  className={`relative ${isActive ? 'text-primary' : ''}`}
                 >
-                  {ViewIcon && <ViewIcon className="h-4 w-4 mr-1" />}
-                  <span className={'text-xs'}>{viewLabel}</span>
+                  {ViewIcon && <ViewIcon className=" h-4 w-4" />}
+                  {viewLabel}
+                  {isActive && (
+                    <div className="absolute bottom-0 left-0 w-full h-0.5 bg-primary" />
+                  )}
                 </Button>
               );
             })}

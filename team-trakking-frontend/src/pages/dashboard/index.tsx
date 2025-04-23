@@ -10,6 +10,7 @@ import { Folder, List, Users } from 'lucide-react';
 import { TaskStatusTable } from '@/pages/dashboard/components/task-table.tsx';
 import { mockActivities, spaceData, myTasks } from '@/mock';
 import { ActivityFeed } from '@/pages/dashboard/components/activity-feed.tsx';
+import { WorkspaceHeader } from '@/pages/dashboard/components/workspace-header.tsx';
 
 export const Dashboard = () => {
   const { setCurrentView } = usePageHeader();
@@ -66,49 +67,52 @@ export const Dashboard = () => {
   const handleViewAllLists = () => {};
 
   return (
-    <Main>
-      <div className="px-4 pt-12 flex-grow">
-        {/* Overview Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-          {/* Folders Card */}
-          <PageHeader
-            icon={<Folder />}
-            title="Folders"
-            description="Projects organized in this workspace"
-            count={folderCount}
-            countLabel="Total Folders"
-            items={foldersData}
-            itemLabelKey="name"
-            color="green"
-            viewAllLabel="View all folders"
-            onViewAll={handleViewAllFolders}
-          />
+    <>
+      <WorkspaceHeader />
+      <Main>
+        <div className="px-4 pt-12 flex-grow">
+          {/* Overview Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            {/* Folders Card */}
+            <PageHeader
+              icon={<Folder />}
+              title="Folders"
+              description="Projects organized in this workspace"
+              count={folderCount}
+              countLabel="Total Folders"
+              items={foldersData}
+              itemLabelKey="name"
+              color="green"
+              viewAllLabel="View all folders"
+              onViewAll={handleViewAllFolders}
+            />
 
-          {/* Lists Card */}
-          <PageHeader
-            icon={<List />}
-            title="Task Lists"
-            description="Organized task collections"
-            count={listCount}
-            countLabel="Total Lists"
-            items={listsData}
-            itemLabelKey="containerName"
-            color="purple"
-            viewAllLabel="View all lists"
-            onViewAll={handleViewAllLists}
-          />
-        </div>
-      </div>
-      <div className="overflow-x-auto w-full px-4">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="md:col-span-2 ">
-            <TaskStatusTable tasks={myTasks} />
-          </div>
-          <div className={'h-[500px]'}>
-            <ActivityFeed activities={mockActivities} onViewAll={() => {}} />
+            {/* Lists Card */}
+            <PageHeader
+              icon={<List />}
+              title="Task Lists"
+              description="Organized task collections"
+              count={listCount}
+              countLabel="Total Lists"
+              items={listsData}
+              itemLabelKey="containerName"
+              color="purple"
+              viewAllLabel="View all lists"
+              onViewAll={handleViewAllLists}
+            />
           </div>
         </div>
-      </div>
-    </Main>
+        <div className="overflow-x-auto w-full px-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="md:col-span-2 ">
+              <TaskStatusTable tasks={myTasks} />
+            </div>
+            <div className={'h-[500px]'}>
+              <ActivityFeed activities={mockActivities} onViewAll={() => {}} />
+            </div>
+          </div>
+        </div>
+      </Main>
+    </>
   );
 };

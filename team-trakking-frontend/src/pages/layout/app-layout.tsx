@@ -12,7 +12,6 @@ export const AppLayout = () => {
         <div className="flex flex-1">
           <AppSidebar />
           <SidebarInset>
-            <PageHeaderRenderer />
             <Outlet />
           </SidebarInset>
         </div>

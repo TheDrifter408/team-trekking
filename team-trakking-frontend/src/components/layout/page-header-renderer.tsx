@@ -1,6 +1,5 @@
 ('use client');
 
-import { PageHeaderContainer } from '@/components/layout/page-header-container.tsx';
 import { WorkspaceHeader } from '@/pages/dashboard/components/workspace-header.tsx';
 import { usePageHeader } from '@/lib/context/page-header-context';
 
