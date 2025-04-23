@@ -1,31 +1,20 @@
 'use client';
 
-import { useEffect } from 'react';
-import { useTMTStore } from '@/stores/zustand';
-import { useBreadcrumbNavigation } from '@/lib/hooks/use-breadcrumb';
-import { usePageHeader } from '@/lib/context/page-header-context';
 import { Main } from '@/components/layout/main.tsx';
-import { PageHeader } from '@/components/layout/page-header.tsx';
-import { Folder, List, Users } from 'lucide-react';
+import { OverviewCard } from '@/pages/dashboard/components/overview-card.tsx';
+import { Folder, List } from 'lucide-react';
 import { TaskStatusTable } from '@/pages/dashboard/components/task-table.tsx';
-import { mockActivities, spaceData, myTasks } from '@/mock';
+import { mockActivities, myTasks, spaceData } from '@/mock';
+import { PageHeader } from '@/components/layout/page-header';
 import { ActivityFeed } from '@/pages/dashboard/components/activity-feed.tsx';
-import { WorkspaceHeader } from '@/pages/dashboard/components/workspace-header.tsx';
+import { HeaderType } from '@/types/props/common.ts';
 
 export const Dashboard = () => {
-  const { setCurrentView } = usePageHeader();
-  const { setCurrentPage } = useTMTStore();
-
-  // Set up breadcrumbs for this page
-  useBreadcrumbNavigation({
-    currentTitle: 'My Workspace',
-    workspace: { label: 'Workspace', href: '/home' },
-  });
-
-  useEffect(() => {
-    setCurrentView('overview');
-    setCurrentPage('Home');
-  }, []);
+  const currentPage = {
+    type: 'HOME' as HeaderType,
+    label: 'Apptitive',
+    link: '/home',
+  };
 
   const spacesData: any[] = [],
     foldersData: any[] = [],
@@ -68,13 +57,13 @@ export const Dashboard = () => {
 
   return (
     <>
-      <WorkspaceHeader />
+      <PageHeader currentPage={currentPage} />
       <Main>
-        <div className="px-4 pt-12 flex-grow">
+        <div className="px-4 flex-grow">
           {/* Overview Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
             {/* Folders Card */}
-            <PageHeader
+            <OverviewCard
               icon={<Folder />}
               title="Folders"
               description="Projects organized in this workspace"
@@ -88,7 +77,7 @@ export const Dashboard = () => {
             />
 
             {/* Lists Card */}
-            <PageHeader
+            <OverviewCard
               icon={<List />}
               title="Task Lists"
               description="Organized task collections"

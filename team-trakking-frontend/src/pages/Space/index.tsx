@@ -1,20 +1,16 @@
-import { useBreadcrumbNavigation } from '@/lib/hooks/use-breadcrumb.tsx';
 import { Main } from '@/components/layout/main.tsx';
+import { PageHeader } from '@/components/layout/page-header';
 import { Folder, List } from 'lucide-react';
-import { usePageHeader } from '@/lib/context/page-header-context';
 import { SpaceOverview } from './components/space-overview.tsx';
-import { PageHeader } from '@/components/layout/page-header.tsx';
+import { OverviewCard } from '@/pages/dashboard/components/overview-card.tsx';
 import { spaceData } from '@/mock';
+import { HeaderType } from '@/types/props/common.ts';
 
 export const Space = () => {
-  const { setCurrentView } = usePageHeader();
-
-  useBreadcrumbNavigation({
-    currentTitle: 'ProjecX Moon',
-    workspace: { label: 'Workspace', href: '/home' },
-    space: { label: 'Space', href: '/space' },
-  });
-  setCurrentView('overview');
+  const currentPage = {
+    type: 'SPACE' as HeaderType,
+    label: 'ProjecX Moon',
+  };
 
   const foldersData: any[] = [],
     listsData: any[] = [];
@@ -44,38 +40,41 @@ export const Space = () => {
   }
 
   return (
-    <Main>
-      <div className="flex-grow grid grid-cols-1 md:grid-cols-2 pt-6 gap-4 mb-6">
-        {/* Folders Card */}
-        <PageHeader
-          icon={<Folder />}
-          title="Folders"
-          description="Projects organized in this workspace"
-          count={folderCount}
-          countLabel="Total Folders"
-          items={foldersData}
-          itemLabelKey="name"
-          color="green"
-          viewAllLabel="View all folders"
-          onViewAll={() => {}}
-        />
-        {/* Lists Card */}
-        <PageHeader
-          icon={<List />}
-          title="Task Lists"
-          description="Organized task collections"
-          count={listCount}
-          countLabel="Total Lists"
-          items={listsData}
-          itemLabelKey="containerName"
-          color="purple"
-          viewAllLabel="View all lists"
-          onViewAll={() => {}}
-        />
-      </div>
-      <div className="">
-        <SpaceOverview foldersData={foldersData} />
-      </div>
-    </Main>
+    <>
+      <PageHeader currentPage={currentPage} />
+      <Main>
+        <div className="flex-grow px-4 grid grid-cols-1 md:grid-cols-2 pt-6 gap-4 mb-6">
+          {/* Folders Card */}
+          <OverviewCard
+            icon={<Folder />}
+            title="Folders"
+            description="Projects organized in this workspace"
+            count={folderCount}
+            countLabel="Total Folders"
+            items={foldersData}
+            itemLabelKey="name"
+            color="green"
+            viewAllLabel="View all folders"
+            onViewAll={() => {}}
+          />
+          {/* Lists Card */}
+          <OverviewCard
+            icon={<List />}
+            title="Task Lists"
+            description="Organized task collections"
+            count={listCount}
+            countLabel="Total Lists"
+            items={listsData}
+            itemLabelKey="containerName"
+            color="purple"
+            viewAllLabel="View all lists"
+            onViewAll={() => {}}
+          />
+        </div>
+        <div className="">
+          <SpaceOverview foldersData={foldersData} />
+        </div>
+      </Main>
+    </>
   );
 };

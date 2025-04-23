@@ -1,12 +1,12 @@
 import React from 'react';
-import { Label } from '@/components/ui/label';
-import { Separator } from '@/components/ui/separator';
+import { Label } from '@/components/ui/label.tsx';
+import { Separator } from '@/components/ui/separator.tsx';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from '@/components/ui/tooltip';
+} from '@/components/ui/tooltip.tsx';
 
 interface Item {
   id: number;
@@ -27,7 +27,7 @@ interface WorkspaceOverviewCardProps {
   onViewAll?: () => void;
 }
 
-export const OverviewCards = ({
+export const OverviewCard = ({
   icon,
   title,
   description,

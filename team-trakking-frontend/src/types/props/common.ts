@@ -38,11 +38,10 @@ export interface ColummTask {
 }
 
 export type ColumnType = 'todo' | 'in-progress' | 'done';
+export type HeaderType = 'HOME' | 'SPACE' | 'FOLDER' | 'LIST' | 'TASK';
 
-export interface Column {
-  id: ColumnType;
-  title: string;
-  tasks: Task[];
-  color: string;
-  icon: string;
+export interface Breadcrumb {
+  meta: HeaderType;
+  label: string;
+  link: string;
 }
