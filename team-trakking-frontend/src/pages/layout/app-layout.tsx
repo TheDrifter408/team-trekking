@@ -5,12 +5,12 @@ import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
 
 export const AppLayout = () => {
   return (
-    <div className="[--header-height:calc(theme(spacing.10))]">
-      <SidebarProvider className="flex flex-col">
+    <div className="flex flex-col h-screen">
+      <SidebarProvider className="flex flex-col h-full">
         <AppHeader />
-        <div className="flex flex-1">
+        <div className="flex flex-1 overflow-hidden">
           <AppSidebar />
-          <SidebarInset>
+          <SidebarInset className="overflow-auto w-full">
             <Outlet />
           </SidebarInset>
         </div>

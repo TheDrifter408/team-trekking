@@ -81,7 +81,7 @@ export const AppSidebar = ({
     <Sidebar
       collapsible={'icon'}
       className={cn(
-        'top-[--header-height] !h-[calc(100svh-var(--header-height))] ',
+        'top-[36px]',
         'peer-data-[state=collapsed]:w-[calc(100%-var(--sidebar-width-icon))]',
         'peer-data-[state=expanded]:w-[calc(100%-var(--sidebar-width))]'
       )}

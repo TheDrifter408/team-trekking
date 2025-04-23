@@ -253,7 +253,7 @@ export const Board = () => {
     <>
       <PageHeader currentPage={currentPage} parents={parents} />
       <Main>
-        <div className="relative w-full overflow-x-auto min-h-screen">
+        <div className="relative min-h-screen">
           <DndContext
             sensors={sensors}
             collisionDetection={closestCenter}
@@ -262,7 +262,7 @@ export const Board = () => {
             onDragEnd={handleDragEnd}
             onDragCancel={handleDragCancel}
           >
-            <div className="flex gap-4 px-4">
+            <div className="flex gap-4 px-4 pb-4 w-max">
               {columns.map((column) => (
                 <SortableContext
                   key={column.id}
@@ -271,7 +271,7 @@ export const Board = () => {
                 >
                   <BoardColumn
                     column={column}
-                    className="flex-shrink-0 self-start"
+                    className="flex-shrink-0 self-start  w-[300px]"
                     isActiveColumn={column.id === activeColumnId}
                   />
                 </SortableContext>
