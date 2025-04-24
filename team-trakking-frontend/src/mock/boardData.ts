@@ -108,7 +108,7 @@ export const mockColumns: Column[] = [
   {
     id: 'col-1',
     title: 'Backlog',
-    color: '#e2e8f0', // slate-200
+    color: '#c6c9cc', // slate-200
     icon: icons.backlog,
     tasks: createRandomTasks(TaskStatus.BACKLOG, 5),
   },

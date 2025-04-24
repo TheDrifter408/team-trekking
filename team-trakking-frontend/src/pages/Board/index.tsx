@@ -19,8 +19,6 @@ import {
   sortableKeyboardCoordinates,
 } from '@dnd-kit/sortable';
 import { Main } from '@/components/layout/main.tsx';
-import { usePageHeader } from '@/lib/context/page-header-context';
-import { useBreadcrumbNavigation } from '@/lib/hooks/use-breadcrumb';
 import { mockColumns, Column, Task } from '@/mock';
 import { BoardColumn } from './components/column.tsx';
 import { TaskCard } from './components/task-card.tsx';
@@ -271,7 +269,7 @@ export const Board = () => {
                 >
                   <BoardColumn
                     column={column}
-                    className="flex-shrink-0 self-start  w-[300px]"
+                    className="flex-shrink-0 self-start w-[244px]"
                     isActiveColumn={column.id === activeColumnId}
                   />
                 </SortableContext>
@@ -281,7 +279,7 @@ export const Board = () => {
             {/* Drag Overlay - This ensures the dragged task appears on top */}
             <DragOverlay>
               {activeTask ? (
-                <div className="w-[300px]">
+                <div className="w-[244px]">
                   <TaskCard task={activeTask} isDragOverlay={true} />
                 </div>
               ) : null}
