@@ -10,6 +10,7 @@ import { Folder } from '@/pages/folder';
 import { List } from '@/pages/list';
 import { Task } from '@/pages/task';
 import { Calendar } from '@/pages/calendar';
+import { Inbox } from '@/pages/inbox';
 import PrivateRoute from '@/routes/privateRoute.tsx';
 
 const AppRoutes = () => {
@@ -28,6 +29,7 @@ const AppRoutes = () => {
           <Route path="folder" element={<Folder />} />
           <Route path="list" element={<List />} />
           <Route path="calendar" element={<Calendar />} />
+          <Route path="inbox" element={<Inbox />} />
         </Route>
         <Route element={<HeaderLayout />}>
           <Route path="task" element={<Task />} />
