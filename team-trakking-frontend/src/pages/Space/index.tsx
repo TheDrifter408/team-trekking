@@ -40,7 +40,7 @@ export const Space = () => {
   }
 
   return (
-    <>
+    <div className={''}>
       <PageHeader currentPage={currentPage} />
       <Main>
         <div className="flex-grow px-4 grid grid-cols-1 md:grid-cols-2 pt-6 gap-4 mb-6">
@@ -71,10 +71,10 @@ export const Space = () => {
             onViewAll={() => {}}
           />
         </div>
-        <div className="">
+        <div className="px-4">
           <SpaceOverview foldersData={foldersData} />
         </div>
       </Main>
-    </>
+    </div>
   );
 };

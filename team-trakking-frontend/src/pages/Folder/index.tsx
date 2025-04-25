@@ -30,7 +30,7 @@ export const Folder = () => {
   }
 
   return (
-    <>
+    <div>
       <PageHeader currentPage={currentPage} parents={parents} />
       <Main>
         <div className="flex-grow px-4 grid grid-cols-1 md:grid-cols-1 pt-6 gap-4 mb-6">
@@ -49,6 +49,6 @@ export const Folder = () => {
           />
         </div>
       </Main>
-    </>
+    </div>
   );
 };

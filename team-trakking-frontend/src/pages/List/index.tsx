@@ -39,7 +39,7 @@ export const List = () => {
   };
 
   return (
-    <>
+    <div className={''}>
       <PageHeader currentPage={currentPage} parents={parents} />
       <Main>
         <div className="flex flex-col min-h-screen">
@@ -57,6 +57,6 @@ export const List = () => {
           </div>
         </div>
       </Main>
-    </>
+    </div>
   );
 };
