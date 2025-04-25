@@ -9,6 +9,7 @@ import {
   Settings2,
   Inbox,
 } from 'lucide-react';
+import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { InboxTabType } from '@/types/props/common';
 
@@ -47,7 +48,12 @@ export const InboxPageHeader = ({
   };
 
   return (
-    <div className="w-full fixed top-[--header-height] bg-background z-10">
+    <div
+      className={cn(
+        'sticky top-0 bg-background z-10 w-full',
+        'border-b border-border'
+      )}
+    >
       {/* Inbox Tabs */}
       <div className="flex pt-2 px-4 border-b border-border justify-between">
         <div className="flex">

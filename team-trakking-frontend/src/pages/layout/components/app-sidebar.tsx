@@ -74,16 +74,17 @@ export const AppSidebar = ({
     setCreateSpaceOpen(false);
   };
 
-  const onInviteUsers = (emails: string[]) => {};
+  const onInviteUsers = () => {};
 
   const isOpen = state !== 'collapsed';
   return (
     <Sidebar
       collapsible={'icon'}
       className={cn(
-        'top-[36px]',
+        'h-[calc(100%-40px)]',
         'peer-data-[state=collapsed]:w-[calc(100%-var(--sidebar-width-icon))]',
-        'peer-data-[state=expanded]:w-[calc(100%-var(--sidebar-width))]'
+        'peer-data-[state=expanded]:w-[calc(100%-var(--sidebar-width))]',
+        'mt-[40px]'
       )}
       {...props}
     >

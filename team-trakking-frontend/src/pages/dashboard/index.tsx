@@ -56,7 +56,7 @@ export const Dashboard = () => {
   const handleViewAllLists = () => {};
 
   return (
-    <>
+    <div>
       <PageHeader currentPage={currentPage} />
       <Main>
         <div className="px-4 flex-grow">
@@ -102,6 +102,6 @@ export const Dashboard = () => {
           </div>
         </div>
       </Main>
-    </>
+    </div>
   );
 };

@@ -16,7 +16,7 @@ export const Inbox = () => {
     <div className="">
       <InboxPageHeader defaultTab={activeTab} onTabChange={handleTabChange} />
       <Main>
-        <div className="mt-12">
+        <div className="mt-2">
           {activeTab === 'IMPORTANT' && <InboxTabs data={mockImportant} />}
           {activeTab === 'OTHER' && <InboxTabs data={mockOthers} />}
           {activeTab === 'CLEARED' && <InboxTabs data={mockCleared} />}

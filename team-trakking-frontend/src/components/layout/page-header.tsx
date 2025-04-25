@@ -6,7 +6,7 @@ import {
   IconList,
   IconCheckbox,
 } from '@tabler/icons-react';
-import { getInitials } from '@/lib/utils';
+import { cn, getInitials } from '@/lib/utils';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -219,7 +219,12 @@ export const PageHeader = ({
   };
 
   return (
-    <div className="w-full top-[--header-height] bg-background z-10">
+    <div
+      className={cn(
+        'sticky top-0 bg-background z-10 w-full',
+        'border border-border'
+      )}
+    >
       <div className="px-8 py-[14.7px] border-b border-border">
         <Breadcrumb>
           <BreadcrumbList>

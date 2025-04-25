@@ -7,10 +7,10 @@ export const AppLayout = () => {
   return (
     <div className="flex flex-col h-screen">
       <SidebarProvider className="flex flex-col h-full">
-        <AppHeader />
-        <div className="flex flex-1 overflow-hidden">
+        <AppHeader /> {/* Make sure header doesn't shrink */}
+        <div className="flex flex-1  overflow-hidden">
           <AppSidebar />
-          <SidebarInset className="overflow-auto w-full">
+          <SidebarInset className="flex-1 overflow-auto">
             <Outlet />
           </SidebarInset>
         </div>
