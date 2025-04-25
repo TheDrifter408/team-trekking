@@ -1,40 +1,32 @@
+// InboxPageHeader.tsx
 import { useState } from 'react';
 import {
   Archive,
   Check,
-  Clock,
   Star,
   ListFilter,
   CheckCheck,
   Settings2,
+  Inbox,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-
-// Define inbox tab type
-type InboxTabType = 'IMPORTANT' | 'OTHER' | 'SNOOZED' | 'CLEARED';
+import { InboxTabType } from '@/types/props/common';
 
 interface Props {
-  // Optional default tab
   defaultTab?: InboxTabType;
-  // Optional callback when tab changes
   onTabChange?: (tab: InboxTabType) => void;
 }
 
-// Define the inbox tabs configuration
-const inboxTabConfig = {
-  important: {
+const inboxTabConfig: Record<InboxTabType, { icon: any; label: string }> = {
+  IMPORTANT: {
     icon: Star,
     label: 'Important',
   },
-  other: {
+  OTHER: {
     icon: Archive,
     label: 'Other',
   },
-  snoozed: {
-    icon: Clock,
-    label: 'Snoozed',
-  },
-  cleared: {
+  CLEARED: {
     icon: Check,
     label: 'Cleared',
   },
@@ -55,15 +47,17 @@ export const InboxPageHeader = ({
   };
 
   return (
-    <div className="w-full sticky top-[--header-height] bg-background z-10 ">
+    <div className="w-full fixed top-[--header-height] bg-background z-10">
       {/* Inbox Tabs */}
       <div className="flex pt-2 px-4 border-b border-border justify-between">
         <div className="flex">
-          <span className="text-muted-foreground text-base relative h-10 items-center flex pr-2">
+          <span className=" text-base relative h-10 items-center flex px-2">
+            <Inbox size={14} className={'mr-2'} />
             Inbox
+            <div className={'bg-border border-1 h-[16px] w-[1px] ml-4'} />
           </span>
-
-          {(Object.keys(inboxTabConfig) as InboxTabType[]).map((tab) => {
+          {Object.keys(inboxTabConfig).map((tabKey) => {
+            const tab = tabKey as InboxTabType;
             const TabIcon = inboxTabConfig[tab].icon;
             const tabLabel = inboxTabConfig[tab].label;
             const isActive = tab === activeTab;
@@ -88,15 +82,15 @@ export const InboxPageHeader = ({
             );
           })}
         </div>
-        <div className="">
-          <Button size={'icon'} variant={'ghost'}>
-            <ListFilter className={'text-muted-foreground font-medium'} />
+        <div>
+          <Button size="icon" variant="ghost">
+            <ListFilter className="text-muted-foreground font-medium" />
           </Button>
-          <Button size={'icon'} variant={'ghost'}>
-            <CheckCheck className={'text-muted-foreground font-medium'} />
+          <Button size="icon" variant="ghost">
+            <CheckCheck className="text-muted-foreground font-medium" />
           </Button>
-          <Button size={'icon'} variant={'ghost'}>
-            <Settings2 className={'text-muted-foreground font-medium'} />
+          <Button size="icon" variant="ghost">
+            <Settings2 className="text-muted-foreground font-medium" />
           </Button>
         </div>
       </div>

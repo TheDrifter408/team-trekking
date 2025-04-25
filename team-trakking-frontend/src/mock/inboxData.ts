@@ -1,4 +1,6 @@
-export const mockImportant = {
+import { Messages } from '@/types/props/common.ts';
+
+export const mockImportant: Messages = {
   today: [
     {
       id: 'x-1',
@@ -34,7 +36,6 @@ export const mockImportant = {
       date: 'Apr 24',
     },
   ],
-
   yesterday: [
     {
       id: 'y-1',
@@ -59,7 +60,6 @@ export const mockImportant = {
       date: 'Apr 22',
     },
   ],
-
   week: [
     {
       id: 'w-1',
@@ -95,7 +95,6 @@ export const mockImportant = {
       date: 'Apr 27',
     },
   ],
-
   month: [
     {
       id: 'm-1',
@@ -144,143 +143,123 @@ export const mockImportant = {
   ],
 };
 
-export const mockOthers = [
-  {
-    id: 'o-1',
-    color: '#34495e',
-    code: 'Low Priority',
-    name: 'Update team contact information',
-    type: 'Date',
-    message: 'HR requested updated contact info.',
-    post_message: 'Not urgent but should be done.',
-    post_type: 'Attention',
-    date: 'May 30',
-  },
-  {
-    id: 'o-2',
-    color: '#3498db',
-    code: 'Review',
-    name: 'Review intern applications',
-    type: 'Assign',
-    message: 'Please review and provide feedback.',
-    post_message: 'Initial screening completed.',
-    post_type: 'Success',
-    date: 'Jun 5',
-  },
-  {
-    id: 'o-3',
-    color: '#f39c12',
-    code: 'Pending',
-    name: 'Schedule team building event',
-    type: 'Comment',
-    message: 'New venue options available.',
-    post_message: 'Vote for preferred location.',
-    post_type: 'Attention',
-    date: 'Jun 15',
-  },
-  {
-    id: 'o-4',
-    color: '#9b59b6',
-    code: 'Planning',
-    name: 'Plan annual developer conference',
-    type: 'Status',
-    message: 'Initial planning phase.',
-    post_message: 'Need input on speakers.',
-    post_type: 'Attention',
-    date: 'Jul 10',
-  },
-];
+// Restructured mockOthers to follow Messages interface
+export const mockOthers: Messages = {
+  today: [],
+  yesterday: [],
+  week: [
+    {
+      id: 'o-1',
+      color: '#34495e',
+      code: 'Low Priority',
+      name: 'Update team contact information',
+      type: 'Date',
+      message: 'HR requested updated contact info.',
+      post_message: 'Not urgent but should be done.',
+      post_type: 'Attention',
+      date: 'May 30',
+    },
+    {
+      id: 'o-2',
+      color: '#3498db',
+      code: 'Review',
+      name: 'Review intern applications',
+      type: 'Assign',
+      message: 'Please review and provide feedback.',
+      post_message: 'Initial screening completed.',
+      post_type: 'Success',
+      date: 'Jun 5',
+    },
+  ],
+  month: [
+    {
+      id: 'o-3',
+      color: '#f39c12',
+      code: 'Pending',
+      name: 'Schedule team building event',
+      type: 'Comment',
+      message: 'New venue options available.',
+      post_message: 'Vote for preferred location.',
+      post_type: 'Attention',
+      date: 'Jun 15',
+    },
+    {
+      id: 'o-4',
+      color: '#9b59b6',
+      code: 'Planning',
+      name: 'Plan annual developer conference',
+      type: 'Status',
+      message: 'Initial planning phase.',
+      post_message: 'Need input on speakers.',
+      post_type: 'Attention',
+      date: 'Jul 10',
+    },
+  ],
+};
 
-export const mockSnoozed = [
-  {
-    id: 's-1',
-    color: '#686af2',
-    code: 'In Progress',
-    name: 'Optimize database queries',
-    type: 'Date',
-    message: 'Snoozed until next sprint.',
-    post_message: 'Will resume on May 5.',
-    post_type: 'Attention',
-    date: 'May 5',
-  },
-  {
-    id: 's-2',
-    color: '#9b59b6',
-    code: 'Planning',
-    name: 'Redesign user profile page',
-    type: 'Status',
-    message: 'Waiting for design team availability.',
-    post_message: 'Snoozed for 2 weeks.',
-    post_type: 'Attention',
-    date: 'May 8',
-  },
-  {
-    id: 's-3',
-    color: '#34495e',
-    code: 'Low Priority',
-    name: 'Document API changes',
-    type: 'Assign',
-    message: 'Assigned to technical writer.',
-    post_message: 'Snoozed until after release.',
-    post_type: 'Attention',
-    date: 'May 12',
-  },
-];
-
-export const mockCleared = [
-  {
-    id: 'c-1',
-    color: '#2ecc71',
-    code: 'Completed',
-    name: 'Fix login page bugs',
-    type: 'Status',
-    message: 'All bugs resolved and tested.',
-    post_message: 'Cleared on April 20.',
-    post_type: 'Success',
-    date: 'Apr 20',
-  },
-  {
-    id: 'c-2',
-    color: '#2ecc71',
-    code: 'Completed',
-    name: 'Update privacy policy',
-    type: 'Date',
-    message: 'Legal team approved changes.',
-    post_message: 'Published to website.',
-    post_type: 'Success',
-    date: 'Apr 18',
-  },
-  {
-    id: 'c-3',
-    color: '#e84c3d',
-    code: 'Urgent',
-    name: 'Fix server outage',
-    type: 'Status',
-    message: 'Emergency issue resolved.',
-    post_message: 'Root cause identified.',
-    post_type: 'Success',
-    date: 'Apr 15',
-  },
-  {
-    id: 'c-4',
-    color: '#686af2',
-    code: 'In Progress',
-    name: 'Onboard new team members',
-    type: 'Greet',
-    message: 'Welcome process completed.',
-    post_message: 'All access granted.',
-    post_type: 'Success',
-    date: 'Apr 10',
-  },
-  {
-    id: 'c-5',
-    color: '#2ecc71',
-    code: 'Completed',
-    name: 'Quarterly performance review',
-    type: 'Date',
-    message: 'All reviews submitted.',
-    post_message: 'Feedback shared with team.',
-    post_type: 'Success',
-    date: 'Apr 5',
-  },
-];
+// Restructured mockCleared to follow Messages interface
+export const mockCleared: Messages = {
+  today: [
+    {
+      id: 'c-1',
+      color: '#2ecc71',
+      code: 'Completed',
+      name: 'Fix login page bugs',
+      type: 'Status',
+      message: 'All bugs resolved and tested.',
+      post_message: 'Cleared on April 20.',
+      post_type: 'Success',
+      date: 'Apr 20',
+    },
+  ],
+  yesterday: [
+    {
+      id: 'c-2',
+      color: '#2ecc71',
+      code: 'Completed',
+      name: 'Update privacy policy',
+      type: 'Date',
+      message: 'Legal team approved changes.',
+      post_message: 'Published to website.',
+      post_type: 'Success',
+      date: 'Apr 18',
+    },
+  ],
+  week: [
+    {
+      id: 'c-3',
+      color: '#e84c3d',
+      code: 'Urgent',
+      name: 'Fix server outage',
+      type: 'Status',
+      message: 'Emergency issue resolved.',
+      post_message: 'Root cause identified.',
+      post_type: 'Success',
+      date: 'Apr 15',
+    },
+    {
+      id: 'c-4',
+      color: '#686af2',
+      code: 'In Progress',
+      name: 'Onboard new team members',
+      type: 'Greet',
+      message: 'Welcome process completed.',
+      post_message: 'All access granted.',
+      post_type: 'Success',
+      date: 'Apr 10',
+    },
+  ],
+  month: [
+    {
+      id: 'c-5',
+      color: '#2ecc71',
+      code: 'Completed',
+      name: 'Quarterly performance review',
+      type: 'Date',
+      message: 'All reviews submitted.',
+      post_message: 'Feedback shared with team.',
+      post_type: 'Success',
+      date: 'Apr 5',
+    },
+  ],
+};
