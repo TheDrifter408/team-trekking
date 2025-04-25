@@ -219,7 +219,7 @@ export const PageHeader = ({
   };
 
   return (
-    <div className="w-full sticky top-[--header-height] bg-background z-10">
+    <div className="w-full top-[--header-height] bg-background z-10">
       <div className="px-8 py-[14.7px] border-b border-border">
         <Breadcrumb>
           <BreadcrumbList>
