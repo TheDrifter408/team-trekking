@@ -12,6 +12,7 @@ import {
   useReactTable,
   VisibilityState,
   getExpandedRowModel,
+  ColumnPinningState,
 } from '@tanstack/react-table';
 import {
   Table,
@@ -44,6 +45,8 @@ interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   onDataChange: (newData: TData[]) => void;
+  filterValue: TValue;
+  onFilterChange: (newFilterValue: TValue) => void;
 }
 
 // Sortable row component
@@ -78,11 +81,16 @@ export function DataTable<TData, TValue>({
   columns,
   data,
   onDataChange,
+  filterValue,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
+  const [columnPinning, setColumnPinning] = useState<ColumnPinningState>({
+    left: [],
+    right: [],
+  });
   const [expanded, setExpanded] = useState({});
 
   // Local copy of data to ensure we're always working with the latest state
@@ -106,12 +114,14 @@ export function DataTable<TData, TValue>({
     getExpandedRowModel: getExpandedRowModel(),
     getSubRows: (row: any) => row.subRows,
     onExpandedChange: setExpanded,
+    onColumnPinningChange: setColumnPinning,
     state: {
       sorting,
       columnFilters,
       columnVisibility,
       rowSelection,
       expanded,
+      columnPinning,
     },
   });
 
@@ -164,19 +174,17 @@ export function DataTable<TData, TValue>({
     }
   };
 
+  useEffect(() => {
+    if (table.getColumn('name')) {
+      table.getColumn('name')?.setFilterValue(filterValue);
+    }
+  }, [filterValue, table]);
+
   return (
     <div className="rounded-md border">
       <div className="flex items-center px-4 py-4">
-        <Input
-          placeholder="Filter Names..."
-          value={(table.getColumn('name')?.getFilterValue() as string) ?? ''}
-          onChange={(event) =>
-            table.getColumn('name')?.setFilterValue(event.target.value)
-          }
-          className="w-1/3"
-        />
         <div className="px-2 flex-1 text-xs text-muted-foreground">
-          {table.getFilteredSelectedRowModel().rows.length} of{' '}
+          {table.getFilteredSelectedRowModel().rows.length} of
           {table.getFilteredRowModel().rows.length} row(s) selected.
         </div>
         <DataTableViewOptions table={table} />

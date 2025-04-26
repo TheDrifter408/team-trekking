@@ -208,7 +208,7 @@ export const columns: ColumnDef<Task>[] = [
     cell: ({ row }) => {
       const progress = row.original.progress;
       return (
-        <div className="flex items-center gap-2">
+        <div className="flex w-[100px] items-center gap-2">
           <Progress value={progress} className="w-[60%]" />
           <span className="text-sm text-muted-foreground text-green-600">
             {progress}%

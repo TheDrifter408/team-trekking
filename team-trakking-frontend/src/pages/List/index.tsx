@@ -4,6 +4,7 @@ import { Main } from '@/components/layout/main.tsx';
 import { DataTable } from '@/components/dataTable/data-table.tsx';
 import { columns } from '@/pages/dashboard/components/columns.tsx';
 import { HeaderType } from '@/types/props/common.ts';
+import { ListCard } from './components/list-card.tsx';
 import { PageHeader } from '@/components/layout/page-header';
 import * as Task from '@/mock/task.ts';
 
@@ -23,8 +24,12 @@ export const List = () => {
     { meta: 'SPACE' as HeaderType, label: 'ProjecX Moon', link: '/space' },
     { meta: 'FOLDER' as HeaderType, label: 'Space Shuttle', link: '/folder' },
   ];
+
   // Use state to manage tasks data
   const [tasks, setTasks] = useState(() => Task.data.map(convertDates));
+
+  // Add state for filter value
+  const [filterValue, setFilterValue] = useState('');
 
   // Handle data updates from drag and drop
   const handleDataChange = (newData: any[]) => {
@@ -42,19 +47,15 @@ export const List = () => {
     <div className={''}>
       <PageHeader currentPage={currentPage} parents={parents} />
       <Main>
-        <div className="flex flex-col min-h-screen">
-          <div className="px-4 rounded-lg">
-            <div className="flex justify-end items-center my-2">
-              <Button size="sm" className="w-auto" onClick={() => {}}>
-                Add Task
-              </Button>
-            </div>
-            <DataTable
-              columns={columns}
-              data={tasks}
-              onDataChange={handleDataChange}
-            />
-          </div>
+        <div className="px-6">
+          <ListCard filterValue={filterValue} onFilterChange={setFilterValue} />
+          <DataTable
+            columns={columns}
+            data={tasks}
+            onDataChange={handleDataChange}
+            filterValue={filterValue}
+            onFilterChange={setFilterValue}
+          />
         </div>
       </Main>
     </div>
