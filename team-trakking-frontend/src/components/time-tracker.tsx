@@ -159,17 +159,17 @@ export function TimeTracker({
 
           {/* Time display - clicking this will open the dropdown */}
           <span
-            className={`${isRunning || elapsedTime > 0 ? 'font-mono' : ''}`}
+            className={` text-primary ${isRunning || elapsedTime > 0 ? 'font-mono ' : ''}`}
           >
             {isRunning || elapsedTime > 0 ? displayTime : initialTime}
           </span>
         </div>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="center" className="p-3 min-w-[200px]">
+      <DropdownMenuContent align="center" className="p-3 min-w-[200px] ">
         <div className="space-y-3">
           <h3 className="font-medium">Time Tracking</h3>
 
-          <div className="text-center text-2xl font-mono">
+          <div className="text-center  text-primary text-2xl font-mono">
             {isRunning || elapsedTime > 0 ? displayTime : '0s'}
           </div>
 

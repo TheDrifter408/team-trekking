@@ -33,7 +33,7 @@ export const columns: ColumnDef<Task>[] = [
   {
     id: 'drag',
     header: () => null,
-    cell: () => <Grip size={16} />,
+    cell: () => <Grip className={'text-muted-foreground'} size={16} />,
     enableSorting: false,
     enableHiding: false,
   },
@@ -41,6 +41,7 @@ export const columns: ColumnDef<Task>[] = [
     id: 'select',
     header: ({ table }) => (
       <Checkbox
+        className={'border-muted-foreground'}
         checked={
           table.getIsAllPageRowsSelected() ||
           (table.getIsSomePageRowsSelected() && 'indeterminate')
@@ -52,6 +53,7 @@ export const columns: ColumnDef<Task>[] = [
     cell: ({ row }) => (
       <Checkbox
         checked={row.getIsSelected()}
+        className={'border-muted-foreground'}
         onCheckedChange={(value) => row.toggleSelected(!!value)}
         aria-label="Select row"
       />
@@ -64,7 +66,10 @@ export const columns: ColumnDef<Task>[] = [
     header: () => null,
     cell: ({ row }) =>
       row.getCanExpand() ? (
-        <button onClick={row.getToggleExpandedHandler()} className="text-2xl">
+        <button
+          onClick={row.getToggleExpandedHandler()}
+          className="text-2xl text-muted-foreground"
+        >
           {row.getIsExpanded() ? '▾' : '▸'}
         </button>
       ) : null,
@@ -194,7 +199,7 @@ export const columns: ColumnDef<Task>[] = [
 
       return (
         <span
-          className={'hover:underline underline-offset-2'}
+          className={'hover:underline underline-offset-2 text-primary'}
           onClick={() => navigate('/task')}
         >
           {row.original.name}
@@ -224,28 +229,28 @@ export const columns: ColumnDef<Task>[] = [
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
+            <Button variant="ghost" className="h-8 w-8 p-0 text-primary">
               {row.original.priority}
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="center">
             <div className="w-40">
-              <div className="flex gap-2 w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-600 transition-colors duration-150 flex items-center cursor-pointer">
+              <div className="flex gap-2 w-full text-left px-4 py-2 text-sm text-primary  hover:bg-gray-100 hover:text-blue-600 transition-colors duration-150  items-center cursor-pointer">
                 <Flag size={16} color="red" fill="red" /> Urgent
               </div>
-              <div className="flex gap-2 w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-600 transition-colors duration-150 flex items-center cursor-pointer">
-                <Flag size={16} color="yellow" fill="yellow" opacity={80} />{' '}
+              <div className="flex gap-2 w-full text-left px-4 py-2 text-sm text-primary  hover:bg-gray-100 hover:text-blue-600 transition-colors duration-150  items-center cursor-pointer">
+                <Flag size={16} color="yellow" fill="yellow" opacity={80} />
                 High
               </div>
-              <div className="flex gap-2 w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-600 transition-colors duration-150 flex items-center cursor-pointer">
+              <div className="flex gap-2 w-full text-left px-4 py-2 text-sm text-primary hover:bg-gray-100 hover:text-blue-600 transition-colors duration-150  items-center cursor-pointer">
                 <Flag size={16} color="blue" fill="blue" /> Normal
               </div>
-              <div className="flex gap-2 w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-600 transition-colors duration-150 flex items-center cursor-pointer">
+              <div className="flex gap-2 w-full text-left px-4 py-2 text-sm text-primary  hover:bg-gray-100 hover:text-blue-600 transition-colors duration-150  items-center cursor-pointer">
                 <Flag size={16} color="gray" fill="gray" /> Low
               </div>
             </div>
             <DropdownMenuSeparator />
-            <div className="flex gap-2 w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-600 transition-colors duration-150 flex items-center cursor-pointer">
+            <div className="flex gap-2 w-full text-left px-4 py-2 text-sm text-primary  hover:bg-gray-100 hover:text-blue-600 transition-colors duration-150  items-center cursor-pointer">
               <Ban size={16} color="gray" /> Clear
             </div>
           </DropdownMenuContent>
@@ -338,7 +343,7 @@ export const columns: ColumnDef<Task>[] = [
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
+            <Button variant="ghost" className="h-8 w-8 p-0 text-primary">
               {new Date(row.original.startDate).toLocaleDateString()}
             </Button>
           </DropdownMenuTrigger>
@@ -356,7 +361,7 @@ export const columns: ColumnDef<Task>[] = [
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
+            <Button variant="ghost" className="h-8 w-8 p-0  text-primary">
               {new Date(row.original.dueDate).toLocaleDateString()}
             </Button>
           </DropdownMenuTrigger>
@@ -374,7 +379,7 @@ export const columns: ColumnDef<Task>[] = [
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
+            <Button variant="ghost" className="h-8 w-8 p-0  text-primary">
               {row.original.estimatedTime}
             </Button>
           </DropdownMenuTrigger>
@@ -404,7 +409,7 @@ export const columns: ColumnDef<Task>[] = [
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
+            <Button variant="ghost" className="h-8 w-8 p-0  text-primary">
               {row.original.spentTime}
             </Button>
           </DropdownMenuTrigger>
@@ -454,7 +459,7 @@ export const columns: ColumnDef<Task>[] = [
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="h-8 w-8 p-0">
               <span className="sr-only">Open menu</span>
-              <MoreVertical className="h-4 w-4" />
+              <MoreVertical className="h-4 w-4 text-muted-foreground" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
