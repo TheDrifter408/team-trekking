@@ -24,6 +24,8 @@ export const Login = () => {
   });
 
   const onSubmit = () => {
+    localStorage.setItem('token', 'dummy_token');
+
     navigate('/home');
   };
 

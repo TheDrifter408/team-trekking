@@ -46,10 +46,18 @@ interface DataTableProps<TData, TValue> {
   onDataChange: (newData: TData[]) => void;
   filterValue: TValue;
   onFilterChange: (newFilterValue: TValue) => void;
+  onRowMouseEnter?: (id: string) => void;
+  onRowMouseLeave?: () => void;
 }
 
 // Sortable row component
-function SortableTableRow({ row, children, id }: any) {
+function SortableTableRow({
+  row,
+  children,
+  id,
+  onMouseEnter,
+  onMouseLeave,
+}: any) {
   const { attributes, listeners, setNodeRef, transform, isDragging } =
     useSortable({ id });
 
@@ -58,6 +66,11 @@ function SortableTableRow({ row, children, id }: any) {
     opacity: isDragging ? 0.5 : 1,
     position: 'relative' as const,
     zIndex: isDragging ? 1 : 0,
+  };
+
+  // Handler for mouse enter - calls the parent handler with the row ID
+  const handleMouseEnter = () => {
+    if (onMouseEnter) onMouseEnter(id);
   };
 
   return (
@@ -70,6 +83,8 @@ function SortableTableRow({ row, children, id }: any) {
       }`}
       {...attributes}
       {...listeners}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={onMouseLeave}
     >
       {children}
     </TableRow>
@@ -81,6 +96,8 @@ export function DataTable<TData, TValue>({
   data,
   onDataChange,
   filterValue,
+  onRowMouseEnter,
+  onRowMouseLeave,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -182,10 +199,6 @@ export function DataTable<TData, TValue>({
   return (
     <div className="rounded-md border">
       <div className="flex items-center px-4 py-4">
-        <div className="px-2 flex-1 text-xs text-muted-foreground">
-          {table.getFilteredSelectedRowModel().rows.length} of
-          {table.getFilteredRowModel().rows.length} row(s) selected.
-        </div>
         <DataTableViewOptions table={table} />
       </div>
 
@@ -230,11 +243,13 @@ export function DataTable<TData, TValue>({
                       key={row.id}
                       id={(row.original as any).id}
                       row={row}
+                      onMouseEnter={onRowMouseEnter}
+                      onMouseLeave={onRowMouseLeave}
                     >
                       {row.getVisibleCells().map((cell, index) => (
                         <TableCell
                           key={cell.id}
-                          className="py-2 text-sm text-gray-800"
+                          className=" text-sm text-gray-800"
                         >
                           {index === 2 || index === 3 ? (
                             <div style={{ marginLeft: `${row.depth * 20}px` }}>
@@ -254,12 +269,17 @@ export function DataTable<TData, TValue>({
                     </SortableTableRow>
                   );
                 } else {
-                  // Regular row for children
+                  // Regular row for children - also add mouse events
                   return (
                     <TableRow
                       key={row.id}
                       data-state={row.getIsSelected() && 'selected'}
                       className="hover:bg-muted transition-all duration-150 cursor-pointer"
+                      onMouseEnter={() =>
+                        onRowMouseEnter &&
+                        onRowMouseEnter((row.original as any).id)
+                      }
+                      onMouseLeave={onRowMouseLeave}
                     >
                       {row.getVisibleCells().map((cell, index) => (
                         <TableCell

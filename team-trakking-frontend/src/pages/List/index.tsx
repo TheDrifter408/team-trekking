@@ -7,7 +7,7 @@ import { ListCard } from './components/list-card.tsx';
 import { PageHeader } from '@/components/layout/page-header';
 import * as Task from '@/mock/task.ts';
 
-const convertDates = (task: any): any => ({
+const convertDates = (task) => ({
   ...task,
   startDate: new Date(task.startDate),
   dueDate: new Date(task.dueDate),
@@ -48,14 +48,14 @@ export const List = () => {
       <Main>
         <div className="px-6">
           <ListCard filterValue={filterValue} onFilterChange={setFilterValue} />
-          <DataTable
-            columns={columns}
-            data={tasks}
-            onDataChange={handleDataChange}
-            filterValue={filterValue}
-            onFilterChange={setFilterValue}
-          />
         </div>
+        <DataTable
+          columns={columns}
+          data={tasks}
+          onDataChange={handleDataChange}
+          filterValue={filterValue}
+          onFilterChange={setFilterValue}
+        />
       </Main>
     </div>
   );

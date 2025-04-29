@@ -159,7 +159,7 @@ export function TimeTracker({
 
           {/* Time display - clicking this will open the dropdown */}
           <span
-            className={` text-primary ${isRunning || elapsedTime > 0 ? 'font-mono ' : ''}`}
+            className={` text-primary text-base ${isRunning || elapsedTime > 0 ? 'font-mono ' : ''}`}
           >
             {isRunning || elapsedTime > 0 ? displayTime : initialTime}
           </span>
