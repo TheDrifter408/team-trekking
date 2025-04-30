@@ -190,7 +190,7 @@ export const Task: React.FC = () => {
   };
 
   return (
-    <div className={' md:px-12 items-center'}>
+    <div className={' md:px-6 items-center'}>
       <div className="space-y-0 mt-4">
         {/* HEADER => TITLE */}
         <div className="mb-4">
