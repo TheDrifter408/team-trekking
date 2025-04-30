@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { Button } from '@/components/ui/button';
 import {
@@ -23,8 +24,10 @@ import {
   X,
   Ellipsis,
 } from 'lucide-react';
+import { ShareTask } from '@/components/share-task.tsx';
 
 export const PageHeader = () => {
+  const [openShareTask, setOpenShareTask] = useState<boolean>(false);
   return (
     <div className="h-[50px] bg-sidebar/80 border w-full flex items-center justify-between px-2">
       <TooltipProvider>
@@ -78,9 +81,15 @@ export const PageHeader = () => {
             </Button>
           </ToolTipContainer>
         </div>
-        <div className="flex space-x-4 items-center justify-between">
-          <span className="text-sm">Created on Mar 28</span>
-          <Button className="text-base">Share</Button>
+        <div className="flex space-x-3 items-center justify-between">
+          <span className="text-sm">Created on Mar 2</span>
+          <Button
+            onClick={() => setOpenShareTask(true)}
+            size={'sm'}
+            className="text-base"
+          >
+            Share
+          </Button>
           <div className="w-[1px] h-[18px] bg-border" />
           <div className="flex gap-1">
             <ToolTipContainer text="Task settings">
@@ -96,6 +105,10 @@ export const PageHeader = () => {
           </div>
         </div>
       </TooltipProvider>
+      <ShareTask
+        open={openShareTask}
+        onOpenChange={() => setOpenShareTask(!openShareTask)}
+      />
     </div>
   );
 };
@@ -105,7 +118,7 @@ const ToolTipContainer = ({
   text,
   side = 'bottom',
 }: {
-  children: any;
+  children: React.ReactNode;
   text: string;
   side?: 'top' | 'bottom' | 'left' | 'right';
 }) => {
