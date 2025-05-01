@@ -40,7 +40,8 @@ import { Badge } from '@/components/ui/badge';
 import { TaskMetaRow } from './components/task-meta-row';
 import { Input } from '@/components/ui/input.tsx';
 import { AssigneeAvatar } from '@/components/assignee-avatar.tsx';
-import { Subtask } from '@/pages/task/components/subtask.tsx';
+import { DocEditor } from './doc-editor.tsx';
+import { Subtask } from '@/pages/task/components/Subtask.tsx';
 
 export const Task: React.FC = () => {
   const [enterStatus, setEnterStatus] = useState<boolean>(false);
@@ -360,143 +361,13 @@ export const Task: React.FC = () => {
             <span className="text-sm text-gray-400">No tags</span>
           )}
         </TaskMetaRow>
-
-        {/*  /!* Subtasks *!/*/}
-        {/*  <Subtask*/}
-        {/*    task={task}*/}
-        {/*    handleSelectAllSubtasks={onHandleSelectAllSubtasks}*/}
-        {/*    selectedSubtasks={selectedSubtasks}*/}
-        {/*    handleSubtaskDragEnd={onHandleSubtaskDragEnd}*/}
-        {/*    onPressAddSubtask={onPressAddSubtask}*/}
-        {/*    sensors={sensors}*/}
-        {/*    handleSubtaskSelect={onHandleSubtaskSelect}*/}
-        {/*  />*/}
-
-        {/*  /!* Checklist *!/*/}
-        {/*  <div className="space-y-4 bg-gray-50 p-6 rounded-lg shadow-sm mt-6">*/}
-        {/*    <div className="flex justify-content-between">*/}
-        {/*      <h3 className="text-lg font-medium text-gray-900">Checklist</h3>*/}
-        {/*      <Button*/}
-        {/*        variant={'ghost'}*/}
-        {/*        size={'icon'}*/}
-        {/*        className={'bg-indigo-600 h-6 w-6 rounded-1 mr-1'}*/}
-        {/*        onClick={onPressAddChecklist}*/}
-        {/*      >*/}
-        {/*        <Plus color={'white'} size={18} />*/}
-        {/*      </Button>*/}
-        {/*    </div>*/}
-
-        {/*    <div className="bg-white rounded-lg shadow overflow-hidden">*/}
-        {/*      <DndContext*/}
-        {/*        sensors={sensors}*/}
-        {/*        collisionDetection={closestCenter}*/}
-        {/*        onDragEnd={onHandleChecklistDragEnd}*/}
-        {/*      >*/}
-        {/*        <table className="min-w-full divide-y divide-gray-200">*/}
-        {/*          <thead className="bg-gray-50">*/}
-        {/*            <tr>*/}
-        {/*              <th className="px-6 py-3 text-left">*/}
-        {/*                <input*/}
-        {/*                  type="checkbox"*/}
-        {/*                  onChange={onHandleSelectAllChecklist}*/}
-        {/*                  checked={*/}
-        {/*                    selectedChecklistItems.size === task.checklist.length*/}
-        {/*                  }*/}
-        {/*                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"*/}
-        {/*                />*/}
-        {/*              </th>*/}
-        {/*              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">*/}
-        {/*                Item*/}
-        {/*              </th>*/}
-        {/*              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">*/}
-        {/*                Status*/}
-        {/*              </th>*/}
-        {/*            </tr>*/}
-        {/*          </thead>*/}
-        {/*          <tbody className="bg-white divide-y divide-gray-200">*/}
-        {/*            <SortableContext*/}
-        {/*              items={task.checklist.map((item) => item.id)}*/}
-        {/*              strategy={verticalListSortingStrategy}*/}
-        {/*            >*/}
-        {/*              {task.checklist.map((item) => (*/}
-        {/*                <SortableChecklistRow*/}
-        {/*                  key={item.id}*/}
-        {/*                  id={item.id}*/}
-        {/*                  selected={selectedChecklistItems.has(item.id)}*/}
-        {/*                  onSelect={() => onHandleChecklistSelect(item.id)}*/}
-        {/*                  item={item}*/}
-        {/*                  onToggle={() => onHandleChecklistToggle(item.id)}*/}
-        {/*                />*/}
-        {/*              ))}*/}
-        {/*            </SortableContext>*/}
-        {/*          </tbody>*/}
-        {/*        </table>*/}
-        {/*      </DndContext>*/}
-        {/*    </div>*/}
-        {/*  </div>*/}
-
-        {/*  /!* Tags *!/*/}
-        {/*  <div className="flex items-center space-x-2">*/}
-        {/*    <Tags className="w-5 h-5 text-gray-500" />*/}
-        {/*    <div className="flex flex-wrap gap-2">*/}
-        {/*      {task.tags.map((tag) => (*/}
-        {/*        <span*/}
-        {/*          key={tag}*/}
-        {/*          className="px-2 py-1 bg-gray-100 text-gray-600 rounded-full text-sm"*/}
-        {/*        >*/}
-        {/*          {tag}*/}
-        {/*        </span>*/}
-        {/*      ))}*/}
-        {/*    </div>*/}
-        {/*  </div>*/}
-
-        {/*  /!* Comments *!/*/}
-        {/*  <div className="space-y-4">*/}
-        {/*    <div className="flex items-center space-x-2">*/}
-        {/*      <MessageSquare className="w-5 h-5 text-gray-500" />*/}
-        {/*      <h3 className="text-sm font-medium text-gray-700">Comments</h3>*/}
-        {/*    </div>*/}
-        {/*    <div className="space-y-4">*/}
-        {/*      {task.comments.map((comment) => (*/}
-        {/*        <div key={comment.id} className="flex space-x-3">*/}
-        {/*          <img*/}
-        {/*            src={comment.user.avatar}*/}
-        {/*            alt={comment.user.name}*/}
-        {/*            className="w-8 h-8 rounded-full"*/}
-        {/*          />*/}
-        {/*          <div className="flex-1">*/}
-        {/*            <div className="flex items-center space-x-2">*/}
-        {/*              <span className="font-medium">{comment.user.name}</span>*/}
-        {/*              <span className="text-sm text-gray-500">*/}
-        {/*                {new Date(comment.createdAt).toLocaleDateString()}*/}
-        {/*              </span>*/}
-        {/*            </div>*/}
-        {/*            <p className="mt-1 text-gray-600">{comment.content}</p>*/}
-        {/*          </div>*/}
-        {/*        </div>*/}
-        {/*      ))}*/}
-        {/*    </div>*/}
-        {/*    <div className="mt-4">*/}
-        {/*      <textarea*/}
-        {/*        placeholder="Add a comment..."*/}
-        {/*        className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"*/}
-        {/*        rows={3}*/}
-        {/*      />*/}
-        {/*      <button className="mt-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">*/}
-        {/*        Comment*/}
-        {/*      </button>*/}
-        {/*    </div>*/}
-        {/*  </div>*/}
       </div>
       <div className="mt-4">
         <div className="space-y-2">
           <Label htmlFor="description">Description</Label>
-          <Textarea
-            id="description"
-            placeholder="Enter your description here..."
-            className="min-h-32 resize-y"
+          <DocEditor
             value={description}
-            onChange={(e) => setDescription(e.target.value)}
+            onChange={(e) => setDescription(e.value)}
           />
         </div>
       </div>
