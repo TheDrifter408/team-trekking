@@ -40,7 +40,7 @@ import { Badge } from '@/components/ui/badge';
 import { TaskMetaRow } from './components/task-meta-row';
 import { Input } from '@/components/ui/input.tsx';
 import { AssigneeAvatar } from '@/components/assignee-avatar.tsx';
-import { DocEditor } from './doc-editor.tsx';
+import { DocEditor } from './components/doc-editor.tsx';
 import { Subtask } from '@/pages/task/components/Subtask.tsx';
 
 export const Task: React.FC = () => {
@@ -366,8 +366,10 @@ export const Task: React.FC = () => {
         <div className="space-y-2">
           <Label htmlFor="description">Description</Label>
           <DocEditor
+            placeholder={"Start writing or type '/' for commands"}
             value={description}
-            onChange={(e) => setDescription(e.value)}
+            name={'Task Description'}
+            onChange={(e) => setDescription(e.target.value)}
           />
         </div>
       </div>
