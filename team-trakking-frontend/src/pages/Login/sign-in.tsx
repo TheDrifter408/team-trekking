@@ -9,9 +9,16 @@ import { AuthLayout } from './components/auth-layout';
 import { AuthCard } from './components/auth-card';
 import { FormInputField } from './components/form-input.tsx';
 import { loginSchema } from '@/lib/config/validation-schema.tsx';
+import { usePostSignInMutation } from '@/redux/query/rtk-query.ts';
+import { UserRole } from '@/lib/constants/appConstants.ts';
+import { CreateUserResponse } from '@/types/props/ApiResponse';
+import { useTMTStore } from '@/stores/zustand/index.tsx';
 
 export const Login = () => {
   const navigate = useNavigate();
+  const [signIn, { isLoading }] = usePostSignInMutation();
+  const { saveUser } = useTMTStore();
+  const [errorMessage, setErrorMessage] = useState(null);
   const [showPassword, setShowPassword] = useState(false);
 
   // Initialize form with Zod schema
@@ -23,16 +30,28 @@ export const Login = () => {
     },
   });
 
-  const onSubmit = () => {
-    localStorage.setItem('token', 'dummy_token');
-
-    navigate('/home');
+  const onSubmit = async (data) => {
+    const loginForm = {
+      ...data,
+      roleId: UserRole.User,
+    };
+    const response = await signIn(loginForm).unwrap();
+    if (response.error) {
+      setErrorMessage(response.error.data.message);
+    } else if (response) {
+      saveUser(response as CreateUserResponse);
+      navigate('/home');
+    }
   };
 
   return (
     <AuthLayout isLoginPage={true}>
-      {/* MAIN => Card */}
       <AuthCard title="Welcome back!" onGoogleClick={() => {}}>
+        {errorMessage && (
+          <p className={'text-sm text-center font-medium text-destructive'}>
+            {errorMessage}
+          </p>
+        )}
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <FormInputField
@@ -53,6 +72,7 @@ export const Login = () => {
               rightElement={
                 <Button
                   variant="link"
+                  type="button"
                   className="absolute right-3 text-normal top-1 hover:decoration-dashed text-indigo-600"
                   onClick={() => setShowPassword(!showPassword)}
                 >
@@ -64,8 +84,9 @@ export const Login = () => {
             <Button
               type="submit"
               className="w-full rounded-lg h-[50px] font-extrabold text-md bg-indigo-600 hover:bg-indigo-700"
+              disabled={isLoading}
             >
-              Log In
+              {isLoading ? 'Logging in...' : 'Log In'}
             </Button>
           </form>
         </Form>

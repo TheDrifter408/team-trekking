@@ -34,7 +34,7 @@ export const SignUp = () => {
   const [otp, setOtp] = useState('');
   const otpType = 'REGISTRATION';
   const registrationType = 'EMAIL';
-  const permissionIds = [1];
+  const permissionIds = [2];
 
   // Initialize form with Zod schema
   const form = useForm({
