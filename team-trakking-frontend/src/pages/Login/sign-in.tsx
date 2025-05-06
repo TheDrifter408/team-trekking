@@ -11,7 +11,7 @@ import { FormInputField } from './components/form-input.tsx';
 import { loginSchema } from '@/lib/config/validation-schema.tsx';
 import { usePostSignInMutation } from '@/redux/query/rtk-query.ts';
 import { UserRole } from '@/lib/constants/appConstants.ts';
-import { CreateUserResponse } from '@/types/props/ApiResponse';
+import { UserResponse } from '@/types/props/ApiResponse';
 import { useTMTStore } from '@/stores/zustand/index.tsx';
 
 export const Login = () => {
@@ -39,7 +39,7 @@ export const Login = () => {
     if (response.error) {
       setErrorMessage(response.error.data.message);
     } else if (response) {
-      saveUser(response as CreateUserResponse);
+      saveUser(response as UserResponse);
       navigate('/home');
     }
   };

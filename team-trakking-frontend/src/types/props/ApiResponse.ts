@@ -3,7 +3,7 @@ export interface ApiResponse<T = any> {
   error: T;
   statusCode: number;
 }
-export interface CreateUserResponse {
+export interface UserResponse {
   userData: {
     id: number;
     fullName: string;

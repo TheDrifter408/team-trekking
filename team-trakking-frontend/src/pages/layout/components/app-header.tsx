@@ -7,10 +7,13 @@ import { Input } from '@/components/ui/input.tsx';
 import { PlusCircle } from 'lucide-react';
 import { ThemeSwitch } from '@/components/theme-switch.tsx';
 import { ProfileDropdown } from '@/components/profile.dropdown.tsx';
+import { UserResponse } from '@/types/props/ApiResponse.ts';
 
-export function AppHeader() {
+interface Props {
+  user: UserResponse | null;
+}
+export function AppHeader({ user }: Props) {
   const { toggleSidebar } = useSidebar();
-
   return (
     <header className="flex flex-col sticky w-full z-50 items-center bg-theme-dark">
       <div className="flex  w-full items-center gap-2 px-4 h-[40px]">
@@ -41,7 +44,7 @@ export function AppHeader() {
         </div>
         <div className="flex items-center gap-2">
           <ThemeSwitch />
-          <ProfileDropdown />
+          <ProfileDropdown user={user} />
         </div>
       </div>
     </header>

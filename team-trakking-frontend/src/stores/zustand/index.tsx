@@ -1,23 +1,23 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { CreateUserResponse } from '@/types/props/ApiResponse';
+import { UserResponse } from '@/types/props/ApiResponse';
 
 interface TeamTrackingState {
-  user: CreateUserResponse | null;
-  saveUser: (CreateUserResponse: CreateUserResponse) => void;
-  getUser: () => CreateUserResponse | null;
+  user: UserResponse | null;
+  saveUser: (UserResponse: UserResponse) => void;
+  getUser: () => UserResponse | null;
   clearUser: () => void;
-  updateUser: (user: CreateUserResponse) => void;
+  updateUser: (user: UserResponse) => void;
 }
 
 export const useTMTStore = create<TeamTrackingState>()(
   persist(
     (set, get) => ({
       user: null,
-      saveUser: (user: CreateUserResponse) => set({ user }),
+      saveUser: (user: UserResponse) => set({ user }),
       getUser: () => get().user,
       clearUser: () => set({ user: null }),
-      updateUser: (user: CreateUserResponse) => {
+      updateUser: (user: UserResponse) => {
         const previous = get().user;
         set({
           user: {

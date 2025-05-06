@@ -12,8 +12,21 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { ChevronDown } from 'lucide-react';
+import { UserResponse } from '@/types/props/ApiResponse.ts';
+import { getInitials } from '@/lib/utils.ts';
+import { useTMTStore } from '@/stores/zustand';
 
-export function ProfileDropdown() {
+interface Props {
+  user: UserResponse | null;
+}
+
+export function ProfileDropdown({ user }: Props) {
+  const { clearUser } = useTMTStore();
+  const email = user?.userData.email ?? '';
+  const fullName = user?.userData.fullName ?? '';
+  const onLogout = () => {
+    clearUser();
+  };
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
@@ -29,7 +42,8 @@ export function ProfileDropdown() {
                 'bg-theme-secondary-dark text-white justify-between px-[7px] w-full'
               }
             >
-              <span>JN</span> <ChevronDown className={'size-[12px]'} />
+              <span>{getInitials(fullName)}</span>{' '}
+              <ChevronDown className={'size-[12px]'} />
             </AvatarFallback>
           </Avatar>
         </Button>
@@ -37,9 +51,9 @@ export function ProfileDropdown() {
       <DropdownMenuContent className="w-56" align="end" forceMount>
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
-            <p className="text-sm font-medium leading-none">Jawahiir Nabhan</p>
+            <p className="text-sm font-medium leading-none">{fullName}</p>
             <p className="text-xs leading-none text-muted-foreground">
-              jawahiirn@gmail.com
+              {email}
             </p>
           </div>
         </DropdownMenuLabel>
@@ -66,7 +80,7 @@ export function ProfileDropdown() {
           <DropdownMenuItem>New Team</DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>
+        <DropdownMenuItem onClick={onLogout}>
           Log out
           <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
         </DropdownMenuItem>

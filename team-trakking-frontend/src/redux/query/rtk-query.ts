@@ -1,7 +1,7 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import axiosBaseQuery from '@/redux/query/base-query.ts';
 import { useTMTStore } from '@/stores/zustand';
-import { ApiResponse, CreateUserResponse } from '@/types/props/ApiResponse.ts';
+import { ApiResponse, UserResponse } from '@/types/props/ApiResponse.ts';
 import {
   CreateUserRequest,
   OTPRequest,
@@ -41,23 +41,21 @@ export const tmtApi = createApi({
       }),
       transformResponse: (response: ApiResponse<string>) => response.data,
     }),
-    postCreateUser: builder.mutation<CreateUserResponse, CreateUserRequest>({
+    postCreateUser: builder.mutation<UserResponse, CreateUserRequest>({
       query: (body) => ({
         url: 'user',
         method: 'POST',
         data: body,
       }),
-      transformResponse: (response: ApiResponse<CreateUserResponse>) =>
-        response.data,
+      transformResponse: (response: ApiResponse<UserResponse>) => response.data,
     }),
-    postSignIn: builder.mutation<CreateUserResponse, SigninRequest>({
+    postSignIn: builder.mutation<UserResponse, SigninRequest>({
       query: (body) => ({
         url: 'auth/signin',
         method: 'POST',
         data: body,
       }),
-      transformResponse: (response: ApiResponse<CreateUserResponse>) =>
-        response.data,
+      transformResponse: (response: ApiResponse<UserResponse>) => response.data,
     }),
   }),
 });
