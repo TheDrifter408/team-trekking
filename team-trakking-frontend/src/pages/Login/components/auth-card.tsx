@@ -24,21 +24,22 @@ export const AuthCard = ({
         </CardHeader>
         <CardContent className="space-y-4">
           {!isOtpSent && (
-            <Button
-              variant="outline"
-              className="w-full border-gray-300 text-base font-medium gap-2"
-              onClick={onGoogleClick}
-            >
-              <FcGoogle size={20} />
-              Continue with Google
-            </Button>
+            <div>
+              <Button
+                variant="outline"
+                className="w-full border-gray-300 text-base font-medium gap-2"
+                onClick={onGoogleClick}
+              >
+                <FcGoogle size={20} />
+                Continue with Google
+              </Button>
+              <div className="w-full flex items-center">
+                <div className="flex-grow h-px bg-gray-200" />
+                <span className="mx-2 text-sm text-gray-300">OR</span>
+                <div className="flex-grow h-px bg-gray-200" />
+              </div>
+            </div>
           )}
-
-          <div className="w-full flex items-center">
-            <div className="flex-grow h-px bg-gray-200" />
-            <span className="mx-2 text-sm text-gray-300">OR</span>
-            <div className="flex-grow h-px bg-gray-200" />
-          </div>
 
           {children}
         </CardContent>

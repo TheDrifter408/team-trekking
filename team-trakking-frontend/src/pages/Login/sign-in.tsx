@@ -44,6 +44,10 @@ export const Login = () => {
     }
   };
 
+  const onForgotPasswordClick = () => {
+    navigate('/forgot');
+  };
+
   return (
     <AuthLayout isLoginPage={true}>
       <AuthCard title="Welcome back!" onGoogleClick={() => {}}>
@@ -74,7 +78,7 @@ export const Login = () => {
                   variant="link"
                   type="button"
                   className="absolute right-3 text-normal top-1 hover:decoration-dashed text-indigo-600"
-                  onClick={() => setShowPassword(!showPassword)}
+                  onClick={onForgotPasswordClick}
                 >
                   Forgot Password
                 </Button>

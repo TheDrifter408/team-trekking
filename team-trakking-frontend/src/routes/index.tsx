@@ -3,6 +3,7 @@ import { AppLayout } from '@/pages/layout/app-layout.tsx';
 import { HeaderLayout } from '@/pages/layout/header-layout.tsx';
 import { Login } from '@/pages/login/sign-in.tsx';
 import { SignUp } from '@/pages/login/sign-up';
+import { ForgotPassword } from '@/pages/login/forgot-password.tsx';
 import { Dashboard } from '@/pages/dashboard';
 import { Board } from '@/pages/board';
 import { Space } from '@/pages/space';
@@ -19,6 +20,7 @@ const AppRoutes = () => {
       {/* Public Route */}
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<SignUp />} />
+      <Route path="/forgot" element={<ForgotPassword />} />
 
       {/* Private Routes */}
       <Route element={<PrivateRoute />}>
