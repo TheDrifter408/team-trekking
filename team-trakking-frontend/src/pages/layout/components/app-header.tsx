@@ -12,7 +12,7 @@ export function AppHeader() {
   const { toggleSidebar } = useSidebar();
 
   return (
-    <header className="flex flex-col sticky w-full z-50 items-center bg-sidebar ">
+    <header className="flex flex-col sticky w-full z-50 items-center bg-theme-dark">
       <div className="flex  w-full items-center gap-2 px-4 h-[40px]">
         <Button
           className="h-8 w-8"

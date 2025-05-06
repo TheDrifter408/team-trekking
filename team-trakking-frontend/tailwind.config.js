@@ -37,6 +37,13 @@ export default {
         sm: 'calc(var(--radius) - 4px)',
       },
       colors: {
+        theme: {
+          DEFAULT: 'var(--theme-main-color)',
+          dark: 'var(--theme-primary-dark)',
+          main: 'var(--theme-main-color)',
+          'main-dark': 'var(--theme-main-color-dark)',
+          'main-light': 'var(--theme-main-color-light)',
+        },
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
         card: {
