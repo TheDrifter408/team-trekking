@@ -91,10 +91,10 @@ export default {
     },
     fontFamily: {
       sans: [
+        ' "Segoe UI"',
         '-apple-system',
         'system-ui',
         'BlinkMacSystemFont',
-        '"Segoe UI"',
         'Roboto',
         '"Helvetica Neue"',
         'Arial',

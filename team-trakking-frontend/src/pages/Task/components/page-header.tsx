@@ -6,7 +6,6 @@ import {
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbList,
-  BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
 import {
   Tooltip,
@@ -29,7 +28,7 @@ import { ShareTask } from '@/components/share-task.tsx';
 export const PageHeader = () => {
   const [openShareTask, setOpenShareTask] = useState<boolean>(false);
   return (
-    <div className="h-[50px] bg-sidebar/80 border w-full flex items-center justify-between px-2">
+    <div className="h-[45px] bg-sidebar/80 border w-full flex items-center justify-between px-2">
       <TooltipProvider>
         <div className="flex items-center justify-between">
           <SidebarTrigger />
@@ -51,18 +50,16 @@ export const PageHeader = () => {
                 />
                 <BreadcrumbLink
                   href="/folder"
-                  className="text-primary font-medium text-base"
+                  className="text-primary font-medium text-sm"
                 >
                   Space Shuttle
                 </BreadcrumbLink>
               </BreadcrumbItem>
-              <BreadcrumbSeparator className="h-[10px]">
-                <Slash />
-              </BreadcrumbSeparator>
+              <Slash size={11} />
               <BreadcrumbItem>
                 <BreadcrumbLink
                   href="/folder"
-                  className="text-primary font-medium text-base"
+                  className="text-primary font-medium text-sm"
                 >
                   Steps List
                 </BreadcrumbLink>

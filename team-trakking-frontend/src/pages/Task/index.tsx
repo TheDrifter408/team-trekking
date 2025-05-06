@@ -402,7 +402,7 @@ export const Task: React.FC = () => {
         />
       </div>
       <div className="mt-4">
-        <div className="flex justify-between py-6 px-2  bg-gray-50 rounded-lg shadow-sm">
+        <div className="flex justify-between py-2 px-2">
           <h3 className="text-lg font-medium text-gray-900">Checklist</h3>
           <Button
             size={'icon'}
@@ -413,7 +413,7 @@ export const Task: React.FC = () => {
           </Button>
         </div>
 
-        <div className="  rounded-lg shadow overflow-hidden">
+        <div className="mt-2  rounded-lg shadow overflow-hidden">
           <DndContext
             sensors={sensors}
             collisionDetection={closestCenter}
