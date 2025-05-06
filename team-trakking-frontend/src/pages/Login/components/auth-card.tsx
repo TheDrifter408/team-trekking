@@ -7,9 +7,15 @@ interface AuthCardProps {
   title: string;
   children: ReactNode;
   onGoogleClick?: () => void;
+  isOtpSent?: boolean;
 }
 
-export const AuthCard = ({ title, children, onGoogleClick }: AuthCardProps) => {
+export const AuthCard = ({
+  title,
+  children,
+  onGoogleClick,
+  isOtpSent = false,
+}: AuthCardProps) => {
   return (
     <div className="flex justify-center">
       <Card className="lg:w-[480px] w-[360px] border-none">
@@ -17,14 +23,16 @@ export const AuthCard = ({ title, children, onGoogleClick }: AuthCardProps) => {
           <CardTitle className="text-4xl font-bold">{title}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <Button
-            variant="outline"
-            className="w-full border-gray-300 text-base font-medium gap-2"
-            onClick={onGoogleClick}
-          >
-            <FcGoogle size={20} />
-            Continue with Google
-          </Button>
+          {!isOtpSent && (
+            <Button
+              variant="outline"
+              className="w-full border-gray-300 text-base font-medium gap-2"
+              onClick={onGoogleClick}
+            >
+              <FcGoogle size={20} />
+              Continue with Google
+            </Button>
+          )}
 
           <div className="w-full flex items-center">
             <div className="flex-grow h-px bg-gray-200" />

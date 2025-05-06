@@ -32,7 +32,7 @@ export const AuthLayout = ({
           <Button
             size="lg"
             onClick={() => navigate(isLoginPage ? '/signup' : '/login')}
-            className="text-base bg-indigo-600 hover:bg-indigo-700 rounded-[9px] shadow-[0_10px_25px_#6347ea80]"
+            className="text-base bg-indigo-600 !font-extrabold hover:bg-indigo-700 rounded-[9px] shadow-[0_10px_25px_#6347ea80]"
           >
             {isLoginPage ? 'Sign up' : 'Login'}
           </Button>

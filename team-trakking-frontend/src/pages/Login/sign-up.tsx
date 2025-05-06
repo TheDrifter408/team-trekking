@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Form } from '@/components/ui/form';
 import { LockKeyhole, Mail, User } from 'lucide-react';
@@ -9,7 +9,12 @@ import { AuthLayout } from './components/auth-layout.tsx';
 import { AuthCard } from './components/auth-card.tsx';
 import { FormInputField } from './components/form-input.tsx';
 import { signUpSchema } from '@/lib/config/validation-schema';
-import { usePostSendOtpMutation } from '@/redux/query/rtk-query.ts';
+import { UserRole } from '@/lib/constants/appConstants.ts';
+import {
+  usePostSendOtpMutation,
+  usePostVerifyOtpMutation,
+  usePostCreateUserMutation,
+} from '@/redux/query/rtk-query.ts';
 import {
   InputOTP,
   InputOTPGroup,
@@ -17,16 +22,19 @@ import {
 } from '@/components/ui/input-otp';
 
 export const SignUp = () => {
-  // For debugging purposes
-  console.log('Rendering SignUp component');
   const navigate = useNavigate();
-  const [sendOtp, { isLoading, isSuccess }] = usePostSendOtpMutation();
+  const [
+    sendOtp,
+    { isLoading: isSendOtpLoading, isSuccess: isSendOtpSuccess },
+  ] = usePostSendOtpMutation();
+  const [verifyOtp] = usePostVerifyOtpMutation();
+  const [createUser] = usePostCreateUserMutation();
   const [showPassword, setShowPassword] = useState(false);
   const [isOtpSent, setIsOtpSent] = useState(false);
   const [otp, setOtp] = useState('');
-  const [userEmail, setUserEmail] = useState('');
   const otpType = 'REGISTRATION';
   const registrationType = 'EMAIL';
+  const permissionIds = [1];
 
   // Initialize form with Zod schema
   const form = useForm({
@@ -48,27 +56,43 @@ export const SignUp = () => {
       otpType: otpType,
       type: registrationType,
     };
-
-    try {
-      const response = await sendOtp(otpForm);
-      console.log(response, 'otp response');
-
-      // Check for successful response - RTK Query formats this differently
-      if (response && 'data' in response) {
-        console.log('OTP sent successfully, showing verification screen');
-        setIsOtpSent(true);
-        setUserEmail(data.email);
-      }
-    } catch (error) {
-      console.error('Failed to send OTP:', error);
-    }
+    await sendOtp(otpForm);
+    setIsOtpSent(true);
+    setOtp('');
   };
 
-  const onVerifyOtp = () => {};
+  const onVerifyOtp = async () => {
+    const verifyOtpForm = {
+      email: form.getValues('email'),
+      otpType: otpType,
+      type: registrationType,
+      otp: otp,
+    };
 
+    // First verify OTP
+    const verifyResponse = await verifyOtp(verifyOtpForm).unwrap();
+
+    // If verification is successful, create the user
+    if (verifyResponse) {
+      const createUserForm = {
+        fullName: form.getValues('name'),
+        email: form.getValues('email'),
+        password: form.getValues('password'),
+        roleId: Number(UserRole.User),
+        permissionIds: permissionIds,
+        otp: otp,
+      };
+
+      // Create user and navigate on success
+      const createResponse = await createUser(createUserForm).unwrap();
+      if (createResponse) {
+        navigate('/login');
+      }
+    }
+  };
   const onResendOtp = async () => {
     const otpForm = {
-      email: userEmail,
+      email: form.getValues('email'),
       otpType: otpType,
       type: registrationType,
     };
@@ -78,10 +102,11 @@ export const SignUp = () => {
   return (
     <AuthLayout isLoginPage={false}>
       <AuthCard
+        isOtpSent={isOtpSent}
         title={isOtpSent ? 'Verify your email' : 'Seconds to sign up!'}
         onGoogleClick={() => {}}
       >
-        {!isSuccess ? (
+        {!isSendOtpSuccess ? (
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
               <FormInputField
@@ -121,10 +146,10 @@ export const SignUp = () => {
 
               <Button
                 type="submit"
-                className="w-full rounded-lg h-[50px] font-bold text-md bg-indigo-600 hover:bg-indigo-700"
-                disabled={isLoading}
+                className="w-full font-extrabold rounded-lg h-[50px] text-md bg-indigo-600 hover:bg-indigo-700"
+                disabled={isSendOtpLoading}
               >
-                {isLoading ? 'Sending...' : 'Sign up'}
+                {isSendOtpLoading ? 'Sending...' : 'Sign up'}
               </Button>
             </form>
           </Form>
@@ -132,7 +157,7 @@ export const SignUp = () => {
           <div className="space-y-6">
             <p className="text-center text-sm text-gray-500">
               A verification code has been sent to your email:{' '}
-              <span className="font-medium">{userEmail}</span>
+              <span className="font-medium">{form.getValues('email')}</span>
             </p>
 
             <div className="flex flex-col items-center space-y-4">
@@ -167,9 +192,9 @@ export const SignUp = () => {
                 type="button"
                 className="text-indigo-600 hover:text-indigo-700"
                 onClick={onResendOtp}
-                disabled={isLoading}
+                disabled={isSendOtpLoading}
               >
-                {isLoading ? 'Sending...' : 'Resend code'}
+                {isSendOtpLoading ? 'Sending...' : 'Resend code'}
               </Button>
             </div>
           </div>

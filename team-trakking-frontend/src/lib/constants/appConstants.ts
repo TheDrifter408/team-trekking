@@ -1,5 +1,10 @@
 const AppConstants = {
-  BASE_URL: 'http://192.168.0.104:3001/',
+  BASE_URL: 'http://192.168.0.109:3001/',
 };
 
-export { AppConstants };
+enum UserRole {
+  User = 1,
+  ADMIN = 2,
+}
+
+export { AppConstants, UserRole };

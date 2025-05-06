@@ -72,6 +72,12 @@
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
+  .theme-pink{
+    --globals: rgb(98,22,57);
+    --theme-main-color: #ee5e99;
+    --theme-main-color-dark:#ea3982;
+    --theme-main-color-light:#fad1e2;
+  }
 
   /* styles.css */
   .CollapsibleContent {

@@ -63,7 +63,7 @@ export const Login = () => {
 
             <Button
               type="submit"
-              className="w-full rounded-lg h-[50px] font-bold text-md bg-indigo-600 hover:bg-indigo-700"
+              className="w-full rounded-lg h-[50px] font-extrabold text-md bg-indigo-600 hover:bg-indigo-700"
             >
               Log In
             </Button>

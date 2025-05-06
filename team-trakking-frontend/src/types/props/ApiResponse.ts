@@ -3,3 +3,18 @@ export interface ApiResponse<T = any> {
   error: string;
   statusCode: number;
 }
+export interface CreateUserResponse {
+  userData: {
+    id: number;
+    fullName: string;
+    email: string;
+    role: {
+      id: number;
+      name: string;
+    };
+    forcePasswordChange: boolean;
+    isActive: boolean;
+  };
+  token: string;
+  refreshToken: string;
+}
