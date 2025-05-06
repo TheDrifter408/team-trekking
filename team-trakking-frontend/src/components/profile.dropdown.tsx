@@ -11,15 +11,26 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { ChevronDown } from 'lucide-react';
 
 export function ProfileDropdown() {
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="relative h-6 w-6 rounded-full">
-          <Avatar className="h-8 w-8">
-            <AvatarImage src="/avatars/01.png" alt="@shadcn" />
-            <AvatarFallback>JN</AvatarFallback>
+          <Avatar className="h-[26px] w-[44px] ">
+            <AvatarImage
+              className={'bg-theme-secondary-dark'}
+              src="/avatars/01.png"
+              alt="@shadcn"
+            />
+            <AvatarFallback
+              className={
+                'bg-theme-secondary-dark text-white justify-between px-[7px] w-full'
+              }
+            >
+              <span>JN</span> <ChevronDown className={'size-[12px]'} />
+            </AvatarFallback>
           </Avatar>
         </Button>
       </DropdownMenuTrigger>

@@ -41,6 +41,7 @@ export default {
           DEFAULT: 'var(--theme-main-color)',
           dark: 'var(--theme-primary-dark)',
           main: 'var(--theme-main-color)',
+          'secondary-dark': 'var(--theme-secondary-dark)',
           'main-dark': 'var(--theme-main-color-dark)',
           'main-light': 'var(--theme-main-color-light)',
         },

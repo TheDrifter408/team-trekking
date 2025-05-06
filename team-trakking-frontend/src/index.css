@@ -75,6 +75,7 @@
   .theme-pink{
     --theme-primary: rgb(233,61,130);
     --theme-primary-dark: rgb(98,22,57);
+    --theme-secondary-dark: rgb(119, 52, 83);
     --theme-main-color: #ee5e99;
     --theme-main-color-dark:#ea3982;
     --theme-main-color-light:#fad1e2;
