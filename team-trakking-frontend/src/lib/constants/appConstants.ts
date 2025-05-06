@@ -3,8 +3,8 @@ const AppConstants = {
 };
 
 enum UserRole {
-  User = 1,
-  ADMIN = 2,
+  User = 2,
+  ADMIN = 1,
 }
 
 export { AppConstants, UserRole };

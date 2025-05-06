@@ -52,7 +52,7 @@ export const tmtApi = createApi({
     }),
     postSignIn: builder.mutation<CreateUserResponse, SigninRequest>({
       query: (body) => ({
-        url: '/auth/signin',
+        url: 'auth/signin',
         method: 'POST',
         data: body,
       }),
