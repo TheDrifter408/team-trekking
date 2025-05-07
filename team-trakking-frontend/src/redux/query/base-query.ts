@@ -9,16 +9,16 @@ type AxiosBaseQueryArgs = {
 
 type AxiosQueryParams = {
   url: string;
+  baseUrl?: string;
   method?: AxiosRequestConfig['method'];
   data?: AxiosRequestConfig['data'];
   params?: AxiosRequestConfig['params'];
   headers?: AxiosRequestConfig['headers'];
 };
 const axiosBaseQuery =
-  (
-    { baseUrl }: AxiosBaseQueryArgs = { baseUrl: AppConstants.BASE_URL }
-  ): BaseQueryFn<AxiosQueryParams, unknown, unknown> =>
-  async ({ url, method = 'GET', data, params, headers }) => {
+  () // { baseUrl }: AxiosBaseQueryArgs = { baseUrl: AppConstants.AUTH_BASE_URL }
+  : BaseQueryFn<AxiosQueryParams, unknown, unknown> =>
+  async ({ baseUrl = '', url, method = 'GET', data, params, headers }) => {
     try {
       const result = await axiosInstance({
         url: baseUrl + url,

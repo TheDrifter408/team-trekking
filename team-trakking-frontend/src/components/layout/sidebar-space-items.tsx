@@ -15,6 +15,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
+import { UpdateSpace } from '@/components/update-space.tsx';
 import { getInitials } from '@/lib/utils.ts';
 
 interface Props {
@@ -25,7 +26,14 @@ interface Props {
 export const SidebarSpaceItems = ({ name, children }: Props) => {
   const navigate = useNavigate();
   const [isHovered, setIsHovered] = useState(false);
+  const [isRename, setIsRename] = useState(false);
   const initials = getInitials(name);
+
+  const onRename = () => {
+    setTimeout(() => {
+      setIsRename(true);
+    }, 10);
+  };
 
   return (
     <Collapsible>
@@ -72,8 +80,10 @@ export const SidebarSpaceItems = ({ name, children }: Props) => {
             </TooltipProvider>
           </div>
         </div>
-        <SidebarActionsMenu />
+        <SidebarActionsMenu onRename={onRename} />
       </div>
+
+      <UpdateSpace isActive={isRename} onClose={() => setIsRename(false)} />
 
       <CollapsibleContent>
         <motion.div

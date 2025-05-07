@@ -1,5 +1,6 @@
 const AppConstants = {
-  BASE_URL: 'http://192.168.0.109:3001/',
+  AUTH_BASE_URL: 'http://192.168.0.104:3001/',
+  SPACE_BASE_URL: 'http://192.168.0.104:3006/',
 };
 
 enum UserRole {

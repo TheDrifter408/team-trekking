@@ -22,8 +22,8 @@ interface Props {
 
 export function ProfileDropdown({ user }: Props) {
   const { clearUser } = useTMTStore();
-  const email = user?.userData.email ?? '';
-  const fullName = user?.userData.fullName ?? '';
+  const email = user?.userData.email ?? 'no email found';
+  const fullName = user?.userData.fullName ?? 'user full name not found';
   const onLogout = () => {
     clearUser();
   };
