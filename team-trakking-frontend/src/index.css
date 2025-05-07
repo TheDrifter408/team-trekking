@@ -79,6 +79,9 @@
     --theme-main-color: #ee5e99;
     --theme-main-color-dark:#ea3982;
     --theme-main-color-light:#fad1e2;
+    --theme-button-highlight-color: #ee5e99;
+    --theme-content-primary: rgb(203, 29, 99);
+    --theme-background-subtle:rgb(252, 229, 240);
   }
 
   /* styles.css */

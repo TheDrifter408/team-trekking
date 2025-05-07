@@ -88,7 +88,7 @@ export const AppSidebar = ({
       )}
       {...props}
     >
-      <SidebarHeader className={'border py-0'}>
+      <SidebarHeader className={'border-b py-0'}>
         <TeamSwitcher teams={sidebarData.teams} />
       </SidebarHeader>
       <SidebarContent>
@@ -120,7 +120,7 @@ export const AppSidebar = ({
                   <Button
                     size={'icon'}
                     onClick={() => setCreateSpaceOpen(true)}
-                    className={'h-5 w-5'}
+                    className={'h-6 w-6 bg-theme-main-dark'}
                   >
                     <Plus size={14} />
                   </Button>

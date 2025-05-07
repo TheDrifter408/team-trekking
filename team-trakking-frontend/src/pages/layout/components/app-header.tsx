@@ -25,7 +25,7 @@ export function AppHeader({ user }: Props) {
             'p-[5px] bg-theme-secondary-dark hover:bg-theme-main-dark hover:opacity-30'
           }
         >
-          <SidebarIcon className={'text-gray-800'} />
+          <SidebarIcon className={'text-gray-100'} />
         </Button>
         <div className="flex space-x-4 justify-center w-full items-center">
           <div className="flex">

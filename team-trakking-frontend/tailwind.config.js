@@ -44,6 +44,8 @@ export default {
           'secondary-dark': 'var(--theme-secondary-dark)',
           'main-dark': 'var(--theme-main-color-dark)',
           'main-light': 'var(--theme-main-color-light)',
+          'content-primary': 'var(--theme-content-primary)',
+          'background-subtle': 'var(--theme-background-subtle)',
         },
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
