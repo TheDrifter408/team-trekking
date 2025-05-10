@@ -5,3 +5,4 @@ export * from './workspaceData';
 export * from './boardData';
 export * from './taskData.tsx';
 export * from './inboxData.ts';
+export * from './spaceData.ts';

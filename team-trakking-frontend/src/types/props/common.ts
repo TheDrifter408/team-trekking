@@ -1,3 +1,5 @@
+import { LucideIcon } from 'lucide-react';
+
 export type Assignee = {
   id: string;
   name: string;
@@ -66,4 +68,30 @@ export interface Messages {
   yesterday: InboxItem[];
   week: InboxItem[];
   month: InboxItem[];
+}
+
+export interface ColorOption {
+  name: string;
+  bgClass: string;
+  textClass: string;
+  color: string;
+}
+
+// Define the icon option type
+export interface IconOption {
+  name: string;
+  icon: LucideIcon;
+}
+
+export interface DropDownProps {
+  selectedColor: ColorOption;
+  selectedIcon: IconOption | null;
+  initials: string;
+  onSelectColor: (color: ColorOption) => void;
+  onSelectIcon: (icon: IconOption) => void;
+  clearIcon: () => void;
+  searchAvatar: string;
+  setSearchAvatar: (searchAvatar: string) => void;
+  iconOptions: IconOption[];
+  colorOptions: ColorOption[];
 }
