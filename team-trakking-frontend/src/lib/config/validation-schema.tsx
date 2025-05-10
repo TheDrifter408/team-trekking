@@ -42,3 +42,7 @@ export const signUpSchema = z.object({
   email: emailSchema,
   password: simplePasswordSchema,
 });
+
+export const emailInputSchema = z.object({
+  email: emailSchema,
+});

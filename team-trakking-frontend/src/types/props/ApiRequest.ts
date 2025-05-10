@@ -22,3 +22,9 @@ export interface SigninRequest {
   password: string;
   roleId: number;
 }
+export interface ForgotPasswordRequest {
+  email: string;
+  password: string;
+  roleId: number;
+  otp: string;
+}

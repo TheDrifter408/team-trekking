@@ -1,19 +1,3 @@
-export const TextAction = {
-  Bold: 'bold',
-  Italic: 'italic',
-  Underline: 'underline',
-  Strikethrough: 'strikethrough',
-  Superscript: 'superscript',
-  Highlight: 'highlight',
-  Code: 'code',
-  LeftAlign: 'leftAlign',
-  RightAlign: 'rightAlign',
-  CenterAlign: 'centerAlign',
-  Divider: 'divider',
-  Undo: 'undo',
-  Redo: 'redo',
-};
-
 import {
   Bold,
   Italic,
@@ -33,7 +17,21 @@ import {
   Heading2,
   Heading3,
 } from 'lucide-react';
-
+export const TextAction = {
+  Bold: 'bold',
+  Italic: 'italic',
+  Underline: 'underline',
+  Strikethrough: 'strikethrough',
+  Superscript: 'superscript',
+  Highlight: 'highlight',
+  Code: 'code',
+  LeftAlign: 'leftAlign',
+  RightAlign: 'rightAlign',
+  CenterAlign: 'centerAlign',
+  Divider: 'divider',
+  Undo: 'undo',
+  Redo: 'redo',
+};
 export const textOptions = [
   {
     id: TextAction.Bold,

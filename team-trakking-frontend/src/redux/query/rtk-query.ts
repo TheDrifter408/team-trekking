@@ -7,7 +7,9 @@ import {
   OTPRequest,
   SigninRequest,
   VerifyOtpRequest,
+  ForgotPasswordRequest,
 } from '@/types/props/ApiRequest.ts';
+import { AppConstants } from '@/lib/constants/appConstants.ts';
 
 export const tmtApi = createApi({
   reducerPath: 'teamTrekking',
@@ -57,6 +59,15 @@ export const tmtApi = createApi({
       }),
       transformResponse: (response: ApiResponse<UserResponse>) => response.data,
     }),
+    postForgotPassword: builder.mutation<string, ForgotPasswordRequest>({
+      query: (body) => ({
+        url: 'auth/forgot-password',
+        method: 'POST',
+        data: body,
+        baseUrl: AppConstants.AUTH_BASE_URL,
+      }),
+      transformResponse: (response: ApiResponse<string>) => response.data,
+    }),
   }),
 });
 
@@ -65,4 +76,5 @@ export const {
   usePostVerifyOtpMutation,
   usePostCreateUserMutation,
   usePostSignInMutation,
+  usePostForgotPasswordMutation,
 } = tmtApi;

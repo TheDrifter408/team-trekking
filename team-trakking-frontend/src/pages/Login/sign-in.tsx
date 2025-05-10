@@ -19,7 +19,6 @@ export const Login = () => {
   const [signIn, { isLoading }] = usePostSignInMutation();
   const { saveUser } = useTMTStore();
   const [errorMessage, setErrorMessage] = useState(null);
-  const [showPassword, setShowPassword] = useState(false);
 
   // Initialize form with Zod schema
   const form = useForm({
@@ -72,7 +71,6 @@ export const Login = () => {
               label="Password"
               placeholder="Enter your password"
               icon={LockKeyhole}
-              type={showPassword ? 'text' : 'password'}
               rightElement={
                 <Button
                   variant="link"

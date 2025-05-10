@@ -33,7 +33,7 @@ export const AuthCard = ({
                 <FcGoogle size={20} />
                 Continue with Google
               </Button>
-              <div className="w-full flex items-center">
+              <div className="w-full mt-5 flex items-center">
                 <div className="flex-grow h-px bg-gray-200" />
                 <span className="mx-2 text-sm text-gray-300">OR</span>
                 <div className="flex-grow h-px bg-gray-200" />
