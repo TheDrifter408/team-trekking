@@ -1,25 +1,29 @@
 import React, { useEffect, useMemo, useRef } from 'react';
 import { useState } from 'react';
-import { Dialog, DialogContent, DialogHeader } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from '@/components/ui/dialog.tsx';
+import { Button } from '@/components/ui/button.tsx';
 import {
   DropdownMenu,
-  DropdownMenuContent,
   DropdownMenuContentOnly,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+} from '@/components/ui/dropdown-menu.tsx';
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
   TooltipProvider,
-} from '@/components/ui/tooltip';
-import { Input } from '@/components/ui/input';
-import { Separator } from '@/components/ui/separator';
-import { Textarea } from '@/components/ui/textarea';
-import { Switch } from '@/components/ui/switch';
+} from '@/components/ui/tooltip.tsx';
+import { Input } from '@/components/ui/input.tsx';
+import { Separator } from '@/components/ui/separator.tsx';
+import { Textarea } from '@/components/ui/textarea.tsx';
+import { Switch } from '@/components/ui/switch.tsx';
 import {
-  Ban,
   Search,
   Bell,
   Book,
@@ -60,7 +64,7 @@ import {
   SelectGroup,
   SelectItem,
   SelectTrigger,
-} from '@/components/ui/select';
+} from '@/components/ui/select.tsx';
 import { taskNotificationUsers } from '@/mock';
 
 interface ColorOption {
@@ -121,9 +125,11 @@ export const UpdateSpace = ({ isActive, onClose }: Props) => {
       <DialogContent className="!max-w-[690px] flex flex-col h-[80%]">
         {/* Header Text */}
         <DialogHeader>
-          <p className="text-xl text-primary font-semibold">
-            Edit Space settings
-          </p>
+          <DialogTitle>
+            <p className="text-xl text-primary font-semibold">
+              Edit Space settings
+            </p>
+          </DialogTitle>
           <p className="text-base text-muted-foreground mt-1 w-full md:w-[90%]">
             A Space represents teams, departments, or groups, each with its own
             Lists, workflows, and settings.
@@ -215,6 +221,11 @@ export const UpdateSpace = ({ isActive, onClose }: Props) => {
           title="ClickApps"
           content="Time Tracking, Sprint Points, Priority, Tags, Time Estimates, Remap Subtask Due Dates, Multiple Assignees, Email, Work In Progress Limits, Income"
         />
+        <DialogFooter className={''}>
+          <Button variant={'default'} className={'bg-theme-main'}>
+            Save Changes
+          </Button>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

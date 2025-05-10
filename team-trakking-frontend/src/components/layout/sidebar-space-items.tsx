@@ -15,7 +15,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { UpdateSpace } from '@/components/update-space.tsx';
+import { UpdateSpace } from '@/components/space/update-space.tsx';
 import { getInitials } from '@/lib/utils.ts';
 
 interface Props {

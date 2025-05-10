@@ -28,7 +28,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip.tsx';
-import { CreateSpace } from '@/components/create-space.tsx';
+import { CreateSpace } from '@/components/space/create-space.tsx';
 import { InviteUser } from '@/components/invite-user.tsx';
 import { NavUser } from '@/components/layout/nav-user.tsx';
 
