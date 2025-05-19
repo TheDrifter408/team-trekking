@@ -49,7 +49,24 @@ export const Dashboard = () => {
               <CardHeader>
                 <CardTitle>My Work</CardTitle>
               </CardHeader>
-              <CardContent className="overflow-y-scroll space-y-1 !px-[10px]"></CardContent>
+              <CardContent className="overflow-y-scroll space-y-1 !px-[10px]">
+                <Tabs defaultValue="account" className="w-[400px]">
+                  <TabsList variant={'underline'} width={'full'}>
+                    <TabsTrigger value="account" variant={'underline'}>
+                      Account
+                    </TabsTrigger>
+                    <TabsTrigger value="password" variant={'underline'}>
+                      Password
+                    </TabsTrigger>
+                  </TabsList>
+                  <TabsContent value="account">
+                    Make changes to your account here.
+                  </TabsContent>
+                  <TabsContent value="password">
+                    Change your password here.
+                  </TabsContent>
+                </Tabs>
+              </CardContent>
             </Card>
           </div>
         </div>
