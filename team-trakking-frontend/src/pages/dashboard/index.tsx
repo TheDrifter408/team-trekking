@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { recentData, myWorkData } from '@/mock';
+import { recentData, myWorkData, assignedCommentData } from '@/mock';
 import { WELCOME_MESSAGE } from '@/lib/constants';
 import { ScheduleSection as SchedulType } from '@/types/props/common';
 import { Main } from '@/components/layout/main.tsx';
@@ -22,24 +22,79 @@ import {
   IconFlag,
   IconTrash,
   IconUser,
+  IconHome,
 } from '@tabler/icons-react';
+import { cn } from '@/lib/utils.ts';
 
 export const Dashboard = () => {
   return (
     <div>
-      <div className=" h-[80px] w-full " />
+      <PageHeader />
       <Main>
-        <div className="p-[25px] h-screen">
+        <div className="px-[25px]">
           <span className="text-3xl font-semibold ml-3">{WELCOME_MESSAGE}</span>
           <div className="grid grid-cols-2 gap-4 mt-3">
             <RecentsCard />
             <MyWorkCard />
+            <AssignedComments />
           </div>
         </div>
       </Main>
     </div>
   );
 };
+
+function PageHeader() {
+  return (
+    <div
+      className={cn(
+        'sticky top-0 bg-background z-10 w-full',
+        'border-l border-r'
+      )}
+    >
+      <div className="px-8 flex text-base items-center gap-4 py-[13px]">
+        <IconHome size={16} /> Home
+      </div>
+    </div>
+  );
+}
+
+function AssignedComments() {
+  return (
+    <Card className="h-[336px] w-full">
+      <CardHeader>
+        <CardTitle>Assigned Comments</CardTitle>
+      </CardHeader>
+      <CardContent className="overflow-y-scroll space-y-3 px-2 max-h-[270px]">
+        {assignedCommentData.map((item) => (
+          <div
+            key={item.id}
+            className="flex w-full items-start hover:bg-accent p-2 rounded-sm cursor-default justify-between"
+          >
+            <div className="flex space-x-3 w-full">
+              <img
+                src={item.imageUrl}
+                alt="avatar"
+                className="h-[24px] w-[24px] rounded-full shrink-0"
+              />
+              <div className="flex flex-col w-full">
+                <span className="text-base w-full">{item.comment}</span>
+                <div className="flex justify-between w-full mt-1">
+                  <span className="text-xs text-muted-foreground truncate max-w-[70%]">
+                    {item.taskName}
+                  </span>
+                  <span className="text-sm text-muted-foreground whitespace-nowrap">
+                    {item.commentTime}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
+      </CardContent>
+    </Card>
+  );
+}
 
 function ScheduleSection({ section }: { section: SchedulType }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -129,6 +184,7 @@ function ScheduleSection({ section }: { section: SchedulType }) {
 }
 
 function MyWorkCard() {
+  // Find the ToDo work data
   const todoWorkData = myWorkData.find((data) => data.workType === 'ToDo');
 
   // Get completed tasks

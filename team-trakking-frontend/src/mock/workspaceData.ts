@@ -1,4 +1,8 @@
-import { RecentActions, WorkData } from '@/types/props/common.ts';
+import {
+  RecentActions,
+  WorkData,
+  AssignedComment,
+} from '@/types/props/common.ts';
 
 export const spaceData = [
   {
@@ -708,5 +712,78 @@ export const myWorkData: WorkData[] = [
         ],
       },
     ],
+  },
+];
+
+export const assignedCommentData: AssignedComment[] = [
+  {
+    id: '1',
+    comment: '@Jawahir Nabhan please do this task today',
+    commentTime: '20 mins',
+    taskName: 'Task monday deadline',
+    imageUrl: 'https://i.pravatar.cc/40?img=1',
+  },
+  {
+    id: '2',
+    comment: '@Leah Roberts kindly review the changes in the design spec',
+    commentTime: '35 mins',
+    taskName: 'Design Specification Review',
+    imageUrl: 'https://i.pravatar.cc/40?img=2',
+  },
+  {
+    id: '3',
+    comment: '@Ahmed Zaki make sure this goes to QA by EOD',
+    commentTime: '1 hr',
+    taskName: 'API Integration for Payments',
+    imageUrl: 'https://i.pravatar.cc/40?img=3',
+  },
+  {
+    id: '4',
+    comment: '@Maya Khan double-check the onboarding copy',
+    commentTime: '2 hrs',
+    taskName: 'Copy Updates Onboarding',
+    imageUrl: 'https://i.pravatar.cc/40?img=4',
+  },
+  {
+    id: '5',
+    comment: '@Omar El-Rashid please align this with the marketing campaign',
+    commentTime: '2 hrs',
+    taskName: 'Landing Page SEO Update',
+    imageUrl: 'https://i.pravatar.cc/40?img=5',
+  },
+  {
+    id: '6',
+    comment: '@Sophia Lin kindly finalize the sprint timeline',
+    commentTime: '3 hrs',
+    taskName: 'Sprint Planning Draft',
+    imageUrl: 'https://i.pravatar.cc/40?img=6',
+  },
+  {
+    id: '7',
+    comment: '@Noah Adams revise the report based on client feedback',
+    commentTime: '4 hrs',
+    taskName: 'Q2 Performance Report',
+    imageUrl: 'https://i.pravatar.cc/40?img=7',
+  },
+  {
+    id: '8',
+    comment: '@Fatima Yusuf make changes to the pricing table as discussed',
+    commentTime: '5 hrs',
+    taskName: 'Pricing Table Revision',
+    imageUrl: 'https://i.pravatar.cc/40?img=8',
+  },
+  {
+    id: '9',
+    comment: '@Daniel Tran please confirm the timezone with the client',
+    commentTime: '6 hrs',
+    taskName: 'Client Meeting Setup',
+    imageUrl: 'https://i.pravatar.cc/40?img=9',
+  },
+  {
+    id: '10',
+    comment: '@Emily Chen add this to the agenda for tomorrow',
+    commentTime: '7 hrs',
+    taskName: 'Team Sync Agenda',
+    imageUrl: 'https://i.pravatar.cc/40?img=10',
   },
 ];

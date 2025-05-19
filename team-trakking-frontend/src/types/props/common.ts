@@ -114,3 +114,11 @@ export interface WorkData {
   workType: string;
   scheduleData: ScheduleSection[];
 }
+
+export interface AssignedComment {
+  id: string;
+  comment: string;
+  commentTime: string;
+  taskName: string;
+  imageUrl: string;
+}
