@@ -1,104 +1,56 @@
 'use client';
 
 import { Main } from '@/components/layout/main.tsx';
-import { OverviewCard } from '@/pages/dashboard/components/overview-card.tsx';
-import { Folder, List } from 'lucide-react';
-import { TaskStatusTable } from '@/pages/dashboard/components/task-table.tsx';
-import { mockActivities, myTasks, spaceData } from '@/mock';
-import { PageHeader } from '@/components/layout/page-header';
-import { ActivityFeed } from '@/pages/dashboard/components/activity-feed.tsx';
-import { HeaderType } from '@/types/props/common.ts';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { recentData } from '@/mock';
+import { WELCOME_MESSAGE } from '@/lib/constants';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+
+import { cn } from '@/lib/utils';
+import { List, Circle } from 'lucide-react';
 
 export const Dashboard = () => {
-  const currentPage = {
-    type: 'HOME' as HeaderType,
-    label: 'Apptitive',
-    link: '/home',
-  };
-
-  const spacesData: any[] = [],
-    foldersData: any[] = [],
-    listsData: any[] = [];
-
-  let folderCount = 0,
-    listCount = 0;
-
-  for (const space of spaceData) {
-    let _listCount = 0;
-    for (const folder of space.folders) {
-      listCount += folder.lists.length;
-      _listCount += folder.lists.length;
-      const _folder = {
-        id: folder.id,
-        name: folder.name,
-        listCount: folder.lists.length,
-      };
-      foldersData.push(_folder);
-      for (const list of folder.lists) {
-        listsData.push(list);
-      }
-    }
-    folderCount += space.folders.length;
-    const _space = {
-      id: space.id,
-      name: space.name,
-      folderCount: space.folders.length,
-      listCount: space.lists.length + _listCount,
-    };
-    spacesData.push(_space);
-    for (const list of space.lists) {
-      listsData.push(list);
-    }
-  }
-
-  const handleViewAllFolders = () => {};
-
-  const handleViewAllLists = () => {};
-
   return (
     <div>
-      <PageHeader currentPage={currentPage} />
       <Main>
-        <div className="px-4 flex-grow">
-          {/* Overview Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-            {/* Folders Card */}
-            <OverviewCard
-              icon={<Folder />}
-              title="Folders"
-              description="Projects organized in this workspace"
-              count={folderCount}
-              countLabel="Total Folders"
-              items={foldersData}
-              itemLabelKey="name"
-              color="green"
-              viewAllLabel="View all folders"
-              onViewAll={handleViewAllFolders}
-            />
-
-            {/* Lists Card */}
-            <OverviewCard
-              icon={<List />}
-              title="Task Lists"
-              description="Organized task collections"
-              count={listCount}
-              countLabel="Total Lists"
-              items={listsData}
-              itemLabelKey="containerName"
-              color="purple"
-              viewAllLabel="View all lists"
-              onViewAll={handleViewAllLists}
-            />
-          </div>
-        </div>
-        <div className="overflow-x-auto w-full px-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="md:col-span-2 ">
-              <TaskStatusTable tasks={myTasks} />
-            </div>
-            <div className={'h-[500px]'}>
-              <ActivityFeed activities={mockActivities} onViewAll={() => {}} />
-            </div>
+        <div className="p-[25px] h-screen">
+          <span className="text-3xl font-semibold ml-3">{WELCOME_MESSAGE}</span>
+          <div className="grid grid-cols-2 gap-4 mt-3">
+            <Card className="h-[336px] w-full">
+              <CardHeader>
+                <CardTitle>Recents</CardTitle>
+              </CardHeader>
+              <CardContent className="overflow-y-scroll space-y-1 !px-[10px]">
+                {recentData.map((item) => (
+                  <div
+                    key={item.id}
+                    className="flex items-center space-x-3 hover:bg-accent py-1 rounded"
+                  >
+                    <div className="w-[20px]">
+                      {item.type === 'List' ? (
+                        <List size={15} className={'bg-text-muted'} />
+                      ) : (
+                        <Circle size={15} className={'bg-text-muted'} />
+                      )}
+                    </div>
+                    <div className="relative w-[45%] shrink-0">
+                      <span className="block text-base font-normal whitespace-nowrap overflow-hidden text-ellipsis">
+                        {item.name}
+                      </span>
+                    </div>
+                    <span className="text-muted-foreground w-[45%] text-base truncate">
+                      {item.location}
+                    </span>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+            <Card className="h-[336px] w-full">
+              <CardHeader>
+                <CardTitle>My Work</CardTitle>
+              </CardHeader>
+              <CardContent className="overflow-y-scroll space-y-1 !px-[10px]"></CardContent>
+            </Card>
           </div>
         </div>
       </Main>

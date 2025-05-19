@@ -1,41 +1,4 @@
-export const mockActivities = [
-  {
-    id: 1,
-    userName: 'Jane Cooper',
-    userAvatar: '/api/placeholder/24/24',
-    action: 'created',
-    itemName: 'Marketing Campaign',
-    itemType: 'task',
-    timestamp: '10 minutes ago',
-  },
-  {
-    id: 2,
-    userName: 'Robert Fox',
-    userAvatar: '/api/placeholder/24/24',
-    action: 'completed',
-    itemName: 'Website Redesign',
-    itemType: 'task',
-    timestamp: '45 minutes ago',
-  },
-  {
-    id: 3,
-    userName: 'Esther Howard',
-    userAvatar: '/api/placeholder/24/24',
-    action: 'added',
-    itemName: 'New Product Launch',
-    itemType: 'folder',
-    timestamp: '2 hours ago',
-  },
-  {
-    id: 4,
-    userName: 'Leslie Alexander',
-    userAvatar: '/api/placeholder/24/24',
-    action: 'assigned',
-    itemName: 'Budget Review',
-    itemType: 'task',
-    timestamp: '3 hours ago',
-  },
-];
+import { RecentActions } from '@/types/props/common.ts';
 
 export const spaceData = [
   {
@@ -398,83 +361,90 @@ export const mockChecklist = [
   },
 ];
 
-export const myTasks = [
-  {
-    id: '1',
-    status: 'in_progress',
-    name: 'Frontend development',
-    priority: 'high',
-    dueDate: '2024-03-28T15:00:00.000Z',
-    startDate: '2024-03-28T15:00:00.000Z',
-    subtasks: [
-      {
-        id: '11',
-        name: 'App Layout page',
-        priority: 'high',
-        dueDate: '2024-03-28T15:00:00.000Z',
-        startDate: '2024-03-28T15:00:00.000Z',
-      },
-      {
-        id: '12',
-        name: 'Page header',
-        priority: 'medium',
-        dueDate: '2024-03-28T15:00:00.000Z',
-        startDate: '2024-03-28T15:00:00.000Z',
-      },
-      {
-        id: '13',
-        name: 'Home page',
-        priority: 'low',
-        dueDate: '2024-03-28T15:00:00.000Z',
-        startDate: '2024-03-28T15:00:00.000Z',
-      },
-
-      {
-        id: '14',
-        name: 'Footer component',
-        priority: '',
-        dueDate: '2024-03-28T15:00:00.000Z',
-        startDate: '2024-03-28T15:00:00.000Z',
-      },
-    ],
-  },
+export const recentData: RecentActions[] = [
+  { id: '1', name: 'All Hands Meeting', type: 'List', location: 'in Projects' },
   {
     id: '2',
-    status: 'completed',
-    name: 'Backend development',
-    priority: 'high',
-    dueDate: '2024-03-28T15:00:00.000Z',
-    startDate: '2024-03-28T15:00:00.000Z',
-    subtasks: [
-      {
-        id: '21',
-        name: 'Home page API',
-        priority: 'high',
-        dueDate: '2024-03-28T15:00:00.000Z',
-        startDate: '2024-03-28T15:00:00.000Z',
-      },
-      {
-        id: '22',
-        name: 'Notifications',
-        priority: 'medium',
-        dueDate: '2024-03-28T15:00:00.000Z',
-        startDate: '2024-03-28T15:00:00.000Z',
-      },
-      {
-        id: '23',
-        name: 'Microservices ',
-        priority: 'low',
-        dueDate: '2024-03-28T15:00:00.000Z',
-        startDate: '2024-03-28T15:00:00.000Z',
-      },
-
-      {
-        id: '24',
-        name: 'Model',
-        priority: '',
-        dueDate: '2024-03-28T15:00:00.000Z',
-        startDate: '2024-03-28T15:00:00.000Z',
-      },
-    ],
+    name: 'Create a list then assign in the task',
+    type: 'Task',
+    location: 'in Your List of expertise',
+  },
+  {
+    id: '3',
+    name: 'Refactor workspace views',
+    type: 'Task',
+    location: 'in Development Board',
+  },
+  {
+    id: '4',
+    name: 'Marketing Roadmap',
+    type: 'List',
+    location: 'in Campaign Planning',
+  },
+  {
+    id: '5',
+    name: 'User Feedback Review',
+    type: 'Task',
+    location: 'in Feedback Repository',
+  },
+  {
+    id: '6',
+    name: 'Prepare Q3 Objectives',
+    type: 'List',
+    location: 'in Strategic Planning',
+  },
+  {
+    id: '7',
+    name: 'Bug triage and resolution',
+    type: 'Task',
+    location: 'in Engineering Tasks',
+  },
+  {
+    id: '8',
+    name: 'Client onboarding checklist',
+    type: 'List',
+    location: 'in Customer Success',
+  },
+  {
+    id: '9',
+    name: 'Sprint Planning Meeting',
+    type: 'Task',
+    location: 'in Agile Board',
+  },
+  {
+    id: '10',
+    name: 'UI/UX Audit',
+    type: 'Task',
+    location: 'in Design System',
+  },
+  {
+    id: '11',
+    name: 'Security Checklist',
+    type: 'List',
+    location: 'in IT Compliance',
+  },
+  {
+    id: '12',
+    name: 'OKRs 2025',
+    type: 'List',
+    location: 'in Company Goals',
+  },
+  {
+    id: '13',
+    name: 'Content Calendar Draft',
+    type: 'Task',
+    location: 'in Marketing Workspace',
+  },
+  {
+    id: '14',
+    name: 'QA Testing Scenarios',
+    type: 'Task',
+    location: 'in Release Checklist',
+  },
+  {
+    id: '15',
+    name: 'Product Roadmap',
+    type: 'List',
+    location: 'in Product Planning',
   },
 ];
