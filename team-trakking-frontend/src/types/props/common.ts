@@ -90,3 +90,27 @@ export interface RecentActions {
   type: WorkspaceRecent;
   location: string;
 }
+
+export type workType = 'ToDo' | 'Done';
+export type scheduleType = 'Today' | 'Overdue' | 'Next' | 'Unscheduled';
+// Type definitions
+export interface MyWorkTask {
+  id: string;
+  name: string;
+  color: string;
+  description?: string;
+  dueDate?: string;
+  priority?: 'low' | 'medium' | 'high';
+  completed?: boolean;
+  location?: string;
+}
+
+export interface ScheduleSection {
+  id: string;
+  tasks: MyWorkTask[];
+}
+
+export interface WorkData {
+  workType: string;
+  scheduleData: ScheduleSection[];
+}

@@ -1,4 +1,4 @@
-import { RecentActions } from '@/types/props/common.ts';
+import { RecentActions, WorkData } from '@/types/props/common.ts';
 
 export const spaceData = [
   {
@@ -130,6 +130,23 @@ export const taskStatuses = [
   { id: '12', name: 'Cancelled', color: 'bg-gray-900', category: 'Closed' },
 ];
 
+export const colorOptions = [
+  '#5b43d7',
+  '#3451b1',
+  '#0780e9',
+  '#067a6f',
+  '#00b499',
+  '#289764',
+  '#ffc53d',
+  '#ee5f01',
+  '#ee5f01',
+  '#cb1d64',
+  '#9c2bae',
+  '#9c2bae',
+  '#9c2bae',
+  '#8d8d8d',
+];
+
 export const taskTemplates = {
   categories: [
     {
@@ -157,22 +174,7 @@ export const taskTemplates = {
         'Tasks in this status will no longer be considered overdue and will unblock dependencies.',
     },
   ],
-  colorOptions: [
-    '#5b43d7',
-    '#3451b1',
-    '#0780e9',
-    '#067a6f',
-    '#00b499',
-    '#289764',
-    '#ffc53d',
-    '#ee5f01',
-    '#ee5f01',
-    '#cb1d64',
-    '#9c2bae',
-    '#9c2bae',
-    '#9c2bae',
-    '#8d8d8d',
-  ],
+  colorOptions: colorOptions,
   templates: [
     {
       id: 1,
@@ -446,5 +448,265 @@ export const recentData: RecentActions[] = [
     name: 'Product Roadmap',
     type: 'List',
     location: 'in Product Planning',
+  },
+];
+
+const getRandomColor = (): string => {
+  const randomIndex = Math.floor(Math.random() * colorOptions.length);
+  return colorOptions[randomIndex];
+};
+
+export const myWorkData: WorkData[] = [
+  {
+    workType: 'ToDo',
+    scheduleData: [
+      {
+        id: 'Today',
+        tasks: [
+          {
+            id: '1',
+            name: 'Complete project proposal',
+            color: getRandomColor(),
+            description: 'Finalize the Q3 project proposal document',
+            priority: 'high',
+            completed: false,
+            location: 'in Projects',
+          },
+          {
+            id: '2',
+            name: 'Team standup meeting',
+            color: getRandomColor(),
+            description: 'Daily standup at 10:00 AM',
+            priority: 'medium',
+            completed: false,
+            location:
+              'Kanban space / Severity Folder / in Your List of expertise',
+          },
+          {
+            id: '3',
+            name: 'Review pull requests',
+            color: getRandomColor(),
+            description: 'Review and merge pending PRs',
+            priority: 'medium',
+            completed: false,
+            location: 'Kanban space / Release Folder / in Release Checklist',
+          },
+        ],
+      },
+      {
+        id: 'Overdue',
+        tasks: [
+          {
+            id: '4',
+            name: 'Submit expense report',
+            color: getRandomColor(),
+            description: 'Expense report for April travel',
+            dueDate: '2025-05-15',
+            priority: 'high',
+            completed: false,
+          },
+          {
+            id: '5',
+            name: 'Client follow-up email',
+            color: getRandomColor(),
+            description: 'Send follow-up email to client about project status',
+            dueDate: '2025-05-17',
+            priority: 'high',
+            completed: false,
+          },
+        ],
+      },
+      {
+        id: 'Next',
+        tasks: [
+          {
+            id: '6',
+            name: 'Prepare for quarterly review',
+            color: getRandomColor(),
+            description: 'Gather metrics and prepare presentation',
+            dueDate: '2025-05-22',
+            priority: 'medium',
+            completed: false,
+          },
+          {
+            id: '7',
+            name: 'Update documentation',
+            color: getRandomColor(),
+            description: 'Update API documentation with new endpoints',
+            dueDate: '2025-05-23',
+            priority: 'low',
+            completed: false,
+          },
+          {
+            id: '8',
+            name: 'Code review session',
+            color: getRandomColor(),
+            description: 'Schedule code review session with junior developers',
+            dueDate: '2025-05-24',
+            priority: 'medium',
+            completed: false,
+          },
+        ],
+      },
+      {
+        id: 'Unscheduled',
+        tasks: [
+          {
+            id: '9',
+            name: 'Research new technologies',
+            color: getRandomColor(),
+            description:
+              'Research potential new frameworks for upcoming project',
+            priority: 'low',
+            completed: false,
+          },
+          {
+            id: '10',
+            name: 'Refactor authentication module',
+            color: getRandomColor(),
+            description:
+              'Refactor the authentication module for better performance',
+            priority: 'medium',
+            completed: false,
+          },
+        ],
+      },
+    ],
+  },
+  {
+    workType: 'Meetings',
+    scheduleData: [
+      {
+        id: 'Today',
+        tasks: [
+          {
+            id: '11',
+            name: 'Weekly status meeting',
+            color: getRandomColor(),
+            description: 'Weekly team status update at 2:00 PM',
+            priority: 'high',
+            completed: false,
+          },
+          {
+            id: '12',
+            name: 'One-on-one with manager',
+            color: getRandomColor(),
+            description: 'Monthly check-in with manager at 4:00 PM',
+            priority: 'medium',
+            completed: false,
+          },
+        ],
+      },
+      {
+        id: 'Next',
+        tasks: [
+          {
+            id: '13',
+            name: 'Product planning session',
+            color: getRandomColor(),
+            description: 'Q3 product planning meeting',
+            dueDate: '2025-05-21',
+            priority: 'high',
+            completed: false,
+          },
+          {
+            id: '14',
+            name: 'Client presentation',
+            color: getRandomColor(),
+            description: 'Present project status to client',
+            dueDate: '2025-05-23',
+            priority: 'high',
+            completed: false,
+          },
+        ],
+      },
+      {
+        id: 'Unscheduled',
+        tasks: [
+          {
+            id: '15',
+            name: 'Team building activity',
+            color: getRandomColor(),
+            description: 'Plan team building activity for next month',
+            priority: 'low',
+            completed: false,
+          },
+        ],
+      },
+    ],
+  },
+  {
+    workType: 'Projects',
+    scheduleData: [
+      {
+        id: 'Active',
+        tasks: [
+          {
+            id: '16',
+            name: 'Website redesign',
+            color: getRandomColor(),
+            description: 'Complete responsive design updates',
+            dueDate: '2025-06-15',
+            priority: 'high',
+            completed: false,
+          },
+          {
+            id: '17',
+            name: 'Mobile app development',
+            color: getRandomColor(),
+            description: 'Develop iOS and Android versions',
+            dueDate: '2025-07-30',
+            priority: 'high',
+            completed: false,
+          },
+        ],
+      },
+      {
+        id: 'Planned',
+        tasks: [
+          {
+            id: '18',
+            name: 'API integration',
+            color: getRandomColor(),
+            description: 'Integrate with third-party payment API',
+            dueDate: '2025-08-10',
+            priority: 'medium',
+            completed: false,
+          },
+          {
+            id: '19',
+            name: 'Analytics dashboard',
+            color: getRandomColor(),
+            description: 'Create customer analytics dashboard',
+            dueDate: '2025-09-01',
+            priority: 'medium',
+            completed: false,
+          },
+        ],
+      },
+      {
+        id: 'Completed',
+        tasks: [
+          {
+            id: '20',
+            name: 'User testing',
+            color: getRandomColor(),
+            description: 'Conduct user testing for new features',
+            dueDate: '2025-05-01',
+            priority: 'high',
+            completed: true,
+          },
+          {
+            id: '21',
+            name: 'Database migration',
+            color: getRandomColor(),
+            description: 'Migrate to new database structure',
+            dueDate: '2025-04-15',
+            priority: 'high',
+            completed: true,
+          },
+        ],
+      },
+    ],
   },
 ];
