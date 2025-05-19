@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { ReactNode, useState } from 'react';
 import { recentData, myWorkData, assignedCommentData } from '@/mock';
 import { WELCOME_MESSAGE } from '@/lib/constants';
 import { ScheduleSection as SchedulType } from '@/types/props/common';
@@ -22,21 +22,35 @@ import {
   IconFlag,
   IconTrash,
   IconUser,
-  IconHome,
+  IconArrowsDiagonal,
 } from '@tabler/icons-react';
-import { cn } from '@/lib/utils.ts';
+import { PageHeader } from './components/page-header';
 
 export const Dashboard = () => {
+  const [state, setState] = useState<'Default' | 'Full'>('Full');
+  const [title, setTitle] = useState<string>('');
+  const onCancelFullView = () => {
+    setState('Default');
+    setTitle('');
+  };
+  const onExpandToFullView = (cardTitle: string) => {
+    setState('Full');
+    setTitle(cardTitle);
+  };
   return (
     <div>
-      <PageHeader />
+      <PageHeader
+        title={title}
+        onCancelFullView={onCancelFullView}
+        state={state}
+      />
       <Main>
         <div className="px-[25px]">
           <span className="text-3xl font-semibold ml-3">{WELCOME_MESSAGE}</span>
           <div className="grid grid-cols-2 gap-4 mt-3">
-            <RecentsCard />
-            <MyWorkCard />
-            <AssignedComments />
+            <RecentsCard onExpand={onExpandToFullView} />
+            <MyWorkCard onExpand={onExpandToFullView} />
+            <AssignedComments onExpand={onExpandToFullView} />
           </div>
         </div>
       </Main>
@@ -44,26 +58,42 @@ export const Dashboard = () => {
   );
 };
 
-function PageHeader() {
+function HoverableCardTitle({
+  children,
+  onExpand,
+}: {
+  children: ReactNode;
+  onExpand: () => void;
+}) {
+  const [isHovered, setIsHovered] = useState(false);
+
   return (
-    <div
-      className={cn(
-        'sticky top-0 bg-background z-10 w-full',
-        'border-l border-r'
-      )}
+    <CardTitle
+      className="flex items-center justify-between cursor-default"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
-      <div className="px-8 flex text-base items-center gap-4 py-[13px]">
-        <IconHome size={16} /> Home
-      </div>
-    </div>
+      {children}
+      {isHovered && (
+        <Button onClick={onExpand} size={'icon_sm'} variant={'ghost'}>
+          <IconArrowsDiagonal className="text-muted-foreground" />
+        </Button>
+      )}
+    </CardTitle>
   );
 }
 
-function AssignedComments() {
+function AssignedComments({
+  onExpand,
+}: {
+  onExpand: (cardTitle: string) => void;
+}) {
   return (
     <Card className="h-[336px] w-full">
       <CardHeader>
-        <CardTitle>Assigned Comments</CardTitle>
+        <HoverableCardTitle onExpand={() => onExpand('Assigned Comments')}>
+          Assigned comments
+        </HoverableCardTitle>
       </CardHeader>
       <CardContent className="overflow-y-scroll space-y-3 px-2 max-h-[270px]">
         {assignedCommentData.map((item) => (
@@ -183,8 +213,7 @@ function ScheduleSection({ section }: { section: SchedulType }) {
   );
 }
 
-function MyWorkCard() {
-  // Find the ToDo work data
+function MyWorkCard({ onExpand }: { onExpand: (cardTitle: string) => void }) {
   const todoWorkData = myWorkData.find((data) => data.workType === 'ToDo');
 
   // Get completed tasks
@@ -196,7 +225,9 @@ function MyWorkCard() {
   return (
     <Card className="h-[336px] w-full">
       <CardHeader>
-        <CardTitle>My Work</CardTitle>
+        <HoverableCardTitle onExpand={() => onExpand('My Work')}>
+          My Work
+        </HoverableCardTitle>
       </CardHeader>
       <CardContent className="overflow-y-scroll space-y-1 !px-[10px]">
         <Tabs defaultValue="todo" className="w-full">
@@ -238,11 +269,13 @@ function MyWorkCard() {
   );
 }
 
-function RecentsCard() {
+function RecentsCard({ onExpand }: { onExpand: (cardTitle: string) => void }) {
   return (
     <Card className="h-[336px] w-full">
       <CardHeader>
-        <CardTitle>Recents</CardTitle>
+        <HoverableCardTitle onExpand={() => onExpand('Recents')}>
+          Recents
+        </HoverableCardTitle>
       </CardHeader>
       <CardContent className="overflow-y-scroll space-y-1 !px-[10px]">
         {recentData.map((item) => (
