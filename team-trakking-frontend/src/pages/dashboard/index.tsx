@@ -58,28 +58,40 @@ export const Dashboard = () => {
   );
 };
 
-function HoverableCardTitle({
+function HoverableCard({
   children,
+  title,
   onExpand,
 }: {
   children: ReactNode;
+  title: string;
   onExpand: () => void;
 }) {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
-    <CardTitle
-      className="flex items-center justify-between cursor-default"
+    <Card
+      className="h-[336px] w-full relative"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
+      <CardHeader className="relative">
+        <CardTitle className="flex items-center cursor-default">
+          {title}
+        </CardTitle>
+        {isHovered && (
+          <Button
+            onClick={onExpand}
+            size={'icon_sm'}
+            variant={'ghost'}
+            className="absolute top-0 right-4"
+          >
+            <IconArrowsDiagonal className="text-muted-foreground" />
+          </Button>
+        )}
+      </CardHeader>
       {children}
-      {isHovered && (
-        <Button onClick={onExpand} size={'icon_sm'} variant={'ghost'}>
-          <IconArrowsDiagonal className="text-muted-foreground" />
-        </Button>
-      )}
-    </CardTitle>
+    </Card>
   );
 }
 
@@ -89,12 +101,10 @@ function AssignedComments({
   onExpand: (cardTitle: string) => void;
 }) {
   return (
-    <Card className="h-[336px] w-full">
-      <CardHeader>
-        <HoverableCardTitle onExpand={() => onExpand('Assigned Comments')}>
-          Assigned comments
-        </HoverableCardTitle>
-      </CardHeader>
+    <HoverableCard
+      title="Assigned comments"
+      onExpand={() => onExpand('Assigned Comments')}
+    >
       <CardContent className="overflow-y-scroll space-y-3 px-2 max-h-[270px]">
         {assignedCommentData.map((item) => (
           <div
@@ -122,7 +132,89 @@ function AssignedComments({
           </div>
         ))}
       </CardContent>
-    </Card>
+    </HoverableCard>
+  );
+}
+
+function MyWorkCard({ onExpand }: { onExpand: (cardTitle: string) => void }) {
+  const todoWorkData = myWorkData.find((data) => data.workType === 'ToDo');
+
+  // Get completed tasks
+  const completedTasks =
+    todoWorkData?.scheduleData.flatMap((section) =>
+      section.tasks.filter((task) => task.completed)
+    ) || [];
+
+  return (
+    <HoverableCard title="My Work" onExpand={() => onExpand('My Work')}>
+      <CardContent className="overflow-y-scroll space-y-1 !px-[10px]">
+        <Tabs defaultValue="todo" className="w-full">
+          <TabsList variant="underline" className="w-full">
+            <TabsTrigger value="todo" variant="underline">
+              <span className="text-muted-foreground font-medium text-base">
+                To Do
+              </span>
+            </TabsTrigger>
+            <TabsTrigger value="done" variant="underline">
+              <span className="text-muted-foreground font-medium text-base">
+                Done
+              </span>
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="todo" className="space-y-2 mt-2">
+            {todoWorkData?.scheduleData.map((section) => (
+              <ScheduleSection key={section.id} section={section} />
+            ))}
+          </TabsContent>
+
+          <TabsContent value="done" className="space-y-2 mt-2">
+            {completedTasks.length > 0 ? (
+              completedTasks.map((task) => (
+                <div key={task.id} className="text-sm py-1 px-4">
+                  {task.name}
+                </div>
+              ))
+            ) : (
+              <div className="text-sm text-gray-500 py-2 px-4">
+                No completed tasks
+              </div>
+            )}
+          </TabsContent>
+        </Tabs>
+      </CardContent>
+    </HoverableCard>
+  );
+}
+
+function RecentsCard({ onExpand }: { onExpand: (cardTitle: string) => void }) {
+  return (
+    <HoverableCard title="Recents" onExpand={() => onExpand('Recents')}>
+      <CardContent className="overflow-y-scroll space-y-1 !px-[10px]">
+        {recentData.map((item) => (
+          <div
+            key={item.id}
+            className="flex items-center space-x-3 hover:bg-accent py-1 rounded"
+          >
+            <div className="w-[20px]">
+              {item.type === 'List' ? (
+                <List size={15} className={'bg-text-muted'} />
+              ) : (
+                <Circle size={15} className={'bg-text-muted'} />
+              )}
+            </div>
+            <div className="relative w-[45%] shrink-0">
+              <span className="block text-base font-normal whitespace-nowrap overflow-hidden text-ellipsis">
+                {item.name}
+              </span>
+            </div>
+            <span className="text-muted-foreground w-[45%] text-base truncate">
+              {item.location}
+            </span>
+          </div>
+        ))}
+      </CardContent>
+    </HoverableCard>
   );
 }
 
@@ -208,99 +300,7 @@ function ScheduleSection({ section }: { section: SchedulType }) {
             </div>
           </div>
         ))}
-      </CollapsibleContent>{' '}
+      </CollapsibleContent>
     </Collapsible>
-  );
-}
-
-function MyWorkCard({ onExpand }: { onExpand: (cardTitle: string) => void }) {
-  const todoWorkData = myWorkData.find((data) => data.workType === 'ToDo');
-
-  // Get completed tasks
-  const completedTasks =
-    todoWorkData?.scheduleData.flatMap((section) =>
-      section.tasks.filter((task) => task.completed)
-    ) || [];
-
-  return (
-    <Card className="h-[336px] w-full">
-      <CardHeader>
-        <HoverableCardTitle onExpand={() => onExpand('My Work')}>
-          My Work
-        </HoverableCardTitle>
-      </CardHeader>
-      <CardContent className="overflow-y-scroll space-y-1 !px-[10px]">
-        <Tabs defaultValue="todo" className="w-full">
-          <TabsList variant="underline" className="w-full">
-            <TabsTrigger value="todo" variant="underline">
-              <span className="text-muted-foreground font-medium text-base">
-                To Do
-              </span>
-            </TabsTrigger>
-            <TabsTrigger value="done" variant="underline">
-              <span className="text-muted-foreground font-medium text-base">
-                Done
-              </span>
-            </TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="todo" className="space-y-2 mt-2">
-            {todoWorkData?.scheduleData.map((section) => (
-              <ScheduleSection key={section.id} section={section} />
-            ))}
-          </TabsContent>
-
-          <TabsContent value="done" className="space-y-2 mt-2">
-            {completedTasks.length > 0 ? (
-              completedTasks.map((task) => (
-                <div key={task.id} className="text-sm py-1 px-4">
-                  {task.name}
-                </div>
-              ))
-            ) : (
-              <div className="text-sm text-gray-500 py-2 px-4">
-                No completed tasks
-              </div>
-            )}
-          </TabsContent>
-        </Tabs>
-      </CardContent>
-    </Card>
-  );
-}
-
-function RecentsCard({ onExpand }: { onExpand: (cardTitle: string) => void }) {
-  return (
-    <Card className="h-[336px] w-full">
-      <CardHeader>
-        <HoverableCardTitle onExpand={() => onExpand('Recents')}>
-          Recents
-        </HoverableCardTitle>
-      </CardHeader>
-      <CardContent className="overflow-y-scroll space-y-1 !px-[10px]">
-        {recentData.map((item) => (
-          <div
-            key={item.id}
-            className="flex items-center space-x-3 hover:bg-accent py-1 rounded"
-          >
-            <div className="w-[20px]">
-              {item.type === 'List' ? (
-                <List size={15} className={'bg-text-muted'} />
-              ) : (
-                <Circle size={15} className={'bg-text-muted'} />
-              )}
-            </div>
-            <div className="relative w-[45%] shrink-0">
-              <span className="block text-base font-normal whitespace-nowrap overflow-hidden text-ellipsis">
-                {item.name}
-              </span>
-            </div>
-            <span className="text-muted-foreground w-[45%] text-base truncate">
-              {item.location}
-            </span>
-          </div>
-        ))}
-      </CardContent>
-    </Card>
   );
 }
