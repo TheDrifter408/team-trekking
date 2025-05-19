@@ -1,20 +1,3 @@
-export const taskCompletionData = [
-  { name: 'Mon', completed: 5, total: 8 },
-  { name: 'Tue', completed: 7, total: 10 },
-  { name: 'Wed', completed: 4, total: 6 },
-  { name: 'Thu', completed: 8, total: 12 },
-  { name: 'Fri', completed: 6, total: 8 },
-  { name: 'Sat', completed: 3, total: 5 },
-  { name: 'Sun', completed: 2, total: 3 },
-];
-
-export const workloadData = [
-  { name: 'Marketing', tasks: 24 },
-  { name: 'Development', tasks: 35 },
-  { name: 'Design', tasks: 18 },
-  { name: 'Operations', tasks: 29 },
-];
-
 export const mockActivities = [
   {
     id: 1,
@@ -183,6 +166,169 @@ export const taskStatuses = [
   { id: '11', name: 'Closed', color: 'bg-green-800', category: 'Closed' },
   { id: '12', name: 'Cancelled', color: 'bg-gray-900', category: 'Closed' },
 ];
+
+export const taskTemplates = {
+  categories: [
+    {
+      id: 'Not Started',
+      status: [1, 2],
+      description: "Tasks that haven't been worked on yet",
+    },
+    {
+      id: 'Active',
+      status: [4, 5, 6, 7, 8],
+      description: 'Tasks that are in progress',
+    },
+    {
+      id: 'Done',
+      status: [9, 10, 11],
+      description:
+        'Completed tasks that still remain visible by default. ' +
+        'Tasks entering these statuses will no longer be considered overdue and will unblock dependencies.',
+    },
+    {
+      id: 'Closed',
+      status: [12],
+      description:
+        'Completed tasks that are hidden by default in views. ' +
+        'Tasks in this status will no longer be considered overdue and will unblock dependencies.',
+    },
+  ],
+  colorOptions: [
+    '#5b43d7',
+    '#3451b1',
+    '#0780e9',
+    '#067a6f',
+    '#00b499',
+    '#289764',
+    '#ffc53d',
+    '#ee5f01',
+    '#ee5f01',
+    '#cb1d64',
+    '#9c2bae',
+    '#9c2bae',
+    '#9c2bae',
+    '#8d8d8d',
+  ],
+  templates: [
+    {
+      id: 1,
+      name: 'Scrum',
+      statuses: [
+        {
+          id: 1,
+          name: 'Backlog',
+          color: '#8d8d8d',
+          category: 'Not Started',
+        },
+        {
+          id: 2,
+          name: 'Sprint Backlog',
+          color: '#ffc53d',
+          category: 'Not Started',
+        },
+        {
+          id: 4,
+          name: 'In Progress',
+          color: '#299764',
+          category: 'Active',
+        },
+        {
+          id: 5,
+          name: 'Completed',
+          color: '#00b499',
+          category: 'Active',
+        },
+        {
+          id: 6,
+          name: 'In Review',
+          color: '#722ed1',
+          category: 'Active',
+        },
+        {
+          id: 7,
+          name: 'Rejected',
+          color: '#c6292f',
+          category: 'Active',
+        },
+        {
+          id: 8,
+          name: 'Blocked',
+          color: '#ee6003',
+          category: 'Active',
+        },
+        {
+          id: 9,
+          name: 'Accepted',
+          color: '#00b499',
+          category: 'Done',
+        },
+        {
+          id: 10,
+          name: 'Released',
+          color: '#00b499',
+          category: 'Done',
+        },
+        {
+          id: 11,
+          name: 'Cancelled',
+          color: '#c5c5c5',
+          category: 'Done',
+        },
+        {
+          id: 12,
+          name: 'Closed',
+          color: '#289764',
+          category: 'Closed',
+        },
+      ],
+    },
+    {
+      id: 2,
+      name: 'Marketing',
+      statuses: [
+        { id: 1, name: 'Ideas', color: '#5b43d7', category: 'Not Started' },
+        { id: 2, name: 'Planning', color: '#ffc53d', category: 'Not Started' },
+        { id: 4, name: 'Design', color: '#3451b1', category: 'Active' },
+        { id: 5, name: 'Execution', color: '#067a6f', category: 'Active' },
+        { id: 6, name: 'Review', color: '#cb1d64', category: 'Active' },
+        {
+          id: 7,
+          name: 'Changes Requested',
+          color: '#ee5f01',
+          category: 'Active',
+        },
+        { id: 8, name: 'Delayed', color: '#ee5f01', category: 'Active' },
+        { id: 9, name: 'Approved', color: '#00b499', category: 'Done' },
+        { id: 10, name: 'Launched', color: '#289764', category: 'Done' },
+        { id: 11, name: 'Abandoned', color: '#c5c5c5', category: 'Done' },
+        { id: 12, name: 'Archived', color: '#9c2bae', category: 'Closed' },
+      ],
+    },
+    {
+      id: 3,
+      name: 'Content',
+      statuses: [
+        {
+          id: 1,
+          name: 'Topic Pool',
+          color: '#9c2bae',
+          category: 'Not Started',
+        },
+        { id: 2, name: 'To Write', color: '#ffc53d', category: 'Not Started' },
+        { id: 4, name: 'Writing', color: '#3451b1', category: 'Active' },
+        { id: 5, name: 'Editing', color: '#0780e9', category: 'Active' },
+        { id: 6, name: 'SEO Review', color: '#5b43d7', category: 'Active' },
+        { id: 7, name: 'Needs Rework', color: '#cb1d64', category: 'Active' },
+        { id: 8, name: 'Blocked', color: '#ee5f01', category: 'Active' },
+        { id: 9, name: 'Approved', color: '#00b499', category: 'Done' },
+        { id: 10, name: 'Published', color: '#289764', category: 'Done' },
+        { id: 11, name: 'Removed', color: '#c5c5c5', category: 'Done' },
+        { id: 12, name: 'Closed', color: '#9c2bae', category: 'Closed' },
+      ],
+    },
+  ],
+};
 
 export const statusColors: Record<string, string> = {
   todo: 'bg-gray-500',

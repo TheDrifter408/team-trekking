@@ -48,31 +48,6 @@ interface Props {
   statuses: Status[];
 }
 
-// Sortable status item component
-function SortableStatusItem({ status }: { status: Status }) {
-  const { attributes, listeners, setNodeRef, transform, transition } =
-    useSortable({ id: status.id });
-
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-  };
-
-  return (
-    <div
-      ref={setNodeRef}
-      style={style}
-      className="flex items-center gap-2 px-2 py-2 rounded-md border bg-gray-50"
-    >
-      <div {...attributes} {...listeners}>
-        <GripVertical className="h-4 w-4 text-gray-600 cursor-grab" />
-      </div>
-      <div className={`w-3 h-3 rounded-full ${status.color}`}></div>
-      <span className="text-xs">{status.name}</span>
-    </div>
-  );
-}
-
 export const StatusView = ({
   open,
   setOpen,
@@ -160,13 +135,13 @@ export const StatusView = ({
             <div className="flex justify-between items-center w-full">
               <IconInnerShadowBottomRight />
               <div className="flex items-center space-x-3">
-                <span className="text-base">Statuses</span>
+                <span className="text-base">Edit Statuses</span>
                 <ChevronRight className="h-3 w-3 rounded-full" />
               </div>
             </div>
           </div>
         </DialogTrigger>
-        <DialogContent className="max-w-lg sm:max-w-xl md:max-w-2xl lg:max-w-3xl">
+        <DialogContent className="!max-w-[690px] flex flex-col h-[80%]">
           <DialogHeader>
             <DialogTitle>Statuses</DialogTitle>
           </DialogHeader>
@@ -210,7 +185,7 @@ export const StatusView = ({
             <Separator orientation="vertical" />
 
             {/* Right column - 60% width */}
-            <div className="w-3/5 max-h-80 overflow-y-auto pl-4">
+            <div className="w-3/5 overflow-y-auto pl-4">
               {getFilteredCategories().map((category) => (
                 <div key={`statuses-${category}`} className="mb-3">
                   <h3 className="text-xs font-medium text-gray-600 mb-1">
@@ -243,3 +218,28 @@ export const StatusView = ({
     </div>
   );
 };
+
+// Sortable status item component
+function SortableStatusItem({ status }: { status: Status }) {
+  const { attributes, listeners, setNodeRef, transform, transition } =
+    useSortable({ id: status.id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={style}
+      className="flex items-center gap-2 px-2 py-2 rounded-md border bg-gray-50"
+    >
+      <div {...attributes} {...listeners}>
+        <GripVertical className="h-4 w-4 text-gray-600 cursor-grab" />
+      </div>
+      <div className={`w-3 h-3 rounded-full ${status.color}`}></div>
+      <span className="text-xs">{status.name}</span>
+    </div>
+  );
+}

@@ -59,8 +59,9 @@ import {
 } from '@/components/ui/select.tsx';
 import { DefaultViews } from '@/components/space/space-default-views.tsx';
 import { DropDownContent } from '@/components/space/space-icon-name-dropdown.tsx';
+import { StatusTemplate } from '@/components/space/status-template';
 import { ColorOption, IconOption } from '@/types/props/common';
-import { taskNotificationUsers } from '@/mock';
+import { taskNotificationUsers, taskStatuses } from '@/mock';
 
 interface Props {
   isActive: boolean;
@@ -77,6 +78,7 @@ export const UpdateSpace = ({ isActive, onClose }: Props) => {
   const [spaceName, setSpaceName] = useState('ProjecX Moon');
   const [searchAvatar, setSearchAvatar] = useState<string>('');
   const [isDefaultViewOpen, setIsDefaultViewOpen] = useState<boolean>(false);
+  const [isTaskStatusOpen, setIsTaskStatusOpen] = useState<boolean>(false);
   const initials = getInitials(spaceName)[0] ?? 'P';
 
   const onSelectIcon = (icon: IconOption) => {
@@ -93,6 +95,9 @@ export const UpdateSpace = ({ isActive, onClose }: Props) => {
 
   const onClickDefaultView = () => {
     setIsDefaultViewOpen(true);
+  };
+  const onClickStatus = () => {
+    setIsTaskStatusOpen(true);
   };
 
   return (
@@ -193,6 +198,7 @@ export const UpdateSpace = ({ isActive, onClose }: Props) => {
             name: c.name,
             color: c.name.toLowerCase(),
           }))}
+          onClickSettings={onClickStatus}
         />
 
         <SettingsCard
@@ -209,6 +215,10 @@ export const UpdateSpace = ({ isActive, onClose }: Props) => {
       <DefaultViews
         isOpen={isDefaultViewOpen}
         setIsOpen={setIsDefaultViewOpen}
+      />
+      <StatusTemplate
+        isOpen={isTaskStatusOpen}
+        setIsOpen={setIsTaskStatusOpen}
       />
     </Dialog>
   );
