@@ -1,41 +1,8 @@
-export const mockActivities = [
-  {
-    id: 1,
-    userName: 'Jane Cooper',
-    userAvatar: '/api/placeholder/24/24',
-    action: 'created',
-    itemName: 'Marketing Campaign',
-    itemType: 'task',
-    timestamp: '10 minutes ago',
-  },
-  {
-    id: 2,
-    userName: 'Robert Fox',
-    userAvatar: '/api/placeholder/24/24',
-    action: 'completed',
-    itemName: 'Website Redesign',
-    itemType: 'task',
-    timestamp: '45 minutes ago',
-  },
-  {
-    id: 3,
-    userName: 'Esther Howard',
-    userAvatar: '/api/placeholder/24/24',
-    action: 'added',
-    itemName: 'New Product Launch',
-    itemType: 'folder',
-    timestamp: '2 hours ago',
-  },
-  {
-    id: 4,
-    userName: 'Leslie Alexander',
-    userAvatar: '/api/placeholder/24/24',
-    action: 'assigned',
-    itemName: 'Budget Review',
-    itemType: 'task',
-    timestamp: '3 hours ago',
-  },
-];
+import {
+  RecentActions,
+  WorkData,
+  AssignedComment,
+} from '@/types/props/common.ts';
 
 export const spaceData = [
   {
@@ -167,6 +134,23 @@ export const taskStatuses = [
   { id: '12', name: 'Cancelled', color: 'bg-gray-900', category: 'Closed' },
 ];
 
+export const colorOptions = [
+  '#5b43d7',
+  '#3451b1',
+  '#0780e9',
+  '#067a6f',
+  '#00b499',
+  '#289764',
+  '#ffc53d',
+  '#ee5f01',
+  '#ee5f01',
+  '#cb1d64',
+  '#9c2bae',
+  '#9c2bae',
+  '#9c2bae',
+  '#8d8d8d',
+];
+
 export const taskTemplates = {
   categories: [
     {
@@ -194,22 +178,7 @@ export const taskTemplates = {
         'Tasks in this status will no longer be considered overdue and will unblock dependencies.',
     },
   ],
-  colorOptions: [
-    '#5b43d7',
-    '#3451b1',
-    '#0780e9',
-    '#067a6f',
-    '#00b499',
-    '#289764',
-    '#ffc53d',
-    '#ee5f01',
-    '#ee5f01',
-    '#cb1d64',
-    '#9c2bae',
-    '#9c2bae',
-    '#9c2bae',
-    '#8d8d8d',
-  ],
+  colorOptions: colorOptions,
   templates: [
     {
       id: 1,
@@ -398,83 +367,423 @@ export const mockChecklist = [
   },
 ];
 
-export const myTasks = [
+export const recentData: RecentActions[] = [
+  { id: '1', name: 'All Hands Meeting', type: 'List', location: 'in Projects' },
   {
-    id: '1',
-    status: 'in_progress',
-    name: 'Frontend development',
-    priority: 'high',
-    dueDate: '2024-03-28T15:00:00.000Z',
-    startDate: '2024-03-28T15:00:00.000Z',
-    subtasks: [
-      {
-        id: '11',
-        name: 'App Layout page',
-        priority: 'high',
-        dueDate: '2024-03-28T15:00:00.000Z',
-        startDate: '2024-03-28T15:00:00.000Z',
-      },
-      {
-        id: '12',
-        name: 'Page header',
-        priority: 'medium',
-        dueDate: '2024-03-28T15:00:00.000Z',
-        startDate: '2024-03-28T15:00:00.000Z',
-      },
-      {
-        id: '13',
-        name: 'Home page',
-        priority: 'low',
-        dueDate: '2024-03-28T15:00:00.000Z',
-        startDate: '2024-03-28T15:00:00.000Z',
-      },
+    id: '2',
+    name: 'Create a list then assign in the task',
+    type: 'Task',
+    location: 'in Your List of expertise',
+  },
+  {
+    id: '3',
+    name: 'Refactor workspace views',
+    type: 'Task',
+    location: 'in Development Board',
+  },
+  {
+    id: '4',
+    name: 'Marketing Roadmap',
+    type: 'List',
+    location: 'in Campaign Planning',
+  },
+  {
+    id: '5',
+    name: 'User Feedback Review',
+    type: 'Task',
+    location: 'in Feedback Repository',
+  },
+  {
+    id: '6',
+    name: 'Prepare Q3 Objectives',
+    type: 'List',
+    location: 'in Strategic Planning',
+  },
+  {
+    id: '7',
+    name: 'Bug triage and resolution',
+    type: 'Task',
+    location: 'in Engineering Tasks',
+  },
+  {
+    id: '8',
+    name: 'Client onboarding checklist',
+    type: 'List',
+    location: 'in Customer Success',
+  },
+  {
+    id: '9',
+    name: 'Sprint Planning Meeting',
+    type: 'Task',
+    location: 'in Agile Board',
+  },
+  {
+    id: '10',
+    name: 'UI/UX Audit',
+    type: 'Task',
+    location: 'in Design System',
+  },
+  {
+    id: '11',
+    name: 'Security Checklist',
+    type: 'List',
+    location: 'in IT Compliance',
+  },
+  {
+    id: '12',
+    name: 'OKRs 2025',
+    type: 'List',
+    location: 'in Company Goals',
+  },
+  {
+    id: '13',
+    name: 'Content Calendar Draft',
+    type: 'Task',
+    location: 'in Marketing Workspace',
+  },
+  {
+    id: '14',
+    name: 'QA Testing Scenarios',
+    type: 'Task',
+    location: 'in Release Checklist',
+  },
+  {
+    id: '15',
+    name: 'Product Roadmap',
+    type: 'List',
+    location: 'in Product Planning',
+  },
+];
 
+const getRandomColor = (): string => {
+  const randomIndex = Math.floor(Math.random() * colorOptions.length);
+  return colorOptions[randomIndex];
+};
+
+export const myWorkData: WorkData[] = [
+  {
+    workType: 'ToDo',
+    scheduleData: [
       {
-        id: '14',
-        name: 'Footer component',
-        priority: '',
-        dueDate: '2024-03-28T15:00:00.000Z',
-        startDate: '2024-03-28T15:00:00.000Z',
+        id: 'Today',
+        tasks: [
+          {
+            id: '1',
+            name: 'Complete project proposal',
+            color: getRandomColor(),
+            description: 'Finalize the Q3 project proposal document',
+            priority: 'high',
+            completed: false,
+            location: 'in Projects',
+          },
+          {
+            id: '2',
+            name: 'Team standup meeting',
+            color: getRandomColor(),
+            description: 'Daily standup at 10:00 AM',
+            priority: 'medium',
+            completed: false,
+            location:
+              'Kanban space / Severity Folder / in Your List of expertise',
+          },
+          {
+            id: '3',
+            name: 'Review pull requests',
+            color: getRandomColor(),
+            description: 'Review and merge pending PRs',
+            priority: 'medium',
+            completed: false,
+            location: 'Kanban space / Release Folder / in Release Checklist',
+          },
+        ],
+      },
+      {
+        id: 'Overdue',
+        tasks: [
+          {
+            id: '4',
+            name: 'Submit expense report',
+            color: getRandomColor(),
+            description: 'Expense report for April travel',
+            dueDate: '2025-05-15',
+            priority: 'high',
+            completed: false,
+          },
+          {
+            id: '5',
+            name: 'Client follow-up email',
+            color: getRandomColor(),
+            description: 'Send follow-up email to client about project status',
+            dueDate: '2025-05-17',
+            priority: 'high',
+            completed: false,
+          },
+        ],
+      },
+      {
+        id: 'Next',
+        tasks: [
+          {
+            id: '6',
+            name: 'Prepare for quarterly review',
+            color: getRandomColor(),
+            description: 'Gather metrics and prepare presentation',
+            dueDate: '2025-05-22',
+            priority: 'medium',
+            completed: false,
+          },
+          {
+            id: '7',
+            name: 'Update documentation',
+            color: getRandomColor(),
+            description: 'Update API documentation with new endpoints',
+            dueDate: '2025-05-23',
+            priority: 'low',
+            completed: false,
+          },
+          {
+            id: '8',
+            name: 'Code review session',
+            color: getRandomColor(),
+            description: 'Schedule code review session with junior developers',
+            dueDate: '2025-05-24',
+            priority: 'medium',
+            completed: false,
+          },
+        ],
+      },
+      {
+        id: 'Unscheduled',
+        tasks: [
+          {
+            id: '9',
+            name: 'Research new technologies',
+            color: getRandomColor(),
+            description:
+              'Research potential new frameworks for upcoming project',
+            priority: 'low',
+            completed: false,
+          },
+          {
+            id: '10',
+            name: 'Refactor authentication module',
+            color: getRandomColor(),
+            description:
+              'Refactor the authentication module for better performance',
+            priority: 'medium',
+            completed: false,
+          },
+        ],
       },
     ],
   },
   {
-    id: '2',
-    status: 'completed',
-    name: 'Backend development',
-    priority: 'high',
-    dueDate: '2024-03-28T15:00:00.000Z',
-    startDate: '2024-03-28T15:00:00.000Z',
-    subtasks: [
+    workType: 'Meetings',
+    scheduleData: [
       {
-        id: '21',
-        name: 'Home page API',
-        priority: 'high',
-        dueDate: '2024-03-28T15:00:00.000Z',
-        startDate: '2024-03-28T15:00:00.000Z',
+        id: 'Today',
+        tasks: [
+          {
+            id: '11',
+            name: 'Weekly status meeting',
+            color: getRandomColor(),
+            description: 'Weekly team status update at 2:00 PM',
+            priority: 'high',
+            completed: false,
+          },
+          {
+            id: '12',
+            name: 'One-on-one with manager',
+            color: getRandomColor(),
+            description: 'Monthly check-in with manager at 4:00 PM',
+            priority: 'medium',
+            completed: false,
+          },
+        ],
       },
       {
-        id: '22',
-        name: 'Notifications',
-        priority: 'medium',
-        dueDate: '2024-03-28T15:00:00.000Z',
-        startDate: '2024-03-28T15:00:00.000Z',
+        id: 'Next',
+        tasks: [
+          {
+            id: '13',
+            name: 'Product planning session',
+            color: getRandomColor(),
+            description: 'Q3 product planning meeting',
+            dueDate: '2025-05-21',
+            priority: 'high',
+            completed: false,
+          },
+          {
+            id: '14',
+            name: 'Client presentation',
+            color: getRandomColor(),
+            description: 'Present project status to client',
+            dueDate: '2025-05-23',
+            priority: 'high',
+            completed: false,
+          },
+        ],
       },
       {
-        id: '23',
-        name: 'Microservices ',
-        priority: 'low',
-        dueDate: '2024-03-28T15:00:00.000Z',
-        startDate: '2024-03-28T15:00:00.000Z',
-      },
-
-      {
-        id: '24',
-        name: 'Model',
-        priority: '',
-        dueDate: '2024-03-28T15:00:00.000Z',
-        startDate: '2024-03-28T15:00:00.000Z',
+        id: 'Unscheduled',
+        tasks: [
+          {
+            id: '15',
+            name: 'Team building activity',
+            color: getRandomColor(),
+            description: 'Plan team building activity for next month',
+            priority: 'low',
+            completed: false,
+          },
+        ],
       },
     ],
+  },
+  {
+    workType: 'Projects',
+    scheduleData: [
+      {
+        id: 'Active',
+        tasks: [
+          {
+            id: '16',
+            name: 'Website redesign',
+            color: getRandomColor(),
+            description: 'Complete responsive design updates',
+            dueDate: '2025-06-15',
+            priority: 'high',
+            completed: false,
+          },
+          {
+            id: '17',
+            name: 'Mobile app development',
+            color: getRandomColor(),
+            description: 'Develop iOS and Android versions',
+            dueDate: '2025-07-30',
+            priority: 'high',
+            completed: false,
+          },
+        ],
+      },
+      {
+        id: 'Planned',
+        tasks: [
+          {
+            id: '18',
+            name: 'API integration',
+            color: getRandomColor(),
+            description: 'Integrate with third-party payment API',
+            dueDate: '2025-08-10',
+            priority: 'medium',
+            completed: false,
+          },
+          {
+            id: '19',
+            name: 'Analytics dashboard',
+            color: getRandomColor(),
+            description: 'Create customer analytics dashboard',
+            dueDate: '2025-09-01',
+            priority: 'medium',
+            completed: false,
+          },
+        ],
+      },
+      {
+        id: 'Completed',
+        tasks: [
+          {
+            id: '20',
+            name: 'User testing',
+            color: getRandomColor(),
+            description: 'Conduct user testing for new features',
+            dueDate: '2025-05-01',
+            priority: 'high',
+            completed: true,
+          },
+          {
+            id: '21',
+            name: 'Database migration',
+            color: getRandomColor(),
+            description: 'Migrate to new database structure',
+            dueDate: '2025-04-15',
+            priority: 'high',
+            completed: true,
+          },
+        ],
+      },
+    ],
+  },
+];
+
+export const assignedCommentData: AssignedComment[] = [
+  {
+    id: '1',
+    comment: '@Jawahir Nabhan please do this task today',
+    commentTime: '20 mins',
+    taskName: 'Task monday deadline',
+    imageUrl: 'https://i.pravatar.cc/40?img=1',
+  },
+  {
+    id: '2',
+    comment: '@Leah Roberts kindly review the changes in the design spec',
+    commentTime: '35 mins',
+    taskName: 'Design Specification Review',
+    imageUrl: 'https://i.pravatar.cc/40?img=2',
+  },
+  {
+    id: '3',
+    comment: '@Ahmed Zaki make sure this goes to QA by EOD',
+    commentTime: '1 hr',
+    taskName: 'API Integration for Payments',
+    imageUrl: 'https://i.pravatar.cc/40?img=3',
+  },
+  {
+    id: '4',
+    comment: '@Maya Khan double-check the onboarding copy',
+    commentTime: '2 hrs',
+    taskName: 'Copy Updates Onboarding',
+    imageUrl: 'https://i.pravatar.cc/40?img=4',
+  },
+  {
+    id: '5',
+    comment: '@Omar El-Rashid please align this with the marketing campaign',
+    commentTime: '2 hrs',
+    taskName: 'Landing Page SEO Update',
+    imageUrl: 'https://i.pravatar.cc/40?img=5',
+  },
+  {
+    id: '6',
+    comment: '@Sophia Lin kindly finalize the sprint timeline',
+    commentTime: '3 hrs',
+    taskName: 'Sprint Planning Draft',
+    imageUrl: 'https://i.pravatar.cc/40?img=6',
+  },
+  {
+    id: '7',
+    comment: '@Noah Adams revise the report based on client feedback',
+    commentTime: '4 hrs',
+    taskName: 'Q2 Performance Report',
+    imageUrl: 'https://i.pravatar.cc/40?img=7',
+  },
+  {
+    id: '8',
+    comment: '@Fatima Yusuf make changes to the pricing table as discussed',
+    commentTime: '5 hrs',
+    taskName: 'Pricing Table Revision',
+    imageUrl: 'https://i.pravatar.cc/40?img=8',
+  },
+  {
+    id: '9',
+    comment: '@Daniel Tran please confirm the timezone with the client',
+    commentTime: '6 hrs',
+    taskName: 'Client Meeting Setup',
+    imageUrl: 'https://i.pravatar.cc/40?img=9',
+  },
+  {
+    id: '10',
+    comment: '@Emily Chen add this to the agenda for tomorrow',
+    commentTime: '7 hrs',
+    taskName: 'Team Sync Agenda',
+    imageUrl: 'https://i.pravatar.cc/40?img=10',
   },
 ];

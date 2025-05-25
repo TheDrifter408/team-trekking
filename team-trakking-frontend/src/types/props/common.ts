@@ -32,22 +32,8 @@ export interface Space {
   description: string;
 }
 
-export interface ColummTask {
-  id: string;
-  title: string;
-  description: string;
-  category: ColumnType;
-}
-
-export type ColumnType = 'todo' | 'in-progress' | 'done';
 export type HeaderType = 'HOME' | 'SPACE' | 'FOLDER' | 'LIST' | 'TASK';
 export type InboxTabType = 'IMPORTANT' | 'OTHER' | 'CLEARED';
-
-export interface Breadcrumb {
-  meta: HeaderType;
-  label: string;
-  link: string;
-}
 
 // Define the base message item structure
 export interface InboxItem {
@@ -94,4 +80,45 @@ export interface DropDownProps {
   setSearchAvatar: (searchAvatar: string) => void;
   iconOptions: IconOption[];
   colorOptions: ColorOption[];
+}
+
+export type WorkspaceRecent = 'List' | 'Task';
+
+export interface RecentActions {
+  id: string;
+  name: string;
+  type: WorkspaceRecent;
+  location: string;
+}
+
+export type workType = 'ToDo' | 'Done';
+export type scheduleType = 'Today' | 'Overdue' | 'Next' | 'Unscheduled';
+// Type definitions
+export interface MyWorkTask {
+  id: string;
+  name: string;
+  color: string;
+  description?: string;
+  dueDate?: string;
+  priority?: 'low' | 'medium' | 'high';
+  completed?: boolean;
+  location?: string;
+}
+
+export interface ScheduleSection {
+  id: string;
+  tasks: MyWorkTask[];
+}
+
+export interface WorkData {
+  workType: string;
+  scheduleData: ScheduleSection[];
+}
+
+export interface AssignedComment {
+  id: string;
+  comment: string;
+  commentTime: string;
+  taskName: string;
+  imageUrl: string;
 }
