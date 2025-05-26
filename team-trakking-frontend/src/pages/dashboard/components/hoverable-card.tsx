@@ -23,7 +23,7 @@ export const HoverableCard = ({
       className={cn(
         'w-full flex flex-col',
         isExpanded
-          ? 'w-screen rounded-sm -mt-[20px] h-screen bg-background'
+          ? 'w-screen rounded-none border-0 border-l -mt-[20px] h-screen bg-background'
           : 'relative h-[336px]'
       )}
       onMouseEnter={() => setIsHovered(true)}

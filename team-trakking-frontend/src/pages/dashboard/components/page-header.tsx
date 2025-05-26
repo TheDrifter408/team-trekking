@@ -1,3 +1,4 @@
+import { FC } from 'react';
 import { cn } from '@/lib/utils.ts';
 import { Button } from '@/components/ui/button';
 import {
@@ -13,65 +14,62 @@ interface Props {
   title?: string;
 }
 
-export const PageHeader = ({
+export const PageHeader: FC<Props> = ({
   state,
   onCancelFullView,
-  title = 'Recents',
-}: Props) => {
-  return state ? (
+  title = '',
+}) =>
+  state ? (
     <FullViewPageHeader title={title} onCancel={onCancelFullView} />
   ) : (
     <DefaultPageHeader />
   );
-};
 
-function DefaultPageHeader() {
-  return (
-    <div
-      className={cn(
-        'sticky top-0 bg-background z-10 w-full',
-        'border-l border-r border-b'
-      )}
-    >
-      <div className="px-8 flex text-base items-center gap-4 py-[13px]">
-        <IconHome size={16} /> Home
-      </div>
+const DefaultPageHeader: FC = () => (
+  <div
+    className={cn(
+      'sticky top-0 bg-background z-10 w-full',
+      'border-l border-r border-b rounded-sm'
+    )}
+  >
+    <div className="px-8 flex text-base items-center gap-4 py-[13px]">
+      <IconHome size={16} /> Home
     </div>
-  );
-}
+  </div>
+);
 
-function FullViewPageHeader({
-  title = 'Recents',
-  onCancel,
-}: {
+interface FullViewPageHeaderProps {
   title?: string;
   onCancel: () => void;
-}) {
-  return (
-    <div
-      className={cn(
-        'sticky top-0 bg-background z-10 w-full',
-        'border-l border-r'
-      )}
-    >
-      <div className="pl-8 pr-4 flex text-base items-center justify-between gap-4 h-[46px]">
-        <div className="flex items-center">
-          <Button variant={'ghost'} size={'icon_sm'}>
-            <IconChevronLeft />
-          </Button>
-          <Button variant={'ghost'} size={'icon_sm'}>
-            <IconChevronRight />
-          </Button>
-          <span>Home&nbsp;&nbsp;</span>
-          <span className="text-muted-foreground">{'/'}&nbsp;&nbsp;</span>
-          <span className="text-muted-foreground">{title}</span>
-        </div>
-        <div className="!mr-0">
-          <Button onClick={onCancel} variant={'ghost'} size={'icon'}>
-            <IconX />
-          </Button>
-        </div>
+}
+
+const FullViewPageHeader: FC<FullViewPageHeaderProps> = ({
+  title = '',
+  onCancel,
+}) => (
+  <div
+    className={cn(
+      'sticky top-0 bg-background z-10 w-full',
+      'border-l border-r'
+    )}
+  >
+    <div className="pl-8 border-b pr-4 flex text-base items-center justify-between gap-4 h-[47px]">
+      <div className="flex items-center">
+        <Button variant={'ghost'} size={'icon_sm'}>
+          <IconChevronLeft />
+        </Button>
+        <Button variant={'ghost'} size={'icon_sm'}>
+          <IconChevronRight />
+        </Button>
+        <span>Home&nbsp;&nbsp;</span>
+        <span className="text-muted-foreground">{'/'}&nbsp;&nbsp;</span>
+        <span className="text-muted-foreground">{title}</span>
+      </div>
+      <div className="!mr-0">
+        <Button onClick={onCancel} variant={'ghost'} size={'icon'}>
+          <IconX />
+        </Button>
       </div>
     </div>
-  );
-}
+  </div>
+);

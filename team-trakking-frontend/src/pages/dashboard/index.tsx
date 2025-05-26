@@ -50,7 +50,7 @@ export const Dashboard = () => {
             <span className="text-3xl font-semibold ml-3">
               {WELCOME_MESSAGE}
             </span>
-            <div className="grid grid-cols-2 gap-4 mt-3">
+            <div className="grid grid-cols-2 gap-4 my-2">
               <RecentContent
                 expanded={expandedCard.recentCard}
                 onExpand={onExpandToFullView}

@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { FC, useState } from 'react';
 import { myWorkData } from '@/mock';
-import { CardContent } from '@/components/ui/card.tsx';
-import { HoverableCard } from './hoverable-card.tsx';
+import { CardContent } from '@/components/ui/card';
+import { HoverableCard } from './hoverable-card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   Collapsible,
@@ -18,12 +18,12 @@ import {
   IconUser,
 } from '@tabler/icons-react';
 import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils.ts';
+import { cn } from '@/lib/utils';
 import {
   MyWorkTask,
   WorkData,
   ScheduleSection as ScheduleType,
-} from '@/types/props/common.ts';
+} from '@/types/props/common';
 
 interface Props {
   expanded: boolean;
@@ -31,26 +31,21 @@ interface Props {
   cardTitle: string;
 }
 
-export const MyWorkContent = ({ expanded, onExpand, cardTitle }: Props) => {
-  return (
-    <MyWork isExpanded={expanded} onExpand={onExpand} cardTitle={cardTitle} />
-  );
-};
+export const MyWorkContent: FC<Props> = ({ expanded, onExpand, cardTitle }) => (
+  <MyWork isExpanded={expanded} onExpand={onExpand} cardTitle={cardTitle} />
+);
 
-function MyWork({
-  isExpanded,
-  onExpand,
-  cardTitle,
-}: {
+interface MyWorkProps {
   isExpanded: boolean;
   onExpand: (title: string) => void;
   cardTitle: string;
-}) {
+}
+
+const MyWork: FC<MyWorkProps> = ({ isExpanded, onExpand, cardTitle }) => {
   const todoWorkData: WorkData | undefined = myWorkData.find(
     (data) => data.workType === 'ToDo'
   );
 
-  // Get completed tasks
   const completedTasks =
     todoWorkData?.scheduleData.flatMap((section) =>
       section.tasks.filter((task) => task.completed)
@@ -59,7 +54,7 @@ function MyWork({
   return (
     <HoverableCard
       isExpanded={isExpanded}
-      title="My Work"
+      title={cardTitle}
       onExpand={() => onExpand(cardTitle)}
     >
       <CardContent
@@ -76,58 +71,62 @@ function MyWork({
       </CardContent>
     </HoverableCard>
   );
-}
+};
 
-function Content({
-  todoWorkData,
-  completedTasks,
-  className,
-}: {
+interface ContentProps {
   todoWorkData: WorkData | undefined;
   completedTasks: MyWorkTask[];
   className?: string;
-}) {
-  return (
-    <div className={cn('w-full', className)}>
-      <Tabs defaultValue="todo" className="w-full">
-        <TabsList variant="underline" className="w-full">
-          <TabsTrigger value="todo" variant="underline">
-            <span className="text-muted-foreground font-medium text-base">
-              To Do
-            </span>
-          </TabsTrigger>
-          <TabsTrigger value="done" variant="underline">
-            <span className="text-muted-foreground font-medium text-base">
-              Done
-            </span>
-          </TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="todo" className="space-y-2 mt-2">
-          {todoWorkData?.scheduleData.map((section: ScheduleType) => (
-            <ScheduleSection key={section.id} section={section} />
-          ))}
-        </TabsContent>
-
-        <TabsContent value="done" className="space-y-2 mt-2">
-          {completedTasks.length > 0 ? (
-            completedTasks.map((task) => (
-              <div key={task.id} className="text-sm py-1 px-4">
-                {task.name}
-              </div>
-            ))
-          ) : (
-            <div className="text-sm text-gray-500 py-2 px-4">
-              No completed tasks
-            </div>
-          )}
-        </TabsContent>
-      </Tabs>
-    </div>
-  );
 }
 
-function ScheduleSection({ section }: { section: ScheduleType }) {
+const Content: FC<ContentProps> = ({
+  todoWorkData,
+  completedTasks,
+  className,
+}) => (
+  <div className={cn('w-full', className)}>
+    <Tabs defaultValue="todo" className="w-full">
+      <TabsList variant="underline" className="w-full">
+        <TabsTrigger value="todo" variant="underline">
+          <span className="text-muted-foreground font-medium text-base">
+            To Do
+          </span>
+        </TabsTrigger>
+        <TabsTrigger value="done" variant="underline">
+          <span className="text-muted-foreground font-medium text-base">
+            Done
+          </span>
+        </TabsTrigger>
+      </TabsList>
+
+      <TabsContent value="todo" className="space-y-2 mt-2">
+        {todoWorkData?.scheduleData.map((section: ScheduleType) => (
+          <ScheduleSection key={section.id} section={section} />
+        ))}
+      </TabsContent>
+
+      <TabsContent value="done" className="space-y-2 mt-2">
+        {completedTasks.length > 0 ? (
+          completedTasks.map((task) => (
+            <div key={task.id} className="text-sm py-1 px-4">
+              {task.name}
+            </div>
+          ))
+        ) : (
+          <div className="text-sm text-gray-500 py-2 px-4">
+            No completed tasks
+          </div>
+        )}
+      </TabsContent>
+    </Tabs>
+  </div>
+);
+
+interface ScheduleSectionProps {
+  section: ScheduleType;
+}
+
+const ScheduleSection: FC<ScheduleSectionProps> = ({ section }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [hoveredTaskId, setHoveredTaskId] = useState<string | null>(null);
 
@@ -212,4 +211,4 @@ function ScheduleSection({ section }: { section: ScheduleType }) {
       </CollapsibleContent>
     </Collapsible>
   );
-}
+};
