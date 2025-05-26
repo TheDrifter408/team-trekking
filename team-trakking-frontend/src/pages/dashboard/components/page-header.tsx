@@ -17,9 +17,9 @@ import {
   IconCheck,
   IconCirclePlus,
 } from '@tabler/icons-react';
+import { LABEL } from '@/lib/constants/strings';
 import { Card, CardContent } from '@/components/ui/card';
 
-// Consolidated interfaces - reduced from 6 to 2
 interface CardItem {
   id: string;
   description: string;
@@ -76,7 +76,7 @@ const CardToggleButton: FC<{ card: CardItem; onClick: () => void }> = ({
     onClick={onClick}
   >
     {card.isAdded ? <IconCheck size={16} /> : <IconCirclePlus size={16} />}
-    <span>{card.isAdded ? 'Added' : 'Add to Overview'}</span>
+    <span>{card.isAdded ? LABEL.ADDED : LABEL.ADD_TO_OVERVIEW}</span>
   </Button>
 );
 

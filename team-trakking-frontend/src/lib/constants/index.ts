@@ -126,22 +126,18 @@ export const HEADINGS = [
     tag: 'h3',
   },
 ];
-
 const getWelcomeMessage = () => {
   const hour = new Date().getHours();
   if (hour < 12) return 'Good morning';
   if (hour < 18) return 'Good afternoon';
   return 'Good evening';
 };
-
 export const WELCOME_MESSAGE = getWelcomeMessage();
-
 export const HOME_CARD_TITLE = {
   MY_WORK: 'My Work',
   ASSIGNED_COMMENTS: 'Assigned Comments',
   RECENTS: 'Recents',
 };
-
 export const HomeCardList = [
   {
     id: HOME_CARD_TITLE.RECENTS,

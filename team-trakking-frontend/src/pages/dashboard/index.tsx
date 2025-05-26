@@ -8,6 +8,11 @@ import { RecentContent } from '@/pages/dashboard/components/recent-content.tsx';
 import { MyWorkContent } from '@/pages/dashboard/components/my-work-content.tsx';
 import { AssignedCommentsContent } from '@/pages/dashboard/components/assigned-comments-content.tsx';
 
+enum Direction {
+  NEXT = 'next',
+  PREV = 'prev',
+}
+
 export const Dashboard = () => {
   const [expandedCardId, setExpandedCardId] = useState<string | null>(null);
   const [cardsList, setCardsList] = useState(HomeCardList);
@@ -22,20 +27,20 @@ export const Dashboard = () => {
     setExpandedCardId(cardTitle);
   };
 
-  const navigateCard = (direction: 'next' | 'prev') => {
+  const navigateCard = (direction: Direction.NEXT | Direction.PREV) => {
     if (!expandedCardId) return;
 
     const currentIndex = cardsList.findIndex(
       (card) => card.id === expandedCardId
     );
-    const increment = direction === 'next' ? 1 : -1;
+    const increment = direction === Direction.NEXT ? 1 : -1;
     const nextIndex =
       (currentIndex + increment + cardsList.length) % cardsList.length;
     setExpandedCardId(cardsList[nextIndex].id);
   };
 
-  const onNextCard = () => navigateCard('next');
-  const onPrevCard = () => navigateCard('prev');
+  const onNextCard = () => navigateCard(Direction.NEXT);
+  const onPrevCard = () => navigateCard(Direction.PREV);
 
   const isCardAdded = (cardId: string) => {
     return cardsList.find((card) => card.id === cardId)?.isAdded ?? false;
