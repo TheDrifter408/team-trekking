@@ -91,8 +91,6 @@ export interface RecentActions {
   location: string;
 }
 
-export type workType = 'ToDo' | 'Done';
-export type scheduleType = 'Today' | 'Overdue' | 'Next' | 'Unscheduled';
 // Type definitions
 export interface MyWorkTask {
   id: string;

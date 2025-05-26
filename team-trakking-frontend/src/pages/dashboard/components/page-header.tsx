@@ -8,17 +8,17 @@ import {
 } from '@tabler/icons-react';
 
 interface Props {
-  state: 'Full' | 'Default';
+  state: boolean;
   onCancelFullView: () => void;
   title?: string;
 }
 
 export const PageHeader = ({
-  state = 'Default',
+  state,
   onCancelFullView,
   title = 'Recents',
 }: Props) => {
-  return state === 'Full' ? (
+  return state ? (
     <FullViewPageHeader title={title} onCancel={onCancelFullView} />
   ) : (
     <DefaultPageHeader />
@@ -30,7 +30,7 @@ function DefaultPageHeader() {
     <div
       className={cn(
         'sticky top-0 bg-background z-10 w-full',
-        'border-l border-r'
+        'border-l border-r border-b'
       )}
     >
       <div className="px-8 flex text-base items-center gap-4 py-[13px]">
@@ -54,7 +54,7 @@ function FullViewPageHeader({
         'border-l border-r'
       )}
     >
-      <div className="pl-8 pr-4 flex text-base items-center justify-between gap-4 h-[48px]">
+      <div className="pl-8 pr-4 flex text-base items-center justify-between gap-4 h-[46px]">
         <div className="flex items-center">
           <Button variant={'ghost'} size={'icon_sm'}>
             <IconChevronLeft />

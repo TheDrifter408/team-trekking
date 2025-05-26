@@ -135,3 +135,9 @@ const getWelcomeMessage = () => {
 };
 
 export const WELCOME_MESSAGE = getWelcomeMessage();
+
+export const HOME_CARD_TITLE = {
+  MY_WORK: 'My Work',
+  ASSIGNED_COMMENTS: 'Assigned Comments',
+  RECENTS: 'Recents',
+};
