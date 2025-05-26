@@ -9,7 +9,7 @@ import { AuthLayout } from './components/auth-layout.tsx';
 import { AuthCard } from './components/auth-card.tsx';
 import { FormInputField } from './components/form-input.tsx';
 import { signUpSchema } from '@/lib/config/validation-schema';
-import { UserRole } from '@/lib/constants/appConstants.ts';
+import { UserRole } from '@/lib/constants/app.ts';
 import {
   usePostSendOtpMutation,
   usePostVerifyOtpMutation,

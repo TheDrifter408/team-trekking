@@ -9,7 +9,7 @@ import {
   VerifyOtpRequest,
   ForgotPasswordRequest,
 } from '@/types/props/ApiRequest.ts';
-import { AppConstants } from '@/lib/constants/appConstants.ts';
+import { App } from '@/lib/constants/app.ts';
 
 export const tmtApi = createApi({
   reducerPath: 'teamTrekking',
@@ -64,7 +64,7 @@ export const tmtApi = createApi({
         url: 'auth/forgot-password',
         method: 'POST',
         data: body,
-        baseUrl: AppConstants.AUTH_BASE_URL,
+        baseUrl: App.AUTH_BASE_URL,
       }),
       transformResponse: (response: ApiResponse<string>) => response.data,
     }),

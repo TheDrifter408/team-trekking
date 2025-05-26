@@ -10,7 +10,7 @@ import { AuthCard } from './components/auth-card';
 import { FormInputField } from './components/form-input.tsx';
 import { loginSchema } from '@/lib/config/validation-schema.tsx';
 import { usePostSignInMutation } from '@/redux/query/rtk-query.ts';
-import { UserRole } from '@/lib/constants/appConstants.ts';
+import { UserRole } from '@/lib/constants/app.ts';
 import { UserResponse } from '@/types/props/ApiResponse';
 import { useTMTStore } from '@/stores/zustand/index.tsx';
 
