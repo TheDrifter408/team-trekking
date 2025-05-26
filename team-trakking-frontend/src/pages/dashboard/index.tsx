@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { WELCOME_MESSAGE } from '@/lib/constants';
-import { HOME_CARD_TITLE } from '@/lib/constants';
+import { HOME_CARD_TITLE, HomeCardList } from '@/lib/constants';
 import { PageHeader } from './components/page-header';
 import { RecentContent } from '@/pages/dashboard/components/recent-content.tsx';
 import { MyWorkContent } from '@/pages/dashboard/components/my-work-content.tsx';
@@ -37,12 +37,50 @@ export const Dashboard = () => {
     });
   };
 
+  const onNextCard = () => {
+    const currentCardId = expandedCard.recentCard
+      ? HOME_CARD_TITLE.RECENTS
+      : expandedCard.myWorkCard
+        ? HOME_CARD_TITLE.MY_WORK
+        : expandedCard.assignedCommentsCard
+          ? HOME_CARD_TITLE.ASSIGNED_COMMENTS
+          : '';
+
+    const currentIndex = HomeCardList.findIndex(
+      (card) => card.id === currentCardId
+    );
+    const nextIndex = (currentIndex + 1) % HomeCardList.length;
+    const nextCardTitle = HomeCardList[nextIndex].id;
+    onExpandToFullView(nextCardTitle);
+  };
+
+  const onPrevCard = () => {
+    const currentCardId = expandedCard.recentCard
+      ? HOME_CARD_TITLE.RECENTS
+      : expandedCard.myWorkCard
+        ? HOME_CARD_TITLE.MY_WORK
+        : expandedCard.assignedCommentsCard
+          ? HOME_CARD_TITLE.ASSIGNED_COMMENTS
+          : '';
+
+    const currentIndex = HomeCardList.findIndex(
+      (card) => card.id === currentCardId
+    );
+    const prevIndex =
+      (currentIndex - 1 + HomeCardList.length) % HomeCardList.length;
+    const prevCardTitle = HomeCardList[prevIndex].id;
+    onExpandToFullView(prevCardTitle);
+  };
+
   return (
     <div>
       <PageHeader
         title={title}
         onCancelFullView={onCancelFullView}
         state={isCardExpanded}
+        onNextCard={onNextCard}
+        onPrevCard={onPrevCard}
+        cardsList={HomeCardList}
       />
       <div className="px-[25px] py-[10px]">
         {!isCardExpanded && (

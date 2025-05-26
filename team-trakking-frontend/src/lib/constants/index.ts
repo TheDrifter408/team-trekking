@@ -141,3 +141,25 @@ export const HOME_CARD_TITLE = {
   ASSIGNED_COMMENTS: 'Assigned Comments',
   RECENTS: 'Recents',
 };
+
+export const HomeCardList = [
+  {
+    id: HOME_CARD_TITLE.RECENTS,
+    description:
+      'A list of all the ClickUp objects and locations you’ve recently viewed.',
+    isAdded: true,
+    imageSource: 'https://app-cdn.clickup.com/media/clock-J2RYU6UH.svg',
+  },
+  {
+    id: HOME_CARD_TITLE.ASSIGNED_COMMENTS,
+    description: 'Resolve and view any comment that has been assigned to you.',
+    isAdded: true,
+    imageSource: 'https://app-cdn.clickup.com/media/comment-5JSAQBZY.svg',
+  },
+  {
+    id: HOME_CARD_TITLE.MY_WORK,
+    description: 'A list for all of your assigned tasks and reminders.',
+    isAdded: true,
+    imageSource: 'https://app-cdn.clickup.com/media/list-6J4AELLQ.svg',
+  },
+];
