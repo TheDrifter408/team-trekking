@@ -14,41 +14,98 @@ import {
   IconChevronRight,
   IconHome,
   IconX,
+  IconCheck,
+  IconCirclePlus,
 } from '@tabler/icons-react';
-import { Card, CardContent } from '@/components/ui/card.tsx';
+import { Card, CardContent } from '@/components/ui/card';
 
-interface Props {
+// Consolidated interfaces - reduced from 6 to 2
+interface CardItem {
+  id: string;
+  description: string;
+  isAdded: boolean;
+  imageSource: string;
+}
+
+interface PageHeaderProps {
   state: boolean;
   onCancelFullView: () => void;
   title?: string;
   onNextCard: () => void;
   onPrevCard: () => void;
-  cardsList: any;
+  cardsList: CardItem[];
+  onToggleCardVisibility: (cardId: string) => void;
 }
 
-export const PageHeader: FC<Props> = ({
+export const PageHeader: FC<PageHeaderProps> = ({
   state,
   onCancelFullView,
   title = '',
   onNextCard,
   onPrevCard,
   cardsList,
+  onToggleCardVisibility,
 }) =>
   state ? (
-    <FullViewPageHeader
-      onNextCard={onNextCard}
-      onPrevCard={onPrevCard}
+    <FullViewHeader
       title={title}
       onCancel={onCancelFullView}
+      onNextCard={onNextCard}
+      onPrevCard={onPrevCard}
     />
   ) : (
-    <DefaultPageHeader cardsList={cardsList} />
+    <DefaultHeader
+      cardsList={cardsList}
+      onToggleCardVisibility={onToggleCardVisibility}
+    />
   );
 
-interface DefaultPageHeaderProps {
-  cardsList: any;
-}
-const DefaultPageHeader: FC<DefaultPageHeaderProps> = ({ cardsList }) => (
+// Simplified internal components with inline props
+const CardToggleButton: FC<{ card: CardItem; onClick: () => void }> = ({
+  card,
+  onClick,
+}) => (
+  <Button
+    size="sm"
+    className={cn(
+      'px-5 font-medium text-sm transition-colors flex items-center gap-2',
+      card.isAdded
+        ? 'bg-theme-main hover:bg-theme-main-dark'
+        : 'bg-muted text-primary hover:bg-muted/80'
+    )}
+    onClick={onClick}
+  >
+    {card.isAdded ? <IconCheck size={16} /> : <IconCirclePlus size={16} />}
+    <span>{card.isAdded ? 'Added' : 'Add to Overview'}</span>
+  </Button>
+);
+
+const CardItem: FC<{ card: CardItem; onToggle: (id: string) => void }> = ({
+  card,
+  onToggle,
+}) => (
+  <Card>
+    <CardContent className="p-4">
+      <div className="flex justify-between items-start">
+        <img
+          src={card.imageSource}
+          alt={card.id}
+          className="w-12 h-12 object-contain"
+        />
+        <CardToggleButton card={card} onClick={() => onToggle(card.id)} />
+      </div>
+      <div className="mt-4">
+        <p className="text-xl font-semibold">{card.id}</p>
+        <p className="text-sm text-muted-foreground">{card.description}</p>
+      </div>
+    </CardContent>
+  </Card>
+);
+
+const DefaultHeader: FC<{
+  cardsList: CardItem[];
+  onToggleCardVisibility: (cardId: string) => void;
+}> = ({ cardsList, onToggleCardVisibility }) => (
   <div
     className={cn(
       'sticky flex items-center justify-between top-0 bg-background z-10 w-full',
@@ -56,14 +113,15 @@ const DefaultPageHeader: FC<DefaultPageHeaderProps> = ({ cardsList }) => (
     )}
   >
     <div className="flex text-base items-center gap-4 py-[13px]">
-      <IconHome size={16} /> Home
+      <IconHome size={16} />
+      <span>Home</span>
     </div>
 
     <Sheet>
       <SheetTrigger asChild>
         <Button
-          variant={'default'}
-          className={'bg-theme-main-dark text-base text-white'}
+          variant="default"
+          className="bg-theme-main-dark text-base text-white hover:bg-theme-main-dark/90"
         >
           Manage cards
         </Button>
@@ -90,47 +148,25 @@ const DefaultPageHeader: FC<DefaultPageHeaderProps> = ({ cardsList }) => (
           </div>
         </SheetHeader>
         <div className="px-4 pb-4 space-y-4">
-          {cardsList.length > 0 &&
-            cardsList.map((card: any) => (
-              <Card key={card.id}>
-                <CardContent>
-                  <div className="w-full flex justify-between">
-                    <img src={card.imageSource} alt={card.id} />
-                    <Button
-                      size={'sm'}
-                      className={'bg-theme-main px-5 font-semibold text-sm'}
-                    >
-                      {card.isAdded ? 'Added' : 'Add'}
-                    </Button>
-                  </div>
-                  <div className="mt-4">
-                    <p className={'text-xl font-semibold'}>{card.id}</p>
-                    <p className={'text-sm text-muted-foreground'}>
-                      {card.description}
-                    </p>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+          {cardsList.map((card) => (
+            <CardItem
+              key={card.id}
+              card={card}
+              onToggle={onToggleCardVisibility}
+            />
+          ))}
         </div>
       </SheetContent>
     </Sheet>
   </div>
 );
 
-interface FullViewPageHeaderProps {
-  title?: string;
+const FullViewHeader: FC<{
+  title: string;
   onCancel: () => void;
   onNextCard: () => void;
   onPrevCard: () => void;
-}
-
-const FullViewPageHeader: FC<FullViewPageHeaderProps> = ({
-  title = '',
-  onCancel,
-  onNextCard,
-  onPrevCard,
-}) => (
+}> = ({ title, onCancel, onNextCard, onPrevCard }) => (
   <div
     className={cn(
       'sticky top-0 bg-background z-10 w-full',
@@ -139,21 +175,18 @@ const FullViewPageHeader: FC<FullViewPageHeaderProps> = ({
   >
     <div className="pl-3 border-b pr-4 flex text-base items-center justify-between gap-4 h-[47px]">
       <div className="flex items-center">
-        <Button onClick={onPrevCard} variant={'ghost'} size={'icon_sm'}>
+        <Button onClick={onPrevCard} variant="ghost" size="icon_sm">
           <IconChevronLeft />
         </Button>
-        <Button onClick={onNextCard} variant={'ghost'} size={'icon_sm'}>
+        <Button onClick={onNextCard} variant="ghost" size="icon_sm">
           <IconChevronRight />
         </Button>
-        <span>Home&nbsp;&nbsp;</span>
-        <span className="text-muted-foreground">{'/'}&nbsp;&nbsp;</span>
+        <span className={'ml-2'}>Home&nbsp;&nbsp;/&nbsp;&nbsp;</span>
         <span className="text-muted-foreground">{title}</span>
       </div>
-      <div className="!mr-0">
-        <Button onClick={onCancel} variant={'ghost'} size={'icon'}>
-          <IconX />
-        </Button>
-      </div>
+      <Button onClick={onCancel} variant="ghost" size="icon">
+        <IconX />
+      </Button>
     </div>
   </div>
 );

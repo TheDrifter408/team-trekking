@@ -9,128 +9,116 @@ import { MyWorkContent } from '@/pages/dashboard/components/my-work-content.tsx'
 import { AssignedCommentsContent } from '@/pages/dashboard/components/assigned-comments-content.tsx';
 
 export const Dashboard = () => {
-  const [isCardExpanded, setIsCardExpanded] = useState(false);
-  const [title, setTitle] = useState<string>('');
-  const [expandedCard, setExpandedCard] = useState({
-    recentCard: false,
-    myWorkCard: false,
-    assignedCommentsCard: false,
-  });
+  const [expandedCardId, setExpandedCardId] = useState<string | null>(null);
+  const [cardsList, setCardsList] = useState(HomeCardList);
+
+  const isCardExpanded = expandedCardId !== null;
 
   const onCancelFullView = () => {
-    setIsCardExpanded(false);
-    setTitle('');
-    setExpandedCard({
-      recentCard: false,
-      myWorkCard: false,
-      assignedCommentsCard: false,
-    });
+    setExpandedCardId(null);
   };
 
   const onExpandToFullView = (cardTitle: string) => {
-    setIsCardExpanded(true);
-    setTitle(cardTitle);
-    setExpandedCard({
-      recentCard: cardTitle === HOME_CARD_TITLE.RECENTS,
-      myWorkCard: cardTitle === HOME_CARD_TITLE.MY_WORK,
-      assignedCommentsCard: cardTitle === HOME_CARD_TITLE.ASSIGNED_COMMENTS,
-    });
+    setExpandedCardId(cardTitle);
   };
 
-  const onNextCard = () => {
-    const currentCardId = expandedCard.recentCard
-      ? HOME_CARD_TITLE.RECENTS
-      : expandedCard.myWorkCard
-        ? HOME_CARD_TITLE.MY_WORK
-        : expandedCard.assignedCommentsCard
-          ? HOME_CARD_TITLE.ASSIGNED_COMMENTS
-          : '';
+  const navigateCard = (direction: 'next' | 'prev') => {
+    if (!expandedCardId) return;
 
-    const currentIndex = HomeCardList.findIndex(
-      (card) => card.id === currentCardId
+    const currentIndex = cardsList.findIndex(
+      (card) => card.id === expandedCardId
     );
-    const nextIndex = (currentIndex + 1) % HomeCardList.length;
-    const nextCardTitle = HomeCardList[nextIndex].id;
-    onExpandToFullView(nextCardTitle);
+    const increment = direction === 'next' ? 1 : -1;
+    const nextIndex =
+      (currentIndex + increment + cardsList.length) % cardsList.length;
+    setExpandedCardId(cardsList[nextIndex].id);
   };
 
-  const onPrevCard = () => {
-    const currentCardId = expandedCard.recentCard
-      ? HOME_CARD_TITLE.RECENTS
-      : expandedCard.myWorkCard
-        ? HOME_CARD_TITLE.MY_WORK
-        : expandedCard.assignedCommentsCard
-          ? HOME_CARD_TITLE.ASSIGNED_COMMENTS
-          : '';
+  const onNextCard = () => navigateCard('next');
+  const onPrevCard = () => navigateCard('prev');
 
-    const currentIndex = HomeCardList.findIndex(
-      (card) => card.id === currentCardId
+  const isCardAdded = (cardId: string) => {
+    return cardsList.find((card) => card.id === cardId)?.isAdded ?? false;
+  };
+
+  const onToggleCardVisibility = (cardId: string) => {
+    setCardsList((prevCards) =>
+      prevCards.map((card) =>
+        card.id === cardId ? { ...card, isAdded: !card.isAdded } : card
+      )
     );
-    const prevIndex =
-      (currentIndex - 1 + HomeCardList.length) % HomeCardList.length;
-    const prevCardTitle = HomeCardList[prevIndex].id;
-    onExpandToFullView(prevCardTitle);
   };
-
   return (
-    <div>
+    <div className="h-screen flex flex-col overflow-hidden">
       <PageHeader
-        title={title}
+        title={expandedCardId || ''}
         onCancelFullView={onCancelFullView}
         state={isCardExpanded}
         onNextCard={onNextCard}
         onPrevCard={onPrevCard}
-        cardsList={HomeCardList}
+        cardsList={cardsList}
+        onToggleCardVisibility={onToggleCardVisibility}
       />
-      <div className="px-[25px] py-[10px]">
+
+      <div className="flex-1 overflow-y-auto px-[25px] py-[10px]">
         {!isCardExpanded && (
           <>
             <span className="text-3xl font-semibold ml-3">
               {WELCOME_MESSAGE}
             </span>
             <div className="grid grid-cols-2 gap-4 my-2">
-              <RecentContent
-                expanded={expandedCard.recentCard}
-                onExpand={onExpandToFullView}
-                cardTitle={HOME_CARD_TITLE.RECENTS}
-              />
-              <MyWorkContent
-                expanded={expandedCard.myWorkCard}
-                onExpand={onExpandToFullView}
-                cardTitle={HOME_CARD_TITLE.MY_WORK}
-              />
-              <AssignedCommentsContent
-                expanded={expandedCard.assignedCommentsCard}
-                onExpand={onExpandToFullView}
-                cardTitle={HOME_CARD_TITLE.ASSIGNED_COMMENTS}
-              />
+              {isCardAdded(HOME_CARD_TITLE.RECENTS) && (
+                <RecentContent
+                  expanded={false}
+                  onExpand={onExpandToFullView}
+                  cardTitle={HOME_CARD_TITLE.RECENTS}
+                />
+              )}
+              {isCardAdded(HOME_CARD_TITLE.MY_WORK) && (
+                <MyWorkContent
+                  expanded={false}
+                  onExpand={onExpandToFullView}
+                  cardTitle={HOME_CARD_TITLE.MY_WORK}
+                />
+              )}
+              {isCardAdded(HOME_CARD_TITLE.ASSIGNED_COMMENTS) && (
+                <AssignedCommentsContent
+                  expanded={false}
+                  onExpand={onExpandToFullView}
+                  cardTitle={HOME_CARD_TITLE.ASSIGNED_COMMENTS}
+                />
+              )}
             </div>
           </>
         )}
       </div>
+
       {isCardExpanded && (
         <div className="fixed">
-          {expandedCard.recentCard && (
-            <RecentContent
-              expanded={expandedCard.recentCard}
-              onExpand={onExpandToFullView}
-              cardTitle={HOME_CARD_TITLE.RECENTS}
-            />
-          )}
-          {expandedCard.myWorkCard && (
-            <MyWorkContent
-              expanded={expandedCard.myWorkCard}
-              onExpand={onExpandToFullView}
-              cardTitle={HOME_CARD_TITLE.MY_WORK}
-            />
-          )}
-          {expandedCard.assignedCommentsCard && (
-            <AssignedCommentsContent
-              expanded={expandedCard.assignedCommentsCard}
-              onExpand={onExpandToFullView}
-              cardTitle={HOME_CARD_TITLE.ASSIGNED_COMMENTS}
-            />
-          )}
+          {expandedCardId === HOME_CARD_TITLE.RECENTS &&
+            isCardAdded(HOME_CARD_TITLE.RECENTS) && (
+              <RecentContent
+                expanded={true}
+                onExpand={onExpandToFullView}
+                cardTitle={HOME_CARD_TITLE.RECENTS}
+              />
+            )}
+          {expandedCardId === HOME_CARD_TITLE.MY_WORK &&
+            isCardAdded(HOME_CARD_TITLE.MY_WORK) && (
+              <MyWorkContent
+                expanded={true}
+                onExpand={onExpandToFullView}
+                cardTitle={HOME_CARD_TITLE.MY_WORK}
+              />
+            )}
+          {expandedCardId === HOME_CARD_TITLE.ASSIGNED_COMMENTS &&
+            isCardAdded(HOME_CARD_TITLE.ASSIGNED_COMMENTS) && (
+              <AssignedCommentsContent
+                expanded={true}
+                onExpand={onExpandToFullView}
+                cardTitle={HOME_CARD_TITLE.ASSIGNED_COMMENTS}
+              />
+            )}
         </div>
       )}
     </div>
