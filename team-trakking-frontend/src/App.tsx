@@ -5,6 +5,8 @@ import AppRoutes from '@/routes';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { PageHeaderContextProvider } from '@/lib/context/page-header-context.tsx';
 
+/// <reference types="vite-plugin-svgr/client" />
+
 function App() {
   const store = configureAppStore();
   return (

@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button.tsx';
-import { Plus } from 'lucide-react';
 import { Input } from '@/components/ui/input';
+import { Icon } from '@/assets/icon-path';
 
 interface ListCardProps {
   filterValue: string;
@@ -15,7 +15,7 @@ export const ListCard = ({ filterValue, onFilterChange }: ListCardProps) => {
           <span className="font-medium text-base">Tasks</span>
           <span className="text-muted-foreground text-sm">20</span>
           <Button size={'icon_sm'} variant={'ghost'} className={''}>
-            <Plus className={'text-muted-foreground'} size={14} />
+            <Icon name={'add02'} />
           </Button>
         </div>
         <div className="mb-4">
