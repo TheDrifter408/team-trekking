@@ -1,4 +1,3 @@
-import { FontProvider } from '@/lib/context/font-context';
 import { ThemeProvider } from '@/lib/context/theme-context.tsx';
 import { Provider } from 'react-redux';
 import configureAppStore from '@/redux/store/store.ts';
@@ -11,13 +10,11 @@ function App() {
   return (
     <Provider store={store}>
       <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
-        <FontProvider>
-          <PageHeaderContextProvider>
-            <Router>
-              <AppRoutes />
-            </Router>
-          </PageHeaderContextProvider>
-        </FontProvider>
+        <PageHeaderContextProvider>
+          <Router>
+            <AppRoutes />
+          </Router>
+        </PageHeaderContextProvider>
       </ThemeProvider>
     </Provider>
   );

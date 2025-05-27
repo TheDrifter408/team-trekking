@@ -46,7 +46,7 @@ export const List = () => {
     <div className={''}>
       <PageHeader currentPage={currentPage} parents={parents} />
       <Main>
-        <div className="px-6">
+        <div className="px-4">
           <ListCard filterValue={filterValue} onFilterChange={setFilterValue} />
         </div>
         <DataTable
