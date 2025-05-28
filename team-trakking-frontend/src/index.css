@@ -10,7 +10,7 @@
     --card-foreground: 222.2 84% 4.9%;
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
-    --primary: 222.2 47.4% 11.2%;
+    --primary: rgb(32,32,32);
     --primary-foreground: 210 40% 98%;
     --secondary: 210 40% 96.1%;
     --secondary-foreground: 222.2 47.4% 11.2%;
@@ -37,9 +37,11 @@
     --sidebar-accent-foreground: 240 5.9% 10%;
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+    --content-tertiary: rgba(123, 123, 123, 1);
+
   }
   .dark {
-    --background: 222.2 84% 4.9%;
+    --background: rgba(17, 17, 17, 1);
     --foreground: 210 40% 98%;
     --card: 222.2 84% 4.9%;
     --card-foreground: 210 40% 98%;
@@ -71,6 +73,18 @@
     --sidebar-accent-foreground: 240 4.8% 95.9%;
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+    --content-tertiary: rgba(123, 123, 123, 1);
+  }
+  .theme-pink{
+    --theme-primary: rgb(233,61,130);
+    --theme-primary-dark: rgb(98,22,57);
+    --theme-secondary-dark: rgb(119, 52, 83);
+    --theme-main-color: #ee5e99;
+    --theme-main-color-dark:#ea3982;
+    --theme-main-color-light:#fad1e2;
+    --theme-button-highlight-color: #ee5e99;
+    --theme-content-primary: rgb(203, 29, 99);
+    --theme-background-subtle:rgb(252, 229, 240);
   }
 
   /* styles.css */
@@ -175,5 +189,4 @@
   }
 }
 html {
-  scrollbar-gutter: stable;
 }

@@ -27,8 +27,8 @@ export const Subtask = ({
   onHandleSubtaskSelect,
 }: SubtaskProps) => {
   return (
-    <div className="space-y-4 bg-gray-50 rounded-lg shadow-sm">
-      <div className="flex justify-between px-2 py-6 ">
+    <div className="rounded-lg shadow-sm">
+      <div className="flex justify-between items-center py-2 px-2 mb-2  ">
         <h3 className="text-lg font-medium text-gray-900">Subtasks</h3>
         <Button
           size={'icon'}
@@ -38,7 +38,7 @@ export const Subtask = ({
           <Plus color={'white'} size={18} />
         </Button>
       </div>
-      <div className="bg-white rounded-lg shadow overflow-x-auto">
+      <div className="bg-accent rounded-lg shadow overflow-x-auto">
         <DndContext
           sensors={sensors}
           collisionDetection={closestCenter}

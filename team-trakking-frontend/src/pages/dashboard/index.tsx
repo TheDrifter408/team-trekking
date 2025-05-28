@@ -1,141 +1,131 @@
 'use client';
 
-import { useEffect } from 'react';
-import { useTMTStore } from '@/stores/zustand';
-import { useBreadcrumbNavigation } from '@/lib/hooks/use-breadcrumb';
-import { usePageHeader } from '@/lib/context/page-header-context';
-import { Main } from '@/components/layout/main.tsx';
-import { PageHeader } from '@/components/layout/page-header.tsx';
-import { Folder, List, Users } from 'lucide-react';
-import { TaskStatusTable } from '@/pages/dashboard/components/task-table.tsx';
-import { mockActivities, spaceData, myTasks } from '@/mock';
-import { ActivityFeed } from '@/pages/dashboard/components/activity-feed.tsx';
+import { useState } from 'react';
+import { WELCOME_MESSAGE } from '@/lib/constants';
+import { HOME_CARD_TITLE, HomeCardList } from '@/lib/constants';
+import { PageHeader } from './components/page-header';
+import { RecentContent } from '@/pages/dashboard/components/recent-content.tsx';
+import { MyWorkContent } from '@/pages/dashboard/components/my-work-content.tsx';
+import { AssignedCommentsContent } from '@/pages/dashboard/components/assigned-comments-content.tsx';
+
+enum Direction {
+  NEXT = 'next',
+  PREV = 'prev',
+}
 
 export const Dashboard = () => {
-  const { setCurrentView } = usePageHeader();
-  const { setCurrentPage } = useTMTStore();
+  const [expandedCardId, setExpandedCardId] = useState<string | null>(null);
+  const [cardsList, setCardsList] = useState(HomeCardList);
 
-  // Set up breadcrumbs for this page
-  useBreadcrumbNavigation({
-    currentTitle: 'My Workspace',
-    workspace: { label: 'Workspace', href: '/home' },
-  });
+  const isCardExpanded = expandedCardId !== null;
 
-  useEffect(() => {
-    setCurrentView('overview');
-    setCurrentPage('Home');
-  }, []);
-
-  const spacesData: any[] = [],
-    foldersData: any[] = [],
-    listsData: any[] = [];
-
-  let spaceCount = 0,
-    folderCount = 0,
-    listCount = 0;
-
-  for (const space of spaceData) {
-    let _listCount = 0;
-    for (const folder of space.folders) {
-      listCount += folder.lists.length;
-      _listCount += folder.lists.length;
-      const _folder = {
-        id: folder.id,
-        name: folder.name,
-        listCount: folder.lists.length,
-      };
-      foldersData.push(_folder);
-      for (const list of folder.lists) {
-        listsData.push(list);
-      }
-    }
-    folderCount += space.folders.length;
-    const _space = {
-      id: space.id,
-      name: space.name,
-      folderCount: space.folders.length,
-      listCount: space.lists.length + _listCount,
-    };
-    spacesData.push(_space);
-    for (const list of space.lists) {
-      listsData.push(list);
-    }
-    ++spaceCount;
-  }
-
-  const handleViewAllSpaces = () => {
-    // Implement navigation or modal to view all spaces
-    console.log('View all spaces clicked');
+  const onCancelFullView = () => {
+    setExpandedCardId(null);
   };
 
-  const handleViewAllFolders = () => {
-    // Implement navigation or modal to view all folders
-    console.log('View all folders clicked');
+  const onExpandToFullView = (cardTitle: string) => {
+    setExpandedCardId(cardTitle);
   };
 
-  const handleViewAllLists = () => {
-    // Implement navigation or modal to view all lists
-    console.log('View all lists clicked');
+  const navigateCard = (direction: Direction.NEXT | Direction.PREV) => {
+    if (!expandedCardId) return;
+
+    const currentIndex = cardsList.findIndex(
+      (card) => card.id === expandedCardId
+    );
+    const increment = direction === Direction.NEXT ? 1 : -1;
+    const nextIndex =
+      (currentIndex + increment + cardsList.length) % cardsList.length;
+    setExpandedCardId(cardsList[nextIndex].id);
   };
 
+  const onNextCard = () => navigateCard(Direction.NEXT);
+  const onPrevCard = () => navigateCard(Direction.PREV);
+
+  const isCardAdded = (cardId: string) => {
+    return cardsList.find((card) => card.id === cardId)?.isAdded ?? false;
+  };
+
+  const onToggleCardVisibility = (cardId: string) => {
+    setCardsList((prevCards) =>
+      prevCards.map((card) =>
+        card.id === cardId ? { ...card, isAdded: !card.isAdded } : card
+      )
+    );
+  };
   return (
-    <Main>
-      <div className="px-6 pt-4 flex-grow">
-        {/* Overview Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-          {/* Spaces Card */}
-          <PageHeader
-            icon={<Users />}
-            title="Spaces"
-            description="Departments or teams in this workspace"
-            count={spaceCount}
-            countLabel="Total Spaces"
-            items={spacesData}
-            itemLabelKey="name"
-            color="blue"
-            viewAllLabel="View all spaces"
-            onViewAll={handleViewAllSpaces}
-          />
+    <div className="h-screen flex flex-col overflow-hidden">
+      <PageHeader
+        title={expandedCardId || ''}
+        onCancelFullView={onCancelFullView}
+        state={isCardExpanded}
+        onNextCard={onNextCard}
+        onPrevCard={onPrevCard}
+        cardsList={cardsList}
+        onToggleCardVisibility={onToggleCardVisibility}
+      />
 
-          {/* Folders Card */}
-          <PageHeader
-            icon={<Folder />}
-            title="Folders"
-            description="Projects organized in this workspace"
-            count={folderCount}
-            countLabel="Total Folders"
-            items={foldersData}
-            itemLabelKey="name"
-            color="green"
-            viewAllLabel="View all folders"
-            onViewAll={handleViewAllFolders}
-          />
+      <div className="flex-1 overflow-y-auto px-[25px] py-[10px]">
+        {!isCardExpanded && (
+          <>
+            <span className="text-3xl font-semibold ml-3">
+              {WELCOME_MESSAGE}
+            </span>
+            <div className="grid grid-cols-2 gap-4 my-2">
+              {isCardAdded(HOME_CARD_TITLE.RECENTS) && (
+                <RecentContent
+                  expanded={false}
+                  onExpand={onExpandToFullView}
+                  cardTitle={HOME_CARD_TITLE.RECENTS}
+                />
+              )}
+              {isCardAdded(HOME_CARD_TITLE.MY_WORK) && (
+                <MyWorkContent
+                  expanded={false}
+                  onExpand={onExpandToFullView}
+                  cardTitle={HOME_CARD_TITLE.MY_WORK}
+                />
+              )}
+              {isCardAdded(HOME_CARD_TITLE.ASSIGNED_COMMENTS) && (
+                <AssignedCommentsContent
+                  expanded={false}
+                  onExpand={onExpandToFullView}
+                  cardTitle={HOME_CARD_TITLE.ASSIGNED_COMMENTS}
+                />
+              )}
+            </div>
+          </>
+        )}
+      </div>
 
-          {/* Lists Card */}
-          <PageHeader
-            icon={<List />}
-            title="Task Lists"
-            description="Organized task collections"
-            count={listCount}
-            countLabel="Total Lists"
-            items={listsData}
-            itemLabelKey="containerName"
-            color="purple"
-            viewAllLabel="View all lists"
-            onViewAll={handleViewAllLists}
-          />
+      {isCardExpanded && (
+        <div className="fixed">
+          {expandedCardId === HOME_CARD_TITLE.RECENTS &&
+            isCardAdded(HOME_CARD_TITLE.RECENTS) && (
+              <RecentContent
+                expanded={true}
+                onExpand={onExpandToFullView}
+                cardTitle={HOME_CARD_TITLE.RECENTS}
+              />
+            )}
+          {expandedCardId === HOME_CARD_TITLE.MY_WORK &&
+            isCardAdded(HOME_CARD_TITLE.MY_WORK) && (
+              <MyWorkContent
+                expanded={true}
+                onExpand={onExpandToFullView}
+                cardTitle={HOME_CARD_TITLE.MY_WORK}
+              />
+            )}
+          {expandedCardId === HOME_CARD_TITLE.ASSIGNED_COMMENTS &&
+            isCardAdded(HOME_CARD_TITLE.ASSIGNED_COMMENTS) && (
+              <AssignedCommentsContent
+                expanded={true}
+                onExpand={onExpandToFullView}
+                cardTitle={HOME_CARD_TITLE.ASSIGNED_COMMENTS}
+              />
+            )}
         </div>
-      </div>
-      <div className="overflow-x-auto w-full px-6">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="md:col-span-2 ">
-            <TaskStatusTable tasks={myTasks} />
-          </div>
-          <div className={'h-[320px]'}>
-            <ActivityFeed activities={mockActivities} onViewAll={() => {}} />
-          </div>
-        </div>
-      </div>
-    </Main>
+      )}
+    </div>
   );
 };

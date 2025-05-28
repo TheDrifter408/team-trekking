@@ -1,0 +1,186 @@
+'use client';
+
+import * as React from 'react';
+import { useEffect, useState } from 'react';
+import { CompassIcon, Plus, UserPlus } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarRail,
+  useSidebar,
+} from '@/components/ui/sidebar';
+import { sidebarData, spaceData } from '@/mock';
+import { TeamSwitcher } from '@/components/layout/team-switcher';
+import { NavGroup } from '@/components/layout/nav-group.tsx';
+import { Collapsible } from '@/components/ui/collapsible.tsx';
+import { Button } from '@/components/ui/button.tsx';
+import { SidebarSpaceItems } from '@/components/layout/sidebar-space-items.tsx';
+import { SidebarFolderItems } from '@/components/layout/sidebar-folder-items.tsx';
+import { SidebarListItems } from '@/components/layout/sidebar-list-items.tsx';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip.tsx';
+import { CreateSpace } from '@/components/space/create-space.tsx';
+import { InviteUser } from '@/components/invite-user.tsx';
+import { NavUser } from '@/components/layout/nav-user.tsx';
+
+export const AppSidebar = ({
+  ...props
+}: React.ComponentProps<typeof Sidebar>) => {
+  const { state } = useSidebar();
+
+  const [createSpaceOpen, setCreateSpaceOpen] = useState(false);
+  const [inviteUserOpen, setInviteUserOpen] = useState(false);
+  // Form states
+  const [spaceName, setSpaceName] = useState('');
+  const [description, setDescription] = useState('');
+  const [selectedIcon, setSelectedIcon] = useState<React.ReactNode | null>(
+    null
+  );
+  const [enterSpaceGroup, setEnterSpaceGroup] = useState<boolean>(false);
+  const [privateAccess, setPrivateAccess] = useState(false);
+  // Derived state
+  const [initials, setInitials] = useState('');
+  // Generate initials based on space name
+  useEffect(() => {
+    if (spaceName) {
+      const words = spaceName.split(' ');
+      let iconValue = '';
+      for (const first of words) {
+        if (first === '') continue;
+        iconValue += first.trim()[0];
+      }
+      if (iconValue.length > 3)
+        setInitials(iconValue[0] + iconValue[iconValue.length - 1]);
+      else setInitials(iconValue);
+    } else {
+      setInitials('');
+    }
+  }, [spaceName]);
+
+  const onCreateSpace = () => {
+    setSpaceName('');
+    setDescription('');
+    setSelectedIcon(null);
+    setPrivateAccess(false);
+    setCreateSpaceOpen(false);
+  };
+
+  const onInviteUsers = () => {};
+
+  const isOpen = state !== 'collapsed';
+  return (
+    <Sidebar
+      collapsible={'icon'}
+      className={cn(
+        'h-[calc(100%-40px)]',
+        'peer-data-[state=collapsed]:w-[calc(100%-var(--sidebar-width-icon))]',
+        'peer-data-[state=expanded]:w-[calc(100%-var(--sidebar-width))]',
+        'mt-[40px]'
+      )}
+      {...props}
+    >
+      <SidebarHeader className={'border-b py-0'}>
+        <TeamSwitcher teams={sidebarData.teams} />
+      </SidebarHeader>
+      <SidebarContent>
+        {sidebarData.navGroups.map((props) => (
+          <NavGroup key={props.title} {...props} />
+        ))}
+        {isOpen ? (
+          <Collapsible className="group/collapsible">
+            <SidebarGroup className="gap-1">
+              <div
+                className="justify-between flex items-center"
+                onMouseEnter={() => setEnterSpaceGroup(true)}
+                onMouseLeave={() => setEnterSpaceGroup(false)}
+              >
+                <SidebarGroupLabel className="text-xs font-medium  tracking-wider">
+                  Spaces
+                </SidebarGroupLabel>
+                <div className="flex gap-2">
+                  {enterSpaceGroup && (
+                    <Button
+                      size={'icon'}
+                      variant={'ghost'}
+                      className={'h-5 w-5'}
+                      onClick={() => setInviteUserOpen(true)}
+                    >
+                      <UserPlus size={14} />
+                    </Button>
+                  )}
+                  <Button
+                    size={'icon'}
+                    onClick={() => setCreateSpaceOpen(true)}
+                    className={'h-6 w-6 bg-theme-main-dark'}
+                  >
+                    <Plus size={14} />
+                  </Button>
+                </div>
+              </div>
+              {spaceData.map((space) => (
+                <SidebarSpaceItems key={space.id} name={space.name}>
+                  {space.folders.map((folder: any) => (
+                    <SidebarFolderItems
+                      key={folder.id}
+                      name={folder.name}
+                      folder={folder}
+                    />
+                  ))}
+                  {space.lists.map((listItem) => (
+                    <SidebarListItems listItem={listItem} />
+                  ))}
+                </SidebarSpaceItems>
+              ))}
+            </SidebarGroup>
+          </Collapsible>
+        ) : (
+          <SidebarGroup className="justify-center flex items-center">
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger>
+                  <CompassIcon className={'text-indigo-600'} size={20} />
+                </TooltipTrigger>
+                <TooltipContent side="right" align="center">
+                  Spaces
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </SidebarGroup>
+        )}
+      </SidebarContent>
+      <SidebarFooter>
+        <NavUser user={sidebarData.user} />
+      </SidebarFooter>
+      <SidebarRail />
+      <CreateSpace
+        createSpaceOpen={createSpaceOpen}
+        setCreateSpaceOpen={setCreateSpaceOpen}
+        spaceName={spaceName}
+        setSpaceName={setSpaceName}
+        description={description}
+        setDescription={setDescription}
+        selectedIcon={selectedIcon}
+        setSelectedIcon={setSelectedIcon}
+        privateAccess={privateAccess}
+        setPrivateAccess={setPrivateAccess}
+        initials={initials}
+        onCreateSpace={onCreateSpace}
+      />
+      <InviteUser
+        inviteUserOpen={inviteUserOpen}
+        setInviteUserOpen={setInviteUserOpen}
+        onInvite={onInviteUsers}
+        maxInvites={10}
+      />
+    </Sidebar>
+  );
+};

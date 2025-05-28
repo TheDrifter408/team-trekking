@@ -1,51 +1,31 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Outlet } from 'react-router-dom';
 import Cookies from 'js-cookie';
-import {
-  SidebarProvider,
-  SidebarInset,
-  useSidebar,
-} from '@/components/ui/sidebar';
-import { Header } from '@/components/layout/header.tsx';
-import { HeaderItems } from '@/components/layout/header-items.tsx';
-import { TaskSidebar } from './task-sidebar';
-
-// Create a wrapper component that handles the layout adjustments
-const SidebarAwareContent = () => {
-  const { open } = useSidebar();
-
-  // Save sidebar state to cookies when it changes
-  useEffect(() => {
-    Cookies.set('sidebar:state', open.toString());
-  }, [open]);
-
-  return (
-    <>
-      <Header fixed={true}>
-        <HeaderItems />
-      </Header>
-      <SidebarInset className={`transition-all mt-5 duration-300 ease-in-out}`}>
-        <Outlet />
-      </SidebarInset>
-    </>
-  );
-};
+import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar';
+import { TaskSidebar } from './components/task-sidebar.tsx';
+import { AppHeader } from '@/pages/layout/components/app-header.tsx';
+import { PageHeader } from '@/pages/task/components/page-header';
 
 export const HeaderLayout: React.FC = () => {
   const defaultOpen = Cookies.get('sidebar:state') !== 'false';
-
+  const sidebarStyle = {
+    '--sidebar-width': '480px',
+  } as React.CSSProperties & { [key: string]: string };
   return (
-    <div className="[--header-height:2rem] [--sidebar-width-icon:3rem] h-screen">
+    <div className="flex flex-col h-screen">
       <SidebarProvider
         defaultOpen={defaultOpen}
-        style={
-          {
-            '--sidebar-width': '350px',
-          } as React.CSSProperties
-        }
+        style={sidebarStyle}
+        className="flex flex-col h-full"
       >
-        <SidebarAwareContent />
-        <TaskSidebar />
+        <AppHeader />
+        <PageHeader />
+        <div className="flex flex-1  overflow-hidden">
+          <SidebarInset className="flex-1 overflow-auto">
+            <Outlet />
+          </SidebarInset>
+          <TaskSidebar />
+        </div>
       </SidebarProvider>
     </div>
   );

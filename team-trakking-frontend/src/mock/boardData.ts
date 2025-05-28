@@ -1,52 +1,154 @@
-import { CheckCircle2, Clock, ListTodo } from 'lucide-react';
+import { faker } from '@faker-js/faker';
+import {
+  Inbox as BacklogIcon,
+  CheckCircle as TodoIcon,
+  ArrowRightCircle as ProgressIcon,
+  Search as ReviewIcon,
+  FlaskRoundIcon as TestingIcon,
+  CheckSquare as CompletedIcon,
+} from 'lucide-react';
 
-export const mockColumns = [
+// Then in the icons object:
+const icons = {
+  backlog: BacklogIcon,
+  todo: TodoIcon,
+  inProgress: ProgressIcon,
+  review: ReviewIcon,
+  testing: TestingIcon,
+  completed: CompletedIcon,
+};
+
+export interface Assignee {
+  id: number;
+  name: string;
+  avatar: string;
+}
+export enum TaskStatus {
+  TODO = 'todo',
+  IN_PROGRESS = 'in_progress',
+  BACKLOG = 'backlog',
+  REVIEW = 'review',
+  TESTING = 'testing',
+  CANCELLED = 'cancelled',
+  REJECTED = 'rejected',
+  APPROVED = 'approved',
+}
+export enum Priority {
+  NONE = 'none',
+  LOW = 'low',
+  MIDDLE = 'mid',
+  HIGH = 'high',
+}
+export type PriorityType = keyof typeof Priority;
+export type TaskStatusType = keyof typeof TaskStatus | TaskStatus;
+export interface Subtask extends Task {
+  parentId?: string;
+}
+export interface Task {
+  id: string;
+  name: string;
+  description: string;
+  status: TaskStatus;
+  dueDate: string;
+  startDate: string;
+  assignees: Assignee[];
+  priority: Priority;
+  subtask: Subtask[];
+  checklistCount: number;
+}
+export interface Column {
+  id: string;
+  title: string;
+  color: string;
+  icon: any;
+  tasks: Task[];
+}
+
+// Function to create random assignees
+const createRandomAssignees = (count: number): Assignee[] => {
+  return Array.from({ length: count }, () => ({
+    id: faker.number.int({ min: 1000, max: 9999 }),
+    name: faker.person.fullName(),
+    avatar: faker.image.avatar(),
+  }));
+};
+
+// Function to create random tasks
+const createRandomTasks = (status: TaskStatus, count: number): Task[] => {
+  return Array.from({ length: count }, () => {
+    const subtaskCount = faker.number.int({ min: 0, max: 3 });
+    return {
+      id: faker.string.uuid(),
+      name: faker.company.catchPhrase(),
+      description: faker.lorem.paragraph(),
+      status,
+      dueDate: faker.date.future().toISOString(),
+      startDate: faker.date.past().toISOString(),
+      assignees: createRandomAssignees(faker.number.int({ min: 1, max: 3 })),
+      priority: faker.helpers.enumValue(Priority),
+      subtask: Array.from({ length: subtaskCount }, () => ({
+        id: faker.string.uuid(),
+        name: faker.hacker.phrase(),
+        description: faker.lorem.sentence(),
+        status: faker.helpers.enumValue(TaskStatus),
+        dueDate: faker.date.future().toISOString(),
+        startDate: faker.date.past().toISOString(),
+        assignees: createRandomAssignees(faker.number.int({ min: 0, max: 2 })),
+        priority: faker.helpers.enumValue(Priority),
+        subtask: [],
+        checklistCount: faker.number.int({ min: 0, max: 5 }),
+        parentId: faker.string.uuid(),
+      })),
+      checklistCount: faker.number.int({ min: 0, max: 10 }),
+    };
+  });
+};
+// Create mock columns with tasks
+export const mockColumns: Column[] = [
   {
-    id: 'todo',
+    id: 'col-1',
+    title: 'Backlog',
+    color: '#c6c9cc', // slate-200
+    icon: icons.backlog,
+    tasks: createRandomTasks(TaskStatus.BACKLOG, 5),
+  },
+  {
+    id: 'col-2',
     title: 'To Do',
-    color: 'text-blue-600',
-    icon: ListTodo,
-    tasks: [
-      {
-        id: '1',
-        title: 'Research competitors',
-        description: 'Analyze main competitors and their features',
-        category: 'todo',
-      },
-      {
-        id: '2',
-        title: 'Design mockups',
-        description: 'Create initial design mockups for the dashboard',
-        category: 'todo',
-      },
-    ],
+    color: '#bfdbfe', // blue-200
+    icon: icons.todo,
+    tasks: createRandomTasks(TaskStatus.TODO, 4),
   },
   {
-    id: 'in-progress',
+    id: 'col-3',
     title: 'In Progress',
-    color: 'text-amber-600',
-    icon: Clock,
-    tasks: [
-      {
-        id: '3',
-        title: 'Implement auth',
-        description: 'Set up authentication system',
-        category: 'in-progress',
-      },
-    ],
+    color: '#fde68a', // amber-200
+    icon: icons.inProgress,
+    tasks: createRandomTasks(TaskStatus.IN_PROGRESS, 3),
   },
   {
-    id: 'completed',
-    title: 'completed',
-    color: 'text-emerald-600',
-    icon: CheckCircle2,
+    id: 'col-4',
+    title: 'Review',
+    color: '#c4b5fd', // violet-300
+    icon: icons.review,
+    tasks: createRandomTasks(TaskStatus.REVIEW, 2),
+  },
+  {
+    id: 'col-5',
+    title: 'Testing',
+    color: '#a7f3d0', // emerald-200
+    icon: icons.testing,
+    tasks: createRandomTasks(TaskStatus.TESTING, 2),
+  },
+  {
+    id: 'col-6',
+    title: 'Completed',
+    color: '#86efac', // green-300
+    icon: icons.completed,
     tasks: [
-      {
-        id: '4',
-        title: 'Project setup',
-        description: 'Initialize project and install dependencies',
-        category: 'completed',
-      },
+      ...createRandomTasks(TaskStatus.APPROVED, 3),
+      ...createRandomTasks(TaskStatus.CANCELLED, 1),
+      ...createRandomTasks(TaskStatus.REJECTED, 1),
     ],
   },
 ];

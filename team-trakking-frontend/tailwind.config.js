@@ -1,15 +1,14 @@
 import tailwindCssAnimate from 'tailwindcss-animate';
 import defaultTheme from 'tailwindcss/defaultTheme';
-import { fonts } from './src/lib/config/fonts';
 
 // Use destructuring with fallback to ensure fontFamily is defined
-const { fontFamily = { sans: ['sans-serif'] } } = defaultTheme || {};
+const { fontFamily = { sans: ['apple-system', 'sans-serif'] } } =
+  defaultTheme || {};
 
 /** @type {import('tailwindcss').Config} */
 export default {
   darkMode: ['class'],
   content: ['./index.html', './src/**/*.{ts,tsx,js,jsx}'],
-  safelist: fonts.map((font) => `font-${font}`),
   theme: {
     container: {
       center: 'true',
@@ -19,10 +18,6 @@ export default {
       },
     },
     extend: {
-      fontFamily: {
-        inter: ['Inter', ...fontFamily.sans],
-        manrope: ['Manrope', ...fontFamily.sans],
-      },
       fontSize: {
         xs: '0.625rem', // 10px
         sm: '0.75rem', // 12px
@@ -31,7 +26,7 @@ export default {
         xl: '1.125rem', // 18px
         '2xl': '1.25rem', // 20px
         '3xl': '1.5rem', // 24px
-        '4xl': '1.875rem', // 30px
+        '4xl': '2rem', // 30px
         '5xl': '2.25rem', // 36px
         '6xl': '3rem', // 48px
         '7xl': '3.75rem', // 60px
@@ -42,7 +37,20 @@ export default {
         sm: 'calc(var(--radius) - 4px)',
       },
       colors: {
-        background: 'hsl(var(--background))',
+        theme: {
+          DEFAULT: 'var(--theme-main-color)',
+          dark: 'var(--theme-primary-dark)',
+          main: 'var(--theme-main-color)',
+          'secondary-dark': 'var(--theme-secondary-dark)',
+          'main-dark': 'var(--theme-main-color-dark)',
+          'main-light': 'var(--theme-main-color-light)',
+          'content-primary': 'var(--theme-content-primary)',
+          'background-subtle': 'var(--theme-background-subtle)',
+        },
+        content: {
+          tertiary: 'var(--content-tertiary)',
+        },
+        background: 'var(--background)',
         foreground: 'hsl(var(--foreground))',
         card: {
           DEFAULT: 'hsl(var(--card))',
@@ -53,7 +61,7 @@ export default {
           foreground: 'hsl(var(--popover-foreground))',
         },
         primary: {
-          DEFAULT: 'hsl(var(--primary))',
+          DEFAULT: 'var(--primary)',
           foreground: 'hsl(var(--primary-foreground))',
         },
         secondary: {
@@ -93,6 +101,18 @@ export default {
           ring: 'hsl(var(--sidebar-ring))',
         },
       },
+    },
+    fontFamily: {
+      sans: [
+        ' "Segoe UI"',
+        '-apple-system',
+        'system-ui',
+        'BlinkMacSystemFont',
+        'Roboto',
+        '"Helvetica Neue"',
+        'Arial',
+        'sans-serif',
+      ],
     },
   },
   plugins: [tailwindCssAnimate],

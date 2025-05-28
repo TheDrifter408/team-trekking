@@ -15,24 +15,25 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
+import { UpdateSpace } from '@/components/space/update-space.tsx';
+import { getInitials } from '@/lib/utils.ts';
 
 interface Props {
   name: string;
   children: ReactNode;
 }
 
-const getInitials = (name: string) => {
-  return name
-    .split(' ')
-    .map((word) => word[0])
-    .join('')
-    .toUpperCase();
-};
-
 export const SidebarSpaceItems = ({ name, children }: Props) => {
   const navigate = useNavigate();
   const [isHovered, setIsHovered] = useState(false);
-  const initials = getInitials(name).slice(0, 3);
+  const [isRename, setIsRename] = useState(false);
+  const initials = getInitials(name);
+
+  const onRename = () => {
+    setTimeout(() => {
+      setIsRename(true);
+    }, 10);
+  };
 
   return (
     <Collapsible>
@@ -41,10 +42,10 @@ export const SidebarSpaceItems = ({ name, children }: Props) => {
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
-        <div className="flex items-center flex-1  ">
+        <div className="flex items-center flex-1">
           {!isHovered ? (
-            <div className="h-7 w-7 ml-1 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center text-xs font-medium">
-              {initials}
+            <div className="h-7 w-7 ml-1 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center text-sm font-medium">
+              {initials[0]}
             </div>
           ) : (
             <CollapsibleTrigger asChild>
@@ -67,7 +68,7 @@ export const SidebarSpaceItems = ({ name, children }: Props) => {
                     onClick={() => navigate('/space')}
                     className="hover:text-primary transition-colors duration-600"
                   >
-                    <span className="text-sm font-medium truncate max-w-[120px]">
+                    <span className="text-base truncate max-w-[120px]">
                       {name}
                     </span>
                   </Button>
@@ -79,8 +80,10 @@ export const SidebarSpaceItems = ({ name, children }: Props) => {
             </TooltipProvider>
           </div>
         </div>
-        <SidebarActionsMenu />
+        <SidebarActionsMenu onRename={onRename} />
       </div>
+
+      <UpdateSpace isActive={isRename} onClose={() => setIsRename(false)} />
 
       <CollapsibleContent>
         <motion.div
