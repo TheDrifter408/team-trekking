@@ -5,7 +5,7 @@ import {
   IconMailFilled,
 } from '@tabler/icons-react';
 import { AudioWaveform, Command, GalleryVerticalEnd } from 'lucide-react';
-import { type SidebarData } from '@/types/props/layout.ts';
+import { type SidebarData } from '@/types/props/Layout.ts';
 
 export const sidebarData: SidebarData = {
   user: {

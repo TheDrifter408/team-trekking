@@ -3,12 +3,12 @@ import { List } from 'lucide-react';
 import { OverviewCard } from '@/pages/dashboard/components/overview-card.tsx';
 import { spaceData } from '@/mock';
 import { PageHeader } from '@/components/layout/page-header.tsx';
-import { HeaderType } from '@/types/props/common.ts';
+import { HeaderType } from '@/types/props/Common.ts';
 
 export const Folder = () => {
   const currentPage = {
     type: 'FOLDER' as HeaderType,
-    label: 'Space Shuttle',
+    label: 'space Shuttle',
   };
   const parents = [
     { meta: 'SPACE' as HeaderType, label: 'ProjecX Moon', link: '/space' },
@@ -20,7 +20,7 @@ export const Folder = () => {
   for (const space of spaceData) {
     if (space.name !== 'ProjecX Moon') continue;
     for (const folder of space.folders) {
-      if (folder.name !== 'Space shuttle') continue;
+      if (folder.name !== 'space shuttle') continue;
       listCount += folder.lists.length;
 
       for (const list of folder.lists) {

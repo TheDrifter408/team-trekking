@@ -11,7 +11,7 @@ import { FormInputField } from './components/form-input.tsx';
 import { loginSchema } from '@/lib/config/validationSchema.tsx';
 import { usePostSignInMutation } from '@/service/rtkQuery.ts';
 import { UserRole } from '@/lib/constants/app.ts';
-import { UserResponse } from '@/types/props/ApiResponse';
+import { UserResponse } from '@/types/request-response/ApiResponse.ts';
 import { useTMTStore } from '@/stores/zustand/index.tsx';
 
 export const Login = () => {

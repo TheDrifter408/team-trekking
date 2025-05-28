@@ -4,4 +4,5 @@ export const LABEL = {
   EVERYTHING: 'Everything',
   SHARED_WITH_ME: 'Shared with me',
   CREATE_SPACE: 'Create space',
+  SPACES: 'Spaces',
 };

@@ -368,7 +368,7 @@ export const Task: React.FC = () => {
           <DocEditor
             placeholder={"Start writing or type '/' for commands"}
             value={description}
-            name={'Task Description'}
+            name={'task Description'}
             onChange={(e) => setDescription(e.target.value)}
           />
         </div>

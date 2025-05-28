@@ -11,7 +11,7 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import { InboxTabType } from '@/types/props/common';
+import { InboxTabType } from '@/types/props/Common.ts';
 
 interface Props {
   defaultTab?: InboxTabType;
