@@ -8,13 +8,13 @@ import { useNavigate } from 'react-router-dom';
 import { AuthLayout } from './components/auth-layout.tsx';
 import { AuthCard } from './components/auth-card.tsx';
 import { FormInputField } from './components/form-input.tsx';
-import { signUpSchema } from '@/lib/config/validation-schema';
+import { signUpSchema } from '@/lib/config/validationSchema.tsx';
 import { UserRole } from '@/lib/constants/app.ts';
 import {
   usePostSendOtpMutation,
   usePostVerifyOtpMutation,
   usePostCreateUserMutation,
-} from '@/redux/query/rtk-query.ts';
+} from '@/service/rtkQuery.ts';
 import {
   InputOTP,
   InputOTPGroup,

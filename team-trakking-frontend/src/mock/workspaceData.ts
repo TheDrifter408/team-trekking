@@ -7,7 +7,7 @@ import {
 export const spaceData = [
   {
     id: 1,
-    name: 'ProjecX Moon',
+    name: 'ProjectX Moon',
     folders: [
       {
         id: 11,

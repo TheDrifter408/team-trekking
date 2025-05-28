@@ -1,5 +1,5 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
-import axiosBaseQuery from '@/redux/query/base-query.ts';
+import axiosBaseQuery from '@/service/baseQuery.ts';
 import { useTMTStore } from '@/stores/zustand';
 import { ApiResponse, UserResponse } from '@/types/props/ApiResponse.ts';
 import {
@@ -76,5 +76,4 @@ export const {
   usePostVerifyOtpMutation,
   usePostCreateUserMutation,
   usePostSignInMutation,
-  usePostForgotPasswordMutation,
 } = tmtApi;
