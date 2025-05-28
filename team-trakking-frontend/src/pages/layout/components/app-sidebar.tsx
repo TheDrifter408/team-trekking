@@ -31,7 +31,7 @@ import {
 import { CreateSpace } from '@/components/space/create-space.tsx';
 import { InviteUser } from '@/components/invite-user.tsx';
 import { NavUser } from '@/components/layout/nav-user.tsx';
-import { Icon } from '@/assets/icon-path.tsx';
+import { Icon } from '@/assets/iconPath.tsx';
 import { LABEL } from '@/lib/constants/strings.ts';
 
 export const AppSidebar = ({

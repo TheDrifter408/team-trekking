@@ -8,8 +8,8 @@ import { useNavigate } from 'react-router-dom';
 import { AuthLayout } from './components/auth-layout';
 import { AuthCard } from './components/auth-card';
 import { FormInputField } from './components/form-input.tsx';
-import { emailInputSchema } from '@/lib/config/validation-schema';
-import { usePostSendOtpMutation } from '@/redux/query/rtk-query.ts';
+import { emailInputSchema } from '@/lib/config/validationSchema.tsx';
+import { usePostSendOtpMutation } from '@/service/rtkQuery.ts';
 import {
   InputOTP,
   InputOTPGroup,
