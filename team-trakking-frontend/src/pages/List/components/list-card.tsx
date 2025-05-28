@@ -1,32 +1,21 @@
 import { Button } from '@/components/ui/button.tsx';
-import { Input } from '@/components/ui/input';
 import { Icon } from '@/assets/icon-path';
 
-interface ListCardProps {
-  filterValue: string;
-  onFilterChange: (value: string) => void;
-}
-
-export const ListCard = ({ filterValue, onFilterChange }: ListCardProps) => {
+export const ListCard = () => {
   return (
-    <div>
-      <div className="flex justify-between">
-        <div className="flex items-center gap-2 mb-2">
-          <span className="font-medium text-base">Tasks</span>
-          <span className="text-muted-foreground text-sm">20</span>
-          <Button size={'icon_sm'} variant={'ghost'} className={''}>
-            <Icon name={'add02'} />
-          </Button>
-        </div>
-        <div className="mb-4">
-          <Input
-            placeholder="Filter Names..."
-            value={filterValue}
-            onChange={(event) => onFilterChange(event.target.value)}
-            className="w-full"
-          />
-        </div>
-      </div>
+    <div className={'flex items-center h-[28px] gap-[12px]'}>
+      <Button size={'icon_sm'} variant={'ghost'}>
+        <Icon name={'expandsubtask'} />
+      </Button>
+      <span className={'text-base'}>Tasks</span>
+      <span className={'font-normal text-content-tertiary text-sm'}>15</span>
+      <Button size={'icon_sm'} variant={'ghost'}>
+        <Icon name={'menu03'} />
+      </Button>
+      <Button className={'font-normal !h-[28px] !w-[84px]'} variant={'ghost'}>
+        <Icon name={'add02'} className={'size-3'} />
+        <span className={'text-content-tertiary text-sm'}>Add Task</span>
+      </Button>
     </div>
   );
 };

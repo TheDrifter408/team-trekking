@@ -22,7 +22,6 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { DataTableViewOptions } from '@/components/dataTable/data-table-view-options.tsx';
 import {
   DndContext,
   closestCenter,
@@ -78,9 +77,7 @@ function SortableTableRow({
       ref={setNodeRef}
       style={style}
       data-state={row.getIsSelected() && 'selected'}
-      className={`hover:bg-muted cursor-pointer ${
-        isDragging ? 'bg-muted' : ''
-      }`}
+      className={`hover:bg-muted cursor-pointer`}
       {...attributes}
       {...listeners}
       onMouseEnter={handleMouseEnter}
@@ -180,12 +177,6 @@ export function DataTable<TData, TValue>({
         // Update both local state and parent component
         setLocalData(newData);
         onDataChange(newData);
-
-        console.log('Item moved:', {
-          item: (movedItem as any).name,
-          from: oldIndex,
-          to: newIndex,
-        });
       }
     }
   };
@@ -197,11 +188,7 @@ export function DataTable<TData, TValue>({
   }, [filterValue, table]);
 
   return (
-    <div className="rounded-md border">
-      <div className="flex items-center px-4 py-4">
-        <DataTableViewOptions table={table} />
-      </div>
-
+    <div className="rounded-md">
       <DndContext
         sensors={sensors}
         collisionDetection={closestCenter}

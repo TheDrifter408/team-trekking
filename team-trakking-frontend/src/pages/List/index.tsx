@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { Main } from '@/components/layout/main.tsx';
-import { DataTable } from '@/components/dataTable/data-table.tsx';
 import { columns } from '@/pages/dashboard/components/columns.tsx';
 import { HeaderType } from '@/types/props/common.ts';
 import { ListCard } from './components/list-card.tsx';
 import { PageHeader } from '@/components/layout/page-header';
 import * as Task from '@/mock/task.ts';
+import { DataTable } from '@/components/dataTable/data-table2.tsx';
 
 const convertDates = (task) => ({
   ...task,
@@ -47,15 +47,15 @@ export const List = () => {
       <PageHeader currentPage={currentPage} parents={parents} />
       <Main>
         <div className="px-4">
-          <ListCard filterValue={filterValue} onFilterChange={setFilterValue} />
+          <ListCard />
+          <DataTable
+            columns={columns}
+            data={tasks}
+            onDataChange={handleDataChange}
+            filterValue={filterValue}
+            onFilterChange={setFilterValue}
+          />
         </div>
-        <DataTable
-          columns={columns}
-          data={tasks}
-          onDataChange={handleDataChange}
-          filterValue={filterValue}
-          onFilterChange={setFilterValue}
-        />
       </Main>
     </div>
   );

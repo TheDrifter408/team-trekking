@@ -47,7 +47,10 @@ export default {
           'content-primary': 'var(--theme-content-primary)',
           'background-subtle': 'var(--theme-background-subtle)',
         },
-        background: 'hsl(var(--background))',
+        content: {
+          tertiary: 'var(--content-tertiary)',
+        },
+        background: 'var(--background)',
         foreground: 'hsl(var(--foreground))',
         card: {
           DEFAULT: 'hsl(var(--card))',

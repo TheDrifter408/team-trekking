@@ -26,7 +26,6 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu.tsx';
 import { TimeTracker } from '@/components/time-tracker.tsx';
-import { DataTableViewOptions } from '@/components/dataTable/data-table-view-options.tsx';
 
 export const columns: ColumnDef<Task>[] = [
   {
@@ -147,6 +146,154 @@ export const columns: ColumnDef<Task>[] = [
             {/* Hover action buttons */}
           </div>
         </div>
+      );
+    },
+  },
+  {
+    accessorKey: 'progress',
+    header: 'Progress',
+    cell: ({ row }) => {
+      const progress = row.original.progress;
+      return (
+        <div className="flex w-[100px] items-center gap-2">
+          <Progress value={progress} className="w-[60%]" />
+          <span className="text-sm text-muted-foreground text-green-600">
+            {progress}%
+          </span>
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: 'priority',
+    header: 'Priority',
+    cell: ({ row }) => {
+      // Function to render the appropriate flag icon based on priority
+      const renderPriorityIcon = (priority: string) => {
+        switch (priority?.toLowerCase()) {
+          case 'urgent':
+            return <Flag size={16} color="red" fill="red" />;
+          case 'high':
+            return <Flag size={16} color="yellow" fill="yellow" opacity={80} />;
+          case 'normal':
+            return <Flag size={16} color="blue" fill="blue" />;
+          case 'low':
+            return <Flag size={16} color="gray" fill="gray" />;
+          default:
+            return <Flag size={16} className={'text-muted-foreground'} />;
+        }
+      };
+
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="h-8 w-8 p-0 text-primary">
+              {renderPriorityIcon(row.original.priority)}
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="center">
+            <div className="w-40">
+              <div className="flex gap-2 w-full text-left px-4 py-2 text-sm text-primary hover:bg-gray-100 hover:text-blue-600 transition-colors duration-150 items-center cursor-pointer">
+                <Flag size={16} color="red" fill="red" /> Urgent
+              </div>
+              <div className="flex gap-2 w-full text-left px-4 py-2 text-sm text-primary hover:bg-gray-100 hover:text-blue-600 transition-colors duration-150 items-center cursor-pointer">
+                <Flag size={16} color="yellow" fill="yellow" opacity={80} />
+                High
+              </div>
+              <div className="flex gap-2 w-full text-left px-4 py-2 text-sm text-primary hover:bg-gray-100 hover:text-blue-600 transition-colors duration-150 items-center cursor-pointer">
+                <Flag size={16} color="blue" fill="blue" /> Normal
+              </div>
+              <div className="flex gap-2 w-full text-left px-4 py-2 text-sm text-primary hover:bg-gray-100 hover:text-blue-600 transition-colors duration-150 items-center cursor-pointer">
+                <Flag size={16} color="gray" fill="gray" /> Low
+              </div>
+            </div>
+            <DropdownMenuSeparator />
+            <div className="flex gap-2 w-full text-left px-4 py-2 text-sm text-primary hover:bg-gray-100 hover:text-blue-600 transition-colors duration-150 items-center cursor-pointer">
+              <Ban size={16} color="gray" /> Clear
+            </div>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      );
+    },
+  },
+  {
+    accessorKey: 'startDate',
+    header: () => <div className="text-left">Start Date</div>,
+    size: 120, // Set a fixed width for the column
+    cell: ({ row }) => {
+      return (
+        <div className="text-left w-full">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                className="h-8 px-2 justify-start text-left text-base font-regular w-full"
+              >
+                {new Date(row.original.startDate).toLocaleDateString()}
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start">
+              <Calendar></Calendar>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: 'dueDate',
+    header: () => <div className="text-left">Due Date</div>,
+    size: 120, // Set a fixed width for the column
+    cell: ({ row }) => {
+      return (
+        <div className="text-left w-full">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                className="h-8 px-2 justify-start text-left text-base font-regular w-full"
+              >
+                {new Date(row.original.dueDate).toLocaleDateString()}
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start">
+              <Calendar></Calendar>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: 'estimatedTime',
+    header: 'Estimated Time',
+    cell: ({ row }) => {
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant="ghost"
+              className="h-8 px-2 justify-start text-left text-base w-full"
+            >
+              {row.original.estimatedTime}
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="center" className="p-2">
+            <div className="flex justify-between items-center gap-4 py-2">
+              <DropdownMenuLabel>Time Estimate</DropdownMenuLabel>
+              <Input
+                type="text"
+                defaultValue={row.original.estimatedTime}
+                className="w-32"
+                placeholder="Enter time"
+              />
+            </div>
+            <DropdownMenuSeparator />
+            <div className="flex justify-center items-center pt-4">
+              <p className="text-sm">Changes are automatically saved</p>
+            </div>
+          </DropdownMenuContent>
+        </DropdownMenu>
       );
     },
   },
