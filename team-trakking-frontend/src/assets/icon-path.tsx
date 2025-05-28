@@ -1,31 +1,32 @@
-import Add01 from '@/assets/add-icon-01.svg?react';
-import Add02 from '@/assets/add-icon-02.svg?react';
-import AddPeople from '@/assets/add-people.svg?react';
-import Ai from '@/assets/ai-icon.svg?react';
-import Clock from '@/assets/clock-icon.svg?react';
-import Column02 from '@/assets/column-icon-02.svg?react';
-import CopyLink from '@/assets/copy-link.svg?react';
-import Drag from '@/assets/drag-icon.svg?react';
-import DropDownArrow from '@/assets/drop-down-arrow.svg?react';
-import Expand from '@/assets/expand-icon.svg?react';
-import ExpendSubtask from '@/assets/expend-subtask-icon.svg?react';
-import ExternalLink from '@/assets/external-link-icon.svg?react';
-import Home from '@/assets/home.svg?react';
-import Layer from '@/assets/layer-icon.svg?react';
-import List from '@/assets/list-icon.svg?react';
-import Menu01 from '@/assets/menu-icon-01.svg?react';
-import Menu02 from '@/assets/menu-icon-02.svg?react';
-import Menu03 from '@/assets/menu-icon-03.svg?react';
-import OkFill01 from '@/assets/ok-icon-fill-01.svg?react';
-import OkFill03 from '@/assets/ok-icon-fill-03.svg?react';
-import OkOutline02 from '@/assets/ok-icon-outline-02.svg?react';
-import Priority from '@/assets/priority-icon.svg?react';
-import Priority02 from '@/assets/Priority-icon-02.svg?react';
-import Progress2 from '@/assets/progress-2.svg?react';
-import ReactIcon from '@/assets/react.svg?react';
-import Status3 from '@/assets/status-3.svg?react';
-import Subtask from '@/assets/subtask-icon.svg?react';
-import UserAdd from '@/assets/user-add-icon.svg?react';
+import Add01 from '@/assets/icons/add-icon-01.svg?react';
+import Add02 from '@/assets/icons/add-icon-02.svg?react';
+import AddPeople from '@/assets/icons/add-people.svg?react';
+import Ai from '@/assets/icons/ai-icon.svg?react';
+import Clock from '@/assets/icons/clock-icon.svg?react';
+import Column02 from '@/assets/icons/column-icon-02.svg?react';
+import CopyLink from '@/assets/icons/copy-link.svg?react';
+import Drag from '@/assets/icons/drag-icon.svg?react';
+import DropDownArrow from '@/assets/icons/drop-down-arrow.svg?react';
+import Expand from '@/assets/icons/expand-icon.svg?react';
+import ExpendSubtask from '@/assets/icons/expend-subtask-icon.svg?react';
+import ExternalLink from '@/assets/icons/external-link-icon.svg?react';
+import Home from '@/assets/icons/home.svg?react';
+import Layer from '@/assets/icons/layer-icon.svg?react';
+import List from '@/assets/icons/list-icon.svg?react';
+import Menu01 from '@/assets/icons/menu-icon-01.svg?react';
+import Menu02 from '@/assets/icons/menu-icon-02.svg?react';
+import Menu03 from '@/assets/icons/menu-icon-03.svg?react';
+import OkFill01 from '@/assets/icons/ok-icon-fill-01.svg?react';
+import OkFill03 from '@/assets/icons/ok-icon-fill-03.svg?react';
+import OkOutline02 from '@/assets/icons/ok-icon-outline-02.svg?react';
+import Priority from '@/assets/icons/priority-icon.svg?react';
+import Priority02 from '@/assets/icons/Priority-icon-02.svg?react';
+import Progress2 from '@/assets/icons/progress-2.svg?react';
+import ReactIcon from '@/assets/icons/react.svg?react';
+import Status3 from '@/assets/icons/status-3.svg?react';
+import Subtask from '@/assets/icons/subtask-icon.svg?react';
+import UserAdd from '@/assets/icons/user-add-icon.svg?react';
+import Search from '@/assets/icons/search-icon.svg?react';
 
 const iconPaths = {
   add01: Add01,
@@ -56,6 +57,7 @@ const iconPaths = {
   status3: Status3,
   subtask: Subtask,
   useradd: UserAdd,
+  search: Search,
 } as const;
 
 type IconName = keyof typeof iconPaths;

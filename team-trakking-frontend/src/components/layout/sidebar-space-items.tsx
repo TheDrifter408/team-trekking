@@ -44,7 +44,7 @@ export const SidebarSpaceItems = ({ name, children }: Props) => {
       >
         <div className="flex items-center flex-1">
           {!isHovered ? (
-            <div className="h-7 w-7 ml-1 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center text-sm font-medium">
+            <div className="h-7 w-7 ml-1 rounded-lg bg-[#525252] text-white flex items-center justify-center text-sm font-medium">
               {initials[0]}
             </div>
           ) : (
