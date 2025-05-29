@@ -9,7 +9,13 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { IconCaretRightFilled } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';
-import { SidebarActionsMenu } from '@/components/layout/sidebar-action-menu.tsx';
+import { Icon } from '@/assets/iconPath.tsx';
+import {
+  folderMenuConfig,
+  listMenuConfig,
+  spacesMenuConfig,
+} from '@/lib/constants/staticData.ts';
+import { ContextMenu } from '@/components/ContextMenu.tsx';
 
 interface Props {
   name: string;
@@ -77,7 +83,18 @@ export const SidebarFolderItems = ({ name, folder }: Props) => {
               </Button>
             </div>
           </div>
-          {!isButtonEntered && <SidebarActionsMenu />}
+          {!isButtonEntered && (
+            <ContextMenu
+              trigger={
+                <Button size={'icon'} variant={'ghost'} className={'h-5 w-5'}>
+                  <Icon name={'menu03'} />
+                </Button>
+              }
+              sections={folderMenuConfig}
+              width="w-64"
+              onItemClick={() => {}}
+            />
+          )}
         </div>
 
         <CollapsibleContent className="pl-6 mt-1 space-y-1">
@@ -107,7 +124,20 @@ export const SidebarFolderItems = ({ name, folder }: Props) => {
                     </span>
                   </Button>
                 </div>
-                <SidebarActionsMenu showAddMenu={false} menuSize="small" />
+                <ContextMenu
+                  trigger={
+                    <Button
+                      size={'icon'}
+                      variant={'ghost'}
+                      className={'h-5 w-5'}
+                    >
+                      <Icon name={'menu03'} />
+                    </Button>
+                  }
+                  sections={folderMenuConfig}
+                  width="w-64"
+                  onItemClick={() => {}}
+                />
               </div>
             ))}
         </CollapsibleContent>
