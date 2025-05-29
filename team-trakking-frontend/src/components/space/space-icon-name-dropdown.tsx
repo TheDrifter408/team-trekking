@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button.tsx';
 import { Separator } from '@/components/ui/separator.tsx';
 import { Search } from 'lucide-react';
 import { Input } from '@/components/ui/input.tsx';
-import { DropDownProps } from '@/types/props/common.ts';
+import { DropDownProps } from '@/types/props/Common.ts';
 
 function DropDownContent({
   selectedColor,

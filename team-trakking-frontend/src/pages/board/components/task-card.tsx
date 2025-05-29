@@ -136,14 +136,14 @@ const TaskCard = ({
         {...(isSubtask || isDragOverlay ? {} : { ...attributes, ...listeners })}
       >
         <CardContent className="px-3">
-          {/* Task title */}
+          {/* task title */}
           <div className="flex justify-between items-start">
             <span className="font-medium text-base line-clamp-2 flex-1">
               {task.name}
             </span>
           </div>
 
-          {/* Task information buttons */}
+          {/* task information buttons */}
           <div className="flex mt-2 gap-2">
             <button className="hover:bg-accent rounded-sm p-.5">
               <TaskDescriptionIcon />
@@ -162,7 +162,7 @@ const TaskCard = ({
             )}
           </div>
 
-          {/* Task badges */}
+          {/* task badges */}
           <div className="mt-2 gap-1 flex-wrap w-fit h-fit flex">
             {/* User badge */}
             <div className={BadgeStyle}>

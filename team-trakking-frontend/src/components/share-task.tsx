@@ -191,7 +191,7 @@ export const ShareTask = ({ open, onOpenChange }: ShareTaskProps) => {
               </div>
             </div>
 
-            {/* Scrollable User List with fixed height */}
+            {/* Scrollable User list with fixed height */}
             <ScrollArea className="h-[300px] w-full">
               <div className="space-y-3 pr-8">
                 {taskNotificationUsers.map((user) => (

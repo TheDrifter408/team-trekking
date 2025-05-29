@@ -60,7 +60,7 @@ import {
 import { DefaultViews } from '@/components/space/space-default-views.tsx';
 import { DropDownContent } from '@/components/space/space-icon-name-dropdown.tsx';
 import { StatusTemplate } from '@/components/space/status-template';
-import { ColorOption, IconOption } from '@/types/props/common';
+import { ColorOption, IconOption } from '@/types/props/Common.ts';
 import { taskNotificationUsers, taskStatuses } from '@/mock';
 
 interface Props {
@@ -141,7 +141,7 @@ export const UpdateSpace = ({ isActive, onClose }: Props) => {
               />
             </div>
           </div>
-          {/* Owner of the Space */}
+          {/* Owner of the space */}
           <div className="">
             <p className="text-base font-medium text-muted-foreground">Owner</p>
             <div className="flex mt-2 !w-full items-center space-x-2">

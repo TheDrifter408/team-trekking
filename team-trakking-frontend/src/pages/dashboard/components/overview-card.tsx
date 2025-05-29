@@ -41,7 +41,7 @@ export const OverviewCard = ({
 }: WorkspaceOverviewCardProps) => {
   // Flatten lists data if it's nested (when lists data is passed as arrays of lists)
   const flattenedItems = React.useMemo(() => {
-    if (title === 'Task Lists' && Array.isArray(items[0])) {
+    if (title === 'task Lists' && Array.isArray(items[0])) {
       return items.flat().slice(0, 5);
     }
     return items.slice(0, 5);
@@ -85,7 +85,7 @@ export const OverviewCard = ({
                         ? item.folderCount + item.listCount
                         : title === 'Folders'
                           ? item.listCount
-                          : title === 'Task Lists'
+                          : title === 'task Lists'
                             ? item.taskNumber
                             : ''}
                     </span>
@@ -95,7 +95,7 @@ export const OverviewCard = ({
                       ? `${item.folderCount} folders + ${item.listCount} lists`
                       : title === 'Folders'
                         ? `${item.listCount} lists`
-                        : title === 'Task Lists'
+                        : title === 'task Lists'
                           ? `${item.taskNumber} tasks`
                           : ''}
                   </TooltipContent>

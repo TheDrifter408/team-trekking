@@ -106,7 +106,7 @@ export const AppSidebar = ({
                 onMouseLeave={() => setEnterSpaceGroup(false)}
               >
                 <SidebarGroupLabel className="text-xs font-medium  tracking-wider">
-                  Spaces
+                  {LABEL.SPACES}
                 </SidebarGroupLabel>
                 <div className="flex gap-2">
                   <Button

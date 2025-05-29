@@ -12,7 +12,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { ChevronDown } from 'lucide-react';
-import { UserResponse } from '@/types/props/ApiResponse.ts';
+import { UserResponse } from '@/types/request-response/ApiResponse.ts';
 import { getInitials } from '@/lib/utils.ts';
 import { useTMTStore } from '@/stores/zustand';
 

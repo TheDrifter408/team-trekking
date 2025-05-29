@@ -1,4 +1,4 @@
-import { Messages } from '@/types/props/common';
+import { Messages } from '@/types/props/Common.ts';
 import { Inbox } from './messages';
 
 interface Props {

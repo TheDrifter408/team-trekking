@@ -9,7 +9,7 @@ import {
   Check,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { InboxItem } from '@/types/props/common';
+import { InboxItem } from '@/types/props/Common.ts';
 import { Button } from '@/components/ui/button.tsx';
 
 interface Props {

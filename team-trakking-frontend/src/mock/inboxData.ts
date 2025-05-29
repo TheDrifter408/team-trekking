@@ -1,4 +1,4 @@
-import { Messages } from '@/types/props/common.ts';
+import { Messages } from '@/types/props/Common.ts';
 
 export const mockImportant: Messages = {
   today: [

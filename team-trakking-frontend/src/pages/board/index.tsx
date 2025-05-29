@@ -22,7 +22,7 @@ import { Main } from '@/components/layout/main.tsx';
 import { mockColumns, Column, Task } from '@/mock';
 import { BoardColumn } from './components/column.tsx';
 import { TaskCard } from './components/task-card.tsx';
-import { HeaderType } from '@/types/props/common.ts';
+import { HeaderType } from '@/types/props/Common.ts';
 import { PageHeader } from '@/components/layout/page-header.tsx';
 
 export const Board = () => {
@@ -241,7 +241,7 @@ export const Board = () => {
 
   const currentPage = {
     type: 'FOLDER' as HeaderType,
-    label: 'Space Shuttle',
+    label: 'space Shuttle',
   };
   const parents = [
     { meta: 'SPACE' as HeaderType, label: 'ProjecX Moon', link: '/space' },
