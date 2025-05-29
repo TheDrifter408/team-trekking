@@ -24,6 +24,7 @@ import {
 } from '@/components/ui/table';
 import { cn } from '@/lib/utils.ts';
 import { ChevronRight, ChevronDown } from 'lucide-react';
+import { getColumns } from '@/pages/dashboard/components/columns.tsx';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -97,9 +98,8 @@ export function DataTable<TData, TValue>({
                 onRowMouseLeave={onRowMouseLeave}
               />
             ))}
-
             {table.getRowModel().rows.length === 0 && (
-              <DataTableEmptyRow columnsLength={enhancedColumns.length} />
+              <DataTableEmptyRow columnsLength={columns.length} />
             )}
           </TableBody>
         </Table>
@@ -113,6 +113,7 @@ interface DataTableHeaderProps<TData> {
 }
 
 const DataTableHeader = <TData,>({ table }: DataTableHeaderProps<TData>) => {
+  const size = table.getHeaderGroups.length;
   return (
     <TableHeader>
       {table.getHeaderGroups().map((headerGroup) => (
@@ -132,7 +133,6 @@ const DataTableHeader = <TData,>({ table }: DataTableHeaderProps<TData>) => {
                   left: isPinnedLeft
                     ? `${header.column.getStart('left')}px`
                     : undefined,
-                  width: header.id === 'expander' ? '60px' : undefined,
                 }}
               >
                 {header.isPlaceholder
@@ -172,28 +172,22 @@ const DataTableRow = <TData,>({
       onRowMouseLeave();
     }
   };
-
   return (
     <TableRow
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
       className={cn('transition-colors group', row.depth > 0 && 'bg-gray-25')}
     >
-      {row.getVisibleCells().map((cell, index) => {
+      {row.getVisibleCells().map((cell) => {
         const isPinnedLeft = cell.column.getIsPinned() === 'left';
-        const isExpanderColumn = cell.column.id === 'expander';
-
-        // Apply indentation to the name column (usually index 1 after expander)
-        const shouldIndent = !isExpanderColumn && (index === 2 || index === 3);
 
         return (
           <TableCell
             key={cell.id}
             className={cn(
-              'text-sm z-0 text-gray-800',
+              'text-sm z-0 p-0 w-fit text-gray-800',
               isPinnedLeft &&
-                'sticky left-0 z-10 bg-background shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]',
-              isExpanderColumn && 'w-[60px] p-2'
+                'sticky left-0 z-10 bg-background shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)] !w-[60px]'
             )}
             style={{
               left: isPinnedLeft
@@ -201,13 +195,7 @@ const DataTableRow = <TData,>({
                 : undefined,
             }}
           >
-            {shouldIndent ? (
-              <div style={{ marginLeft: `${row.depth * 20}px` }}>
-                {flexRender(cell.column.columnDef.cell, cell.getContext())}
-              </div>
-            ) : (
-              flexRender(cell.column.columnDef.cell, cell.getContext())
-            )}
+            {flexRender(cell.column.columnDef.cell, cell.getContext())}
           </TableCell>
         );
       })}

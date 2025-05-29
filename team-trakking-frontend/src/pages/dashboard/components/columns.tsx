@@ -2,6 +2,7 @@
 
 import { ColumnDef } from '@tanstack/react-table';
 import { Task } from '@/types/props/Common';
+import { NameColumn } from '@/components/dataTable/name-column.tsx';
 import { SelectColumn } from '@/components/dataTable/select-column.tsx';
 
 export const getColumns = (
@@ -10,6 +11,7 @@ export const getColumns = (
 ): ColumnDef<Task>[] => [
   {
     id: 'select',
+    accessorKey: 'select',
     header: () => null,
     cell: ({ row }) => {
       const task = row.original;
@@ -21,5 +23,14 @@ export const getColumns = (
         />
       );
     },
+    size: 50,
+    enableSorting: false,
+    enableHiding: false,
+  },
+  {
+    accessorKey: 'name',
+    id: 'name',
+    header: 'Name',
+    cell: ({ row }) => <NameColumn task={row.original} />,
   },
 ];
