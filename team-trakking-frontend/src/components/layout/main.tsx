@@ -6,7 +6,7 @@ interface MainProps extends React.HTMLAttributes<HTMLElement> {
   ref?: React.Ref<HTMLElement>;
 }
 
-export const Main = ({ fixed = true, ...props }: MainProps) => {
+export const Main = ({ fixed = true, className, ...props }: MainProps) => {
   return (
     <main
       className={cn(
@@ -14,7 +14,8 @@ export const Main = ({ fixed = true, ...props }: MainProps) => {
         'px-1 py-5',
         fixed && 'fixed-main flex flex-grow flex-col',
         'border-t border-l rounded-sm',
-        'w-full overflow-auto' // Changed from overflow-x-auto to overflow-auto
+        'w-full overflow-auto', // Changed from overflow-x-auto to overflow-auto 
+        className 
       )}
       {...props}
     />

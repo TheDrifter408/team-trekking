@@ -5,4 +5,5 @@ export const LABEL = {
   SHARED_WITH_ME: 'Shared with me',
   CREATE_SPACE: 'Create space',
   SPACES: 'Spaces',
+  NO_ASSIGNEES_SELECTED: 'No Assignees selected',
 };

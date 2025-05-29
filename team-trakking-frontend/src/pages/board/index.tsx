@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import {
   DndContext,
   closestCenter,
@@ -10,7 +10,6 @@ import {
   DragOverEvent,
   DragStartEvent,
   DragOverlay,
-  DragCancelEvent,
 } from '@dnd-kit/core';
 import {
   SortableContext,
@@ -24,8 +23,12 @@ import { BoardColumn } from './components/column.tsx';
 import { TaskCard } from './components/task-card.tsx';
 import { HeaderType } from '@/types/props/Common.ts';
 import { PageHeader } from '@/components/layout/page-header.tsx';
+import { useTheme } from '@/lib/context/theme-context.tsx';
 
 export const Board = () => {
+  // Get the Theme
+  const { theme } = useTheme();
+   
   const [columns, setColumns] = useState<Column[]>(mockColumns);
   const [activeTask, setActiveTask] = useState<Task | null>(null);
   const [activeColumnId, setActiveColumnId] = useState<string | null>(null);
@@ -181,46 +184,47 @@ export const Board = () => {
     const activeId = active.id as string;
     const overId = over.id as string;
 
-    // Check if over ID is a column ID
-    const isOverColumn = columns.some((column) => column.id === overId);
-
-    if (isOverColumn) {
-      // Find the task in the columns
-      const sourceColumnIndex = columns.findIndex((column) =>
-        column.tasks.some((task) => task.id === activeId)
-      );
-
-      if (sourceColumnIndex !== -1) {
-        const destinationColumnIndex = columns.findIndex(
-          (column) => column.id === overId
-        );
-
-        if (
-          destinationColumnIndex !== -1 &&
-          sourceColumnIndex !== destinationColumnIndex
-        ) {
-          // Create a new columns array
-          const newColumns = [...columns];
-
-          // Find and remove the task from the source column
-          const sourceColumn = newColumns[sourceColumnIndex];
-          const taskIndex = sourceColumn.tasks.findIndex(
-            (task) => task.id === activeId
-          );
-
-          if (taskIndex !== -1) {
-            const [removedTask] = sourceColumn.tasks.splice(taskIndex, 1);
-
-            // Add the task to the destination column at the end
-            newColumns[destinationColumnIndex].tasks.push(removedTask);
-
-            setColumns(newColumns);
-          }
-        }
-      }
+    if (activeId === overId) {
+      setActiveTask(null);
+      setActiveColumnId(null);
+      return;
     }
 
-    // Reset active states
+    const newColumns = [...columns];
+
+    // Find the source column and Task
+    const sourceColIndex = newColumns.findIndex(
+      (col) => col.tasks.some(
+        (t) => t.id === activeId
+      )
+    );
+    
+    const sourceCol = newColumns[sourceColIndex];
+
+    const taskIndex = sourceCol.tasks.findIndex((task) => task.id === activeId);
+    // Remove the Task from the source column and assign it to movedTask
+    const [ movedTask ] = sourceCol.tasks.splice(taskIndex, 1);
+
+    // Case 1: Dragging over a Column
+    const isOverColumn = newColumns.some((col) => col.id === overId);
+
+    if (isOverColumn) {
+      // Find the index of the destination column
+      const destColIndex = newColumns.findIndex((col) => col.id === overId);
+      newColumns[destColIndex].tasks.push(movedTask);
+    } else {
+    // Case 2: Dragging it over another Task
+      const destColIndex = newColumns.findIndex((col) => 
+        col.tasks.some((task) => task.id === overId)
+      );
+      const destCol = newColumns[destColIndex];
+      const overTaskIndex = destCol.tasks.findIndex(task => task.id === overId);
+
+      // Insert dragged Task before the overTaskIndex
+      destCol.tasks.splice(overTaskIndex, 0, movedTask);
+    }
+
+    setColumns(newColumns);
     setActiveTask(null);
     setActiveColumnId(null);
   };
@@ -250,8 +254,8 @@ export const Board = () => {
   return (
     <>
       <PageHeader currentPage={currentPage} parents={parents} />
-      <Main>
-        <div className="relative min-h-screen">
+      <Main className={ theme === 'dark' ? 'dark' : 'light'}>
+        <div className="relative overflow-x-auto h-full text-foreground transition-colors duration-300">
           <DndContext
             sensors={sensors}
             collisionDetection={closestCenter}
@@ -268,6 +272,7 @@ export const Board = () => {
                   strategy={verticalListSortingStrategy}
                 >
                   <BoardColumn
+                    setColumns={setColumns}
                     column={column}
                     className="flex-shrink-0 self-start w-[244px]"
                     isActiveColumn={column.id === activeColumnId}

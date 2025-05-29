@@ -74,7 +74,7 @@ export const Dashboard = () => {
             <div className="grid grid-cols-2 gap-4 my-2">
               {isCardAdded(HOME_CARD_TITLE.RECENTS) && (
                 <RecentContent
-                  expanded={false}
+                  isExpanded={false}
                   onExpand={onExpandToFullView}
                   cardTitle={HOME_CARD_TITLE.RECENTS}
                 />
@@ -103,7 +103,7 @@ export const Dashboard = () => {
           {expandedCardId === HOME_CARD_TITLE.RECENTS &&
             isCardAdded(HOME_CARD_TITLE.RECENTS) && (
               <RecentContent
-                expanded={true}
+                isExpanded={true}
                 onExpand={onExpandToFullView}
                 cardTitle={HOME_CARD_TITLE.RECENTS}
               />
