@@ -60,7 +60,7 @@ import {
 import { DefaultViews } from '@/components/space/space-default-views.tsx';
 import { DropDownContent } from '@/components/space/space-icon-name-dropdown.tsx';
 import { StatusTemplate } from '@/components/space/status-template';
-import { ColorOption, IconOption } from '@/types/props/common';
+import { ColorOption, IconOption } from '@/types/props/Common.ts';
 import { taskNotificationUsers, taskStatuses } from '@/mock';
 
 interface Props {

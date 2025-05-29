@@ -2,7 +2,7 @@ import {
   RecentActions,
   WorkData,
   AssignedComment,
-} from '@/types/props/common.ts';
+} from '@/types/props/Common.ts';
 
 export const spaceData = [
   {

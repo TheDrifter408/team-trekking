@@ -23,7 +23,7 @@ import {
   MyWorkTask,
   WorkData,
   ScheduleSection as ScheduleType,
-} from '@/types/props/common';
+} from '@/types/props/Common.ts';
 
 interface Props {
   expanded: boolean;

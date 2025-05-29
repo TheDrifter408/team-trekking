@@ -1,16 +1,9 @@
 'use client';
 
 import { ColumnDef } from '@tanstack/react-table';
-import { Task } from '@/types/props/common.ts';
+import { Task } from '@/types/props/Common.ts';
 import { useNavigate } from 'react-router-dom';
-import {
-  GripVertical,
-  MoreVertical,
-  Plus,
-  Flag,
-  Ban,
-  Pencil,
-} from 'lucide-react';
+import { GripVertical, MoreVertical, Flag, Ban } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox.tsx';
 import { Progress } from '@/components/progress';
@@ -26,6 +19,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu.tsx';
 import { TimeTracker } from '@/components/time-tracker.tsx';
+import { Icon } from '@/assets/icon-path';
 
 export const columns: ColumnDef<Task>[] = [
   {
@@ -64,236 +58,53 @@ export const columns: ColumnDef<Task>[] = [
     header: 'Name',
     cell: ({ row }) => {
       const navigate = useNavigate();
-
+      const item = row.original;
       const rowId = (row.original as any).id;
       const seed = rowId.charCodeAt(0) || 0;
       const statusIndex = seed % statuses.length;
       const status = statuses[statusIndex];
-      const progress = row.original.progress % 101; // 0-100 range
-
-      const circumference = 2 * Math.PI * 14;
-      const dashArray = `${(circumference * progress) / 100} ${circumference}`;
-
-      const isRowHovered = false;
-      return (
-        <div
-          className="flex items-center gap-3"
-          onClick={() => navigate('/task')}
-        >
-          {/* Status progress circle */}
-          <div className="relative w-5 h-5 flex-shrink-0">
-            <div
-              className="w-full h-full rounded-full"
-              style={{ backgroundColor: status.color }}
-            >
-              <svg
-                className="absolute top-0 left-0 w-full h-full -rotate-90"
-                viewBox="0 0 32 32"
-              >
-                <circle
-                  cx="16"
-                  cy="16"
-                  r="14"
-                  strokeWidth="3"
-                  fill="none"
-                  stroke="rgba(255, 255, 255, 0.3)"
-                />
-                <circle
-                  cx="16"
-                  cy="16"
-                  r="14"
-                  strokeWidth="3"
-                  fill="none"
-                  stroke="white"
-                  strokeDasharray={dashArray}
-                  className="transition-all duration-300"
-                />
-              </svg>
-            </div>
-          </div>
-
-          <div className="flex flex-col">
-            <span className="text-muted-foreground text-xs">List name</span>
-            <span className="text-primary text-base gap-2 flex items-center font-medium hover:text-violet-600">
-              {row.getValue('name')}
-              {isRowHovered && (
-                <div className=" flex items-center">
-                  <Button
-                    variant="ghost"
-                    size="icon_sm"
-                    className=" hover:bg-violet-100 shadow-sm"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      console.log('Add subtask to:', row.original.id);
-                    }}
-                  >
-                    <Plus size={13} className="text-violet-600" />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="icon_sm"
-                    className=" hover:bg-violet-100 shadow-sm"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      console.log('Edit task:', row.original.id);
-                    }}
-                  >
-                    <Pencil size={16} className="text-violet-600" />
-                  </Button>
-                </div>
-              )}
-            </span>
-            {/* Hover action buttons */}
-          </div>
-        </div>
-      );
-    },
-  },
-  {
-    accessorKey: 'progress',
-    header: 'Progress',
-    cell: ({ row }) => {
       const progress = row.original.progress;
       return (
-        <div className="flex w-[100px] items-center gap-2">
-          <Progress value={progress} className="w-[60%]" />
-          <span className="text-sm text-muted-foreground text-green-600">
-            {progress}%
-          </span>
-        </div>
-      );
-    },
-  },
-  {
-    accessorKey: 'priority',
-    header: 'Priority',
-    cell: ({ row }) => {
-      // Function to render the appropriate flag icon based on priority
-      const renderPriorityIcon = (priority: string) => {
-        switch (priority?.toLowerCase()) {
-          case 'urgent':
-            return <Flag size={16} color="red" fill="red" />;
-          case 'high':
-            return <Flag size={16} color="yellow" fill="yellow" opacity={80} />;
-          case 'normal':
-            return <Flag size={16} color="blue" fill="blue" />;
-          case 'low':
-            return <Flag size={16} color="gray" fill="gray" />;
-          default:
-            return <Flag size={16} className={'text-muted-foreground'} />;
-        }
-      };
-
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0 text-primary">
-              {renderPriorityIcon(row.original.priority)}
+        <div
+          className="items-center flex w-[200px]"
+          onClick={() => navigate('/task')}
+        >
+          <div className="w-[40px] h-[16px] justify-between mr-[12px] flex items-center">
+            <Button size={'auto'} variant={'ghost'}>
+              <Icon name={'expandsubtask'} className={'-rotate-90'} />
             </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="center">
-            <div className="w-40">
-              <div className="flex gap-2 w-full text-left px-4 py-2 text-sm text-primary hover:bg-gray-100 hover:text-blue-600 transition-colors duration-150 items-center cursor-pointer">
-                <Flag size={16} color="red" fill="red" /> Urgent
-              </div>
-              <div className="flex gap-2 w-full text-left px-4 py-2 text-sm text-primary hover:bg-gray-100 hover:text-blue-600 transition-colors duration-150 items-center cursor-pointer">
-                <Flag size={16} color="yellow" fill="yellow" opacity={80} />
-                High
-              </div>
-              <div className="flex gap-2 w-full text-left px-4 py-2 text-sm text-primary hover:bg-gray-100 hover:text-blue-600 transition-colors duration-150 items-center cursor-pointer">
-                <Flag size={16} color="blue" fill="blue" /> Normal
-              </div>
-              <div className="flex gap-2 w-full text-left px-4 py-2 text-sm text-primary hover:bg-gray-100 hover:text-blue-600 transition-colors duration-150 items-center cursor-pointer">
-                <Flag size={16} color="gray" fill="gray" /> Low
-              </div>
-            </div>
-            <DropdownMenuSeparator />
-            <div className="flex gap-2 w-full text-left px-4 py-2 text-sm text-primary hover:bg-gray-100 hover:text-blue-600 transition-colors duration-150 items-center cursor-pointer">
-              <Ban size={16} color="gray" /> Clear
-            </div>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
-    },
-  },
-  {
-    accessorKey: 'startDate',
-    header: () => <div className="text-left">Start Date</div>,
-    size: 120, // Set a fixed width for the column
-    cell: ({ row }) => {
-      return (
-        <div className="text-left w-full">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="ghost"
-                className="h-8 px-2 justify-start text-left text-base font-regular w-full"
-              >
-                {new Date(row.original.startDate).toLocaleDateString()}
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="start">
-              <Calendar></Calendar>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-      );
-    },
-  },
-  {
-    accessorKey: 'dueDate',
-    header: () => <div className="text-left">Due Date</div>,
-    size: 120, // Set a fixed width for the column
-    cell: ({ row }) => {
-      return (
-        <div className="text-left w-full">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="ghost"
-                className="h-8 px-2 justify-start text-left text-base font-regular w-full"
-              >
-                {new Date(row.original.dueDate).toLocaleDateString()}
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="start">
-              <Calendar></Calendar>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-      );
-    },
-  },
-  {
-    accessorKey: 'estimatedTime',
-    header: 'Estimated Time',
-    cell: ({ row }) => {
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
             <Button
-              variant="ghost"
-              className="h-8 px-2 justify-start text-left text-base w-full"
+              size={'auto'}
+              style={{ color: item.status.color }}
+              variant={'ghost'}
             >
-              {row.original.estimatedTime}
+              <Icon name={'progress2'} />
             </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="center" className="p-2">
-            <div className="flex justify-between items-center gap-4 py-2">
-              <DropdownMenuLabel>Time Estimate</DropdownMenuLabel>
-              <Input
-                type="text"
-                defaultValue={row.original.estimatedTime}
-                className="w-32"
-                placeholder="Enter time"
-              />
+          </div>
+          <div className="justify-center flex flex-col">
+            <p className="text-content-tertiary text-xs hover:text-content-default cursor-pointer">
+              List Name
+            </p>
+            <div className="flex items-center gap-[8px]">
+              <p className="text-content-default cursor-pointer hover:text-theme-main w-[100px] truncate font-normal text-sm">
+                {row.original.name}
+              </p>
+              {row.original.subRows && (
+                <Button variant={'ghost'} size={'auto'} className={'px-[2px]'}>
+                  <Icon name={'subtask'} className={'size-3'} />
+                  <p className={'text-content-tertiary font-normal text-xs'}>
+                    {row.original.subRows.length}
+                  </p>
+                </Button>
+              )}
+              {row.original.estimatedTime && (
+                <Button variant={'ghost'} size={'auto'} className={'px-[2px]'}>
+                  <Icon name={'description'} className={'size-3'} />
+                </Button>
+              )}
             </div>
-            <DropdownMenuSeparator />
-            <div className="flex justify-center items-center pt-4">
-              <p className="text-sm">Changes are automatically saved</p>
-            </div>
-          </DropdownMenuContent>
-        </DropdownMenu>
+          </div>
+        </div>
       );
     },
   },
@@ -491,3 +302,11 @@ export const columns: ColumnDef<Task>[] = [
     },
   },
 ];
+
+const myComponent = () => {
+  return (
+    <div>
+      <div className="font-xl">hey</div>
+    </div>
+  );
+};

@@ -3,7 +3,7 @@ import { assignedCommentData } from '@/mock';
 import { CardContent } from '@/components/ui/card';
 import { HoverableCard } from './hoverable-card';
 import { cn } from '@/lib/utils';
-import { AssignedComment } from '@/types/props/common';
+import { AssignedComment } from '@/types/props/Common.ts';
 
 interface Props {
   expanded: boolean;

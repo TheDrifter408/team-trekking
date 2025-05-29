@@ -40,7 +40,6 @@ export function ThemeProvider({
       const effectiveTheme = theme === 'system' ? systemTheme : theme;
       root.classList.add(effectiveTheme); // Add the new theme class
     };
-
     const handleChange = () => {
       if (theme === 'system') {
         applyTheme('system');

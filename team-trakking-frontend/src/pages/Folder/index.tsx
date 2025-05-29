@@ -3,7 +3,7 @@ import { List } from 'lucide-react';
 import { OverviewCard } from '@/pages/dashboard/components/overview-card.tsx';
 import { spaceData } from '@/mock';
 import { PageHeader } from '@/components/layout/page-header.tsx';
-import { HeaderType } from '@/types/props/common.ts';
+import { HeaderType } from '@/types/props/Common.ts';
 
 export const Folder = () => {
   const currentPage = {

@@ -22,7 +22,7 @@ import { Main } from '@/components/layout/main.tsx';
 import { mockColumns, Column, Task } from '@/mock';
 import { BoardColumn } from './components/column.tsx';
 import { TaskCard } from './components/task-card.tsx';
-import { HeaderType } from '@/types/props/common.ts';
+import { HeaderType } from '@/types/props/Common.ts';
 import { PageHeader } from '@/components/layout/page-header.tsx';
 
 export const Board = () => {
@@ -40,6 +40,7 @@ export const Board = () => {
       coordinateGetter: sortableKeyboardCoordinates,
     })
   );
+
   const handleDragStart = (event: DragStartEvent) => {
     const { active } = event;
     const taskId = active.id as string;

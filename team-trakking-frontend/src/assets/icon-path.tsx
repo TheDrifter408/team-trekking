@@ -26,8 +26,10 @@ import ReactIcon from '@/assets/react.svg?react';
 import Status3 from '@/assets/status-3.svg?react';
 import Subtask from '@/assets/subtask-icon.svg?react';
 import UserAdd from '@/assets/user-add-icon.svg?react';
+import Description from '@/assets/description-icon.svg?react';
 
 const iconPaths = {
+  description: Description,
   add01: Add01,
   add02: Add02,
   addpeople: AddPeople,

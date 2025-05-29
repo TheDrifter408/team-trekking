@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
 import { Main } from '@/components/layout/main.tsx';
 import { columns } from '@/pages/dashboard/components/columns.tsx';
-import { HeaderType } from '@/types/props/common.ts';
+import { HeaderType } from '@/types/props/Common.ts';
 import { ListCard } from './components/list-card.tsx';
 import { PageHeader } from '@/components/layout/page-header';
 import * as Task from '@/mock/task.ts';
@@ -15,46 +16,68 @@ const convertDates = (task) => ({
 });
 
 export const List = () => {
-  const currentPage = {
-    type: 'LIST' as HeaderType,
-    label: 'Steps',
-  };
-  const parents = [
-    { meta: 'SPACE' as HeaderType, label: 'ProjecX Moon', link: '/space' },
-    { meta: 'FOLDER' as HeaderType, label: 'Space Shuttle', link: '/folder' },
-  ];
+  const currentPage = useMemo(
+    () => ({
+      type: 'LIST' as HeaderType,
+      label: 'Steps',
+    }),
+    []
+  );
+  const parents = useMemo(
+    () => [
+      { meta: 'SPACE' as HeaderType, label: 'ProjecX Moon', link: '/space' },
+      { meta: 'FOLDER' as HeaderType, label: 'Space Shuttle', link: '/folder' },
+    ],
+    []
+  );
 
-  // Use state to manage tasks data
   const [tasks, setTasks] = useState(() => Task.data.map(convertDates));
-
-  // Add state for filter value
+  console.log(tasks, 'tasks');
+  const [isTableExpanded, setIsTableExpanded] = useState(true);
   const [filterValue, setFilterValue] = useState('');
 
-  // Handle data updates from drag and drop
   const handleDataChange = (newData: any[]) => {
-    // Important: Create a completely new reference to ensure React detects the change
     const updatedTasks = JSON.parse(JSON.stringify(newData));
-
-    // Re-convert dates after JSON parsing
     const processedTasks = updatedTasks.map(convertDates);
-
-    // Update state with the new processed data
     setTasks(processedTasks);
   };
 
+  const onToggleExpand = () => {
+    setIsTableExpanded(!isTableExpanded);
+  };
+
   return (
-    <div className={''}>
+    <div>
       <PageHeader currentPage={currentPage} parents={parents} />
       <Main>
-        <div className="px-4">
-          <ListCard />
-          <DataTable
-            columns={columns}
-            data={tasks}
-            onDataChange={handleDataChange}
-            filterValue={filterValue}
-            onFilterChange={setFilterValue}
+        <div className="px-3">
+          <ListCard
+            isTableExpanded={isTableExpanded}
+            onToggleExpand={onToggleExpand}
           />
+          <AnimatePresence initial={false}>
+            {isTableExpanded && (
+              <motion.div
+                key="table"
+                initial={{ height: 0 }}
+                animate={{ height: 'auto' }}
+                exit={{ height: 0 }}
+                transition={{
+                  duration: 0.4,
+                  ease: [0.7, 0, 0.84, 0],
+                }}
+                style={{ overflow: 'hidden', transformOrigin: 'top' }}
+              >
+                <DataTable
+                  columns={columns}
+                  data={tasks}
+                  onDataChange={handleDataChange}
+                  filterValue={filterValue}
+                  onFilterChange={setFilterValue}
+                />
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </Main>
     </div>

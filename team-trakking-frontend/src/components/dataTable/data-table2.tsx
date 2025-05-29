@@ -9,8 +9,10 @@ import {
   getCoreRowModel,
   getFilteredRowModel,
   getSortedRowModel,
+  getExpandedRowModel,
   useReactTable,
   ColumnPinningState,
+  ExpandedState,
 } from '@tanstack/react-table';
 import {
   Table,
@@ -21,6 +23,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { cn } from '@/lib/utils.ts';
+import { ChevronRight, ChevronDown } from 'lucide-react';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -36,8 +39,11 @@ export function DataTable<TData, TValue>({
   columns,
   data,
   filterValue,
+  onRowMouseEnter,
+  onRowMouseLeave,
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = useState({});
+  const [expanded, setExpanded] = useState<ExpandedState>({});
   const [columnPinning, setColumnPinning] = useState<ColumnPinningState>(() => {
     // Ensure columns have IDs before setting up pinning
     const firstColumnId =
@@ -53,17 +59,50 @@ export function DataTable<TData, TValue>({
     setLocalData(data);
   }, [data]);
 
+  // Enhanced columns with expand functionality
+  const enhancedColumns = [
+    {
+      id: 'expander',
+      header: '',
+      cell: ({ row }: { row: RowType<TData> }) => {
+        return row.getCanExpand() ? (
+          <button
+            onClick={row.getToggleExpandedHandler()}
+            className="flex items-center justify-center w-6 h-6 hover:bg-gray-100 rounded transition-colors"
+            style={{ marginLeft: `${row.depth * 20}px` }}
+          >
+            {row.getIsExpanded() ? (
+              <ChevronDown className="h-4 w-4" />
+            ) : (
+              <ChevronRight className="h-4 w-4" />
+            )}
+          </button>
+        ) : (
+          <div
+            style={{ marginLeft: `${(row.depth + 1) * 20}px` }}
+            className="w-6 h-6"
+          />
+        );
+      },
+    },
+    ...columns,
+  ];
+
   const table = useReactTable({
     data: localData,
-    columns,
+    columns: enhancedColumns,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
+    getExpandedRowModel: getExpandedRowModel(),
     onRowSelectionChange: setRowSelection,
     onColumnPinningChange: setColumnPinning,
+    onExpandedChange: setExpanded,
+    getSubRows: (row: any) => row.subRows,
     state: {
       rowSelection,
       columnPinning,
+      expanded,
     },
   });
 
@@ -80,11 +119,16 @@ export function DataTable<TData, TValue>({
           <DataTableHeader table={table} />
           <TableBody>
             {table.getRowModel().rows.map((row) => (
-              <DataTableRow key={row.id} row={row} />
+              <DataTableRow
+                key={row.id}
+                row={row}
+                onRowMouseEnter={onRowMouseEnter}
+                onRowMouseLeave={onRowMouseLeave}
+              />
             ))}
 
             {table.getRowModel().rows.length === 0 && (
-              <DataTableEmptyRow columnsLength={columns.length} />
+              <DataTableEmptyRow columnsLength={enhancedColumns.length} />
             )}
           </TableBody>
         </Table>
@@ -109,14 +153,15 @@ const DataTableHeader = <TData,>({ table }: DataTableHeaderProps<TData>) => {
               <TableHead
                 key={header.id}
                 className={cn(
-                  'bg-background',
+                  'bg-background ',
                   isPinnedLeft &&
-                    'sticky left-0 z-40 !bg-sidebar shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]'
+                    'sticky left-0 z-10 bg-gradient-to-r from-background via-background/70 to-transparent shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]'
                 )}
                 style={{
                   left: isPinnedLeft
                     ? `${header.column.getStart('left')}px`
                     : undefined,
+                  width: header.id === 'expander' ? '60px' : undefined,
                 }}
               >
                 {header.isPlaceholder
@@ -136,21 +181,48 @@ const DataTableHeader = <TData,>({ table }: DataTableHeaderProps<TData>) => {
 
 interface DataTableRowProps<TData> {
   row: RowType<TData>;
+  onRowMouseEnter?: (id: string) => void;
+  onRowMouseLeave?: () => void;
 }
 
-const DataTableRow = <TData,>({ row }: DataTableRowProps<TData>) => {
+const DataTableRow = <TData,>({
+  row,
+  onRowMouseEnter,
+  onRowMouseLeave,
+}: DataTableRowProps<TData>) => {
+  const handleMouseEnter = () => {
+    if (onRowMouseEnter) {
+      onRowMouseEnter(row.id);
+    }
+  };
+
+  const handleMouseLeave = () => {
+    if (onRowMouseLeave) {
+      onRowMouseLeave();
+    }
+  };
+
   return (
-    <TableRow>
+    <TableRow
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      className={cn('transition-colors', row.depth > 0 && 'bg-gray-25')}
+    >
       {row.getVisibleCells().map((cell, index) => {
         const isPinnedLeft = cell.column.getIsPinned() === 'left';
+        const isExpanderColumn = cell.column.id === 'expander';
+
+        // Apply indentation to the name column (usually index 1 after expander)
+        const shouldIndent = !isExpanderColumn && (index === 2 || index === 3);
 
         return (
           <TableCell
             key={cell.id}
             className={cn(
-              'text-sm z-0 text-gray-800 ',
+              'text-sm z-0 text-gray-800',
               isPinnedLeft &&
-                'sticky left-0 z-10 bg-primary-foreground shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]'
+                'sticky left-0 z-10 bg-background shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]',
+              isExpanderColumn && 'w-[60px] p-2'
             )}
             style={{
               left: isPinnedLeft
@@ -158,7 +230,7 @@ const DataTableRow = <TData,>({ row }: DataTableRowProps<TData>) => {
                 : undefined,
             }}
           >
-            {index === 2 || index === 3 ? (
+            {shouldIndent ? (
               <div style={{ marginLeft: `${row.depth * 20}px` }}>
                 {flexRender(cell.column.columnDef.cell, cell.getContext())}
               </div>

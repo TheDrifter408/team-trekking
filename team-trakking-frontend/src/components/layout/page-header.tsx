@@ -15,7 +15,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
-import { HeaderType } from '@/types/props/common.ts';
+import { HeaderType } from '@/types/props/Common.ts';
 import { Button } from '@/components/ui/button.tsx';
 import { ViewType } from '@/lib/context/page-header-context.tsx';
 import { Calendar, Grid, LayoutDashboard, List } from 'lucide-react';

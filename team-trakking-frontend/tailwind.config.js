@@ -49,6 +49,8 @@ export default {
         },
         content: {
           tertiary: 'var(--content-tertiary)',
+          success: 'var(--content-success)',
+          default: 'var(--content-default)',
         },
         background: 'var(--background)',
         foreground: 'hsl(var(--foreground))',
