@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import { CompassIcon, Plus, Share2 } from 'lucide-react';
+import { Archive, ChevronDown, CompassIcon, Eye, Grid3X3, MoreHorizontal, Plus, Share2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
   Sidebar,
@@ -33,6 +33,8 @@ import { InviteUser } from '@/components/invite-user.tsx';
 import { NavUser } from '@/components/layout/nav-user.tsx';
 import { Icon } from '@/assets/iconPath.tsx';
 import { LABEL } from '@/lib/constants/strings.ts';
+import { ContextMenu } from '@/components/ContextMenu.tsx';
+import { spacesMenuConfig } from '@/lib/constants/staticData.ts';
 
 export const AppSidebar = ({
   ...props
@@ -51,6 +53,7 @@ export const AppSidebar = ({
   const [privateAccess, setPrivateAccess] = useState(false);
   // Derived state
   const [initials, setInitials] = useState('');
+
   // Generate initials based on space name
   useEffect(() => {
     if (spaceName) {
@@ -109,14 +112,20 @@ export const AppSidebar = ({
                   {LABEL.SPACES}
                 </SidebarGroupLabel>
                 <div className="flex gap-2">
-                  <Button
-                    size={'icon'}
-                    variant={'ghost'}
-                    className={'h-5 w-5'}
-                    onClick={() => setInviteUserOpen(true)}
-                  >
-                    <Icon name={'menu03'} />
-                  </Button>
+                  <ContextMenu
+                    trigger={
+                      <Button
+                        size={'icon'}
+                        variant={'ghost'}
+                        className={'h-5 w-5'}
+                      >
+                        <Icon name={'menu03'} />
+                      </Button>
+                    }
+                    sections={spacesMenuConfig}
+                    width="w-64"
+                    onItemClick={() => {}}
+                  />
                   <Button
                     size={'icon'}
                     variant={'ghost'}

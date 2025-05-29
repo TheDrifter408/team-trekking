@@ -2,7 +2,9 @@ import { ListIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button.tsx';
 import { cn } from '@/lib/utils.ts';
 import { useNavigate } from 'react-router-dom';
-import { SidebarActionsMenu } from '@/components/layout/sidebar-action-menu.tsx';
+import { ContextMenu } from '@/components/ContextMenu.tsx';
+import { Icon } from '@/assets/iconPath.tsx';
+import { listMenuConfig } from '@/lib/constants/staticData.ts';
 
 interface Props {
   listItem: any;
@@ -28,7 +30,16 @@ export const SidebarListItems = ({ listItem }: Props) => {
           <span className={cn('text-xs truncate')}>{listItem.name}</span>
         </Button>
       </div>
-      <SidebarActionsMenu showAddMenu={false} />
+      <ContextMenu
+        trigger={
+          <Button size={'icon'} variant={'ghost'} className={'h-5 w-5'}>
+            <Icon name={'menu03'} />
+          </Button>
+        }
+        sections={listMenuConfig}
+        width="w-64"
+        onItemClick={() => {}}
+      />
     </div>
   );
 };
