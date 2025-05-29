@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Main } from '@/components/layout/main.tsx';
-import { columns } from '@/pages/dashboard/components/columns.tsx';
+import { getColumns } from '@/pages/dashboard/components/columns.tsx';
 import { HeaderType } from '@/types/props/Common.ts';
 import { ListCard } from './components/list-card.tsx';
 import { PageHeader } from '@/components/layout/page-header';
@@ -32,9 +32,15 @@ export const List = () => {
   );
 
   const [tasks, setTasks] = useState(() => Task.data.map(convertDates));
-  console.log(tasks, 'tasks');
   const [isTableExpanded, setIsTableExpanded] = useState(true);
   const [filterValue, setFilterValue] = useState('');
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+
+  const toggleSelect = (id: string) => {
+    setSelectedIds((prev) =>
+      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
+    );
+  };
 
   const handleDataChange = (newData: any[]) => {
     const updatedTasks = JSON.parse(JSON.stringify(newData));
@@ -45,6 +51,8 @@ export const List = () => {
   const onToggleExpand = () => {
     setIsTableExpanded(!isTableExpanded);
   };
+
+  const columns = getColumns(selectedIds, toggleSelect);
 
   return (
     <div>

@@ -59,38 +59,9 @@ export function DataTable<TData, TValue>({
     setLocalData(data);
   }, [data]);
 
-  // Enhanced columns with expand functionality
-  const enhancedColumns = [
-    {
-      id: 'expander',
-      header: '',
-      cell: ({ row }: { row: RowType<TData> }) => {
-        return row.getCanExpand() ? (
-          <button
-            onClick={row.getToggleExpandedHandler()}
-            className="flex items-center justify-center w-6 h-6 hover:bg-gray-100 rounded transition-colors"
-            style={{ marginLeft: `${row.depth * 20}px` }}
-          >
-            {row.getIsExpanded() ? (
-              <ChevronDown className="h-4 w-4" />
-            ) : (
-              <ChevronRight className="h-4 w-4" />
-            )}
-          </button>
-        ) : (
-          <div
-            style={{ marginLeft: `${(row.depth + 1) * 20}px` }}
-            className="w-6 h-6"
-          />
-        );
-      },
-    },
-    ...columns,
-  ];
-
   const table = useReactTable({
     data: localData,
-    columns: enhancedColumns,
+    columns: columns,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
@@ -190,13 +161,13 @@ const DataTableRow = <TData,>({
   onRowMouseEnter,
   onRowMouseLeave,
 }: DataTableRowProps<TData>) => {
-  const handleMouseEnter = () => {
+  const onMouseEnter = () => {
     if (onRowMouseEnter) {
       onRowMouseEnter(row.id);
     }
   };
 
-  const handleMouseLeave = () => {
+  const onMouseLeave = () => {
     if (onRowMouseLeave) {
       onRowMouseLeave();
     }
@@ -204,9 +175,9 @@ const DataTableRow = <TData,>({
 
   return (
     <TableRow
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-      className={cn('transition-colors', row.depth > 0 && 'bg-gray-25')}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+      className={cn('transition-colors group', row.depth > 0 && 'bg-gray-25')}
     >
       {row.getVisibleCells().map((cell, index) => {
         const isPinnedLeft = cell.column.getIsPinned() === 'left';
