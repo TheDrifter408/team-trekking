@@ -16,6 +16,7 @@ import { CalendarIcon } from 'lucide-react';
 import { Calendar } from '@/components/ui/calendar';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Assignee, PriorityType } from '@/mock';
+import { LABEL } from '@/lib/constants/strings';
 
 let assignees: Assignee[] = [];
 const priorities: PriorityType[] = ['HIGH', 'LOW', 'MIDDLE', 'NONE'];
@@ -134,7 +135,7 @@ export const AddTaskForm = ({
                                 {
                                     field.value?.length && field.value.length > 0 ?
                                     `${field.value.length} assignee${field.value.length > 1 ? 's' : ''}`  : 
-                                    'No Assignees selected'
+                                    LABEL.NO_ASSIGNEES_SELECTED
                                 }
                             </Button>
                         </PopoverTrigger>
