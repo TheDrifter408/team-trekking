@@ -40,6 +40,7 @@
     --content-tertiary: rgba(123, 123, 123, 1);
     --content-success:rgba(61, 214, 140, 1);
     --content-default: rgba(32,32,32, 1);
+    --content-secondary: rgba(180, 180, 180, 1);
   }
   .dark {
     --background: rgba(17, 17, 17, 1);
@@ -77,6 +78,7 @@
     --content-tertiary: rgba(123, 123, 123, 1);
     --content-success:rgba(61, 214, 140, 1);
     --content-default: rgba(238, 238, 238, 1);
+    --content-secondary: rgba(180, 180, 180, 1);
   }
   .theme-pink{
     --theme-primary: rgb(233,61,130);

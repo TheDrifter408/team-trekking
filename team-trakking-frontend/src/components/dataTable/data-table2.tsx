@@ -164,9 +164,8 @@ const DataTableRow = <TData,>({
   onRowMouseLeave,
 }: DataTableRowProps<TData>) => {
   const onMouseEnter = () => {
-    if (onRowMouseEnter) {
-      onRowMouseEnter(row.id);
-    }
+    const original = row.original as { id: string | number };
+    onRowMouseEnter?.(original.id.toString());
   };
 
   const onMouseLeave = () => {

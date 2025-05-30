@@ -3,17 +3,12 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { Main } from '@/components/layout/main.tsx';
 import { getColumns } from '@/pages/dashboard/components/columns.tsx';
 import { HeaderType } from '@/types/props/Common.ts';
-import { ListCard } from './components/list-card.tsx';
+import { ListCard } from '@/pages/list/components/list-card.tsx';
 import { PageHeader } from '@/components/layout/page-header';
-import * as Task from '@/mock/task.ts';
 import { DataTable } from '@/components/dataTable/data-table2.tsx';
+import { generateTasks } from '@/mock';
 
-const convertDates = (task) => ({
-  ...task,
-  startDate: new Date(task.startDate),
-  dueDate: new Date(task.dueDate),
-  subRows: task.subRows?.map(convertDates) || [],
-});
+const generatedTasks = generateTasks(100);
 
 export const List = () => {
   const currentPage = useMemo(
@@ -31,7 +26,7 @@ export const List = () => {
     []
   );
 
-  const [tasks, setTasks] = useState(() => Task.data.map(convertDates));
+  const [tasks, setTasks] = useState(generatedTasks);
   const [isTableExpanded, setIsTableExpanded] = useState(true);
   const [filterValue, setFilterValue] = useState('');
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
@@ -45,8 +40,7 @@ export const List = () => {
 
   const handleDataChange = (newData: any[]) => {
     const updatedTasks = JSON.parse(JSON.stringify(newData));
-    const processedTasks = updatedTasks.map(convertDates);
-    setTasks(processedTasks);
+    setTasks(updatedTasks);
   };
 
   const onToggleExpand = () => {

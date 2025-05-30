@@ -159,3 +159,4 @@ export const HomeCardList = [
     imageSource: 'https://app-cdn.clickup.com/media/list-6J4AELLQ.svg',
   },
 ];
+export * from './strings.ts';

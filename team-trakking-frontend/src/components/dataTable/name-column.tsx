@@ -6,8 +6,14 @@ import {
   TooltipContent,
   TooltipProvider,
 } from '@/components/ui/tooltip';
+import { Task } from '@/types/props/Common.ts';
 
-export const NameColumn = ({ task, isHovered }) => {
+interface Props {
+  task: Task;
+  isHovered: boolean;
+}
+
+export const NameColumn = ({ task, isHovered }: Props) => {
   return (
     <div className="flex items-center w-[240px] overflow-hidden">
       <div className="w-[40px] flex-shrink-0 flex justify-between items-center">
@@ -30,7 +36,7 @@ export const NameColumn = ({ task, isHovered }) => {
           Name of the List
         </p>
         <div className="flex items-center overflow-hidden">
-          <TooltipProvider delayDuration={200}>
+          <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
                 <span className="text-base font-normal text-content-default cursor-pointer hover:text-theme-main truncate max-w-[140px]">
@@ -43,15 +49,17 @@ export const NameColumn = ({ task, isHovered }) => {
             </Tooltip>
           </TooltipProvider>
           <div className="flex-shrink-0 flex ml-2 gap-1">
-            {task.subRows.length > 0 && (
+            {(task.subTaskCount ?? 0) > 0 && (
               <Button size="auto" variant="ghost" className="gap-1">
                 <Icon name="subtask" className="size-3" />
-                <p className="text-content-tertiary">{task.subRows.length}</p>
+                <p className="text-content-tertiary">{task.subTaskCount}</p>
               </Button>
             )}
-            <Button size="auto" variant="ghost" className="gap-1">
-              <Icon name="description" className="size-3" />
-            </Button>
+            {(task.description?.length ?? 0) > 0 && (
+              <Button size="auto" variant="ghost" className="gap-1">
+                <Icon name="description" className="size-3" />
+              </Button>
+            )}
             {isHovered && (
               <div className="flex gap-0.5 ml-2">
                 <Button size="auto" variant="ghost" className="gap-1 bg-accent">

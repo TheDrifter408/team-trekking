@@ -33,8 +33,7 @@ export const getColumns = (
     id: 'name',
     header: 'Name',
     cell: ({ row }) => {
-      const isHovered =
-        (Number(row.original.id) - 1).toString() === hoveredRowId;
+      const isHovered = row.original.id.toString() === hoveredRowId;
       return <NameColumn task={row.original} isHovered={isHovered} />;
     },
   },

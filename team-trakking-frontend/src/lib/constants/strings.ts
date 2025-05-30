@@ -6,4 +6,8 @@ export const LABEL = {
   CREATE_SPACE: 'Create space',
   SPACES: 'Spaces',
   NO_ASSIGNEES_SELECTED: 'No Assignees selected',
+  LOW: 'Low',
+  NORMAL: 'Normal',
+  HIGH: 'High',
+  URGENT: 'Urgent',
 };
