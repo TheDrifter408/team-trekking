@@ -23,8 +23,6 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { cn } from '@/lib/utils.ts';
-import { ChevronRight, ChevronDown } from 'lucide-react';
-import { getColumns } from '@/pages/dashboard/components/columns.tsx';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -34,6 +32,17 @@ interface DataTableProps<TData, TValue> {
   onFilterChange: (newFilterValue: TValue) => void;
   onRowMouseEnter?: (id: string) => void;
   onRowMouseLeave?: () => void;
+}
+interface DataTableHeaderProps<TData> {
+  table: TableType<TData>;
+}
+interface DataTableRowProps<TData> {
+  row: RowType<TData>;
+  onRowMouseEnter?: (id: string) => void;
+  onRowMouseLeave?: () => void;
+}
+interface DataTableEmptyRowProps {
+  columnsLength: number;
 }
 
 export function DataTable<TData, TValue>({
@@ -108,10 +117,6 @@ export function DataTable<TData, TValue>({
   );
 }
 
-interface DataTableHeaderProps<TData> {
-  table: TableType<TData>;
-}
-
 const DataTableHeader = <TData,>({ table }: DataTableHeaderProps<TData>) => {
   return (
     <TableHeader>
@@ -151,21 +156,15 @@ const DataTableHeader = <TData,>({ table }: DataTableHeaderProps<TData>) => {
     </TableHeader>
   );
 };
-
-interface DataTableRowProps<TData> {
-  row: RowType<TData>;
-  onRowMouseEnter?: (id: string) => void;
-  onRowMouseLeave?: () => void;
-}
-
 const DataTableRow = <TData,>({
   row,
   onRowMouseEnter,
   onRowMouseLeave,
 }: DataTableRowProps<TData>) => {
   const onMouseEnter = () => {
-    const original = row.original as { id: string | number };
-    onRowMouseEnter?.(original.id.toString());
+    if (onRowMouseEnter) {
+      onRowMouseEnter((row.original as any).id.toString());
+    }
   };
 
   const onMouseLeave = () => {
@@ -206,11 +205,6 @@ const DataTableRow = <TData,>({
     </TableRow>
   );
 };
-
-interface DataTableEmptyRowProps {
-  columnsLength: number;
-}
-
 const DataTableEmptyRow = ({ columnsLength }: DataTableEmptyRowProps) => {
   return (
     <TableRow>

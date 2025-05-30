@@ -16,11 +16,11 @@ export const getColumns = (
     header: () => null,
     cell: ({ row }) => {
       const task = row.original;
-      const isSelected = selectedIds.includes(task.id);
+      const isSelected = selectedIds.includes(task.id.toString());
       return (
         <SelectColumn
           isSelected={isSelected}
-          onSelect={() => toggleSelect(task.id)}
+          onSelect={() => toggleSelect(task.id.toString())}
         />
       );
     },

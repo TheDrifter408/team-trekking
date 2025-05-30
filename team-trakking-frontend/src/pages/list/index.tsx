@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Main } from '@/components/layout/main.tsx';
 import { getColumns } from '@/pages/dashboard/components/columns.tsx';
@@ -18,6 +18,7 @@ export const List = () => {
     }),
     []
   );
+
   const parents = useMemo(
     () => [
       { meta: 'SPACE' as HeaderType, label: 'ProjecX Moon', link: '/space' },
@@ -32,22 +33,32 @@ export const List = () => {
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [hoveredRowId, setHoveredRowId] = useState<string | null>(null);
 
-  const onToggleSelect = (id: string) => {
+  const onToggleSelect = useCallback((id: string) => {
     setSelectedIds((prev) =>
       prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
     );
-  };
+  }, []);
 
-  const handleDataChange = (newData: any[]) => {
+  const handleDataChange = useCallback((newData: any[]) => {
     const updatedTasks = JSON.parse(JSON.stringify(newData));
     setTasks(updatedTasks);
-  };
+  }, []);
 
-  const onToggleExpand = () => {
+  const onToggleExpand = useCallback(() => {
     setIsTableExpanded(!isTableExpanded);
-  };
+  }, [isTableExpanded]);
 
-  const columns = getColumns(selectedIds, onToggleSelect, hoveredRowId);
+  const handleRowMouseEnter = useCallback((id: string) => {
+    setHoveredRowId(id);
+  }, []);
+
+  const handleRowMouseLeave = useCallback(() => {
+    setHoveredRowId(null);
+  }, []);
+
+  const columns = useMemo(() => {
+    return getColumns(selectedIds, onToggleSelect, hoveredRowId);
+  }, [selectedIds, onToggleSelect]);
 
   return (
     <div>
@@ -71,15 +82,14 @@ export const List = () => {
                 }}
                 style={{ overflow: 'hidden', transformOrigin: 'top' }}
               >
-                {/* Make this into a pure function so that re-renders do not matter if data is same */}
                 <DataTable
                   columns={columns}
                   data={tasks}
                   onDataChange={handleDataChange}
                   filterValue={filterValue}
                   onFilterChange={setFilterValue}
-                  onRowMouseEnter={(id) => setHoveredRowId(id)}
-                  onRowMouseLeave={() => setHoveredRowId(null)}
+                  onRowMouseEnter={handleRowMouseEnter}
+                  onRowMouseLeave={handleRowMouseLeave}
                 />
               </motion.div>
             )}
