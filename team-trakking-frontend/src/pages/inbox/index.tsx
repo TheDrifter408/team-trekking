@@ -3,7 +3,7 @@ import { Main } from '@/components/layout/main.tsx';
 import { InboxPageHeader } from '@/pages/inbox/components/inbox-page-header.tsx';
 import { InboxTabs } from '@/pages/inbox/components/inbox-tabs.tsx';
 import { mockImportant, mockOthers, mockCleared } from '@/mock';
-import { InboxTabType } from '@/types/props/common';
+import { InboxTabType } from '@/types/props/Common.ts';
 
 export const Inbox = () => {
   const [activeTab, setActiveTab] = useState<InboxTabType>('IMPORTANT');

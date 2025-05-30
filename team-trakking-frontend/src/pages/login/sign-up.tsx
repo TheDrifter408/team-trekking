@@ -1,46 +1,56 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Form } from '@/components/ui/form';
-import { Mail } from 'lucide-react';
+import { LockKeyhole, Mail, User } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useNavigate } from 'react-router-dom';
-import { AuthLayout } from './components/auth-layout';
-import { AuthCard } from './components/auth-card';
+import { AuthLayout } from './components/auth-layout.tsx';
+import { AuthCard } from './components/auth-card.tsx';
 import { FormInputField } from './components/form-input.tsx';
-import { emailInputSchema } from '@/lib/config/validation-schema';
-import { usePostSendOtpMutation } from '@/redux/query/rtk-query.ts';
+import { signUpSchema } from '@/lib/config/validationSchema.tsx';
+import { UserRole } from '@/lib/constants/app.ts';
+import {
+  usePostSendOtpMutation,
+  usePostVerifyOtpMutation,
+  usePostCreateUserMutation,
+} from '@/service/rtkQuery.ts';
 import {
   InputOTP,
   InputOTPGroup,
   InputOTPSlot,
 } from '@/components/ui/input-otp';
 
-export const ForgotPassword = () => {
+export const SignUp = () => {
   const navigate = useNavigate();
   const [
     sendOtp,
     { isLoading: isSendOtpLoading, isSuccess: isSendOtpSuccess },
   ] = usePostSendOtpMutation();
-
+  const [verifyOtp] = usePostVerifyOtpMutation();
+  const [createUser] = usePostCreateUserMutation();
+  const [showPassword, setShowPassword] = useState(false);
   const [isOtpSent, setIsOtpSent] = useState(false);
   const [otp, setOtp] = useState('');
-  const [errorMessage, setErrorMessage] = useState(null);
-
-  const otpType = 'PASSWORD_RESET';
+  const otpType = 'REGISTRATION';
   const registrationType = 'EMAIL';
+  const permissionIds = [2];
 
-  // Initialize form for email submission
+  // Initialize form with Zod schema
   const form = useForm({
-    resolver: zodResolver(emailInputSchema),
+    resolver: zodResolver(signUpSchema),
     defaultValues: {
+      name: '',
       email: '',
+      password: '',
     },
   });
 
-  const onSubmit = async (data) => {
-    console.log('data', data);
-
+  const onSubmit = async (data: {
+    name: string;
+    email: string;
+    password: string;
+  }) => {
     const otpForm = {
       email: data.email,
       otpType: otpType,
@@ -49,59 +59,101 @@ export const ForgotPassword = () => {
     await sendOtp(otpForm);
     setIsOtpSent(true);
     setOtp('');
-    setErrorMessage(null);
   };
 
-  const onResendOtp = async () => {
-    try {
-      const otpForm = {
+  const onVerifyOtp = async () => {
+    const verifyOtpForm = {
+      email: form.getValues('email'),
+      otpType: otpType,
+      type: registrationType,
+      otp: otp,
+    };
+
+    // First verify OTP
+    const verifyResponse = await verifyOtp(verifyOtpForm).unwrap();
+
+    // If verification is successful, create the user
+    if (verifyResponse) {
+      const createUserForm = {
+        fullName: form.getValues('name'),
         email: form.getValues('email'),
-        otpType: otpType,
-        type: registrationType,
+        password: form.getValues('password'),
+        roleId: Number(UserRole.User),
+        permissionIds: permissionIds,
+        otp: otp,
       };
-      await sendOtp(otpForm);
-      setErrorMessage(null);
-    } catch (error) {
-      setErrorMessage(error.message || 'Failed to resend verification code');
+
+      // Create user and navigate on success
+      const createResponse = await createUser(createUserForm).unwrap();
+      if (createResponse) {
+        navigate('/login');
+      }
     }
+  };
+  const onResendOtp = async () => {
+    const otpForm = {
+      email: form.getValues('email'),
+      otpType: otpType,
+      type: registrationType,
+    };
+    await sendOtp(otpForm);
   };
 
   return (
     <AuthLayout isLoginPage={false}>
       <AuthCard
-        title={isOtpSent ? 'Verify your email' : 'Forgot your password?'}
-        isOtpSent={true}
+        isOtpSent={isOtpSent}
+        title={isOtpSent ? 'Verify your email' : 'Seconds to sign up!'}
         onGoogleClick={() => {}}
       >
-        {errorMessage && (
-          <div className="mb-4 p-2 bg-red-50 text-red-500 text-sm rounded border border-red-200">
-            {errorMessage}
-          </div>
-        )}
-
-        {/* Step 1: Email Submission */}
         {!isSendOtpSuccess ? (
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
               <FormInputField
                 control={form.control}
+                name="name"
+                label="Full Name"
+                placeholder="John Doe"
+                icon={User}
+              />
+
+              <FormInputField
+                control={form.control}
                 name="email"
                 label="Email"
-                placeholder="Enter your email address"
+                placeholder="example@site.com"
                 icon={Mail}
+              />
+
+              <FormInputField
+                control={form.control}
+                name="password"
+                label="Password"
+                placeholder="Minimum 8 characters"
+                icon={LockKeyhole}
+                type={showPassword ? 'text' : 'password'}
+                rightElement={
+                  <Button
+                    variant="link"
+                    type="button"
+                    className="absolute right-3 text-normal top-1 hover:decoration-dashed text-indigo-600"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    {!showPassword ? 'Show' : 'Hide'}
+                  </Button>
+                }
               />
 
               <Button
                 type="submit"
-                className="w-full rounded-lg h-[50px] font-extrabold text-md bg-indigo-600 hover:bg-indigo-700"
+                className="w-full font-extrabold rounded-lg h-[50px] text-md bg-indigo-600 hover:bg-indigo-700"
                 disabled={isSendOtpLoading}
               >
-                {isSendOtpLoading ? 'Sending...' : 'Send verification code'}
+                {isSendOtpLoading ? 'Sending...' : 'Sign up'}
               </Button>
             </form>
           </Form>
         ) : (
-          /* Step 2: OTP Input */
           <div className="space-y-6">
             <p className="text-center text-sm text-gray-500">
               A verification code has been sent to your email:{' '}
@@ -127,10 +179,11 @@ export const ForgotPassword = () => {
             </div>
 
             <Button
+              onClick={onVerifyOtp}
               className="w-full rounded-lg h-[50px] font-bold text-md bg-indigo-600 hover:bg-indigo-700"
               disabled={otp.length !== 6}
             >
-              Continue
+              Verify
             </Button>
 
             <div className="text-center">

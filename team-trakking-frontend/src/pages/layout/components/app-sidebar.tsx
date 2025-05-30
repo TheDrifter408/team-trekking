@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import { CompassIcon, Plus, UserPlus } from 'lucide-react';
+import { CompassIcon, Plus, Share2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
   Sidebar,
@@ -31,6 +31,8 @@ import {
 import { CreateSpace } from '@/components/space/create-space.tsx';
 import { InviteUser } from '@/components/invite-user.tsx';
 import { NavUser } from '@/components/layout/nav-user.tsx';
+import { Icon } from '@/assets/iconPath.tsx';
+import { LABEL } from '@/lib/constants/strings.ts';
 
 export const AppSidebar = ({
   ...props
@@ -104,28 +106,48 @@ export const AppSidebar = ({
                 onMouseLeave={() => setEnterSpaceGroup(false)}
               >
                 <SidebarGroupLabel className="text-xs font-medium  tracking-wider">
-                  Spaces
+                  {LABEL.SPACES}
                 </SidebarGroupLabel>
                 <div className="flex gap-2">
-                  {enterSpaceGroup && (
-                    <Button
-                      size={'icon'}
-                      variant={'ghost'}
-                      className={'h-5 w-5'}
-                      onClick={() => setInviteUserOpen(true)}
-                    >
-                      <UserPlus size={14} />
-                    </Button>
-                  )}
                   <Button
                     size={'icon'}
+                    variant={'ghost'}
+                    className={'h-5 w-5'}
+                    onClick={() => setInviteUserOpen(true)}
+                  >
+                    <Icon name={'menu03'} />
+                  </Button>
+                  <Button
+                    size={'icon'}
+                    variant={'ghost'}
+                    className={'h-5 w-5'}
+                    onClick={() => setInviteUserOpen(true)}
+                  >
+                    <Icon name={'search'} />
+                  </Button>
+                  <Button
+                    size={'icon_sm'}
                     onClick={() => setCreateSpaceOpen(true)}
-                    className={'h-6 w-6 bg-theme-main-dark'}
+                    className={'h-6 w-6 bg-theme-main'}
                   >
                     <Plus size={14} />
                   </Button>
                 </div>
               </div>
+              <Button
+                variant="ghost"
+                className="w-full justify-start px-4 py-2 font-normal text-base hover:bg-muted"
+              >
+                <Icon name={'menu02'} className="w-4 h-4 mr-2" />
+                {LABEL.EVERYTHING}
+              </Button>
+              <Button
+                variant="ghost"
+                className="w-full justify-start px-4 py-2 font-normal text-base hover:bg-muted"
+              >
+                <Share2 className="h-4 w-4 mr-2" />
+                {LABEL.SHARED_WITH_ME}
+              </Button>
               {spaceData.map((space) => (
                 <SidebarSpaceItems key={space.id} name={space.name}>
                   {space.folders.map((folder: any) => (
@@ -140,6 +162,13 @@ export const AppSidebar = ({
                   ))}
                 </SidebarSpaceItems>
               ))}
+              <Button
+                variant="ghost"
+                className="w-full justify-start px-4 py-2 text-muted-foreground hover:bg-muted rounded-none text-base"
+              >
+                <Plus className="h-4 w-4 mr-2" />
+                {LABEL.CREATE_SPACE}
+              </Button>
             </SidebarGroup>
           </Collapsible>
         ) : (

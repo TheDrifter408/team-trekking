@@ -1,7 +1,7 @@
 'use client';
 
 import { ColumnDef } from '@tanstack/react-table';
-import { Task } from '@/types/props/common.ts';
+import { Task } from '@/types/props/Common.ts';
 import { useNavigate } from 'react-router-dom';
 import {
   GripVertical,

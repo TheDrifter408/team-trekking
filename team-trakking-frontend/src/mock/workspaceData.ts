@@ -2,16 +2,16 @@ import {
   RecentActions,
   WorkData,
   AssignedComment,
-} from '@/types/props/common.ts';
+} from '@/types/props/Common.ts';
 
 export const spaceData = [
   {
     id: 1,
-    name: 'ProjecX Moon',
+    name: 'ProjectX Moon',
     folders: [
       {
         id: 11,
-        name: 'Space shuttle',
+        name: 'space shuttle',
         lists: [
           {
             id: 111,
@@ -34,12 +34,12 @@ export const spaceData = [
     lists: [
       {
         id: 13,
-        name: 'Mock List',
+        name: 'Mock list',
         taskNumber: 779,
       },
       {
         id: 14,
-        name: 'Mock List',
+        name: 'Mock list',
         taskNumber: 120,
       },
     ],
@@ -79,7 +79,7 @@ export const spaceData = [
     folders: [
       {
         id: 31,
-        name: 'Space shuttle',
+        name: 'space shuttle',
         lists: [
           {
             id: 311,
@@ -97,12 +97,12 @@ export const spaceData = [
     lists: [
       {
         id: 313,
-        name: 'Mock List',
+        name: 'Mock list',
         taskNumber: 779,
       },
       {
         id: 314,
-        name: 'Mock List',
+        name: 'Mock list',
         taskNumber: 120,
       },
     ],
@@ -373,13 +373,13 @@ export const recentData: RecentActions[] = [
     id: '2',
     name: 'Create a list then assign in the task',
     type: 'Task',
-    location: 'in Your List of expertise',
+    location: 'in Your list of expertise',
   },
   {
     id: '3',
     name: 'Refactor workspace views',
     type: 'Task',
-    location: 'in Development Board',
+    location: 'in Development board',
   },
   {
     id: '4',
@@ -415,7 +415,7 @@ export const recentData: RecentActions[] = [
     id: '9',
     name: 'Sprint Planning Meeting',
     type: 'Task',
-    location: 'in Agile Board',
+    location: 'in Agile board',
   },
   {
     id: '10',
@@ -484,7 +484,7 @@ export const myWorkData: WorkData[] = [
             priority: 'medium',
             completed: false,
             location:
-              'Kanban space / Severity Folder / in Your List of expertise',
+              'Kanban space / Severity folder / in Your list of expertise',
           },
           {
             id: '3',
@@ -493,7 +493,7 @@ export const myWorkData: WorkData[] = [
             description: 'Review and merge pending PRs',
             priority: 'medium',
             completed: false,
-            location: 'Kanban space / Release Folder / in Release Checklist',
+            location: 'Kanban space / Release folder / in Release Checklist',
           },
         ],
       },
@@ -720,7 +720,7 @@ export const assignedCommentData: AssignedComment[] = [
     id: '1',
     comment: '@Jawahir Nabhan please do this task today',
     commentTime: '20 mins',
-    taskName: 'Task monday deadline',
+    taskName: 'task monday deadline',
     imageUrl: 'https://i.pravatar.cc/40?img=1',
   },
   {

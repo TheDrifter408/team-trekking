@@ -4,7 +4,7 @@ import { Folder, List } from 'lucide-react';
 import { SpaceOverview } from './components/space-overview.tsx';
 import { OverviewCard } from '@/pages/dashboard/components/overview-card.tsx';
 import { spaceData } from '@/mock';
-import { HeaderType } from '@/types/props/common.ts';
+import { HeaderType } from '@/types/props/Common.ts';
 
 export const Space = () => {
   const currentPage = {

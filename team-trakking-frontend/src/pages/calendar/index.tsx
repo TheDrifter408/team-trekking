@@ -55,7 +55,7 @@ export const Calendar = () => {
     currentTitle: 'ProjecX Moon',
     workspace: { label: 'Apptitive', href: '/home' },
     space: { label: 'ProjecX Moon', href: '/space' },
-    folder: { label: 'Space Shuttle', href: '/folder' },
+    folder: { label: 'space Shuttle', href: '/folder' },
   });
 
   // Add these new state variables inside the component
@@ -772,7 +772,7 @@ export const Calendar = () => {
           </div>
         )}
 
-        {/* Task Form */}
+        {/* task Form */}
         {showTaskForm && (
           <div
             className="task-form absolute  border border-gray-300 rounded-lg p-4 shadow-md w-80 z-20"

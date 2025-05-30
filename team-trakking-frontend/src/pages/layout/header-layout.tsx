@@ -4,7 +4,7 @@ import Cookies from 'js-cookie';
 import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar';
 import { TaskSidebar } from './components/task-sidebar.tsx';
 import { AppHeader } from '@/pages/layout/components/app-header.tsx';
-import { PageHeader } from '@/pages/task/components/page-header';
+import { PageHeader } from '@/pages/Task/components/page-header';
 
 export const HeaderLayout: React.FC = () => {
   const defaultOpen = Cookies.get('sidebar:state') !== 'false';
@@ -18,7 +18,7 @@ export const HeaderLayout: React.FC = () => {
         style={sidebarStyle}
         className="flex flex-col h-full"
       >
-        <AppHeader />
+        <AppHeader user={null} />
         <PageHeader />
         <div className="flex flex-1  overflow-hidden">
           <SidebarInset className="flex-1 overflow-auto">

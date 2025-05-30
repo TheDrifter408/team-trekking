@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input.tsx';
 import { PlusCircle } from 'lucide-react';
 import { ThemeSwitch } from '@/components/theme-switch.tsx';
 import { ProfileDropdown } from '@/components/profile.dropdown.tsx';
-import { UserResponse } from '@/types/props/ApiResponse.ts';
+import { UserResponse } from '@/types/request-response/ApiResponse.ts';
 
 interface Props {
   user: UserResponse | null;

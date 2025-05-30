@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { Main } from '@/components/layout/main.tsx';
 import { columns } from '@/pages/dashboard/components/columns.tsx';
-import { HeaderType } from '@/types/props/common.ts';
+import { HeaderType } from '@/types/props/Common.ts';
 import { ListCard } from './components/list-card.tsx';
 import { PageHeader } from '@/components/layout/page-header';
 import * as Task from '@/mock/task.ts';
-import { DataTable } from '@/components/dataTable/data-table2.tsx';
+import { DataTable } from '@/components/data-table/data-table2.tsx';
 
 const convertDates = (task) => ({
   ...task,
@@ -21,7 +21,7 @@ export const List = () => {
   };
   const parents = [
     { meta: 'SPACE' as HeaderType, label: 'ProjecX Moon', link: '/space' },
-    { meta: 'FOLDER' as HeaderType, label: 'Space Shuttle', link: '/folder' },
+    { meta: 'FOLDER' as HeaderType, label: 'space Shuttle', link: '/folder' },
   ];
 
   // Use state to manage tasks data

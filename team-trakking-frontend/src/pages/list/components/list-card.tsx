@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button.tsx';
-import { Icon } from '@/assets/icon-path';
+import { Icon } from '@/assets/iconPath.tsx';
 
 export const ListCard = () => {
   return (

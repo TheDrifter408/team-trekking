@@ -1,14 +1,14 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
-import axiosBaseQuery from '@/redux/query/base-query.ts';
+import axiosBaseQuery from '@/service/baseQuery.ts';
 import { useTMTStore } from '@/stores/zustand';
-import { ApiResponse, UserResponse } from '@/types/props/ApiResponse.ts';
+import { ApiResponse, UserResponse } from '@/types/request-response/ApiResponse.ts';
 import {
   CreateUserRequest,
   OTPRequest,
   SigninRequest,
   VerifyOtpRequest,
   ForgotPasswordRequest,
-} from '@/types/props/ApiRequest.ts';
+} from '@/types/request-response/ApiRequest.ts';
 import { App } from '@/lib/constants/app.ts';
 
 export const tmtApi = createApi({
@@ -76,5 +76,4 @@ export const {
   usePostVerifyOtpMutation,
   usePostCreateUserMutation,
   usePostSignInMutation,
-  usePostForgotPasswordMutation,
 } = tmtApi;
