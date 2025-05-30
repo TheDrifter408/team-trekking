@@ -41,6 +41,9 @@
     --content-success:rgba(61, 214, 140, 1);
     --content-default: rgba(32,32,32, 1);
     --content-secondary: rgba(180, 180, 180, 1);
+    --content-warning: rgba(255, 204, 77, 1);
+    --content-normal: rgba(99, 71, 234, 1);
+    --content-danger:rgba(198, 42,47, 1);
   }
   .dark {
     --background: rgba(17, 17, 17, 1);
@@ -79,6 +82,9 @@
     --content-success:rgba(61, 214, 140, 1);
     --content-default: rgba(238, 238, 238, 1);
     --content-secondary: rgba(180, 180, 180, 1);
+    --content-warning: rgba(255, 204, 77, 1);
+    --content-normal: rgba(99, 71, 234, 1);
+    --content-danger:rgba(198, 42,47, 1);
   }
   .theme-pink{
     --theme-primary: rgb(233,61,130);
