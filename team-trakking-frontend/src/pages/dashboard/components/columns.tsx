@@ -5,6 +5,7 @@ import { Task } from '@/types/props/Common';
 import { NameColumn } from '@/components/dataTable/name-column.tsx';
 import { SelectColumn } from '@/components/dataTable/select-column.tsx';
 import { AssigneeColumn } from '@/components/dataTable/assignee-column.tsx';
+import { ProgressColumn } from '@/components/dataTable/progress-column.tsx';
 
 export const getColumns = (
   selectedIds: string[],
@@ -45,5 +46,14 @@ export const getColumns = (
     id: 'assignees',
     header: 'Assignee',
     cell: ({ row }) => <AssigneeColumn task={row.original} />,
+  },
+  {
+    id: 'progress',
+    accessorKey: 'progress',
+    header: 'Progress',
+    cell: ({ row }) => <ProgressColumn task={row.original} />,
+    size: 10,
+    maxSize: 10,
+    minSize: 10,
   },
 ];
