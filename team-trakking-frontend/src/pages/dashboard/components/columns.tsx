@@ -4,6 +4,7 @@ import { ColumnDef } from '@tanstack/react-table';
 import { Task } from '@/types/props/Common';
 import { NameColumn } from '@/components/dataTable/name-column.tsx';
 import { SelectColumn } from '@/components/dataTable/select-column.tsx';
+import { AssigneeColumn } from '@/components/dataTable/assignee-column.tsx';
 
 export const getColumns = (
   selectedIds: string[],
@@ -36,5 +37,13 @@ export const getColumns = (
       const isHovered = row.original.id.toString() === hoveredRowId;
       return <NameColumn task={row.original} isHovered={isHovered} />;
     },
+    maxSize: 70,
+    size: 47,
+  },
+  {
+    accessorKey: 'assignees',
+    id: 'assignees',
+    header: 'Assignee',
+    cell: ({ row }) => <AssigneeColumn task={row.original} />,
   },
 ];
