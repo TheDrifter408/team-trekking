@@ -27,6 +27,8 @@ import Status3 from '@/assets/status-3.svg?react';
 import Subtask from '@/assets/subtask-icon.svg?react';
 import UserAdd from '@/assets/user-add-icon.svg?react';
 import Description from '@/assets/description-icon.svg?react';
+import Tag from '@/assets/tag.svg?react';
+import Edit from '@/assets/edit.svg?react';
 
 const iconPaths = {
   description: Description,
@@ -58,6 +60,8 @@ const iconPaths = {
   status3: Status3,
   subtask: Subtask,
   useradd: UserAdd,
+  tag: Tag,
+  edit: Edit,
 } as const;
 
 type IconName = keyof typeof iconPaths;

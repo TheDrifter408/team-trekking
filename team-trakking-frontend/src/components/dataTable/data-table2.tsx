@@ -113,7 +113,6 @@ interface DataTableHeaderProps<TData> {
 }
 
 const DataTableHeader = <TData,>({ table }: DataTableHeaderProps<TData>) => {
-  const size = table.getHeaderGroups.length;
   return (
     <TableHeader>
       {table.getHeaderGroups().map((headerGroup) => (
@@ -127,9 +126,12 @@ const DataTableHeader = <TData,>({ table }: DataTableHeaderProps<TData>) => {
                 className={cn(
                   'bg-background ',
                   isPinnedLeft &&
-                    'sticky left-0 z-10 bg-gradient-to-r from-background via-background/70 to-transparent shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]'
+                    'sticky !p-0 left-0 z-10 bg-gradient-to-r from-background via-background/70 to-transparent shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]'
                 )}
                 style={{
+                  width: header.column.columnDef.size,
+                  minWidth: header.column.columnDef.size,
+                  maxWidth: header.column.columnDef.size,
                   left: isPinnedLeft
                     ? `${header.column.getStart('left')}px`
                     : undefined,
@@ -176,7 +178,7 @@ const DataTableRow = <TData,>({
     <TableRow
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
-      className={cn('transition-colors group', row.depth > 0 && 'bg-gray-25')}
+      className={cn('transition-colors group')}
     >
       {row.getVisibleCells().map((cell) => {
         const isPinnedLeft = cell.column.getIsPinned() === 'left';
@@ -185,11 +187,14 @@ const DataTableRow = <TData,>({
           <TableCell
             key={cell.id}
             className={cn(
-              'text-sm z-0 p-0 w-fit text-gray-800',
+              'text-sm z-0 !p-0 text-gray-800 !m-0',
               isPinnedLeft &&
-                'sticky left-0 z-10 bg-background shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)] !w-[60px]'
+                'sticky left-0 z-10 bg-background shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]'
             )}
             style={{
+              width: cell.column.columnDef.size,
+              minWidth: cell.column.columnDef.size,
+              maxWidth: cell.column.columnDef.size,
               left: isPinnedLeft
                 ? `${cell.column.getStart('left')}px`
                 : undefined,

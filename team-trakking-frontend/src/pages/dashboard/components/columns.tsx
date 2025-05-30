@@ -7,7 +7,8 @@ import { SelectColumn } from '@/components/dataTable/select-column.tsx';
 
 export const getColumns = (
   selectedIds: string[],
-  toggleSelect: (id: string) => void
+  toggleSelect: (id: string) => void,
+  hoveredRowId: string | null
 ): ColumnDef<Task>[] => [
   {
     id: 'select',
@@ -23,7 +24,7 @@ export const getColumns = (
         />
       );
     },
-    size: 50,
+    size: 8,
     enableSorting: false,
     enableHiding: false,
   },
@@ -31,6 +32,10 @@ export const getColumns = (
     accessorKey: 'name',
     id: 'name',
     header: 'Name',
-    cell: ({ row }) => <NameColumn task={row.original} />,
+    cell: ({ row }) => {
+      const isHovered =
+        (Number(row.original.id) - 1).toString() === hoveredRowId;
+      return <NameColumn task={row.original} isHovered={isHovered} />;
+    },
   },
 ];

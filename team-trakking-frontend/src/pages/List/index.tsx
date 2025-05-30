@@ -35,8 +35,9 @@ export const List = () => {
   const [isTableExpanded, setIsTableExpanded] = useState(true);
   const [filterValue, setFilterValue] = useState('');
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [hoveredRowId, setHoveredRowId] = useState<string | null>(null);
 
-  const toggleSelect = (id: string) => {
+  const onToggleSelect = (id: string) => {
     setSelectedIds((prev) =>
       prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
     );
@@ -52,7 +53,7 @@ export const List = () => {
     setIsTableExpanded(!isTableExpanded);
   };
 
-  const columns = getColumns(selectedIds, toggleSelect);
+  const columns = getColumns(selectedIds, onToggleSelect, hoveredRowId);
 
   return (
     <div>
@@ -76,12 +77,15 @@ export const List = () => {
                 }}
                 style={{ overflow: 'hidden', transformOrigin: 'top' }}
               >
+                {/* Make this into a pure function so that re-renders do not matter if data is same */}
                 <DataTable
                   columns={columns}
                   data={tasks}
                   onDataChange={handleDataChange}
                   filterValue={filterValue}
                   onFilterChange={setFilterValue}
+                  onRowMouseEnter={(id) => setHoveredRowId(id)}
+                  onRowMouseLeave={() => setHoveredRowId(null)}
                 />
               </motion.div>
             )}
