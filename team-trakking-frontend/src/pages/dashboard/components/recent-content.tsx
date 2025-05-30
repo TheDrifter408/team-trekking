@@ -6,13 +6,13 @@ import { HoverableCard } from './hoverable-card';
 import { cn } from '@/lib/utils';
 
 interface Props {
-  expanded: boolean;
+  isExpanded: boolean;
   onExpand: (cardTitle: string) => void;
   cardTitle: string;
 }
 
-export const RecentContent = ({ expanded, onExpand, cardTitle }: Props) => (
-  <Recents isExpanded={expanded} onExpand={onExpand} cardTitle={cardTitle} />
+const RecentContent = ({ isExpanded, onExpand, cardTitle }: Props) => (
+  <Recents isExpanded={isExpanded} onExpand={onExpand} cardTitle={cardTitle} />
 );
 
 interface RecentsProps {
@@ -21,7 +21,7 @@ interface RecentsProps {
   cardTitle: string;
 }
 
-const Recents: FC<RecentsProps> = ({ isExpanded, onExpand, cardTitle }) => (
+const Recents: FC<Props> = ({ isExpanded, onExpand, cardTitle }) => (
   <HoverableCard
     isExpanded={isExpanded}
     title={cardTitle}
@@ -67,3 +67,4 @@ const Content: FC<ContentProps> = ({ className }) => (
     })}
   </div>
 );
+export { RecentContent, Content };

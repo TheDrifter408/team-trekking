@@ -30,7 +30,7 @@ import {
   NavItem,
   NavLink,
   type NavGroup,
-} from '@/types/props/layout.ts';
+} from '@/types/props/Layout.ts';
 import { cn } from '@/lib/utils.ts';
 
 export function NavGroup({ items }: NavGroup) {

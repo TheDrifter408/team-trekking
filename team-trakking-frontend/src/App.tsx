@@ -1,6 +1,6 @@
 import { ThemeProvider } from '@/lib/context/theme-context.tsx';
 import { Provider } from 'react-redux';
-import configureAppStore from '@/redux/store/store.ts';
+import configureAppStore from '@/stores/store.ts';
 import AppRoutes from '@/routes';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { PageHeaderContextProvider } from '@/lib/context/page-header-context.tsx';

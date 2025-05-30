@@ -52,7 +52,7 @@ type ViewConfigType = {
 // Map header types to their respective UI components
 const BreadcrumbTypeIcons: Record<HeaderType, React.ReactNode> = {
   HOME: <IconHomeFilled size={14} className="text-gray-600" />,
-  SPACE: null, // Space uses initials instead of an icon
+  SPACE: null, // space uses initials instead of an icon
   FOLDER: <IconFolderFilled size={16} className="text-gray-600" />,
   LIST: <IconList size={16} className="text-gray-600" />,
   TASK: <IconCheckbox size={16} className="text-gray-600" />,

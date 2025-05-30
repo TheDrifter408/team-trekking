@@ -1,7 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { tmtApi } from '@/redux/query/rtk-query';
+import { tmtApi } from '@/service/rtkQuery.ts';
 import { setupListeners } from '@reduxjs/toolkit/query';
-import { rtkQueryErrorMiddleware } from '@/redux/store/rtk-query-error-middleware';
+import { apiErrorMiddleware } from '@/stores/apiErrorMiddleware.ts';
 
 const configureAppStore = () => {
   const store = configureStore({
@@ -11,7 +11,7 @@ const configureAppStore = () => {
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware().concat([
         tmtApi.middleware,
-        rtkQueryErrorMiddleware,
+        apiErrorMiddleware,
       ]),
     devTools: process.env.NODE_ENV === 'development',
   });

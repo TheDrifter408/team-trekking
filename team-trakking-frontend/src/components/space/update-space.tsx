@@ -141,7 +141,7 @@ export const UpdateSpace = ({ isActive, onClose }: Props) => {
               />
             </div>
           </div>
-          {/* Owner of the Space */}
+          {/* Owner of the space */}
           <div className="">
             <p className="text-base font-medium text-muted-foreground">Owner</p>
             <div className="flex mt-2 !w-full items-center space-x-2">

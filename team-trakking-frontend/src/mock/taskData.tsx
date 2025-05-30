@@ -14,7 +14,7 @@ export const taskNotificationUsers = [
     id: 9,
     userName: 'Jawahiir Nabhan ( You )',
     initials: 'JN',
-    role: 'Task Creator',
+    role: 'task Creator',
     isWatching: true,
     avatar: 'https://api.dicebear.com/7.x/personas/svg?seed=jawahiir',
   },

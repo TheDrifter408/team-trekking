@@ -173,7 +173,7 @@ export const CreateSpace = ({
         </DialogHeader>
 
         <div className="grid gap-4 py-4">
-          {/* Space Name with Icon Integration */}
+          {/* space Name with Icon Integration */}
           <div className="flex items-center gap-2">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>

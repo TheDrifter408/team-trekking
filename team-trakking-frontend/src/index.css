@@ -4,7 +4,7 @@
 
 @layer base {
   :root {
-    --background: rgba(255, 255, 255, 1%);
+    --background: rgba(255, 255 ,255, 1);
     --foreground: 222.2 84% 4.9%;
     --card: 0 0% 100%;
     --card-foreground: 222.2 84% 4.9%;
@@ -88,6 +88,17 @@
     --theme-button-highlight-color: #ee5e99;
     --theme-content-primary: rgb(203, 29, 99);
     --theme-background-subtle:rgb(252, 229, 240);
+  }
+  .theme-purple {
+    --theme-primary: #6347EA; /* base color */
+    --theme-primary-dark: #4c35b6; /* darker shade */
+    --theme-secondary-dark: #3d2d8a; /* even darker / contrasting */
+    --theme-main-color: #7c66f2; /* lighter primary */
+    --theme-main-color-dark: #5640d4; /* darkened main */
+    --theme-main-color-light: #dcd6fa; /* soft pastel version */
+    --theme-button-highlight-color: #7c66f2; /* button highlight */
+    --theme-content-primary: #4f37cc; /* used for text/content */
+    --theme-background-subtle: #f3f1fe; /* soft background */
   }
 
   /* styles.css */
