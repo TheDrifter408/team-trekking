@@ -17,4 +17,7 @@ export const LABEL = {
   WHICH_FEATURES_ARE_YOU_INTERESTED_IN: 'Which features are you interested in?',
   LASTLY_WHAT_WOULD_YOU_LIKE_TO_NAME_YOUR_WORKSPACE:
     'Lastly, what would you like to name your workspace?',
+  ENTER_EMAIL_ADDRESSES_ONBOARDING: 'Enter email addresses',
+  INVITE_PEOPLE_TO_YOUR_WORKSPACE_: 'Invite people to your Workspace',
+  JAWAHIIRS_WORKSPACE: "Jawahiir\'s Workspace",
 };

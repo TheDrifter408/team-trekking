@@ -1,11 +1,11 @@
-import {
+import React, {
   useState,
   useRef,
   MouseEvent,
   KeyboardEvent,
   ChangeEvent,
 } from 'react';
-import { Check, ChevronsLeft, ChevronsRight } from 'lucide-react';
+import { Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Icon } from '@/assets/icon-path';
 import {
@@ -18,8 +18,28 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { workspacePurposeOptions, manageOptions } from '@/mock';
+import {
+  ManagePurposeProps,
+  ManageFeaturesProps,
+  InvitePeopleProps,
+  SelectFeaturesProps,
+  NameWorkspaceProps,
+  FooterProps,
+  ProgressBarProps,
+} from '@/types/props/Layout.ts';
+import {
+  workspacePurposeOptions,
+  manageOptions,
+  featureOptions,
+  toolOptions,
+} from '@/mock';
 import { LABEL } from '@/lib/constants';
+
+// New interface for ManageTools component
+interface ManageToolsProps {
+  selectedTools: string[];
+  onToggleTool: (tool: string) => void;
+}
 
 interface Props {
   isOpen: boolean;
@@ -27,95 +47,80 @@ interface Props {
   onOpenDialog: () => void;
 }
 
-// Step rendering
+export const CreateWorkspace: React.FC<Props> = ({
+  isOpen,
+  onOpenDialog,
+  setIsOpen,
+}) => {
+  const [step, setStep] = useState<number>(1);
 
-export const CreateWorkspace = ({ isOpen, onOpenDialog, setIsOpen }: Props) => {
-  const [step, setStep] = useState(1);
-
-  // State for form data
-  const [selectedPurpose, setSelectedPurpose] = useState('');
-  const [selectedOption, setSelectedOption] = useState('');
-  const [email, setEmail] = useState('');
+  // State for form data with proper types
+  const [selectedPurpose, setSelectedPurpose] = useState<string | ''>('');
+  const [selectedOption, setSelectedOption] = useState<string | ''>('');
+  const [email, setEmail] = useState<string>('');
   const [selectedEmails, setSelectedEmails] = useState<string[]>([]);
+  const [selectedTools, setSelectedTools] = useState<string[]>([]);
   const [selectedFeatures, setSelectedFeatures] = useState<string[]>([]);
-  const [workspaceName, setWorkspaceName] = useState(`Jawahiir's Workspace`);
+  const [workspaceName, setWorkspaceName] = useState<string>(
+    LABEL.JAWAHIIRS_WORKSPACE
+  );
 
   const inputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const totalSteps = 5;
+  const totalSteps = 6;
 
-  const featureOptions = [
-    'Scheduling',
-    'Docs & Wikis',
-    'Ask AI',
-    'CRM',
-    'Gantt Charts',
-    'Goals & OKRs',
-    'Calendar',
-    'Clips',
-    'Boards & Kanban',
-    'Tasks & Projects',
-    'Time Tracking',
-    'Forms',
-    'Sprints',
-    'Chat',
-    'Dashboard',
-    'Whiteboard',
-    'Workload',
-    'Automations',
-  ];
-
-  const focusInput = () => {
+  const focusInput = (): void => {
     inputRef.current?.focus();
   };
 
   // Form navigation
-  const prevStep = (e: MouseEvent<HTMLButtonElement>) => {
+  const prevStep = (e: MouseEvent<HTMLButtonElement>): void => {
     e.preventDefault();
     if (step > 1) setStep(step - 1);
   };
 
-  const nextStep = (e: MouseEvent<HTMLButtonElement>) => {
+  const nextStep = (e: MouseEvent<HTMLButtonElement>): void => {
     e.preventDefault();
     if (step < totalSteps) {
       setStep(step + 1);
     }
   };
 
-  const onSubmit = () => {
+  const onSubmit = (): void => {
     setIsOpen(false);
     resetForm();
   };
 
-  const resetForm = () => {
+  const resetForm = (): void => {
     setStep(1);
     setSelectedPurpose('');
     setSelectedOption('');
     setEmail('');
     setSelectedEmails([]);
+    setSelectedTools([]);
     setSelectedFeatures([]);
-    setWorkspaceName(`Jawahiir's Workspace`);
+    setWorkspaceName(LABEL.JAWAHIIRS_WORKSPACE);
   };
 
-  // Form input handlers
-  const onSelectPurpose = (option: string) => setSelectedPurpose(option);
-  const onSelectOption = (option: string) => setSelectedOption(option);
+  // Form input handlers with proper types
+  const onSelectPurpose = (option: string): void => setSelectedPurpose(option);
+  const onSelectOption = (option: string): void => setSelectedOption(option);
 
-  const onAddEmail = (emailInput: string) => {
+  const onAddEmail = (emailInput: string): void => {
     const trimmedEmail = emailInput.trim();
     if (!trimmedEmail) return;
-    const newEmailList: string[] = selectedEmails;
-    newEmailList.push(trimmedEmail);
-    setSelectedEmails(newEmailList);
+
+    // Fix: Create new array instead of mutating existing one
+    setSelectedEmails((prev) => [...prev, trimmedEmail]);
     setEmail('');
   };
 
-  const onRemoveEmail = (index: number) => {
+  const onRemoveEmail = (index: number): void => {
     setSelectedEmails((prev) => prev.filter((_, i) => i !== index));
   };
 
-  const onKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+  const onKeyDown = (e: KeyboardEvent<HTMLInputElement>): void => {
     if (e.key === ',' || e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
       onAddEmail(email);
@@ -128,7 +133,7 @@ export const CreateWorkspace = ({ isOpen, onOpenDialog, setIsOpen }: Props) => {
     }
   };
 
-  const onEmailChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const onEmailChange = (e: ChangeEvent<HTMLInputElement>): void => {
     const value = e.target.value;
     const lastChar = value.slice(-1);
     if (lastChar === ',') {
@@ -138,7 +143,15 @@ export const CreateWorkspace = ({ isOpen, onOpenDialog, setIsOpen }: Props) => {
     }
   };
 
-  const onToggleFeature = (option: string) => {
+  const onToggleTool = (tool: string): void => {
+    setSelectedTools((prev) => {
+      return prev.includes(tool)
+        ? prev.filter((item) => item !== tool)
+        : [...prev, tool];
+    });
+  };
+
+  const onToggleFeature = (option: string): void => {
     setSelectedFeatures((prev) => {
       return prev.includes(option)
         ? prev.filter((item) => item !== option)
@@ -158,7 +171,7 @@ export const CreateWorkspace = ({ isOpen, onOpenDialog, setIsOpen }: Props) => {
         );
       case 2:
         return (
-          <ManaegFeatures
+          <ManageFeatures
             manageOptions={manageOptions}
             selectedOption={selectedOption}
             onSelectOption={onSelectOption}
@@ -166,95 +179,37 @@ export const CreateWorkspace = ({ isOpen, onOpenDialog, setIsOpen }: Props) => {
         );
       case 3:
         return (
-          <div className="items-center flex flex-col">
-            <h2 className="text-3xl font-bold mb-12">
-              Invite people to your Workspace:
-            </h2>
-            <div className="min-h-12 rounded-lg py-2 mb-8 items-center border flex w-full max-w-md">
-              <div
-                className="flex flex-wrap gap-2 border-input px-5 w-full"
-                ref={containerRef}
-                onClick={focusInput}
-              >
-                {selectedEmails.map((email, index) => (
-                  <div
-                    key={index}
-                    className="rounded-sm text-sm border px-2 py-1"
-                  >
-                    {email}
-                  </div>
-                ))}
-                <input
-                  ref={inputRef}
-                  type="text"
-                  className="flex-1 text-sm outline-none border-none bg-transparent"
-                  value={email}
-                  onChange={onEmailChange}
-                  onKeyDown={onKeyDown}
-                  placeholder={
-                    selectedEmails.length === 0 ? 'Enter email addresses' : ''
-                  }
-                />
-              </div>
-            </div>
-          </div>
+          <InvitePeople
+            email={email}
+            selectedEmails={selectedEmails}
+            onEmailChange={onEmailChange}
+            onKeyDown={onKeyDown}
+            onRemoveEmail={onRemoveEmail}
+            inputRef={inputRef}
+            containerRef={containerRef}
+            focusInput={focusInput}
+          />
         );
       case 4:
         return (
-          <div className="items-center flex flex-col">
-            <h2 className="text-3xl font-bold mb-8">
-              Which features are you interested in trying?
-            </h2>
-            <div className="w-full justify-center items-center flex flex-wrap gap-2">
-              {featureOptions.map((option) => {
-                const isSelected = selectedFeatures.includes(option);
-                return (
-                  <Button
-                    key={option}
-                    variant="outline"
-                    onClick={() => onToggleFeature(option)}
-                    className="h-10"
-                  >
-                    <span className="flex-1 text-left">{option}</span>
-                    <div
-                      className={cn(
-                        'h-4 w-4 rounded border flex items-center justify-center transition-colors',
-                        isSelected
-                          ? 'bg-purple-700 border-purple-700'
-                          : 'border-primary'
-                      )}
-                    >
-                      {isSelected && (
-                        <Check className="text-white" strokeWidth={2} />
-                      )}
-                    </div>
-                  </Button>
-                );
-              })}
-            </div>
-            <span className="text-sm mt-2">
-              Don't worry, you will have access to all of these in your
-              Workspace.
-            </span>
-          </div>
+          <ManageTools
+            selectedTools={selectedTools}
+            onToggleTool={onToggleTool}
+          />
         );
       case 5:
         return (
-          <div className="items-center flex flex-col">
-            <h2 className="text-3xl font-bold mb-12">
-              Lastly, what would you like to name your Workspace?
-            </h2>
-            <div className="flex">
-              <Input
-                className="h-12 min-w-64 text-base font-medium text-center"
-                value={workspaceName}
-                onChange={(e) => setWorkspaceName(e.target.value)}
-              />
-            </div>
-            <span className="text-sm mt-2">
-              Try the name of your organization.
-            </span>
-          </div>
+          <SelectFeatures
+            selectedFeatures={selectedFeatures}
+            onToggleFeature={onToggleFeature}
+          />
+        );
+      case 6:
+        return (
+          <NameWorkspace
+            workspaceName={workspaceName}
+            setWorkspaceName={setWorkspaceName}
+          />
         );
       default:
         return null;
@@ -304,7 +259,8 @@ export const CreateWorkspace = ({ isOpen, onOpenDialog, setIsOpen }: Props) => {
   );
 };
 
-const ManagePurpose = ({
+// Step Components
+const ManagePurpose: React.FC<ManagePurposeProps> = ({
   workspacePurposeOptions,
   onSelectPurpose,
   selectedPurpose,
@@ -335,7 +291,11 @@ const ManagePurpose = ({
   );
 };
 
-const ManaegFeatures = ({ onSelectOption, manageOptions, selectedOption }) => {
+const ManageFeatures: React.FC<ManageFeaturesProps> = ({
+  onSelectOption,
+  manageOptions,
+  selectedOption,
+}) => {
   return (
     <div className="flex flex-col items-center pt-4">
       <h2 className="text-4xl text-content-default font-bold mb-4">
@@ -362,13 +322,174 @@ const ManaegFeatures = ({ onSelectOption, manageOptions, selectedOption }) => {
   );
 };
 
-const ProgressBar = ({ step, totalSteps }) => {
+const InvitePeople: React.FC<InvitePeopleProps> = ({
+  email,
+  selectedEmails,
+  onEmailChange,
+  onKeyDown,
+  inputRef,
+  containerRef,
+  focusInput,
+}) => {
+  return (
+    <div className="items-center flex flex-col">
+      <h2 className="text-4xl font-bold text-content-default mb-12">
+        {LABEL.INVITE_PEOPLE_TO_YOUR_WORKSPACE}
+      </h2>
+      {/* Gradient border wrapper */}
+      <div className="min-h-12 rounded-lg gradient-border mb-8 w-full max-w-md">
+        <div className="min-h-12 rounded-lg py-2 items-center bg-white flex w-full">
+          <div
+            className="flex flex-wrap gap-2 px-5 w-full"
+            ref={containerRef}
+            onClick={focusInput}
+          >
+            {selectedEmails.map((email, index) => (
+              <div
+                key={index}
+                className="rounded-sm font-medium text-content-onboarding-secondary text-sm border px-2 py-1"
+              >
+                {email}
+              </div>
+            ))}
+            <Input
+              ref={inputRef}
+              type="text"
+              className="flex-1 !text-lg border-none outline-none !ring-0 focus-visible-none bg-transparent placeholder:text-lg placeholder:text-content-onboarding-secondary"
+              value={email}
+              onChange={onEmailChange}
+              onKeyDown={onKeyDown}
+              placeholder={
+                selectedEmails.length === 0
+                  ? LABEL.ENTER_EMAIL_ADDRESSES_ONBOARDING
+                  : ''
+              }
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const ManageTools: React.FC<ManageToolsProps> = ({
+  selectedTools,
+  onToggleTool,
+}) => {
+  return (
+    <div className="items-center flex flex-col">
+      <h2 className="text-4xl font-bold text-content-default mb-12">
+        Which tools would you like to integrate?
+      </h2>
+      <div className="w-full max-w-4xl justify-center items-center flex flex-wrap gap-3">
+        {toolOptions.map((tool) => {
+          const isSelected = selectedTools.includes(tool);
+          return (
+            <Button
+              key={tool}
+              variant="outline"
+              onClick={() => onToggleTool(tool)}
+              className={cn(
+                'h-12 min-w-[160px] rounded-xl text-content-onboarding-secondary text-base font-medium hover:shadow-lg transition-all duration-200',
+                isSelected && ' border-theme-main shadow-theme-main shadow-sm'
+              )}
+            >
+              <span className="flex-1 text-center">{tool}</span>
+              <div
+                className={cn(
+                  'h-4 w-4 ml-2 rounded border flex items-center justify-center transition-colors',
+                  isSelected ? '' : 'border-primary'
+                )}
+              >
+                {isSelected && (
+                  <Check
+                    className="bg-theme-main-dark text-white"
+                    strokeWidth={2}
+                    size={12}
+                  />
+                )}
+              </div>
+            </Button>
+          );
+        })}
+      </div>
+    </div>
+  );
+};
+
+const SelectFeatures: React.FC<SelectFeaturesProps> = ({
+  selectedFeatures,
+  onToggleFeature,
+}) => {
+  return (
+    <div className="items-center flex flex-col">
+      <h2 className="text-4xl font-bold text-content-default mb-12">
+        {LABEL.WHICH_FEATURES_ARE_YOU_INTERESTED_IN}
+      </h2>
+      <div className="w-full justify-center items-center flex flex-wrap gap-2">
+        {featureOptions.map((option) => {
+          const isSelected = selectedFeatures.includes(option);
+          return (
+            <Button
+              key={option}
+              variant="outline"
+              onClick={() => onToggleFeature(option)}
+              className={cn(
+                'h-12 rounded-xl text-content-onboarding-secondary text-base font-medium',
+                isSelected &&
+                  'border-[1px] border-theme-main shadow-theme-main shadow-sm'
+              )}
+            >
+              <span className="flex-1 text-left">{option}</span>
+              <div
+                className={cn(
+                  'h-4 w-4 rounded border flex items-center justify-center transition-colors',
+                  isSelected ? 'bg-theme-main-dark' : 'border-primary'
+                )}
+              >
+                {isSelected && <Check className="text-white" strokeWidth={2} />}
+              </div>
+            </Button>
+          );
+        })}
+      </div>
+      <span className="text-sm mt-2">
+        Don't worry, you will have access to all of these in your Workspace.
+      </span>
+    </div>
+  );
+};
+
+const NameWorkspace: React.FC<NameWorkspaceProps> = ({
+  workspaceName,
+  setWorkspaceName,
+}) => {
+  return (
+    <div className="items-center flex flex-col">
+      <h2 className="text-3xl font-bold text-content-default">
+        {LABEL.LASTLY_WHAT_WOULD_YOU_LIKE_TO_NAME_YOUR_WORKSPACE}
+      </h2>
+      <div className="flex flex-col items-center justify-center h-full">
+        <Input
+          className="h-12 !w-[270px] !text-xl text-center"
+          value={workspaceName}
+          onChange={(e) => setWorkspaceName(e.target.value)}
+        />
+        <span className="text-sm text-content-tertiary mt-2">
+          Try the name of your organization.
+        </span>
+      </div>
+    </div>
+  );
+};
+
+const ProgressBar: React.FC<ProgressBarProps> = ({ step, totalSteps }) => {
   const progress = (step / totalSteps) * 100;
   return (
     <div className="w-full mt-8 mb-4">
       <div className="h-1 w-full bg-gray-200 rounded-full overflow-hidden">
         <div
-          className="h-full bg-gradient-to-r from-blue-500 via-indigo-400 via-violet-500 to-purple-600"
+          className="h-full rounded-full bg-gradient-to-r from-blue-500 via-indigo-400 via-violet-500 to-purple-600"
           style={{ width: `${progress}%`, transition: 'width 0.3s ease' }}
         />
       </div>
@@ -376,7 +497,13 @@ const ProgressBar = ({ step, totalSteps }) => {
   );
 };
 
-const Footer = ({ step, prevStep, nextStep, totalSteps, onSubmit }) => (
+const Footer: React.FC<FooterProps> = ({
+  step,
+  prevStep,
+  nextStep,
+  totalSteps,
+  onSubmit,
+}) => (
   <div className="flex justify-between w-full">
     {step > 1 && (
       <Button
@@ -407,7 +534,9 @@ const Footer = ({ step, prevStep, nextStep, totalSteps, onSubmit }) => (
       <Button
         onClick={onSubmit}
         type="button"
-        className={cn('w-32 ml-auto h-10 text-lg')}
+        className={cn(
+          'ml-auto !w-[113px] bg-theme-main-dark !h-[58px] text-xl flex items-center rounded-lg'
+        )}
       >
         Finish
       </Button>

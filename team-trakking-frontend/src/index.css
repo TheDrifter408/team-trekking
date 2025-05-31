@@ -188,7 +188,10 @@
   fill: #ebf8ff;
   opacity: .5;
 }
-
+.gradient-border {
+  padding: 2px;
+  background: linear-gradient(90deg, #45c3f986, #8820fead, #ff0be7af);
+}
 
 @layer base {
   * {
