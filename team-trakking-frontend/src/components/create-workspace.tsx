@@ -18,7 +18,8 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { workspacePurposeOptions } from '@/mock';
+import { workspacePurposeOptions, manageOptions } from '@/mock';
+import { LABEL } from '@/lib/constants';
 
 interface Props {
   isOpen: boolean;
@@ -43,22 +44,7 @@ export const CreateWorkspace = ({ isOpen, onOpenDialog, setIsOpen }: Props) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   const totalSteps = 5;
-  const manageOptions = [
-    'HR & Recruiting',
-    'Operations',
-    'Software Development',
-    'IT',
-    'Sales & CRM',
-    'Marketing',
-    'Creative & Design',
-    'Support',
-    'Finance & Accounting',
-    'Professional Services',
-    'PMO',
-    'Startup',
-    'Personal Use',
-    'Other',
-  ];
+
   const featureOptions = [
     'Scheduling',
     'Docs & Wikis',
@@ -172,28 +158,11 @@ export const CreateWorkspace = ({ isOpen, onOpenDialog, setIsOpen }: Props) => {
         );
       case 2:
         return (
-          <div className="items-center flex flex-col">
-            <h2 className="text-3xl font-bold mb-2">
-              What would you like to manage?
-            </h2>
-            <div className="h-48 w-full max-w-2xl justify-center items-center flex flex-wrap gap-2">
-              {manageOptions.map((option) => (
-                <Button
-                  key={option}
-                  onClick={() => onSelectOption(option)}
-                  variant="outline"
-                  className={cn(
-                    'h-12 text-lg hover:bg-purple-700 hover:text-white hover:shadow-lg',
-                    selectedOption === option
-                      ? 'bg-purple-700/90 shadow-lg text-white border-none'
-                      : ''
-                  )}
-                >
-                  {option}
-                </Button>
-              ))}
-            </div>
-          </div>
+          <ManaegFeatures
+            manageOptions={manageOptions}
+            selectedOption={selectedOption}
+            onSelectOption={onSelectOption}
+          />
         );
       case 3:
         return (
@@ -343,7 +312,7 @@ const ManagePurpose = ({
   return (
     <div className="flex flex-col items-center pt-4">
       <h2 className="text-4xl text-content-default font-bold mb-4">
-        What will you use this workspace for?
+        {LABEL.WHAT_WILL_YOU_USE_THIS_WORKSPACE_FOR}
       </h2>
       <div className="min-h-48 justify-center items-center flex flex-wrap gap-2">
         {workspacePurposeOptions.map((option) => (
@@ -352,9 +321,36 @@ const ManagePurpose = ({
             variant="outline"
             onClick={() => onSelectPurpose(option)}
             className={cn(
-              'min-w-[180px] py-[12px] px-[20px] hover:bg-theme-main hover:text-primary-foreground h-12 text-base font-medium text-content-tertiary',
+              'min-w-[180px] py-[12px] px-[20px] hover:bg-theme-main hover:text-primary-foreground h-12 text-xl font-medium text-content-onboarding-secondary ',
               selectedPurpose === option
                 ? 'bg-theme-main-dark shadow-theme-main shadow-lg border-theme-main text-primary-foreground'
+                : ''
+            )}
+          >
+            {option}
+          </Button>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+const ManaegFeatures = ({ onSelectOption, manageOptions, selectedOption }) => {
+  return (
+    <div className="flex flex-col items-center pt-4">
+      <h2 className="text-4xl text-content-default font-bold mb-4">
+        {LABEL.WHAT_WOULD_YOU_LIKE_TO_MANAGE}
+      </h2>
+      <div className="h-48 w-full max-w-2xl justify-center items-center flex flex-wrap gap-2">
+        {manageOptions.map((option) => (
+          <Button
+            key={option}
+            onClick={() => onSelectOption(option)}
+            variant="outline"
+            className={cn(
+              'h-12 text-lg text-content-onboarding-secondary hover:bg-theme-main-dark hover:text-white hover:shadow-lg',
+              selectedOption === option
+                ? 'bg-theme-main-dark shadow-md shadow-theme-main text-white border-none'
                 : ''
             )}
           >

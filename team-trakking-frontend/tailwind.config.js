@@ -54,6 +54,8 @@ export default {
           warning: 'var(--content-warning)',
           danger: 'var(--content-danger)',
           normal: 'var(--content-normal)',
+          secondary: 'var(--content-secondary)',
+          'onboarding-secondary': 'var(--content-onboarding-secondary)',
         },
         background: 'var(--background)',
         foreground: 'hsl(var(--foreground))',

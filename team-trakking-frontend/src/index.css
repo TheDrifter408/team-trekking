@@ -44,6 +44,7 @@
     --content-warning: rgba(255, 204, 77, 1);
     --content-normal: rgba(99, 71, 234, 1);
     --content-danger:rgba(198, 42,47, 1);
+    --content-onboarding-secondary:rgb(79, 87, 98);
   }
   .dark {
     --background: rgba(17, 17, 17, 1);
@@ -85,6 +86,7 @@
     --content-warning: rgba(255, 204, 77, 1);
     --content-normal: rgba(99, 71, 234, 1);
     --content-danger:rgba(198, 42,47, 1);
+    --content-onboarding-secondary:rgb(79, 87, 98);
   }
   .theme-pink{
     --theme-primary: rgb(233,61,130);
