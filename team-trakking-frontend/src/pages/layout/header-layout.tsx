@@ -4,7 +4,7 @@ import Cookies from 'js-cookie';
 import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar';
 import { TaskSidebar } from './components/task-sidebar.tsx';
 import { AppHeader } from '@/pages/layout/components/app-header.tsx';
-import { PageHeader } from '@/pages/Task/components/page-header';
+import { PageHeader } from '@/pages/task/components/page-header';
 
 export const HeaderLayout: React.FC = () => {
   const defaultOpen = Cookies.get('sidebar:state') !== 'false';
