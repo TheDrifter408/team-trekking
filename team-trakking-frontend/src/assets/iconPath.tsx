@@ -27,6 +27,7 @@ import Status3 from '@/assets/icons/status-3.svg?react';
 import Subtask from '@/assets/icons/subtask-icon.svg?react';
 import UserAdd from '@/assets/icons/user-add-icon.svg?react';
 import Search from '@/assets/icons/search-icon.svg?react';
+import SignUpBG from "@/assets/backgrounds/auth-gradient-background.svg?react";
 
 const iconPaths = {
   add01: Add01,
@@ -58,6 +59,7 @@ const iconPaths = {
   subtask: Subtask,
   useradd: UserAdd,
   search: Search,
+  signUpBg: SignUpBG
 } as const;
 
 type IconName = keyof typeof iconPaths;

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { FC, useState } from 'react';
 import { mockChecklist, mockSubtasks, mockUsers, sampleTask } from '@/mock';
 import { cn } from '@/lib/utils';
 import { ChevronDown, PlayCircle, Plus } from 'lucide-react';
@@ -32,8 +32,7 @@ import {
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { SortableChecklistRow } from '@/pages/Task/components/sortable-checklist-row.tsx';
-import { Textarea } from '@/components/ui/textarea';
+import { SortableChecklistRow } from '@/pages/task/components/sortable-checklist-row.tsx';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -41,9 +40,9 @@ import { TaskMetaRow } from './components/task-meta-row';
 import { Input } from '@/components/ui/input.tsx';
 import { AssigneeAvatar } from '@/components/assignee-avatar.tsx';
 import { DocEditor } from './components/doc-editor.tsx';
-import { Subtask } from '@/pages/Task/components/Subtask.tsx';
+import { Subtask } from '@/pages/task/components/Subtask.tsx';
 
-export const Task: React.FC = () => {
+export const Task: FC = () => {
   const [enterStatus, setEnterStatus] = useState<boolean>(false);
   const [enterDates, setEnterDates] = useState<boolean>(false);
   const [enterAssignee, setEnterAssignee] = useState<boolean>(false);
