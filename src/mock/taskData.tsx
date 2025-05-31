@@ -1,0 +1,178 @@
+import { taskStatuses } from './workspaceData';
+
+// Sample notification data
+export const taskNotificationUsers = [
+  {
+    id: 1,
+    userName: 'Alex Johnson',
+    initials: 'AJ',
+    role: 'Workspace Owner',
+    isWatching: true,
+    avatar: 'https://api.dicebear.com/7.x/personas/svg?seed=alexjohnson',
+  },
+  {
+    id: 9,
+    userName: 'Jawahiir Nabhan ( You )',
+    initials: 'JN',
+    role: 'task Creator',
+    isWatching: true,
+    avatar: 'https://api.dicebear.com/7.x/personas/svg?seed=jawahiir',
+  },
+  {
+    id: 10,
+    userName: 'Piash Mehedi',
+    initials: 'PM',
+    role: 'Admin',
+    isWatching: true,
+    avatar: 'https://api.dicebear.com/7.x/personas/svg?seed=mehedi',
+  },
+  {
+    id: 5,
+    userName: 'James Wilson',
+    initials: 'JW',
+    role: 'Member',
+    isWatching: true,
+    avatar: 'https://api.dicebear.com/7.x/personas/svg?seed=jameswilson',
+  },
+  {
+    id: 2,
+    userName: 'Maria Garcia',
+    initials: 'MG',
+    role: 'Member',
+    isWatching: false,
+    avatar: 'https://api.dicebear.com/7.x/personas/svg?seed=mariagarcia',
+  },
+  {
+    id: 3,
+    userName: 'David Park',
+    initials: 'DP',
+    role: 'Member',
+    isWatching: true,
+    avatar: 'https://api.dicebear.com/7.x/personas/svg?seed=davidpark',
+  },
+  {
+    id: 4,
+    userName: 'Sarah Williams',
+    initials: 'SW',
+    role: 'Member',
+    isWatching: false,
+    avatar: 'https://api.dicebear.com/7.x/personas/svg?seed=sarahwilliams',
+  },
+
+  {
+    id: 6,
+    userName: 'Emily Chen',
+    initials: 'EC',
+    role: 'Member',
+    isWatching: false,
+    avatar: 'https://api.dicebear.com/7.x/personas/svg?seed=emilychen',
+  },
+  {
+    id: 7,
+    userName: 'Michael Brown',
+    initials: 'MB',
+    role: 'Member',
+    isWatching: true,
+    avatar: 'https://api.dicebear.com/7.x/personas/svg?seed=michaelbrown',
+  },
+  {
+    id: 8,
+    userName: 'Lisa Taylor',
+    initials: 'LT',
+    role: 'Member',
+    isWatching: false,
+    avatar: 'https://api.dicebear.com/7.x/personas/svg?seed=lisataylor',
+  },
+
+  {
+    id: 11,
+    userName: 'Mike Tyson',
+    initials: 'MT',
+    role: 'Member',
+    isWatching: false,
+    avatar: 'https://api.dicebear.com/7.x/personas/svg?seed=tyson',
+  },
+];
+
+// Sample filter options
+export const filterOptions = [
+  { id: 'all', label: 'All Activity', checked: true },
+  { id: 'comments', label: 'Comments', checked: true },
+  { id: 'assignments', label: 'Assignments', checked: true },
+  { id: 'status', label: 'Status Changes', checked: false },
+  { id: 'mentions', label: 'Mentions', checked: true },
+];
+
+export const sampleTask = {
+  id: 1,
+  name: 'Budget plan for summer vacation',
+  description:
+    'Each Summer, Dcastalia celebrates their year mid success and takes the opportunity to recess and take a breather.',
+  startDate: '',
+  endDate: '',
+  estimatedTime: '8',
+  tags: ['budget', 'planning'],
+  assignees: ['Tawakkul', 'Saidur Rahman', 'Polok'],
+  priority: 'low',
+  trackTime: '2hours 4minutes',
+  timeSpent: '3hours 44 minutes',
+  status: taskStatuses[2],
+  subtask: [
+    {
+      id: 11,
+      name: 'Date fix',
+      description: 'Fix a date for the event',
+      startDate: '',
+      endDate: '',
+      estimatedTime: '2',
+      priority: 'mid',
+      assignees: ['Tawakkul'],
+      trackTime: '5hours',
+      timeSpent: '4hours 44minutes',
+      status: taskStatuses[1],
+    },
+    {
+      id: 12,
+      name: 'Location fix',
+      description: 'Fix a location for the event',
+      startDate: '',
+      endDate: '',
+      estimatedTime: '2',
+      priority: 'mid',
+      assignees: ['Saidur Rahman'],
+      trackTime: '5hours',
+      timeSpent: '4hours 44minutes',
+      status: taskStatuses[3],
+    },
+    {
+      id: 13,
+      name: 'Budget estimation',
+      description: 'Estimate a near accurate cost ',
+      startDate: '',
+      endDate: '',
+      estimatedTime: '2',
+      priority: 'mid',
+      assignees: ['Polok'],
+      trackTime: '5hours',
+      timeSpent: '4hours 44minutes',
+      status: taskStatuses[4],
+    },
+  ],
+  checklist: [
+    {
+      id: 11,
+      name: 'Contact resort for price details',
+      isCompleted: false,
+    },
+    {
+      id: 12,
+      name: 'Negotiation',
+      isCompleted: false,
+    },
+    {
+      id: 13,
+      name: 'Event planning',
+      isCompleted: true,
+    },
+  ],
+};

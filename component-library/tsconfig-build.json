@@ -1,6 +1,0 @@
-// To avoid error in TypeScript when importing components
-// directly from the dist folder that isn't build yet
-{
-  "extends": "./tsconfig.json",
-  "include": ["lib"]
-}
