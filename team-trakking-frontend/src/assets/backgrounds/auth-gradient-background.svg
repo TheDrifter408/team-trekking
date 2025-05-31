@@ -1,5 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 1050" fill="none">
-<g clipPath="url(#a)"><path fill="transparent" d="M0 0h1152v1012H0z"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 1050" preserveAspectRatio="none" fill="none">
+<g clipPath="url(#a)">
     <path fill="url(#b)" d="M -6 1043 L 1382.53 1043 L 1382.53 134.893 C 1337 88 1320 3 1178 59 L 64 677 C -77 765 -75 848 -72 1037 L -73 839 L -70 1042 Z"/>
     <path fill="url(#c)" d="M -6 1043 L 1382.53 1043 L 1382.53 134.893 C 1337 88 1320 3 1178 59 L 64 677 C -77 765 -75 848 -72 1037 L -73 839 L -70 1042 Z"/>
 </g>
