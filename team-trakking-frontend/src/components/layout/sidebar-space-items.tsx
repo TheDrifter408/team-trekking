@@ -17,6 +17,10 @@ import {
 } from '@/components/ui/tooltip';
 import { UpdateSpace } from '@/components/space/update-space.tsx';
 import { getInitials } from '@/lib/utils.ts';
+import { ContextMenu } from '@/components/ContextMenu.tsx';
+import { Icon } from '@/assets/iconPath.tsx';
+import { spacesMenuConfig } from '@/lib/constants/staticData.ts';
+import * as React from 'react';
 
 interface Props {
   name: string;
@@ -80,7 +84,16 @@ export const SidebarSpaceItems = ({ name, children }: Props) => {
             </TooltipProvider>
           </div>
         </div>
-        <SidebarActionsMenu onRename={onRename} />
+        <ContextMenu
+          trigger={
+            <Button size={'icon'} variant={'ghost'} className={'h-5 w-5'}>
+              <Icon name={'menu03'} />
+            </Button>
+          }
+          sections={spacesMenuConfig}
+          width="w-64"
+          onItemClick={() => {}}
+        />
       </div>
 
       <UpdateSpace isActive={isRename} onClose={() => setIsRename(false)} />
