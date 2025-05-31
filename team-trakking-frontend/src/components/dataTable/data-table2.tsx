@@ -5,16 +5,14 @@ import {
   ColumnDef,
   Table as TableType,
   Row as RowType,
-  ColumnFiltersState,
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
   getSortedRowModel,
-  SortingState,
-  useReactTable,
-  VisibilityState,
   getExpandedRowModel,
+  useReactTable,
   ColumnPinningState,
+  ExpandedState,
 } from '@tanstack/react-table';
 import {
   Table,
@@ -35,13 +33,27 @@ interface DataTableProps<TData, TValue> {
   onRowMouseEnter?: (id: string) => void;
   onRowMouseLeave?: () => void;
 }
+interface DataTableHeaderProps<TData> {
+  table: TableType<TData>;
+}
+interface DataTableRowProps<TData> {
+  row: RowType<TData>;
+  onRowMouseEnter?: (id: string) => void;
+  onRowMouseLeave?: () => void;
+}
+interface DataTableEmptyRowProps {
+  columnsLength: number;
+}
 
 export function DataTable<TData, TValue>({
   columns,
   data,
   filterValue,
+  onRowMouseEnter,
+  onRowMouseLeave,
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = useState({});
+  const [expanded, setExpanded] = useState<ExpandedState>({});
   const [columnPinning, setColumnPinning] = useState<ColumnPinningState>(() => {
     // Ensure columns have IDs before setting up pinning
     const firstColumnId =
@@ -59,15 +71,19 @@ export function DataTable<TData, TValue>({
 
   const table = useReactTable({
     data: localData,
-    columns,
+    columns: columns,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
+    getExpandedRowModel: getExpandedRowModel(),
     onRowSelectionChange: setRowSelection,
     onColumnPinningChange: setColumnPinning,
+    onExpandedChange: setExpanded,
+    getSubRows: (row: any) => row.subRows,
     state: {
       rowSelection,
       columnPinning,
+      expanded,
     },
   });
 
@@ -84,9 +100,13 @@ export function DataTable<TData, TValue>({
           <DataTableHeader table={table} />
           <TableBody>
             {table.getRowModel().rows.map((row) => (
-              <DataTableRow key={row.id} row={row} />
+              <DataTableRow
+                key={row.id}
+                row={row}
+                onRowMouseEnter={onRowMouseEnter}
+                onRowMouseLeave={onRowMouseLeave}
+              />
             ))}
-
             {table.getRowModel().rows.length === 0 && (
               <DataTableEmptyRow columnsLength={columns.length} />
             )}
@@ -97,10 +117,6 @@ export function DataTable<TData, TValue>({
   );
 }
 
-interface DataTableHeaderProps<TData> {
-  table: TableType<TData>;
-}
-
 const DataTableHeader = <TData,>({ table }: DataTableHeaderProps<TData>) => {
   return (
     <TableHeader>
@@ -108,24 +124,21 @@ const DataTableHeader = <TData,>({ table }: DataTableHeaderProps<TData>) => {
         <TableRow key={headerGroup.id}>
           {headerGroup.headers.map((header) => {
             const isPinnedLeft = header.column.getIsPinned() === 'left';
-            const isPinnedRight = header.column.getIsPinned() === 'right';
 
             return (
               <TableHead
                 key={header.id}
                 className={cn(
-                  'bg-background',
+                  'bg-background ',
                   isPinnedLeft &&
-                    'sticky left-0 z-10 border-r bg-background shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]',
-                  isPinnedRight &&
-                    'sticky right-0 border-l bg-background shadow-[-2px_0_5px_-2px_rgba(0,0,0,0.1)]'
+                    'sticky !p-0 left-0 z-10 bg-gradient-to-r from-background via-background/70 to-transparent shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]'
                 )}
                 style={{
+                  width: header.column.columnDef.size,
+                  minWidth: header.column.columnDef.size,
+                  maxWidth: header.column.columnDef.size,
                   left: isPinnedLeft
                     ? `${header.column.getStart('left')}px`
-                    : undefined,
-                  right: isPinnedRight
-                    ? `${header.column.getAfter('right')}px`
                     : undefined,
                 }}
               >
@@ -143,49 +156,55 @@ const DataTableHeader = <TData,>({ table }: DataTableHeaderProps<TData>) => {
     </TableHeader>
   );
 };
+const DataTableRow = <TData,>({
+  row,
+  onRowMouseEnter,
+  onRowMouseLeave,
+}: DataTableRowProps<TData>) => {
+  const onMouseEnter = () => {
+    if (onRowMouseEnter) {
+      onRowMouseEnter((row.original as any).id.toString());
+    }
+  };
 
-interface DataTableRowProps<TData> {
-  row: RowType<TData>;
-}
-
-const DataTableRow = <TData,>({ row }: DataTableRowProps<TData>) => {
+  const onMouseLeave = () => {
+    if (onRowMouseLeave) {
+      onRowMouseLeave();
+    }
+  };
   return (
-    <TableRow>
-      {row.getVisibleCells().map((cell, index) => {
+    <TableRow
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+      className={cn('transition-colors group')}
+    >
+      {row.getVisibleCells().map((cell) => {
         const isPinnedLeft = cell.column.getIsPinned() === 'left';
 
         return (
           <TableCell
             key={cell.id}
             className={cn(
-              'text-sm text-gray-800 bg-background',
+              'text-sm z-0 !p-0 text-gray-800 !m-0',
               isPinnedLeft &&
-                'sticky left-0 z-10 border-r  shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]'
+                'sticky left-0 z-10 bg-background shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]'
             )}
             style={{
+              width: cell.column.columnDef.size,
+              minWidth: cell.column.columnDef.size,
+              maxWidth: cell.column.columnDef.size,
               left: isPinnedLeft
                 ? `${cell.column.getStart('left')}px`
                 : undefined,
             }}
           >
-            {index === 2 || index === 3 ? (
-              <div style={{ marginLeft: `${row.depth * 20}px` }}>
-                {flexRender(cell.column.columnDef.cell, cell.getContext())}
-              </div>
-            ) : (
-              flexRender(cell.column.columnDef.cell, cell.getContext())
-            )}
+            {flexRender(cell.column.columnDef.cell, cell.getContext())}
           </TableCell>
         );
       })}
     </TableRow>
   );
 };
-
-interface DataTableEmptyRowProps {
-  columnsLength: number;
-}
-
 const DataTableEmptyRow = ({ columnsLength }: DataTableEmptyRowProps) => {
   return (
     <TableRow>

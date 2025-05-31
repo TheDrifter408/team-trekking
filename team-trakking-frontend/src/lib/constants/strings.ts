@@ -6,5 +6,19 @@ export const LABEL = {
   CREATE_SPACE: 'Create space',
   SPACES: 'Spaces',
   NO_ASSIGNEES_SELECTED: 'No Assignees selected',
-  DESTRUCTIVE:"destructive"
+  DESTRUCTIVE:"destructive",
+  LOW: 'Low',
+  NORMAL: 'Normal',
+  HIGH: 'High',
+  URGENT: 'Urgent',
+  WHAT_WILL_YOU_USE_THIS_WORKSPACE_FOR: 'What will you use this workspace for?',
+  WHAT_WOULD_YOU_LIKE_TO_MANAGE: 'What would you like to manage?',
+  INVITE_PEOPLE_TO_YOUR_WORKSPACE: 'Invite people to your workspace',
+  DO_YOU_USE_ANY_OF_THESE_TOOLS: 'Do you use any of these tools?',
+  WHICH_FEATURES_ARE_YOU_INTERESTED_IN: 'Which features are you interested in?',
+  LASTLY_WHAT_WOULD_YOU_LIKE_TO_NAME_YOUR_WORKSPACE:
+    'Lastly, what would you like to name your workspace?',
+  ENTER_EMAIL_ADDRESSES_ONBOARDING: 'Enter email addresses',
+  INVITE_PEOPLE_TO_YOUR_WORKSPACE_: 'Invite people to your Workspace',
+  JAWAHIIRS_WORKSPACE: "Jawahiir's Workspace",
 };

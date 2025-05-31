@@ -43,6 +43,7 @@ export const Board = () => {
       coordinateGetter: sortableKeyboardCoordinates,
     })
   );
+
   const handleDragStart = (event: DragStartEvent) => {
     const { active } = event;
     const taskId = active.id as string;

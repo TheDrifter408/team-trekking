@@ -1,11 +1,23 @@
 import { Button } from '@/components/ui/button.tsx';
-import { Icon } from '@/assets/iconPath.tsx';
+import { Icon } from '@/assets/icon-path';
+import { cn } from '@/lib/utils.ts';
 
-export const ListCard = () => {
+interface Props {
+  isTableExpanded: boolean;
+  onToggleExpand: () => void;
+}
+
+export const ListCard = ({ isTableExpanded, onToggleExpand }: Props) => {
   return (
     <div className={'flex items-center h-[28px] gap-[12px]'}>
-      <Button size={'icon_sm'} variant={'ghost'}>
-        <Icon name={'expandsubtask'} />
+      <Button size={'icon_sm'} variant={'ghost'} onClick={onToggleExpand}>
+        <Icon
+          name={'expandsubtask'}
+          className={cn(
+            'text-content-tertiary transition-transform duration-[450ms] ease-out',
+            isTableExpanded ? '-rotate-90' : 'rotate-0'
+          )}
+        />
       </Button>
       <span className={'text-base'}>Tasks</span>
       <span className={'font-normal text-content-tertiary text-sm'}>15</span>

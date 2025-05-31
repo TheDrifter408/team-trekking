@@ -1,30 +1,5 @@
 import { LucideIcon } from 'lucide-react';
-
-export type Assignee = {
-  id: string;
-  name: string;
-};
-
-export type TaskStatus = {
-  id: string;
-  name: string;
-  color: string;
-};
-
-export type Task = {
-  id: string;
-  name: string;
-  status: TaskStatus;
-  progress: number;
-  priority: string;
-  assignees: Assignee[];
-  startDate: Date;
-  dueDate: Date;
-  estimatedTime: string;
-  spentTime: string;
-  timeTracked: string;
-  subRows?: Task[];
-};
+import { LABEL } from '@/lib/constants/strings.ts';
 
 export interface Space {
   id: number;
@@ -119,4 +94,43 @@ export interface AssignedComment {
   commentTime: string;
   taskName: string;
   imageUrl: string;
+}
+
+export interface TaskStatus {
+  id: number;
+  name: string;
+  color: string;
+  category: string;
+}
+export interface Checklist {
+  id: number;
+  name: string;
+  isCompleted: boolean;
+}
+export interface Assignee {
+  id: number;
+  name: string;
+  avatar?: string;
+}
+export type TaskPriority =
+  | typeof LABEL.LOW
+  | typeof LABEL.NORMAL
+  | typeof LABEL.HIGH
+  | typeof LABEL.URGENT;
+export interface Task {
+  id: number;
+  name: string;
+  progress: number;
+  status: TaskStatus;
+  startDate?: string;
+  dueDate?: string;
+  description?: string;
+  checklist?: Checklist[];
+  assignees?: Assignee[];
+  spendTime?: string;
+  estimatedTime?: string;
+  priority?: TaskPriority;
+  subTask?: Task[];
+  subTaskCount?: number;
+  checkListCount?: number;
 }

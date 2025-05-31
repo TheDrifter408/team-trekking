@@ -38,7 +38,13 @@
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 217.2 91.2% 59.8%;
     --content-tertiary: rgba(123, 123, 123, 1);
-
+    --content-success:rgba(61, 214, 140, 1);
+    --content-default: rgba(32,32,32, 1);
+    --content-secondary: rgba(180, 180, 180, 1);
+    --content-warning: rgba(255, 204, 77, 1);
+    --content-normal: rgba(99, 71, 234, 1);
+    --content-danger:rgba(198, 42,47, 1);
+    --content-onboarding-secondary:rgb(79, 87, 98);
   }
   .dark {
     --background: rgba(17, 17, 17, 1);
@@ -47,7 +53,7 @@
     --card-foreground: 210 40% 98%;
     --popover: 222.2 84% 4.9%;
     --popover-foreground: 210 40% 98%;
-    --primary: 210 40% 98%;
+    --primary: rgba(229,231, 235, 1);
     --primary-foreground: 222.2 47.4% 11.2%;
     --secondary: 217.2 32.6% 17.5%;
     --secondary-foreground: 210 40% 98%;
@@ -74,6 +80,13 @@
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
     --content-tertiary: rgba(123, 123, 123, 1);
+    --content-success:rgba(61, 214, 140, 1);
+    --content-default: rgba(238, 238, 238, 1);
+    --content-secondary: rgba(180, 180, 180, 1);
+    --content-warning: rgba(255, 204, 77, 1);
+    --content-normal: rgba(99, 71, 234, 1);
+    --content-danger:rgba(198, 42,47, 1);
+    --content-onboarding-secondary:rgb(79, 87, 98);
   }
   .theme-pink{
     --theme-primary: rgb(233,61,130);
@@ -175,7 +188,10 @@
   fill: #ebf8ff;
   opacity: .5;
 }
-
+.gradient-border {
+  padding: 2px;
+  background: linear-gradient(90deg, #45c3f986, #8820fead, #ff0be7af);
+}
 
 @layer base {
   * {

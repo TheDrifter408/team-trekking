@@ -159,3 +159,23 @@ export const HomeCardList = [
     imageSource: 'https://app-cdn.clickup.com/media/list-6J4AELLQ.svg',
   },
 ];
+export const COLUMN_META = {
+  ACCESSOR_KEY: {
+    SELECT: 'select',
+    NAME: 'name',
+    DESCRIPTION: 'description',
+    PROGRESS: 'progress',
+    ASSIGNEES: 'assignees',
+    PRIORITY: 'priority',
+  },
+  HEADER: {
+    SELECT: 'Select',
+    NAME: 'Name',
+    DESCRIPTION: 'Description',
+    PROGRESS: 'Progress',
+    ASSIGNEES: 'Assignees',
+    PRIORITY: 'Priority',
+  },
+};
+
+export * from './strings.ts';
