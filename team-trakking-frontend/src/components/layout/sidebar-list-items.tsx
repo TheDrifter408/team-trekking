@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button.tsx';
 import { cn } from '@/lib/utils.ts';
 import { useNavigate } from 'react-router-dom';
 import { ContextMenu } from '@/components/ContextMenu.tsx';
-import { Icon } from '@/assets/iconPath.tsx';
+import { Icon } from '@/assets/icon-path.tsx';
 import { listMenuConfig } from '@/lib/constants/staticData.ts';
 
 interface Props {
