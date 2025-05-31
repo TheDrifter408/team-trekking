@@ -7,6 +7,7 @@ import { PageHeader } from './components/page-header';
 import { RecentContent } from '@/pages/dashboard/components/recent-content.tsx';
 import { MyWorkContent } from '@/pages/dashboard/components/my-work-content.tsx';
 import { AssignedCommentsContent } from '@/pages/dashboard/components/assigned-comments-content.tsx';
+import {TutorialDialog} from '@/components/tutotial-dialog'
 
 enum Direction {
   NEXT = 'next',
@@ -126,6 +127,7 @@ export const Dashboard = () => {
             )}
         </div>
       )}
+      <TutorialDialog/>
     </div>
   );
 };

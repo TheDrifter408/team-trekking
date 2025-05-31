@@ -72,6 +72,44 @@ function DialogContent({
   );
 }
 
+function DialogContentPlain({
+  className,
+  children,
+  onClose,
+  ...props
+}: React.ComponentProps<typeof DialogPrimitive.Content> & {
+  onClose?: () => void;
+}) {
+  return (
+    <DialogPortal>
+      <DialogOverlay />
+      <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
+        <div className="relative">
+          <DialogPrimitive.Content
+            className={cn(
+              'relative bg-white rounded-xl overflow-hidden w-full max-w-3xl shadow-xl',
+              'data-[state=open]:animate-in data-[state=closed]:animate-out',
+              'data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0',
+              'data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95',
+              className
+            )}
+            {...props}
+          >
+            {children}
+          </DialogPrimitive.Content>
+          <button
+            onClick={onClose}
+            className="absolute -top-8 -right-8 z-10 bg-white hover:bg-gray-50 rounded-full p-2 shadow-lg transition-all hover:scale-110 border"
+          >
+            <XIcon className="h-5 w-5 text-gray-700" />
+            <span className="sr-only">Close</span>
+          </button>
+        </div>
+      </div>
+    </DialogPortal>
+  );
+}
+
 function DialogHeader({ className, ...props }: React.ComponentProps<'div'>) {
   return (
     <div
@@ -132,4 +170,5 @@ export {
   DialogPortal,
   DialogTitle,
   DialogTrigger,
+  DialogContentPlain,
 };

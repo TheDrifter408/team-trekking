@@ -33,7 +33,7 @@ import { InviteUser } from '@/components/invite-user.tsx';
 import { NavUser } from '@/components/layout/nav-user.tsx';
 import { Icon } from '@/assets/icon-path.tsx';
 import { LABEL } from '@/lib/constants/strings.ts';
-import { ContextMenu } from '@/components/ContextMenu.tsx';
+import { ContextMenu } from '@/components/context-menu.tsx';
 import { spacesMenuConfig } from '@/lib/constants/staticData.ts';
 
 export const AppSidebar = ({

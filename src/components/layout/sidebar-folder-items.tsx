@@ -11,7 +11,7 @@ import { IconCaretRightFilled } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';
 import { Icon } from '@/assets/icon-path.tsx';
 import { folderMenuConfig } from '@/lib/constants/staticData.ts';
-import { ContextMenu } from '@/components/ContextMenu.tsx';
+import { ContextMenu } from '@/components/context-menu.tsx';
 
 interface Props {
   name: string;

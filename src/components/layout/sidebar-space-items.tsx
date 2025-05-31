@@ -16,7 +16,7 @@ import {
 } from '@/components/ui/tooltip';
 import { UpdateSpace } from '@/components/space/update-space.tsx';
 import { getInitials } from '@/lib/utils.ts';
-import { ContextMenu } from '@/components/ContextMenu.tsx';
+import { ContextMenu } from '@/components/context-menu.tsx';
 import { Icon } from '@/assets/icon-path.tsx';
 import { spacesMenuConfig } from '@/lib/constants/staticData.ts';
 
