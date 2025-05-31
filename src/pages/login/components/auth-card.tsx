@@ -17,7 +17,7 @@ export const AuthCard = ({
   isOtpSent = false,
 }: AuthCardProps) => {
   return (
-    <div className="flex justify-center">
+    <div className="flex justify-center z-10">
       <Card className="lg:w-[480px] w-[360px] border-none">
         <CardHeader className={'justify-center'}>
           <CardTitle className="text-4xl font-bold">{title}</CardTitle>
