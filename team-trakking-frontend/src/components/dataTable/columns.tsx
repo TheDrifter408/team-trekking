@@ -1,12 +1,13 @@
 'use client';
 
 import { ColumnDef } from '@tanstack/react-table';
-import { Task } from '@/types/props/Common';
+import { Task } from '@/types/props/Common.ts';
 import { NameColumn } from '@/components/dataTable/name-column.tsx';
 import { SelectColumn } from '@/components/dataTable/select-column.tsx';
 import { AssigneeColumn } from '@/components/dataTable/assignee-column.tsx';
 import { ProgressColumn } from '@/components/dataTable/progress-column.tsx';
 import { PriorityColumn } from '@/components/dataTable/priority-column.tsx';
+import { COLUMN_META } from '@/lib/constants';
 
 export const getColumns = (
   selectedIds: string[],
@@ -14,8 +15,8 @@ export const getColumns = (
   hoveredRowId: string | null
 ): ColumnDef<Task>[] => [
   {
-    id: 'select',
-    accessorKey: 'select',
+    id: COLUMN_META.ACCESSOR_KEY.SELECT,
+    accessorKey: COLUMN_META.ACCESSOR_KEY.SELECT,
     header: () => null,
     cell: ({ row }) => {
       const task = row.original;
@@ -32,9 +33,9 @@ export const getColumns = (
     enableHiding: false,
   },
   {
-    accessorKey: 'name',
-    id: 'name',
-    header: 'Name',
+    accessorKey: COLUMN_META.ACCESSOR_KEY.NAME,
+    id: COLUMN_META.ACCESSOR_KEY.NAME,
+    header: COLUMN_META.HEADER.NAME,
     cell: ({ row }) => {
       const isHovered = row.original.id.toString() === hoveredRowId;
       return <NameColumn task={row.original} isHovered={isHovered} />;
@@ -43,23 +44,23 @@ export const getColumns = (
     size: 47,
   },
   {
-    accessorKey: 'assignees',
-    id: 'assignees',
-    header: 'Assignee',
+    accessorKey: COLUMN_META.ACCESSOR_KEY.ASSIGNEES,
+    id: COLUMN_META.ACCESSOR_KEY.ASSIGNEES,
+    header: COLUMN_META.HEADER.NAME,
     cell: ({ row }) => <AssigneeColumn task={row.original} />,
     size: 10,
   },
   {
-    id: 'progress',
-    accessorKey: 'progress',
-    header: 'Progress',
+    id: COLUMN_META.ACCESSOR_KEY.PROGRESS,
+    accessorKey: COLUMN_META.ACCESSOR_KEY.PROGRESS,
+    header: COLUMN_META.HEADER.PROGRESS,
     cell: ({ row }) => <ProgressColumn task={row.original} />,
     size: 10,
   },
   {
-    id: 'priority',
-    accessorKey: 'priority',
-    header: 'Priority',
+    id: COLUMN_META.ACCESSOR_KEY.PRIORITY,
+    accessorKey: COLUMN_META.ACCESSOR_KEY.PRIORITY,
+    header: COLUMN_META.HEADER.PRIORITY,
     cell: ({ row }) => <PriorityColumn task={row.original} />,
     size: 5,
   },

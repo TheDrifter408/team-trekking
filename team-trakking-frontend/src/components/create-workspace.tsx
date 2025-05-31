@@ -26,6 +26,7 @@ import {
   NameWorkspaceProps,
   FooterProps,
   ProgressBarProps,
+  ManageToolsProps,
 } from '@/types/props/Layout.ts';
 import {
   workspacePurposeOptions,
@@ -34,12 +35,6 @@ import {
   toolOptions,
 } from '@/mock';
 import { LABEL } from '@/lib/constants';
-
-// New interface for ManageTools component
-interface ManageToolsProps {
-  selectedTools: string[];
-  onToggleTool: (tool: string) => void;
-}
 
 interface Props {
   isOpen: boolean;

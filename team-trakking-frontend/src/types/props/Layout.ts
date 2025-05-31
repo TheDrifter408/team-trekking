@@ -87,5 +87,9 @@ export interface FooterProps {
   totalSteps: number;
   onSubmit: () => void;
 }
+export interface ManageToolsProps {
+  selectedTools: string[];
+  onToggleTool: (tool: string) => void;
+}
 
 export type { SidebarData, NavGroup, NavItem, NavCollapsible, NavLink };
