@@ -26,8 +26,8 @@ export const List = () => {
     ],
     []
   );
+
   const [tasks, setTasks] = useState(generatedTasks);
-  console.log(tasks);
 
   const [isTableExpanded, setIsTableExpanded] = useState(true);
   const [filterValue, setFilterValue] = useState('');
