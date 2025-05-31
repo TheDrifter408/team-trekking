@@ -9,12 +9,8 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { IconCaretRightFilled } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';
-import { Icon } from '@/assets/iconPath.tsx';
-import {
-  folderMenuConfig,
-  listMenuConfig,
-  spacesMenuConfig,
-} from '@/lib/constants/staticData.ts';
+import { Icon } from '@/assets/icon-path.tsx';
+import { folderMenuConfig } from '@/lib/constants/staticData.ts';
 import { ContextMenu } from '@/components/ContextMenu.tsx';
 
 interface Props {

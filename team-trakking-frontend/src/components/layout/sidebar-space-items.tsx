@@ -8,7 +8,6 @@ import { Button } from '@/components/ui/button.tsx';
 import { IconCaretRightFilled } from '@tabler/icons-react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { SidebarActionsMenu } from '@/components/layout/sidebar-action-menu';
 import {
   Tooltip,
   TooltipContent,
@@ -18,9 +17,8 @@ import {
 import { UpdateSpace } from '@/components/space/update-space.tsx';
 import { getInitials } from '@/lib/utils.ts';
 import { ContextMenu } from '@/components/ContextMenu.tsx';
-import { Icon } from '@/assets/iconPath.tsx';
+import { Icon } from '@/assets/icon-path.tsx';
 import { spacesMenuConfig } from '@/lib/constants/staticData.ts';
-import * as React from 'react';
 
 interface Props {
   name: string;
@@ -32,12 +30,6 @@ export const SidebarSpaceItems = ({ name, children }: Props) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isRename, setIsRename] = useState(false);
   const initials = getInitials(name);
-
-  const onRename = () => {
-    setTimeout(() => {
-      setIsRename(true);
-    }, 10);
-  };
 
   return (
     <Collapsible>
