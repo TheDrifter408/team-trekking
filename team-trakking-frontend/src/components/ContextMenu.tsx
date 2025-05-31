@@ -17,6 +17,7 @@ import {
   MenuSection,
   SubmenuItem,
 } from '@/types/interfaces/ContextMenu.ts';
+import {LABEL} from "@/lib/constants/strings.ts";
 
 // Updated ContextMenu Component with reduced vertical gaps
 export const ContextMenu: React.FC<ContextMenuProps> = ({
@@ -93,7 +94,7 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({
       );
     }
 
-    if (item.type === 'destructive') {
+    if (item.type === LABEL.DESTRUCTIVE) {
       return (
         <DropdownMenuItem
           key={index}
