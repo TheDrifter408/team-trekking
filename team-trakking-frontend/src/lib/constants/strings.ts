@@ -6,7 +6,7 @@ export const LABEL = {
   CREATE_SPACE: 'Create space',
   SPACES: 'Spaces',
   NO_ASSIGNEES_SELECTED: 'No Assignees selected',
-  DESTRUCTIVE:"destructive"
+  DESTRUCTIVE:"destructive",
   LOW: 'Low',
   NORMAL: 'Normal',
   HIGH: 'High',
@@ -20,5 +20,5 @@ export const LABEL = {
     'Lastly, what would you like to name your workspace?',
   ENTER_EMAIL_ADDRESSES_ONBOARDING: 'Enter email addresses',
   INVITE_PEOPLE_TO_YOUR_WORKSPACE_: 'Invite people to your Workspace',
-  JAWAHIIRS_WORKSPACE: "Jawahiir/'s Workspace",
+  JAWAHIIRS_WORKSPACE: "Jawahiir's Workspace",
 };
