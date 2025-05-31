@@ -32,7 +32,7 @@ import {
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { SortableChecklistRow } from '@/pages/Task/components/sortable-checklist-row.tsx';
+import { SortableChecklistRow } from '@/pages/task/components/sortable-checklist-row.tsx';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
@@ -41,7 +41,7 @@ import { TaskMetaRow } from './components/task-meta-row';
 import { Input } from '@/components/ui/input.tsx';
 import { AssigneeAvatar } from '@/components/assignee-avatar.tsx';
 import { DocEditor } from './components/doc-editor.tsx';
-import { Subtask } from '@/pages/Task/components/Subtask.tsx';
+import { Subtask } from '@/pages/task/components/Subtask.tsx';
 
 export const Task: React.FC = () => {
   const [enterStatus, setEnterStatus] = useState<boolean>(false);
