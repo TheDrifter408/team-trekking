@@ -10,4 +10,11 @@ export const LABEL = {
   NORMAL: 'Normal',
   HIGH: 'High',
   URGENT: 'Urgent',
+  WHAT_WILL_YOU_USE_THIS_WORKSPACE_FOR: 'What will you use this workspace for?',
+  WHAT_WOULD_YOU_LIKE_TO_MANAGE: 'What would you like to manage?',
+  INVITE_PEOPLE_TO_YOUR_WORKSPACE: 'Invite people to your workspace',
+  DO_YOU_USE_ANY_OF_THESE_TOOLS: 'Do you use any of these tools?',
+  WHICH_FEATURES_ARE_YOU_INTERESTED_IN: 'Which features are you interested in?',
+  LASTLY_WHAT_WOULD_YOU_LIKE_TO_NAME_YOUR_WORKSPACE:
+    'Lastly, what would you like to name your workspace?',
 };

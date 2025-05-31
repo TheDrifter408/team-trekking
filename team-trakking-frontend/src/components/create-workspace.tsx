@@ -7,6 +7,7 @@ import {
 } from 'react';
 import { Check, ChevronsLeft, ChevronsRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Icon } from '@/assets/icon-path';
 import {
   Dialog,
   DialogContent,
@@ -17,6 +18,7 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { workspacePurposeOptions } from '@/mock';
 
 interface Props {
   isOpen: boolean;
@@ -41,7 +43,6 @@ export const CreateWorkspace = ({ isOpen, onOpenDialog, setIsOpen }: Props) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   const totalSteps = 5;
-  const workspaceUseOptions = ['Work', 'Personal', 'School'];
   const manageOptions = [
     'HR & Recruiting',
     'Operations',
@@ -159,47 +160,15 @@ export const CreateWorkspace = ({ isOpen, onOpenDialog, setIsOpen }: Props) => {
     });
   };
 
-  // Progress bar component
-  const ProgressBar = () => {
-    const progress = (step / totalSteps) * 100;
-
-    return (
-      <div className="w-full mt-8 mb-4">
-        <div className="h-2 w-full bg-gray-200 rounded-full overflow-hidden">
-          <div
-            className="h-full bg-gradient-to-r from-blue-500 via-indigo-400 via-violet-500 to-purple-600"
-            style={{ width: `${progress}%`, transition: 'width 0.3s ease' }}
-          />
-        </div>
-      </div>
-    );
-  };
-
   const renderStep = () => {
     switch (step) {
       case 1:
         return (
-          <div className="flex flex-col items-center justify-center h-full">
-            <h2 className="text-3xl font-bold mb-2">
-              What will you use this workspace for?
-            </h2>
-            <div className="h-48 justify-center items-center flex space-x-2">
-              {workspaceUseOptions.map((option) => (
-                <Button
-                  key={option}
-                  onClick={() => onSelectPurpose(option)}
-                  className={cn(
-                    'w-40 h-12 text-lg hover:bg-primary/80',
-                    selectedPurpose === option
-                      ? 'hover:bg-purple-800/80 bg-purple-700/90 shadow-lg'
-                      : ''
-                  )}
-                >
-                  {option}
-                </Button>
-              ))}
-            </div>
-          </div>
+          <ManagePurpose
+            workspacePurposeOptions={workspacePurposeOptions}
+            onSelectPurpose={onSelectPurpose}
+            selectedPurpose={selectedPurpose}
+          />
         );
       case 2:
         return (
@@ -323,49 +292,19 @@ export const CreateWorkspace = ({ isOpen, onOpenDialog, setIsOpen }: Props) => {
     }
   };
 
-  const renderFooter = () => (
-    <div className="flex justify-between w-full">
-      {step > 1 && (
-        <Button
-          variant="outline"
-          onClick={prevStep}
-          className="w-32 h-10 text-lg"
-          type="button"
-        >
-          <ChevronsLeft className="mr-2 h-4 w-4" />
-          Back
-        </Button>
-      )}
-      {step < totalSteps ? (
-        <Button
-          onClick={nextStep}
-          className={cn(
-            'w-32 ml-auto h-10 text-lg bg-purple-700/90 shadow-lg hover:bg-purple-700/80'
-          )}
-        >
-          Next <ChevronsRight className="ml-2 h-4 w-4" />
-        </Button>
-      ) : (
-        <Button
-          onClick={onSubmit}
-          type="button"
-          className={cn(
-            'w-32 ml-auto h-10 text-lg bg-purple-700/90 shadow-lg hover:bg-purple-700/80'
-          )}
-        >
-          Finish
-        </Button>
-      )}
-    </div>
-  );
   return (
     <Dialog open={isOpen} onOpenChange={onOpenDialog}>
-      <DialogOverlay className="bg-black/30 backdrop-blur-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0" />
+      <DialogOverlay className="  bg-content-tertiary/10 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0" />
 
-      <DialogContent className="sm:max-w-lg md:max-w-2xl lg:max-w-3xl h-[90vh] flex flex-col p-0">
+      <DialogContent className="sm:max-w-lg md:max-w-2xl lg:max-w-3xl !max-w-[70%] h-[90vh] flex flex-col p-0">
         {/* Fixed Header */}
-        <DialogHeader className="px-6 py-4 border-b">
-          <DialogTitle className="text-xl">Team Trekking</DialogTitle>
+        <DialogHeader className="px-6 py-4">
+          <DialogTitle className="text-xl w-full px-4 flex justify-between items-center">
+            <span className={"font-bold text-3xl'"}>Team Trekking</span>
+            <span className={'font-semibold text-2xl'}>
+              Welcome, Jawahiir Nabhan!
+            </span>
+          </DialogTitle>
         </DialogHeader>
 
         <form
@@ -373,17 +312,109 @@ export const CreateWorkspace = ({ isOpen, onOpenDialog, setIsOpen }: Props) => {
           className="flex flex-col flex-1"
         >
           {/* Main content area with proper centering */}
-          <div className="flex-1 flex items-center justify-center overflow-y-auto p-2">
+          <div className="flex-1 flex  justify-center overflow-y-auto px-2">
             {renderStep()}
           </div>
 
           {/* Fixed Footer */}
-          <div className="mt-auto border px-6 pb-4">
-            <ProgressBar />
-            <DialogFooter>{renderFooter()}</DialogFooter>
+          <div className="mt-auto px-6 pb-4">
+            <ProgressBar step={step} totalSteps={totalSteps} />
+            <DialogFooter>
+              <Footer
+                step={step}
+                prevStep={prevStep}
+                nextStep={nextStep}
+                totalSteps={totalSteps}
+                onSubmit={onSubmit}
+              />
+            </DialogFooter>
           </div>
         </form>
       </DialogContent>
     </Dialog>
   );
 };
+
+const ManagePurpose = ({
+  workspacePurposeOptions,
+  onSelectPurpose,
+  selectedPurpose,
+}) => {
+  return (
+    <div className="flex flex-col items-center pt-4">
+      <h2 className="text-4xl text-content-default font-bold mb-4">
+        What will you use this workspace for?
+      </h2>
+      <div className="min-h-48 justify-center items-center flex flex-wrap gap-2">
+        {workspacePurposeOptions.map((option) => (
+          <Button
+            key={option}
+            variant="outline"
+            onClick={() => onSelectPurpose(option)}
+            className={cn(
+              'min-w-[180px] py-[12px] px-[20px] hover:bg-theme-main hover:text-primary-foreground h-12 text-base font-medium text-content-tertiary',
+              selectedPurpose === option
+                ? 'bg-theme-main-dark shadow-theme-main shadow-lg border-theme-main text-primary-foreground'
+                : ''
+            )}
+          >
+            {option}
+          </Button>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+const ProgressBar = ({ step, totalSteps }) => {
+  const progress = (step / totalSteps) * 100;
+  return (
+    <div className="w-full mt-8 mb-4">
+      <div className="h-1 w-full bg-gray-200 rounded-full overflow-hidden">
+        <div
+          className="h-full bg-gradient-to-r from-blue-500 via-indigo-400 via-violet-500 to-purple-600"
+          style={{ width: `${progress}%`, transition: 'width 0.3s ease' }}
+        />
+      </div>
+    </div>
+  );
+};
+
+const Footer = ({ step, prevStep, nextStep, totalSteps, onSubmit }) => (
+  <div className="flex justify-between w-full">
+    {step > 1 && (
+      <Button
+        variant="outline"
+        onClick={prevStep}
+        className={cn(
+          '!w-[113px] !h-[58px] text-xl flex items-center rounded-lg'
+        )}
+        type="button"
+      >
+        <Icon
+          name={'dropdownarrow'}
+          className={'rotate-90 size-4 text-content-default'}
+        />
+        Back
+      </Button>
+    )}
+    {step < totalSteps ? (
+      <Button
+        onClick={nextStep}
+        className={cn(
+          'ml-auto !w-[113px] bg-theme-main-dark !h-[58px] text-xl flex items-center rounded-lg'
+        )}
+      >
+        Next <Icon name={'dropdownarrow'} className={'-rotate-90 size-4'} />
+      </Button>
+    ) : (
+      <Button
+        onClick={onSubmit}
+        type="button"
+        className={cn('w-32 ml-auto h-10 text-lg')}
+      >
+        Finish
+      </Button>
+    )}
+  </div>
+);
