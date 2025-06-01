@@ -112,10 +112,10 @@ export const BoardColumn = ({
         </CardHeader>
         <CardContent className="flex items-center p-2 rotate-90 w-auto h-full">
           <div 
-            className="flex items-center gap-2 w-full transition-transform delay-100 duration-300 whitespace-nowrap rounded border shadow-sm p-1" 
+            className="flex items-center gap-2 w-full transition-transform delay-100 duration-300 whitespace-nowrap rounded shadow-sm p-1" 
             style={{ backgroundColor: `${column.color}` }}
             >
-            <Circle size={16} />
+            <Circle size={16} className="text-white" />
             <span className='text-sm text-black pr-1'>{column.title.toUpperCase()}</span>
           </div>
           <span className="ml-2 text-primary-foreground text-sm">
