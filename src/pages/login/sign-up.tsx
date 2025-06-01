@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Form } from '@/components/ui/form';
-import { LockKeyhole, Mail, User } from 'lucide-react';
+import { LockKeyhole, Mail, MailCheck, User } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useNavigate } from 'react-router-dom';
@@ -9,7 +9,7 @@ import { AuthLayout } from './components/auth-layout.tsx';
 import { AuthCard } from './components/auth-card.tsx';
 import { FormInputField } from './components/form-input.tsx';
 import { signUpSchema } from '@/lib/config/validationSchema.tsx';
-import { UserRole } from '@/lib/constants/app.ts';
+import { OtpType, RegistrationType, UserRole } from '@/lib/constants/app.ts';
 import {
   usePostSendOtpMutation,
   usePostVerifyOtpMutation,
@@ -20,6 +20,8 @@ import {
   InputOTPGroup,
   InputOTPSlot,
 } from '@/components/ui/input-otp';
+import { LABEL } from '@/lib/constants/strings.ts';
+import { z } from 'zod';
 
 export const SignUp = () => {
   const navigate = useNavigate();
@@ -32,8 +34,8 @@ export const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isOtpSent, setIsOtpSent] = useState(false);
   const [otp, setOtp] = useState('');
-  const otpType = 'REGISTRATION';
-  const registrationType = 'EMAIL';
+  const otpType = OtpType.REGISTRATION;
+  const registrationType = RegistrationType.EMAIL;
   const permissionIds = [2];
 
   // Initialize form with Zod schema
@@ -46,11 +48,7 @@ export const SignUp = () => {
     },
   });
 
-  const onSubmit = async (data: {
-    name: string;
-    email: string;
-    password: string;
-  }) => {
+  const onSubmit = async (data: z.infer<typeof signUpSchema>) => {
     const otpForm = {
       email: data.email,
       otpType: otpType,
@@ -86,7 +84,7 @@ export const SignUp = () => {
       // Create user and navigate on success
       const createResponse = await createUser(createUserForm).unwrap();
       if (createResponse) {
-        navigate('/login');
+        navigate('/home');
       }
     }
   };
@@ -103,7 +101,7 @@ export const SignUp = () => {
     <AuthLayout isLoginPage={false}>
       <AuthCard
         isOtpSent={isOtpSent}
-        title={isOtpSent ? 'Verify your email' : 'Seconds to sign up!'}
+        title={isOtpSent ? LABEL.VERIFY_YOUR_EMAIL : LABEL.SECONDS_TO_SIGN_UP }
         onGoogleClick={() => {}}
       >
         {!isSendOtpSuccess ? (
@@ -149,18 +147,23 @@ export const SignUp = () => {
                 className="w-full font-extrabold rounded-lg h-[50px] text-md bg-indigo-600 hover:bg-indigo-700"
                 disabled={isSendOtpLoading}
               >
-                {isSendOtpLoading ? 'Sending...' : 'Sign up'}
+                {isSendOtpLoading ? LABEL.SENDING : LABEL.SIGN_UP }
               </Button>
             </form>
           </Form>
         ) : (
           <div className="space-y-6">
-            <p className="text-center text-sm text-gray-500">
-              A verification code has been sent to your email:{' '}
-              <span className="font-medium">{form.getValues('email')}</span>
-            </p>
-
-            <div className="flex flex-col items-center space-y-4">
+            <MailCheck className="mx-auto sm:w-16 sm:h-16 lg:w-14 lg:h-14" />
+            <div>
+              <p className="font-semibold text-3xl text-gray-600">{LABEL.WE_JUST_EMAILED_YOU}</p>
+              <p className="text-sm text-gray-500">
+                {LABEL.PLEASE_ENTER_THE_CODE_WE_JUST_EMAILED_YOU}:{' '}
+                <br />
+                <span className="font-medium text-base">{form.getValues('email') ? form.getValues('email') : 'dummy@gmail.com'}</span>
+              </p>
+              <p className="text-gray-500 mt-4">{LABEL.CONFIRMATION_CODE}</p>
+            </div>
+            <div className="flex flex-col items-center space-y-2">
               <InputOTP
                 maxLength={6}
                 value={otp}
@@ -183,7 +186,7 @@ export const SignUp = () => {
               className="w-full rounded-lg h-[50px] font-bold text-md bg-indigo-600 hover:bg-indigo-700"
               disabled={otp.length !== 6}
             >
-              Verify
+              {LABEL.VERIFY}
             </Button>
 
             <div className="text-center">
@@ -194,7 +197,7 @@ export const SignUp = () => {
                 onClick={onResendOtp}
                 disabled={isSendOtpLoading}
               >
-                {isSendOtpLoading ? 'Sending...' : 'Resend code'}
+                {isSendOtpLoading ? LABEL.SENDING : LABEL.RESENDING_CODE }
               </Button>
             </div>
           </div>

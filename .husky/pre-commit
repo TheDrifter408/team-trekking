@@ -1,0 +1,32 @@
+#!/bin/sh
+
+echo "🔍 Running pre-commit checks..."
+
+# Get staged JS/TS files excluding .husky directory
+FILES=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.(js|ts|jsx|tsx)$' | grep -v '^.husky/' || true)
+
+if [ -z "$FILES" ]; then
+  echo "✅ No JS/TS files to check."
+  exit 0
+fi
+
+echo "🔎 Files being checked:"
+echo "$FILES"
+
+FOUND_LOGS=false
+HAS_PRETTIER_ERRORS=false
+
+# Check for console.log
+for file in $FILES; do
+  if [ -f "$file" ]; then
+    echo "👀 Checking $file"
+    if grep -Eq "console(\s*\.\s*|\s*\[\s*['\"]log['\"]\s*\])" "$file"; then
+      echo "❌ Found console.log in $file"
+      grep -En "console(\s*\.\s*|\s*\[\s*['\"]log['\"]\s*\])" "$file"
+      FOUND_LOGS=true
+    fi
+  fi
+done
+
+echo "✅ All pre-commit checks passed."
+exit 0

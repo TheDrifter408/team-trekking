@@ -1,0 +1,19 @@
+#!/bin/sh
+
+echo "🔍 Running pre-push checks..."
+
+# Prevent pushing to main
+BRANCH_NAME=$(git rev-parse --abbrev-ref HEAD)
+if [ "$BRANCH_NAME" = "main" ]; then
+  echo "❌ Pushing directly to main is not allowed!"
+  exit 1
+fi
+
+# Check branch name format
+if ! echo "$BRANCH_NAME" | grep -Eq '^(architecture|feature|update|bugfix|hotfix|release)/[a-z0-9._-]+$'; then
+  echo "❌ Invalid branch name: $BRANCH_NAME"
+  echo "Allowed format: [architecture|feature|update|bugfix|hotfix|release], feature/xyz,  bugfix/abc"
+  exit 1
+fi
+
+echo "✅ All pre-push checks passed!"

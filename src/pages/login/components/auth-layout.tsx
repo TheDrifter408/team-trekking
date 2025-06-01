@@ -1,7 +1,8 @@
 import { ReactNode } from 'react';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
-
+import { LABEL } from '@/lib/constants/strings.ts';
+import { Icon } from '@/assets/icon-path';
 interface AuthLayoutProps {
   children: ReactNode;
   isLoginPage?: boolean;
@@ -14,27 +15,30 @@ export const AuthLayout = ({
   const navigate = useNavigate();
 
   return (
-    <div className="px-8 min-h-screen bg-accent">
+    <div className="min-h-screen bg-accent relative z-0">
+      <div className="absolute top-0 left-0 -z-50 w-screen h-screen inset-0 overflow-hidden">
+        <Icon name="signUpBG" className="h-full w-full scale-x-105 translate-y-28" />
+      </div>
       {/* Header */}
-      <div className="flex sticky top-0 justify-between items-center h-24">
+      <div className="px-8 flex sticky top-0 justify-between items-center h-24">
         <div className="flex flex-col">
-          <p className="font-bold text-2xl">Team Trekking</p>
-          <span className="font-medium text-base">
+          <p className="font-bold text-xl">Team Trekking</p>
+          <span className="font-medium text-base hidden md:flex">
             The everything app for work
           </span>
         </div>
         <div className="flex items-center space-x-4">
-          <span className="text-base font-medium">
+          <span className="text-base font-medium text-right">
             {isLoginPage
-              ? "Don't have an account?"
-              : 'Already playing with Team Trekking?'}
+              ? LABEL.DONT_HAVE_AN_ACCOUNT
+              : LABEL.ALREADY_A_MEMBER }
           </span>
           <Button
             size="lg"
             onClick={() => navigate(isLoginPage ? '/signup' : '/login')}
             className="text-base bg-indigo-600 !font-extrabold hover:bg-indigo-700 rounded-[9px] shadow-[0_10px_25px_#6347ea80]"
           >
-            {isLoginPage ? 'Sign up' : 'Login'}
+            {isLoginPage ? LABEL.SIGN_UP : LABEL.LOGIN }
           </Button>
         </div>
       </div>
@@ -43,17 +47,17 @@ export const AuthLayout = ({
       {children}
 
       {/* Footer */}
-      <div className="justify-center flex pb-20">
+      <div className="justify-center flex relative z-10">
         <span className={'text-sm'}>
           {isLoginPage
-            ? "Don't have an account ?"
-            : 'Already have an account ?'}
+            ? LABEL.DONT_HAVE_AN_ACCOUNT
+            : LABEL.ALREADY_HAVE_AN_ACCOUNT }
           <Button
             variant={'link'}
-            className={'m-0 text-sm'}
+            className={'m-0 text-sm pl-1'}
             onClick={() => navigate(isLoginPage ? '/signup' : '/login')}
           >
-            {isLoginPage ? 'Sign up' : 'Login'}
+            {isLoginPage ? LABEL.SIGN_UP : LABEL.LOGIN }
           </Button>
         </span>
       </div>
