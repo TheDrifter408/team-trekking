@@ -21,4 +21,17 @@ export const LABEL = {
   ENTER_EMAIL_ADDRESSES_ONBOARDING: 'Enter email addresses',
   INVITE_PEOPLE_TO_YOUR_WORKSPACE_: 'Invite people to your Workspace',
   JAWAHIIRS_WORKSPACE: "Jawahiir's Workspace",
+  SECONDS_TO_SIGN_UP: 'Seconds to sign up!',
+  ALREADY_HAVE_AN_ACCOUNT: 'Already have an account?',
+  ALREADY_A_MEMBER: 'Already a member?',
+  DONT_HAVE_AN_ACCOUNT: 'Don\'t have an account ?',
+  VERIFY_YOUR_EMAIL: 'Verify your email',
+  SENDING: 'Sending...',
+  LOGIN: 'Login',
+  SIGN_UP: 'Sign Up',
+  RESENDING_CODE: 'Resend code',
+  VERIFY: 'Verify',
+  WE_JUST_EMAILED_YOU: 'We just emailed you.',
+  PLEASE_ENTER_THE_CODE_WE_JUST_EMAILED_YOU:'Please enter the code we emailed you',
+  CONFIRMATION_CODE: 'Confirmation code'
 };

@@ -60,6 +60,8 @@ import Tag from '@/assets/icons/tag.svg?react';
 
 import Edit from '@/assets/icons/edit.svg?react';
 
+import SignUpBG from '@/assets/backgrounds/auth-gradient-background.svg?react';
+
 const iconPaths = {
   description: Description,
   add01: Add01,
@@ -92,6 +94,7 @@ const iconPaths = {
   useradd: UserAdd,
   tag: Tag,
   edit: Edit,
+  signUpBG: SignUpBG
 } as const;
 
 type IconName = keyof typeof iconPaths;
