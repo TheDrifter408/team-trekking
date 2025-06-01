@@ -15,6 +15,7 @@ import { UserResponse } from '@/types/request-response/ApiResponse.ts';
 import { useTMTStore } from '@/stores/zustand/index.tsx';
 
 export const Login = () => {
+  console.log(store);
   const navigate = useNavigate();
   const [signIn, { isLoading }] = usePostSignInMutation();
   const { saveUser } = useTMTStore();
