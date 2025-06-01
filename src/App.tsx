@@ -6,8 +6,6 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import { PageHeaderContextProvider } from '@/lib/context/page-header-context.tsx';
 import { Toaster } from './components/ui/sonner';
 
-/// <reference types="vite-plugin-svgr/client" />
-
 function App() {
   const store = configureAppStore();
   return (
