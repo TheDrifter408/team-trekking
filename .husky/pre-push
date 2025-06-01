@@ -12,7 +12,7 @@ fi
 # Check branch name format
 if ! echo "$BRANCH_NAME" | grep -Eq '^(architecture|feature|update|bugfix|hotfix|release)/[a-z0-9._-]+$'; then
   echo "❌ Invalid branch name: $BRANCH_NAME"
-  echo "Allowed format: feature/xyz or bugfix/abc"
+  echo "Allowed format: [architecture|feature|update|bugfix|hotfix|release], feature/xyz,  bugfix/abc"
   exit 1
 fi
 
