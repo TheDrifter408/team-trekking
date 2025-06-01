@@ -1,0 +1,27 @@
+#!/bin/sh
+
+echo "🔍 Running pre-commit checks..."
+
+FILES=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.(js|ts|jsx|tsx)$')
+echo "🔎 Files being checked:"
+echo "$FILES"
+
+FOUND_LOGS=false
+
+for file in $FILES; do
+  if [ -f "$file" ]; then
+    echo "👀 Checking $file"
+    if grep -Eq "console(\s*\.\s*|\s*\[\s*['\"]log['\"]\s*\])" "$file"; then
+      echo "❌ Found console.log in $file"
+      grep -En "console(\s*\.\s*|\s*\[\s*['\"]log['\"]\s*\])" "$file"
+      FOUND_LOGS=true
+    fi
+  fi
+done
+
+if [ "$FOUND_LOGS" = true ]; then
+  echo "🚫 Commit blocked due to console.log usage."
+  exit 1
+fi
+
+echo "✅ No console.log found. Proceeding with commit."

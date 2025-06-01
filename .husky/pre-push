@@ -10,32 +10,10 @@ if [ "$BRANCH_NAME" = "main" ]; then
 fi
 
 # Check branch name format
-if ! echo "$BRANCH_NAME" | grep -Eq '^(architecture|feature|bugfix|hotfix|release)/[a-z0-9._-]+$'; then
+if ! echo "$BRANCH_NAME" | grep -Eq '^(architecture|feature|update|bugfix|hotfix|release)/[a-z0-9._-]+$'; then
   echo "❌ Invalid branch name: $BRANCH_NAME"
   echo "Allowed format: feature/xyz or bugfix/abc"
   exit 1
 fi
 
-FILES=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.(js|ts|jsx|tsx)$')
-echo "🔎 Files being checked:"
-echo "$FILES"
-
-FOUND_LOGS=false
-
-for file in $FILES; do
-  if [ -f "$file" ]; then
-    echo "👀 Checking $file"
-    if grep -q "console\.log" "$file"; then
-      echo "❌ Found console.log in $file"
-      FOUND_LOGS=true
-    fi
-  fi
-done
-
-if [ "$FOUND_LOGS" = true ]; then
-  echo "🚫 Push blocked due to console.log usage."
-  exit 1
-fi
-
-echo "✅ No console.log found. Proceeding with push."
 echo "✅ All pre-push checks passed!"
