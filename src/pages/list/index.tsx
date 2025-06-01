@@ -1,5 +1,4 @@
 import { useState, useMemo, useCallback } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
 import { Main } from '@/components/layout/main.tsx';
 import { getColumns } from '@/components/dataTable/columns.tsx';
 import { HeaderType } from '@/types/props/Common.ts';
@@ -27,12 +26,8 @@ export const List = () => {
     []
   );
 
-  const [tasks, setTasks] = useState(generatedTasks);
-
   const [isTableExpanded, setIsTableExpanded] = useState(true);
-  const [filterValue, setFilterValue] = useState('');
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
-  const [hoveredRowId, setHoveredRowId] = useState<string | null>(null);
 
   const onToggleSelect = useCallback((id: string) => {
     setSelectedIds((prev) =>
@@ -40,25 +35,12 @@ export const List = () => {
     );
   }, []);
 
-  const handleDataChange = useCallback((newData: any[]) => {
-    const updatedTasks = JSON.parse(JSON.stringify(newData));
-    setTasks(updatedTasks);
-  }, []);
-
   const onToggleExpand = useCallback(() => {
     setIsTableExpanded(!isTableExpanded);
   }, [isTableExpanded]);
 
-  const handleRowMouseEnter = useCallback((id: string) => {
-    setHoveredRowId(id);
-  }, []);
-
-  const handleRowMouseLeave = useCallback(() => {
-    setHoveredRowId(null);
-  }, []);
-
   const columns = useMemo(() => {
-    return getColumns(selectedIds, onToggleSelect, hoveredRowId);
+    return getColumns(selectedIds, onToggleSelect);
   }, [selectedIds, onToggleSelect]);
 
   return (
@@ -70,31 +52,9 @@ export const List = () => {
             isTableExpanded={isTableExpanded}
             onToggleExpand={onToggleExpand}
           />
-          <AnimatePresence initial={false}>
-            {isTableExpanded && (
-              <motion.div
-                key="table"
-                initial={{ height: 0 }}
-                animate={{ height: 'auto' }}
-                exit={{ height: 0 }}
-                transition={{
-                  duration: 0.4,
-                  ease: [0.7, 0, 0.84, 0],
-                }}
-                style={{ overflow: 'hidden', transformOrigin: 'top' }}
-              >
-                <DataTable
-                  columns={columns}
-                  data={tasks}
-                  onDataChange={handleDataChange}
-                  filterValue={filterValue}
-                  onFilterChange={setFilterValue}
-                  onRowMouseEnter={handleRowMouseEnter}
-                  onRowMouseLeave={handleRowMouseLeave}
-                />
-              </motion.div>
-            )}
-          </AnimatePresence>
+          {isTableExpanded && (
+            <DataTable columns={columns} data={generatedTasks} />
+          )}
         </div>
       </Main>
     </div>

@@ -11,8 +11,7 @@ import { COLUMN_META } from '@/lib/constants';
 
 export const getColumns = (
   selectedIds: string[],
-  toggleSelect: (id: string) => void,
-  hoveredRowId: string | null
+  toggleSelect: (id: string) => void
 ): ColumnDef<Task>[] => [
   {
     id: COLUMN_META.ACCESSOR_KEY.SELECT,
@@ -37,8 +36,7 @@ export const getColumns = (
     id: COLUMN_META.ACCESSOR_KEY.NAME,
     header: COLUMN_META.HEADER.NAME,
     cell: ({ row }) => {
-      const isHovered = row.original.id.toString() === hoveredRowId;
-      return <NameColumn task={row.original} isHovered={isHovered} />;
+      return <NameColumn task={row.original} isHovered={false} />;
     },
     maxSize: 70,
     size: 47,

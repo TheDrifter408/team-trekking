@@ -32,14 +32,11 @@ export const NameColumn = ({ task, isHovered }: Props) => {
         </Button>
       </div>
       <div className="ml-[12px] flex flex-col overflow-hidden">
-        <p className="text-xs font-normal text-content-tertiary cursor-pointer hover:text-content-default truncate">
-          Name of the List
-        </p>
         <div className="flex items-center overflow-hidden">
           <TooltipProvider>
-            <Tooltip>
+            <Tooltip delayDuration={200}>
               <TooltipTrigger asChild>
-                <span className="text-base font-normal text-content-default cursor-pointer hover:text-theme-main truncate max-w-[140px]">
+                <span className="text-lg font-medium text-content-default cursor-pointer hover:text-theme-main truncate max-w-[140px]">
                   {task.name}
                 </span>
               </TooltipTrigger>

@@ -27,20 +27,16 @@ import { cn } from '@/lib/utils.ts';
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-  onDataChange: (newData: TData[]) => void;
-  filterValue: TValue;
-  onFilterChange: (newFilterValue: TValue) => void;
-  onRowMouseEnter?: (id: string) => void;
-  onRowMouseLeave?: () => void;
 }
+
 interface DataTableHeaderProps<TData> {
   table: TableType<TData>;
 }
+
 interface DataTableRowProps<TData> {
   row: RowType<TData>;
-  onRowMouseEnter?: (id: string) => void;
-  onRowMouseLeave?: () => void;
 }
+
 interface DataTableEmptyRowProps {
   columnsLength: number;
 }
@@ -48,9 +44,6 @@ interface DataTableEmptyRowProps {
 export function DataTable<TData, TValue>({
   columns,
   data,
-  filterValue,
-  onRowMouseEnter,
-  onRowMouseLeave,
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = useState({});
   const [expanded, setExpanded] = useState<ExpandedState>({});
@@ -87,12 +80,6 @@ export function DataTable<TData, TValue>({
     },
   });
 
-  useEffect(() => {
-    if (table.getColumn('name')) {
-      table.getColumn('name')?.setFilterValue(filterValue);
-    }
-  }, [filterValue, table]);
-
   return (
     <div className="rounded-md">
       <div className="relative overflow-auto">
@@ -100,12 +87,7 @@ export function DataTable<TData, TValue>({
           <DataTableHeader table={table} />
           <TableBody>
             {table.getRowModel().rows.map((row) => (
-              <DataTableRow
-                key={row.id}
-                row={row}
-                onRowMouseEnter={onRowMouseEnter}
-                onRowMouseLeave={onRowMouseLeave}
-              />
+              <DataTableRow key={row.id} row={row} />
             ))}
             {table.getRowModel().rows.length === 0 && (
               <DataTableEmptyRow columnsLength={columns.length} />
@@ -156,28 +138,10 @@ const DataTableHeader = <TData,>({ table }: DataTableHeaderProps<TData>) => {
     </TableHeader>
   );
 };
-const DataTableRow = <TData,>({
-  row,
-  onRowMouseEnter,
-  onRowMouseLeave,
-}: DataTableRowProps<TData>) => {
-  const onMouseEnter = () => {
-    if (onRowMouseEnter) {
-      onRowMouseEnter((row.original as any).id.toString());
-    }
-  };
 
-  const onMouseLeave = () => {
-    if (onRowMouseLeave) {
-      onRowMouseLeave();
-    }
-  };
+const DataTableRow = <TData,>({ row }: DataTableRowProps<TData>) => {
   return (
-    <TableRow
-      onMouseEnter={onMouseEnter}
-      onMouseLeave={onMouseLeave}
-      className={cn('transition-colors group')}
-    >
+    <TableRow className={cn('transition-colors group')}>
       {row.getVisibleCells().map((cell) => {
         const isPinnedLeft = cell.column.getIsPinned() === 'left';
 
@@ -205,6 +169,7 @@ const DataTableRow = <TData,>({
     </TableRow>
   );
 };
+
 const DataTableEmptyRow = ({ columnsLength }: DataTableEmptyRowProps) => {
   return (
     <TableRow>
