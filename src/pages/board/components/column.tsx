@@ -20,7 +20,7 @@ interface BoardColumnProps {
   column: Column;
   className?: string;
   isActiveColumn?: boolean;
-  setColumns: Dispatch<SetStateAction<Column[]>>
+  setColumns: Dispatch<SetStateAction<Column[]>>;
 }
 
 export const BoardColumn = ({
@@ -35,10 +35,12 @@ export const BoardColumn = ({
 
   const onSubmit = (values: z.infer<typeof addTaskSchema>) => {
     // Assign the correct enum value from user input for status and priority
-    const status:TaskStatus = TaskStatus[column.title.toUpperCase()as keyof typeof TaskStatus];
-    const priority:Priority = Priority[values.priority.toUpperCase() as keyof typeof Priority];
+    const status: TaskStatus =
+      TaskStatus[column.title.toUpperCase() as keyof typeof TaskStatus];
+    const priority: Priority =
+      Priority[values.priority.toUpperCase() as keyof typeof Priority];
     // Create a new Task
-    const newTask:Task = {
+    const newTask: Task = {
       id: faker.string.uuid(),
       name: values.name,
       description: '',
@@ -49,7 +51,7 @@ export const BoardColumn = ({
       priority,
       subtask: [],
       checklistCount: 0,
-    }
+    };
     setColumns((prev) => {
       const updated = [...prev];
       const col = updated.find((c) => c.id === column.id);
@@ -58,11 +60,11 @@ export const BoardColumn = ({
       }
       return updated;
     });
-  }
+  };
 
   const AddTaskOnClick = () => {
     setAddingTask((prev) => !prev);
-  }
+  };
 
   const { setNodeRef, isOver } = useDroppable({
     id: column.id,
@@ -96,7 +98,7 @@ export const BoardColumn = ({
     return (
       <Card
         className={`transition-all text-black duration-300 flex items-center min-h-44 gap-10 w-10 py-0 self-start ${className}`}
-        style={{ backgroundColor: "#fff" }}
+        style={{ backgroundColor: '#fff' }}
       >
         <CardHeader className="p-2 flex items-center justify-center h-max">
           <Button
@@ -109,15 +111,17 @@ export const BoardColumn = ({
           </Button>
         </CardHeader>
         <CardContent className="flex items-center p-2 rotate-90 w-auto h-full">
-          <div 
-            className="flex items-center gap-2 w-full transition-transform delay-100 duration-300 whitespace-nowrap rounded shadow-sm p-1" 
+          <div
+            className="flex items-center gap-2 w-full transition-transform delay-100 duration-300 whitespace-nowrap rounded shadow-sm p-1"
             style={{ backgroundColor: `${column.color}` }}
-            >
+          >
             <Circle size={16} className="text-white" />
-            <span className='text-sm text-black pr-1'>{column.title.toUpperCase()}</span>
+            <span className="text-sm text-black pr-1">
+              {column.title.toUpperCase()}
+            </span>
           </div>
           <span className="ml-2 text-primary-foreground text-sm">
-            { column.tasks.length > 0 ? column.tasks.length : ''}
+            {column.tasks.length > 0 ? column.tasks.length : ''}
           </span>
         </CardContent>
       </Card>
@@ -145,7 +149,9 @@ export const BoardColumn = ({
             style={{ backgroundColor: column.color }}
           >
             <Circle size={16} />
-            <span className='text-sm text-black pr-1'>{column.title.toUpperCase()}</span>
+            <span className="text-sm text-black pr-1">
+              {column.title.toUpperCase()}
+            </span>
           </div>
           <span className="text-muted-foreground font-medium text-sm px-1">
             {column.tasks.length}
@@ -174,16 +180,17 @@ export const BoardColumn = ({
         {column.tasks.map((task: Task) => (
           <SortableTaskCard key={task.id} task={task} />
         ))}
-        {
-          addingTask ? 
-          <AddTaskForm onSubmit={onSubmit} setAddingTask={setAddingTask} /> :
-          <Button 
-            onClick={AddTaskOnClick} 
-              className="w-full rounded-lg bg-inherit hover:bg-gray-50 text-base text-muted-foreground font-medium justify-start">
+        {addingTask ? (
+          <AddTaskForm onSubmit={onSubmit} setAddingTask={setAddingTask} />
+        ) : (
+          <Button
+            onClick={AddTaskOnClick}
+            className="w-full rounded-lg bg-inherit hover:bg-gray-50 text-base text-muted-foreground font-medium justify-start"
+          >
             <Plus size={16} className="text-muted-foreground" />
             Add Task
           </Button>
-        }
+        )}
       </CardContent>
     </Card>
   );
