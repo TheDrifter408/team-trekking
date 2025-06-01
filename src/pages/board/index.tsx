@@ -275,7 +275,7 @@ export const Board = () => {
                   <BoardColumn
                     setColumns={setColumns}
                     column={column}
-                    className="flex-shrink-0 self-start w-[244px]"
+                    className=""
                     isActiveColumn={column.id === activeColumnId}
                   />
                 </SortableContext>
