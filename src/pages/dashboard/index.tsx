@@ -7,14 +7,14 @@ import { PageHeader } from './components/page-header';
 import { RecentContent } from '@/pages/dashboard/components/recent-content.tsx';
 import { MyWorkContent } from '@/pages/dashboard/components/my-work-content.tsx';
 import { AssignedCommentsContent } from '@/pages/dashboard/components/assigned-comments-content.tsx';
-import {TutorialDialog} from '@/components/tutotial-dialog'
+import { TutorialDialog } from '@/components/tutotial-dialog';
 
 enum Direction {
   NEXT = 'next',
   PREV = 'prev',
 }
 
-export const Dashboard = () => {
+const Dashboard = () => {
   const [expandedCardId, setExpandedCardId] = useState<string | null>(null);
   const [cardsList, setCardsList] = useState(HomeCardList);
 
@@ -127,7 +127,8 @@ export const Dashboard = () => {
             )}
         </div>
       )}
-      <TutorialDialog/>
+      <TutorialDialog />
     </div>
   );
 };
+export default Dashboard;

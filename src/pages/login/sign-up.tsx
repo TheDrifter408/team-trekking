@@ -203,3 +203,4 @@ export const SignUp = () => {
     </AuthLayout>
   );
 };
+export default SignUp;

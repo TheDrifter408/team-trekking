@@ -96,3 +96,4 @@ export const Login = () => {
     </AuthLayout>
   );
 };
+export default Login;

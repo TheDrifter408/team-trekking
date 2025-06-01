@@ -52,3 +52,4 @@ export const Folder = () => {
     </div>
   );
 };
+export default Folder;

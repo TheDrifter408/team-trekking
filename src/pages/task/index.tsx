@@ -466,3 +466,4 @@ export const Task: React.FC = () => {
     </div>
   );
 };
+export default Task;

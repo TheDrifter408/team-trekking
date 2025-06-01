@@ -21,4 +21,6 @@ export const LABEL = {
   ENTER_EMAIL_ADDRESSES_ONBOARDING: 'Enter email addresses',
   INVITE_PEOPLE_TO_YOUR_WORKSPACE_: 'Invite people to your Workspace',
   JAWAHIIRS_WORKSPACE: "Jawahiir's Workspace",
+  LOADING: 'Loading...',
+  PREARING_TEAM_TREKKING_FOR_YOU: 'Preparing Team Trekking for you',
 };
