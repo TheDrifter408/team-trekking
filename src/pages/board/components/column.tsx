@@ -97,10 +97,10 @@ export const BoardColumn = ({
   if (isCollapsed) {
     return (
       <Card
-        className={`transition-all text-black duration-300 flex flex-col h-[200px] w-12 ${className}`}
-        style={{ backgroundColor: `${column.color}` }}
+        className={`transition-all text-black duration-300 flex items-center min-h-44 gap-10 w-10 py-0 self-start ${className}`}
+        style={{ backgroundColor: "#fff" }}
       >
-        <CardHeader className="p-2 flex items-center justify-center">
+        <CardHeader className="p-2 flex items-center justify-center h-max">
           <Button
             variant="ghost"
             size="sm"
@@ -110,23 +110,17 @@ export const BoardColumn = ({
             <ChevronRight className="h-4 w-4" />
           </Button>
         </CardHeader>
-        <CardContent className="p-2 flex flex-1 justify-center items-center">
-          <div className="flex w-full mt-12 transform -rotate-90 whitespace-nowrap">
-            {IconComponent && (
-              <IconComponent
-                className="h-4 w-4 mr-2"
-                style={{ color: column.color }}
-              />
-            )}
-            <CardTitle className="text-sm font-medium">
-              {column.title}
-              {column.tasks.length > 0 && (
-                <span className="ml-2 bg-accent text-primary rounded-full px-2 py-1 text-xs">
-                  {column.tasks.length}
-                </span>
-              )}
-            </CardTitle>
+        <CardContent className="flex items-center p-2 rotate-90 w-auto h-full">
+          <div 
+            className="flex items-center gap-2 w-full transition-transform delay-100 duration-300 whitespace-nowrap rounded border shadow-sm p-1" 
+            style={{ backgroundColor: `${column.color}` }}
+            >
+            <Circle size={16} />
+            <span className='text-sm text-black pr-1'>{column.title.toUpperCase()}</span>
           </div>
+          <span className="ml-2 text-primary-foreground text-sm">
+            { column.tasks.length > 0 ? column.tasks.length : ''}
+          </span>
         </CardContent>
       </Card>
     );
@@ -153,7 +147,7 @@ export const BoardColumn = ({
             style={{ backgroundColor: column.color }}
           >
             <Circle size={16} />
-            <span className='text-sm text-black pr-1'>{column.title}</span>
+            <span className='text-sm text-black pr-1'>{column.title.toUpperCase()}</span>
           </div>
           <span className="text-muted-foreground font-medium text-sm px-1">
             {column.tasks.length}
