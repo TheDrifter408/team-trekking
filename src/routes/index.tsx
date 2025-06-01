@@ -1,46 +1,48 @@
+import { lazy, Suspense } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
-import { AppLayout } from '@/pages/layout/app-layout.tsx';
-import { HeaderLayout } from '@/pages/layout/header-layout.tsx';
-import { Login } from '@/pages/login/sign-in.tsx';
-import { SignUp } from '@/pages/login/sign-up';
-import { ForgotPassword } from '@/pages/login/forgot-password.tsx';
-import { Dashboard } from '@/pages/dashboard';
-import { Board } from '@/pages/board';
-import { Space } from '@/pages/space';
-import { Folder } from '@/pages/folder';
-import { List } from '@/pages/list';
-import { Task } from '@/pages/task';
-import { Calendar } from '@/pages/calendar';
-import { Inbox } from '@/pages/inbox';
 import PrivateRoute from '@/routes/privateRoute.tsx';
+import { Fallback } from './fallback-route.tsx';
+
+const AppLayout = lazy(() => import('@/pages/layout/app-layout.tsx'));
+const HeaderLayout = lazy(() => import('@/pages/layout/header-layout.tsx'));
+const Login = lazy(() => import('@/pages/login/sign-in.tsx'));
+const SignUp = lazy(() => import('@/pages/login/sign-up'));
+const ForgotPassword = lazy(() => import('@/pages/login/forgot-password.tsx'));
+const Dashboard = lazy(() => import('@/pages/dashboard'));
+const Board = lazy(() => import('@/pages/board'));
+const Space = lazy(() => import('@/pages/space'));
+const Folder = lazy(() => import('@/pages/folder'));
+const List = lazy(() => import('@/pages/list'));
+const Task = lazy(() => import('@/pages/task'));
+const Calendar = lazy(() => import('@/pages/calendar'));
+const Inbox = lazy(() => import('@/pages/inbox'));
 
 const AppRoutes = () => {
   return (
-    <Routes>
-      {/* Public Route */}
-      <Route path="/login" element={<Login />} />
-      <Route path="/signup" element={<SignUp />} />
-      <Route path="/forgot" element={<ForgotPassword />} />
+    <Suspense fallback={<Fallback />}>
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/forgot" element={<ForgotPassword />} />
 
-      {/* Private Routes */}
-      <Route element={<PrivateRoute />}>
-        <Route element={<AppLayout />}>
-          <Route path="home" element={<Dashboard />} />
-          <Route path="board" element={<Board />} />
-          <Route path="space" element={<Space />} />
-          <Route path="folder" element={<Folder />} />
-          <Route path="list" element={<List />} />
-          <Route path="calendar" element={<Calendar />} />
-          <Route path="inbox" element={<Inbox />} />
+        <Route element={<PrivateRoute />}>
+          <Route element={<AppLayout />}>
+            <Route path="home" element={<Dashboard />} />
+            <Route path="board" element={<Board />} />
+            <Route path="space" element={<Space />} />
+            <Route path="folder" element={<Folder />} />
+            <Route path="list" element={<List />} />
+            <Route path="calendar" element={<Calendar />} />
+            <Route path="inbox" element={<Inbox />} />
+          </Route>
+          <Route element={<HeaderLayout />}>
+            <Route path="task" element={<Task />} />
+          </Route>
         </Route>
-        <Route element={<HeaderLayout />}>
-          <Route path="task" element={<Task />} />
-        </Route>
-      </Route>
 
-      {/* Redirect unknown routes to login. will be changed to a 404 page later */}
-      <Route path="*" element={<Navigate to="/login" replace />} />
-    </Routes>
+        <Route path="*" element={<Navigate to="/login" replace />} />
+      </Routes>
+    </Suspense>
   );
 };
 

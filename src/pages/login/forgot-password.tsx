@@ -224,3 +224,4 @@ export const ForgotPassword = () => {
     </AuthLayout>
   );
 };
+export default ForgotPassword;

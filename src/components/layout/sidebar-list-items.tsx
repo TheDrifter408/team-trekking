@@ -2,7 +2,7 @@ import { ListIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button.tsx';
 import { cn } from '@/lib/utils.ts';
 import { useNavigate } from 'react-router-dom';
-import { ContextMenu } from '@/components/ContextMenu.tsx';
+import { ContextMenu } from '@/components/context-menu.tsx';
 import { Icon } from '@/assets/icon-path.tsx';
 import { listMenuConfig } from '@/lib/constants/staticData.ts';
 

@@ -25,3 +25,4 @@ export const Inbox = () => {
     </div>
   );
 };
+export default Inbox;

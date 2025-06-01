@@ -28,6 +28,7 @@ export const List = () => {
   );
 
   const [tasks, setTasks] = useState(generatedTasks);
+
   const [isTableExpanded, setIsTableExpanded] = useState(true);
   const [filterValue, setFilterValue] = useState('');
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
@@ -99,3 +100,4 @@ export const List = () => {
     </div>
   );
 };
+export default List;

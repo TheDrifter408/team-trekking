@@ -926,3 +926,4 @@ export const Calendar = () => {
     </Main>
   );
 };
+export default Calendar;

@@ -6,7 +6,7 @@ import { TaskSidebar } from './components/task-sidebar.tsx';
 import { AppHeader } from '@/pages/layout/components/app-header.tsx';
 import { PageHeader } from '@/pages/task/components/page-header';
 
-export const HeaderLayout: React.FC = () => {
+const HeaderLayout: React.FC = () => {
   const defaultOpen = Cookies.get('sidebar:state') !== 'false';
   const sidebarStyle = {
     '--sidebar-width': '480px',
@@ -30,3 +30,4 @@ export const HeaderLayout: React.FC = () => {
     </div>
   );
 };
+export default HeaderLayout;

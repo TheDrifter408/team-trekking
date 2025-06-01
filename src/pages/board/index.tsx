@@ -28,7 +28,7 @@ import { useTheme } from '@/lib/context/theme-context.tsx';
 export const Board = () => {
   // Get the Theme
   const { theme } = useTheme();
-   
+
   const [columns, setColumns] = useState<Column[]>(mockColumns);
   const [activeTask, setActiveTask] = useState<Task | null>(null);
   const [activeColumnId, setActiveColumnId] = useState<string | null>(null);
@@ -194,17 +194,15 @@ export const Board = () => {
     const newColumns = [...columns];
 
     // Find the source column and Task
-    const sourceColIndex = newColumns.findIndex(
-      (col) => col.tasks.some(
-        (t) => t.id === activeId
-      )
+    const sourceColIndex = newColumns.findIndex((col) =>
+      col.tasks.some((t) => t.id === activeId)
     );
-    
+
     const sourceCol = newColumns[sourceColIndex];
 
     const taskIndex = sourceCol.tasks.findIndex((task) => task.id === activeId);
     // Remove the Task from the source column and assign it to movedTask
-    const [ movedTask ] = sourceCol.tasks.splice(taskIndex, 1);
+    const [movedTask] = sourceCol.tasks.splice(taskIndex, 1);
 
     // Case 1: Dragging over a Column
     const isOverColumn = newColumns.some((col) => col.id === overId);
@@ -214,12 +212,14 @@ export const Board = () => {
       const destColIndex = newColumns.findIndex((col) => col.id === overId);
       newColumns[destColIndex].tasks.push(movedTask);
     } else {
-    // Case 2: Dragging it over another Task
-      const destColIndex = newColumns.findIndex((col) => 
+      // Case 2: Dragging it over another Task
+      const destColIndex = newColumns.findIndex((col) =>
         col.tasks.some((task) => task.id === overId)
       );
       const destCol = newColumns[destColIndex];
-      const overTaskIndex = destCol.tasks.findIndex(task => task.id === overId);
+      const overTaskIndex = destCol.tasks.findIndex(
+        (task) => task.id === overId
+      );
 
       // Insert dragged Task before the overTaskIndex
       destCol.tasks.splice(overTaskIndex, 0, movedTask);
@@ -255,7 +255,7 @@ export const Board = () => {
   return (
     <>
       <PageHeader currentPage={currentPage} parents={parents} />
-      <Main className={ theme === 'dark' ? 'dark' : 'light'}>
+      <Main className={theme === 'dark' ? 'dark' : 'light'}>
         <div className="relative overflow-x-auto h-full text-foreground transition-colors duration-300">
           <DndContext
             sensors={sensors}
@@ -296,3 +296,4 @@ export const Board = () => {
     </>
   );
 };
+export default Board;

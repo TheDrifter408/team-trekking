@@ -4,7 +4,7 @@ import { AppHeader } from '@/pages/layout/components/app-header';
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
 import { useTMTStore } from '@/stores/zustand';
 
-export const AppLayout = () => {
+const AppLayout = () => {
   const { user } = useTMTStore();
   return (
     <div className="flex flex-col h-screen">
@@ -20,3 +20,4 @@ export const AppLayout = () => {
     </div>
   );
 };
+export default AppLayout;

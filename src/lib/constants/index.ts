@@ -177,5 +177,6 @@ export const COLUMN_META = {
     PRIORITY: 'Priority',
   },
 };
+export const TUTORIAL_TIMER = 3600000; // Equates to 1 Hour ( 60 * 60 * 100 ms )
 
 export * from './strings.ts';
