@@ -48,13 +48,13 @@ export const AuthLayout = ({
 
       {/* Footer */}
       <div className="justify-center flex relative z-10">
-        <span className={'text-sm text-white'}>
+        <span className={'text-sm'}>
           {isLoginPage
             ? LABEL.DONT_HAVE_AN_ACCOUNT
             : LABEL.ALREADY_HAVE_AN_ACCOUNT }
           <Button
             variant={'link'}
-            className={'m-0 text-sm text-white'}
+            className={'m-0 text-sm pl-1'}
             onClick={() => navigate(isLoginPage ? '/signup' : '/login')}
           >
             {isLoginPage ? LABEL.SIGN_UP : LABEL.LOGIN }

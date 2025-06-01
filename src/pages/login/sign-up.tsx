@@ -9,7 +9,7 @@ import { AuthLayout } from './components/auth-layout.tsx';
 import { AuthCard } from './components/auth-card.tsx';
 import { FormInputField } from './components/form-input.tsx';
 import { signUpSchema } from '@/lib/config/validationSchema.tsx';
-import { UserRole } from '@/lib/constants/app.ts';
+import { OtpType, RegistrationType, UserRole } from '@/lib/constants/app.ts';
 import {
   usePostSendOtpMutation,
   usePostVerifyOtpMutation,
@@ -21,6 +21,7 @@ import {
   InputOTPSlot,
 } from '@/components/ui/input-otp';
 import { LABEL } from '@/lib/constants/strings.ts';
+import { z } from 'zod';
 
 export const SignUp = () => {
   const navigate = useNavigate();
@@ -33,8 +34,8 @@ export const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isOtpSent, setIsOtpSent] = useState(false);
   const [otp, setOtp] = useState('');
-  const otpType = 'REGISTRATION';
-  const registrationType = 'EMAIL';
+  const otpType = OtpType.REGISTRATION;
+  const registrationType = RegistrationType.EMAIL;
   const permissionIds = [2];
 
   // Initialize form with Zod schema
@@ -47,11 +48,7 @@ export const SignUp = () => {
     },
   });
 
-  const onSubmit = async (data: {
-    name: string;
-    email: string;
-    password: string;
-  }) => {
+  const onSubmit = async (data: z.infer<typeof signUpSchema>) => {
     const otpForm = {
       email: data.email,
       otpType: otpType,
@@ -87,7 +84,7 @@ export const SignUp = () => {
       // Create user and navigate on success
       const createResponse = await createUser(createUserForm).unwrap();
       if (createResponse) {
-        navigate('/login');
+        navigate('/home');
       }
     }
   };
