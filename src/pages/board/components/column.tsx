@@ -8,14 +8,14 @@ import {
 } from 'lucide-react';
 import { useDroppable } from '@dnd-kit/core';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Column, Priority, Task, TaskStatus } from '@/mock';
 import { SortableTaskCard } from './sortable-task-card';
 import { z } from 'zod';
 import { addTaskSchema } from '../schema/addTaskSchema';
 import { AddTaskForm } from './AddTaskForm';
 import { faker } from '@faker-js/faker';
-import { useTheme } from '@/lib/context/theme-context';
+
 interface BoardColumnProps {
   column: Column;
   className?: string;
@@ -29,11 +29,9 @@ export const BoardColumn = ({
   isActiveColumn,
   setColumns,
 }: BoardColumnProps) => {
-  const { theme } = useTheme();
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [onEnterHeader, setOnEnterHeader] = useState(false);
   const [addingTask, setAddingTask] = useState(false);
-  const IconComponent = column.icon;
 
   const onSubmit = (values: z.infer<typeof addTaskSchema>) => {
     // Assign the correct enum value from user input for status and priority
