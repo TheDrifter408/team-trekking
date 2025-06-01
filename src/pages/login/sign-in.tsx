@@ -13,6 +13,7 @@ import { usePostSignInMutation } from '@/service/rtkQuery.ts';
 import { UserRole } from '@/lib/constants/app.ts';
 import { UserResponse } from '@/types/request-response/ApiResponse.ts';
 import { useTMTStore } from '@/stores/zustand/index.tsx';
+import { z } from 'zod';
 
 export const Login = () => {
   const navigate = useNavigate();
@@ -29,7 +30,7 @@ export const Login = () => {
     },
   });
 
-  const onSubmit = async (data) => {
+  const onSubmit = async (data:z.infer<typeof loginSchema>) => {
     const loginForm = {
       ...data,
       roleId: UserRole.User,
@@ -71,6 +72,7 @@ export const Login = () => {
               label="Password"
               placeholder="Enter your password"
               icon={LockKeyhole}
+              type="password"
               rightElement={
                 <Button
                   variant="link"
@@ -78,7 +80,7 @@ export const Login = () => {
                   className="absolute right-3 text-normal top-1 hover:decoration-dashed text-indigo-600"
                   onClick={onForgotPasswordClick}
                 >
-                  Forgot Password
+                  Forgot Password ?
                 </Button>
               }
             />
