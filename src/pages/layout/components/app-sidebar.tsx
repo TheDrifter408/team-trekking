@@ -14,8 +14,8 @@ import {
   SidebarRail,
   useSidebar,
 } from '@/components/ui/sidebar';
-import { WorkspaceSwitcher } from '@/components/layout/workspace-switcher';
 import { sampleProjectsData, sidebarData, spaceData } from '@/mock';
+import { TeamSwitcher } from '@/components/layout/team-switcher';
 import { NavGroup } from '@/components/layout/nav-group.tsx';
 import { Collapsible } from '@/components/ui/collapsible.tsx';
 import { Button } from '@/components/ui/button.tsx';
@@ -110,7 +110,7 @@ export const AppSidebar = ({
       {...props}
     >
       <SidebarHeader className={'border-b py-0'}>
-        <WorkspaceSwitcher workspaces={sidebarData.workspaces} />
+        <TeamSwitcher teams={sidebarData.teams} />
       </SidebarHeader>
       <SidebarContent>
         {sidebarData.navGroups.map((props) => (
@@ -152,7 +152,7 @@ export const AppSidebar = ({
                     className={'h-5 w-5'}
                     onClick={() => setInviteUserOpen(true)}
                   >
-                    <Icon name={'add02'} />
+                    <Icon name={'search'} />
                   </Button>
                   <Button
                     size={'icon_sm'}
