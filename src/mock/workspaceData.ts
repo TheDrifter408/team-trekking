@@ -787,3 +787,9 @@ export const assignedCommentData: AssignedComment[] = [
     imageUrl: 'https://i.pravatar.cc/40?img=10',
   },
 ];
+
+export const sampleProjectsData = [
+  { id: 'final-initiative', name: 'Final-Initiative' },
+  { id: 'project-alpha', name: 'Project Alpha' },
+  { id: 'project-beta', name: 'Project Beta' },
+];
