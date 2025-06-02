@@ -15,11 +15,11 @@ const createAssignee = (): Assignee => ({
 });
 
 export const statuses: TaskStatus[] = [
-  { id: '1', name: 'Open', color: '#4573d2' },
-  { id: '2', name: 'In Progress', color: '#d99e2b' },
-  { id: '3', name: 'Review', color: '#8256d0' },
-  { id: '4', name: 'Done', color: '#5bb85c' },
-  { id: '5', name: 'Blocked', color: '#e44235' },
+  { id: 1, name: 'Open', color: '#4573d2', category: 'DONE' },
+  { id: 2, name: 'In Progress', color: '#d99e2b', category: 'DONE' },
+  { id: 3, name: 'Review', color: '#8256d0', category: 'DONE' },
+  { id: 4, name: 'Done', color: '#5bb85c', category: 'DONE' },
+  { id: 5, name: 'Blocked', color: '#e44235', category: 'DONE' },
 ];
 
 const newTask = (): Task => {

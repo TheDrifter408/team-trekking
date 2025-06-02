@@ -1,13 +1,11 @@
 import { useState, useMemo, useCallback } from 'react';
 import { Main } from '@/components/layout/main.tsx';
-import { getColumns } from '@/components/dataTable/columns.tsx';
 import { HeaderType } from '@/types/props/Common.ts';
 import { ListCard } from '@/pages/list/components/list-card.tsx';
 import { PageHeader } from '@/components/layout/page-header';
-import { DataTable } from '@/components/dataTable/data-table2.tsx';
-import { generateTasks } from '@/mock';
-
-const generatedTasks = generateTasks(100);
+import { DataTable } from '@/components/dataTable/data-table.tsx';
+import { columns } from '@/components/dataTable/columns.tsx';
+import { mockTasks } from '@/mock';
 
 export const List = () => {
   const currentPage = useMemo(
@@ -25,38 +23,36 @@ export const List = () => {
     ],
     []
   );
-
   const [isTableExpanded, setIsTableExpanded] = useState(true);
-  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [hoveredRowId, setHoveredRowId] = useState<string | null>(null);
 
-  const onToggleSelect = useCallback((id: string) => {
-    setSelectedIds((prev) =>
-      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
-    );
+  const onMouseEnter = useCallback((id: string) => {
+    setHoveredRowId(id);
   }, []);
-
+  const onMouseLeave = useCallback(() => {
+    setHoveredRowId(null);
+  }, []);
   const onToggleExpand = useCallback(() => {
     setIsTableExpanded(!isTableExpanded);
   }, [isTableExpanded]);
 
-  const columns = useMemo(() => {
-    return getColumns(selectedIds, onToggleSelect);
-  }, [selectedIds, onToggleSelect]);
-
   return (
-    <div>
+    <div className="h-screen flex-1 overflow-hidden flex-col">
       <PageHeader currentPage={currentPage} parents={parents} />
-      <Main>
-        <div className="px-3">
+      <div className="flex-1 min-h-0 flex flex-col">
+        <div className="px-3 mt-2 flex-shrink-0">
           <ListCard
             isTableExpanded={isTableExpanded}
             onToggleExpand={onToggleExpand}
           />
-          {isTableExpanded && (
-            <DataTable columns={columns} data={generatedTasks} />
-          )}
         </div>
-      </Main>
+        <DataTable
+          onRowHover={onMouseEnter}
+          onRowLeave={onMouseLeave}
+          columns={columns(hoveredRowId)}
+          data={mockTasks}
+        />
+      </div>
     </div>
   );
 };

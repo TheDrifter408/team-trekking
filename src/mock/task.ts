@@ -14,14 +14,13 @@ const priorities: TaskPriority[] = [
   LABEL.HIGH,
   LABEL.URGENT,
 ];
-export const statusCategory = {
+const statusCategory = {
   OPEN: 'Open',
   ACTIVE: 'Active',
   DONE: 'Done',
   CLOSED: 'Closed',
 } as const;
-
-export const statuses: TaskStatus[] = [
+const statuses: TaskStatus[] = [
   {
     id: 1,
     name: 'Backlog',
@@ -122,3 +121,5 @@ export const generateTasks = (count: number): Task[] => {
   taskIdCounter = 1;
   return Array.from({ length: count }).map(() => generateTask());
 };
+
+export const mockTasks: Task[] = generateTasks(100);
