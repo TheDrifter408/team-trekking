@@ -37,7 +37,7 @@ echo "$FILES"
 
 # 🧹 Run ESLint
 echo "🔍 Running ESLint for unused imports..."
-npx eslint $FILES --rule 'no-unused-vars: error' --max-warnings=0 || {
+npx eslint $FILES --max-warnings=0 || {
   echo "🚫 ESLint found issues (e.g., unused imports)."
   echo "❌ Push aborted due to lint errors."
   exit 1

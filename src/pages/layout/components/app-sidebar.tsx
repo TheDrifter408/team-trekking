@@ -2,11 +2,7 @@
 
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import {
-  CompassIcon,
-  Plus,
-  Share2,
-} from 'lucide-react';
+import { CompassIcon, Plus, Share2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
   Sidebar,

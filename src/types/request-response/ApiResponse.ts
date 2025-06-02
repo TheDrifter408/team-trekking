@@ -1,4 +1,4 @@
-export interface ApiResponse<T = any> {
+export interface ApiResponse<T> {
   data: T; // Data can be either a single object or an array of objects
   error: T;
   statusCode: number;

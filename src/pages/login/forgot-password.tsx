@@ -32,8 +32,7 @@ export const ForgotPassword = () => {
   const [sendOtp, { isLoading: isSendOtpLoading }] = usePostSendOtpMutation();
 
   const [isOtpSent, setIsOtpSent] = useState(false);
-  const [verifyOtp] =
-    usePostVerifyOtpMutation();
+  const [verifyOtp] = usePostVerifyOtpMutation();
   const [passwordReset, { isLoading: isPasswordResetLoading }] =
     usePostForgotPasswordMutation();
   const [otp, setOtp] = useState('');

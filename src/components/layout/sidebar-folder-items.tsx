@@ -14,7 +14,10 @@ import { folderMenuConfig } from '@/lib/constants/staticData.ts';
 import { ContextMenu } from '@/components/context-menu.tsx';
 import { SidebarFolderItemsProps } from '@/types/props/Common';
 
-export const SidebarFolderItems = ({ name, folder }: SidebarFolderItemsProps) => {
+export const SidebarFolderItems = ({
+  name,
+  folder,
+}: SidebarFolderItemsProps) => {
   const navigate = useNavigate();
   const [isHovered, setIsHovered] = useState(false);
   const [isButtonEntered, setIsButtonEntered] = useState(false);
