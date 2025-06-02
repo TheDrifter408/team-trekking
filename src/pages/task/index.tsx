@@ -33,7 +33,6 @@ import {
 } from '@dnd-kit/sortable';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { SortableChecklistRow } from '@/pages/task/components/sortable-checklist-row.tsx';
-import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';

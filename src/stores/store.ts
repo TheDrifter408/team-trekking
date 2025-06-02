@@ -9,10 +9,7 @@ const configureAppStore = () => {
       [tmtApi.reducerPath]: tmtApi.reducer,
     },
     middleware: (getDefaultMiddleware) =>
-      getDefaultMiddleware().concat([
-        tmtApi.middleware,
-        apiErrorMiddleware,
-      ]),
+      getDefaultMiddleware().concat([tmtApi.middleware, apiErrorMiddleware]),
     devTools: process.env.NODE_ENV === 'development',
   });
 

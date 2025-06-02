@@ -1,5 +1,6 @@
 import { LucideIcon } from 'lucide-react';
 import { LABEL } from '@/lib/constants/strings.ts';
+import { Folder } from '@/types/interfaces/Folder';
 
 export interface Space {
   id: number;
@@ -133,4 +134,49 @@ export interface Task {
   subTask?: Task[];
   subTaskCount?: number;
   checkListCount?: number;
+}
+
+export interface SidebarFolderItemsProps {
+  name: string;
+  folder: Folder;
+}
+
+export interface SortableChecklistRowProps {
+  id: string;
+  selected: boolean;
+  onSelect: () => void;
+  item: {
+    content: string;
+    completed: true;
+  };
+  onToggle: () => void;
+}
+
+export interface SortableTaskRowProps {
+  id: number;
+  selected: boolean;
+  onSelect: () => void;
+  subtask: Task;
+}
+interface Filter {
+  id: number;
+  label: string;
+  checked: boolean;
+}
+export interface TaskActivityFiltersProps {
+  filters: Filter[];
+  toggleFilter: (filterId: number) => void;
+}
+
+interface TaskNotificationUsers {
+  id: number;
+  isWatching: boolean;
+  avatar: string;
+  userName: string;
+}
+export interface TaskActivityNotificationsProps {
+  watching: boolean;
+  setWatching: (watching: boolean) => void;
+  taskNotificationUsers: TaskNotificationUsers[];
+  markNotificationAsRead: (notificationId: number) => void;
 }

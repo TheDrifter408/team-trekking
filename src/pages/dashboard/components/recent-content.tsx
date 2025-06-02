@@ -15,12 +15,6 @@ const RecentContent = ({ isExpanded, onExpand, cardTitle }: Props) => (
   <Recents isExpanded={isExpanded} onExpand={onExpand} cardTitle={cardTitle} />
 );
 
-interface RecentsProps {
-  isExpanded: boolean;
-  onExpand: (title: string) => void;
-  cardTitle: string;
-}
-
 const Recents: FC<Props> = ({ isExpanded, onExpand, cardTitle }) => (
   <HoverableCard
     isExpanded={isExpanded}

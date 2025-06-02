@@ -9,13 +9,12 @@ import {
 import { Button } from '@/components/ui/button.tsx';
 import { Check, ListFilter } from 'lucide-react';
 import { cn } from '@/lib/utils.ts';
+import { TaskActivityFiltersProps } from '@/types/props/Common';
 
-interface Props {
-  filters: any[];
-  toggleFilter: (filter: any) => void;
-}
-
-export const TaskActivityFilters = ({ filters, toggleFilter }: Props) => {
+export const TaskActivityFilters = ({
+  filters,
+  toggleFilter,
+}: TaskActivityFiltersProps) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>

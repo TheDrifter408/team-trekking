@@ -1,17 +1,10 @@
-import React from 'react';
+import { FC } from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { GripVertical } from 'lucide-react';
+import { SortableChecklistRowProps } from '@/types/props/Common';
 
-interface SortableChecklistRowProps {
-  id: string;
-  selected: boolean;
-  onSelect: () => void;
-  item: any;
-  onToggle: () => void;
-}
-
-export const SortableChecklistRow: React.FC<SortableChecklistRowProps> = ({
+export const SortableChecklistRow: FC<SortableChecklistRowProps> = ({
   id,
   selected,
   onSelect,

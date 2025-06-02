@@ -1,7 +1,10 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import axiosBaseQuery from '@/service/baseQuery.ts';
 import { useTMTStore } from '@/stores/zustand';
-import { ApiResponse, UserResponse } from '@/types/request-response/ApiResponse.ts';
+import {
+  ApiResponse,
+  UserResponse,
+} from '@/types/request-response/ApiResponse.ts';
 import {
   CreateUserRequest,
   OTPRequest,

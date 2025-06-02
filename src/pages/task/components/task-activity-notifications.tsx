@@ -4,20 +4,14 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu.tsx';
-
-interface Props {
-  watching: boolean;
-  setWatching: (watching: boolean) => void;
-  taskNotificationUsers: any[];
-  markNotificationAsRead: (notification: boolean) => void;
-}
+import { TaskActivityNotificationsProps } from '@/types/props/Common';
 
 export const TaskActivityNotifications = ({
   watching,
   setWatching,
   taskNotificationUsers,
   markNotificationAsRead,
-}: Props) => {
+}: TaskActivityNotificationsProps) => {
   return (
     <div className=" items-center justify-between px-1 py-2 space-y-2">
       <div

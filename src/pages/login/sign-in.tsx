@@ -30,7 +30,7 @@ export const Login = () => {
     },
   });
 
-  const onSubmit = async (data:z.infer<typeof loginSchema>) => {
+  const onSubmit = async (data: z.infer<typeof loginSchema>) => {
     const loginForm = {
       ...data,
       roleId: UserRole.User,

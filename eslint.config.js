@@ -30,6 +30,15 @@ export default tseslint.config(
                 { allowConstantExport: true }, // React Fast Refresh rule
             ],
             'prettier/prettier': 'warn', // Enforce Prettier formatting
+            'no-unused-vars': "off",
+            '@typescript-eslint/no-unused-vars': "off",
+            '@typescript-eslint/no-explicit-any': "off"           
         },
+    },
+    {
+        files: ['**/ui/*.tsx'],
+        rules: {
+            "react-refresh/only-export-components": 'off'
+        }
     }
 );

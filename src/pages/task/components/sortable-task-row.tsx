@@ -1,22 +1,16 @@
-import React from 'react';
+import { FC } from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { GripVertical } from 'lucide-react';
 import { statusColors, priorityColors } from '@/mock';
 import { useNavigate } from 'react-router-dom';
+import { SortableTaskRowProps } from '@/types/props/Common';
 
-interface SortableTaskRowProps {
-  id: string;
-  selected: boolean;
-  onSelect: () => void;
-  subtask: any;
-}
-
-const formatTime = (hours: number): string => {
-  return `${Math.floor(hours)}h ${Math.round((hours % 1) * 60)}m`;
+const formatTime = (hours: string): string => {
+  return `${Math.floor(Number(hours))}h ${Math.round((Number(hours) % 1) * 60)}m`;
 };
 
-export const SortableTaskRow: React.FC<SortableTaskRowProps> = ({
+export const SortableTaskRow: FC<SortableTaskRowProps> = ({
   id,
   selected,
   onSelect,
@@ -65,15 +59,15 @@ export const SortableTaskRow: React.FC<SortableTaskRowProps> = ({
             className="text-sm font-medium text-gray-900 hover:underline cursor-pointer"
             onClick={() => navigate('/subtask/1')}
           >
-            {subtask.title}
+            {subtask.name}
           </span>
         </div>
       </td>
       <td className="px-6 py-4 whitespace-nowrap">
         <span
-          className={`px-2 py-1 text-xs rounded-full text-white ${statusColors[subtask.status]}`}
+          className={`px-2 py-1 text-xs rounded-full text-white ${statusColors[subtask.status.name]}`}
         >
-          {subtask.status.replace('_', ' ')}
+          {subtask.status.name.replace('_', ' ')}
         </span>
       </td>
       <td className="px-6 py-4 whitespace-nowrap">
@@ -86,14 +80,16 @@ export const SortableTaskRow: React.FC<SortableTaskRowProps> = ({
         <span className="text-xs text-gray-500 mt-1">{subtask.progress}%</span>
       </td>
       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-        {new Date(subtask.dueDate).toLocaleDateString()}
+        {subtask.dueDate ? new Date(subtask.dueDate).toLocaleDateString() : ''}
       </td>
       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-        {formatTime(subtask.estimatedTime)}
+        {subtask.estimatedTime && !isNaN(Number(subtask.estimatedTime))
+          ? formatTime(subtask.estimatedTime)
+          : ''}
       </td>
       <td className="px-6 py-4 whitespace-nowrap">
         <span
-          className={`px-2 py-1 text-xs rounded-full text-white ${priorityColors[subtask.priority]}`}
+          className={`px-2 py-1 text-xs rounded-full text-white ${subtask.priority ? priorityColors[subtask.priority] : 'bg-gray-500'}`}
         >
           {subtask.priority}
         </span>
