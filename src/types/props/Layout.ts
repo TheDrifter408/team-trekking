@@ -7,10 +7,13 @@ interface User {
   avatar: string;
 }
 
-interface Team {
+interface Workspace {
+  id: number;
   name: string;
-  logo: React.ElementType;
+  logo?: string;
   plan: string;
+  color?: string;
+  member: number;
 }
 
 interface BaseNavItem {
@@ -38,7 +41,7 @@ interface NavGroup {
 
 interface SidebarData {
   user: User;
-  teams: Team[];
+  workspaces: Workspace[];
   navGroups: NavGroup[];
 }
 
