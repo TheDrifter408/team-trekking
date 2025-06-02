@@ -42,4 +42,16 @@ export const LABEL = {
     'Please enter the code we emailed you',
   CONFIRMATION_CODE: 'Confirmation code',
   COLLAPSED: 'Collapsed',
+  DUPLICATE: 'Duplicate',
+  CANCEL: 'Cancel',
+  WHAT_WOULD_YOU_LIKE_TO_COPY: 'What would you like to copy?',
+  CUSTOMIZE: 'Customize',
+  ALL_COMMENTS_FIELDS_AND_SETTINGS_WILL_BE_DUPLICATED_EXACTLY_AS_IS:
+    'All comments, fields, and settings will be duplicated exactly as is.',
+  CHOOSE_SPECIFIC_ELEMENTS_TO_COPY_FROM_THE_ORIGINAL_TASK:
+    'Choose specific elements to copy from the original task.',
+  INCLUDE_THE_FULL_HISTORY_AND_ACTIVITY_ON_THE_TASK_IN_THE_NEW_TASK:
+    'Include the full history and activity on the task in the new task.',
+  NOTIFY_TEAM_MEMBERS_ABOUT_THE_NEW_DUPLICATED_TASK:
+    'Notify team members about the new duplicated task.',
 };
