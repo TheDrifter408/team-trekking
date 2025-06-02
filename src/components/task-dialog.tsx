@@ -17,7 +17,7 @@ import {
 } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Check, List, Settings } from 'lucide-react';
+import { Check, List, SlidersHorizontal, Snowflake } from 'lucide-react';
 import { LABEL } from '@/lib/constants';
 
 interface Project {
@@ -161,14 +161,14 @@ const TaskDialog: React.FC<DuplicateTaskDialogProps> = ({
                   value="everything"
                   className="flex items-center gap-2"
                 >
-                  <Settings className="h-4 w-4" />
-                  Everything
+                  <Snowflake className="h-4 w-4" />
+                  {LABEL.EVERYTHING}
                 </TabsTrigger>
                 <TabsTrigger
                   value="customize"
                   className="flex items-center gap-2"
                 >
-                  <Settings className="h-4 w-4" />
+                  <SlidersHorizontal className="h-4 w-4" />
                   {LABEL.CUSTOMIZE}
                 </TabsTrigger>
               </TabsList>
