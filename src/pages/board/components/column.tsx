@@ -1,11 +1,5 @@
 import { Dispatch, SetStateAction, useState } from 'react';
-import {
-  ChevronLeft,
-  Circle,
-  ChevronRight,
-  Ellipsis,
-  Plus,
-} from 'lucide-react';
+import { ChevronLeft, Circle, Ellipsis, Plus } from 'lucide-react';
 import { useDroppable } from '@dnd-kit/core';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
@@ -15,12 +9,13 @@ import { z } from 'zod';
 import { addTaskSchema } from '../schema/addTaskSchema';
 import { AddTaskForm } from './AddTaskForm';
 import { faker } from '@faker-js/faker';
-
 interface BoardColumnProps {
   column: Column;
   className?: string;
   isActiveColumn?: boolean;
   setColumns: Dispatch<SetStateAction<Column[]>>;
+  updateCollapsed: (column: Column) => void;
+  isCollapsed: boolean;
 }
 
 export const BoardColumn = ({
@@ -28,8 +23,9 @@ export const BoardColumn = ({
   className,
   isActiveColumn,
   setColumns,
+  updateCollapsed,
+  isCollapsed,
 }: BoardColumnProps) => {
-  const [isCollapsed, setIsCollapsed] = useState(false);
   const [onEnterHeader, setOnEnterHeader] = useState(false);
   const [addingTask, setAddingTask] = useState(false);
 
@@ -70,8 +66,8 @@ export const BoardColumn = ({
     id: column.id,
   });
 
-  const toggleCollapse = () => {
-    setIsCollapsed(!isCollapsed);
+  const toggleCollapse = (column: Column) => {
+    updateCollapsed(column);
   };
   const lightenColor = (hex: string, percent: number) => {
     const num = parseInt(hex.replace('#', ''), 16);
@@ -97,19 +93,10 @@ export const BoardColumn = ({
   if (isCollapsed) {
     return (
       <Card
-        className={`transition-all text-black duration-300 flex items-center min-h-44 gap-10 w-10 py-0 self-start ${className}`}
+        className={`transition-all text-black duration-300 flex items-center min-h-32 gap-10 w-10 py-14 self-start ${className}`}
         style={{ backgroundColor: '#fff' }}
+        onClick={() => toggleCollapse(column)}
       >
-        <CardHeader className="p-2 flex items-center justify-center h-max">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={toggleCollapse}
-            className="h-6 w-6 p-0"
-          >
-            <ChevronRight className="h-4 w-4" />
-          </Button>
-        </CardHeader>
         <CardContent className="flex items-center p-2 rotate-90 w-auto h-full">
           <div
             className="flex items-center gap-2 w-full transition-transform delay-100 duration-300 whitespace-nowrap rounded shadow-sm p-1"
@@ -120,7 +107,7 @@ export const BoardColumn = ({
               {column.title.toUpperCase()}
             </span>
           </div>
-          <span className="ml-2 text-primary-foreground text-sm">
+          <span className="ml-2 text-sm">
             {column.tasks.length > 0 ? column.tasks.length : ''}
           </span>
         </CardContent>
@@ -153,13 +140,17 @@ export const BoardColumn = ({
               {column.title.toUpperCase()}
             </span>
           </div>
-          <span className="text-muted-foreground font-medium text-sm px-1">
+          <span className="font-medium text-sm px-1">
             {column.tasks.length}
           </span>
         </div>
         <div className="flex">
           {onEnterHeader && (
-            <Button onClick={toggleCollapse} variant={'ghost'} size={'icon_sm'}>
+            <Button
+              onClick={() => toggleCollapse(column)}
+              variant={'ghost'}
+              size={'icon_sm'}
+            >
               <ChevronLeft className={'text-muted-foreground'} />
             </Button>
           )}

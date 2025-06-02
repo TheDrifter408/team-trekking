@@ -39,5 +39,6 @@ export const LABEL = {
   VERIFY: 'Verify',
   WE_JUST_EMAILED_YOU: 'We just emailed you.',
   PLEASE_ENTER_THE_CODE_WE_JUST_EMAILED_YOU:'Please enter the code we emailed you',
-  CONFIRMATION_CODE: 'Confirmation code'
+  CONFIRMATION_CODE: 'Confirmation code',
+  COLLAPSED: 'Collapsed',
 };
