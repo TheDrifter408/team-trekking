@@ -122,4 +122,4 @@ export const generateTasks = (count: number): Task[] => {
   return Array.from({ length: count }).map(() => generateTask());
 };
 
-export const mockTasks: Task[] = generateTasks(100);
+export const mockTasks: Task[] = generateTasks(10);

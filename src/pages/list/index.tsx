@@ -1,5 +1,4 @@
 import { useState, useMemo, useCallback } from 'react';
-import { Main } from '@/components/layout/main.tsx';
 import { HeaderType } from '@/types/props/Common.ts';
 import { ListCard } from '@/pages/list/components/list-card.tsx';
 import { PageHeader } from '@/components/layout/page-header';

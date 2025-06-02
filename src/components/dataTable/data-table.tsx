@@ -74,7 +74,10 @@ export function DataTable<TData>({
   const totalSize = rowVirtualizer.getTotalSize();
 
   return (
-    <div ref={parentRef} className="h-screen px-3 overflow-auto rounded-md">
+    <div
+      ref={parentRef}
+      className="h-screen pb-[40px] px-3 overflow-auto rounded-md"
+    >
       <Table className={'table-fixed'}>
         <TableHeader className="sticky top-0 z-10 bg-background">
           {table.getHeaderGroups().map((headerGroup) => (
@@ -111,7 +114,7 @@ export function DataTable<TData>({
                 }
                 onMouseLeave={onRowLeave}
                 data-state={row.getIsSelected() && 'selected'}
-                className="absolute left-0 top-0 w-full table-fixed border-b border-border group hover:bg-accent/50"
+                className="absolute left-0 top-0 w-full table-fixed border-b border-border group"
                 style={{
                   height: `${ROW_HEIGHT}px`,
                   transform: `translateY(${virtualRow.start}px)`,
