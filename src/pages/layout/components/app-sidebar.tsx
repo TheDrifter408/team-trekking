@@ -15,7 +15,6 @@ import {
   useSidebar,
 } from '@/components/ui/sidebar';
 import { sampleProjectsData, sidebarData, spaceData } from '@/mock';
-import { TeamSwitcher } from '@/components/layout/team-switcher';
 import { NavGroup } from '@/components/layout/nav-group.tsx';
 import { Collapsible } from '@/components/ui/collapsible.tsx';
 import { Button } from '@/components/ui/button.tsx';
@@ -36,6 +35,7 @@ import { LABEL } from '@/lib/constants/strings.ts';
 import { ContextMenu } from '@/components/context-menu.tsx';
 import { spacesMenuConfig } from '@/lib/constants/staticData.ts';
 import TaskDialog from '@/components/task-dialog.tsx';
+import { WorkspaceSwitcher } from '@/components/layout/workspace-switcher.tsx';
 
 export const AppSidebar = ({
   ...props
@@ -110,7 +110,7 @@ export const AppSidebar = ({
       {...props}
     >
       <SidebarHeader className={'border-b py-0'}>
-        <TeamSwitcher teams={sidebarData.teams} />
+        <WorkspaceSwitcher workspaces={sidebarData.workspaces} />
       </SidebarHeader>
       <SidebarContent>
         {sidebarData.navGroups.map((props) => (

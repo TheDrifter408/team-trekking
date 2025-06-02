@@ -240,7 +240,7 @@ const TaskDialog: React.FC<DuplicateTaskDialogProps> = ({
           <Button
             onClick={handleDuplicate}
             disabled={!taskName.trim()}
-            className="px-6 py-2 bg-pink-600 hover:bg-pink-700 text-white font-medium"
+            className="px-6 py-2 bg-theme-main-light hover:bg-theme-main-light text-white font-medium"
           >
             {LABEL.DUPLICATE}
           </Button>
