@@ -26,7 +26,7 @@ export const LABEL = {
   SECONDS_TO_SIGN_UP: 'Seconds to sign up!',
   ALREADY_HAVE_AN_ACCOUNT: 'Already have an account?',
   ALREADY_A_MEMBER: 'Already a member?',
-  DONT_HAVE_AN_ACCOUNT: 'Don\'t have an account ?',
+  DONT_HAVE_AN_ACCOUNT: "Don't have an account ?",
   FORGOT_YOUR_PASSWORD: 'Forgot your password?',
   VERIFY_YOUR_EMAIL: 'Verify your email',
   SEND: 'Send',
@@ -38,7 +38,8 @@ export const LABEL = {
   RESENDING_CODE: 'Resend code',
   VERIFY: 'Verify',
   WE_JUST_EMAILED_YOU: 'We just emailed you.',
-  PLEASE_ENTER_THE_CODE_WE_JUST_EMAILED_YOU:'Please enter the code we emailed you',
+  PLEASE_ENTER_THE_CODE_WE_JUST_EMAILED_YOU:
+    'Please enter the code we emailed you',
   CONFIRMATION_CODE: 'Confirmation code',
   COLLAPSED: 'Collapsed',
 };

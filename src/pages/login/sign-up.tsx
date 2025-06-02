@@ -101,7 +101,7 @@ export const SignUp = () => {
     <AuthLayout isLoginPage={false}>
       <AuthCard
         isOtpSent={isOtpSent}
-        title={isOtpSent ? LABEL.VERIFY_YOUR_EMAIL : LABEL.SECONDS_TO_SIGN_UP }
+        title={isOtpSent ? LABEL.VERIFY_YOUR_EMAIL : LABEL.SECONDS_TO_SIGN_UP}
         onGoogleClick={() => {}}
       >
         {!isSendOtpSuccess ? (
@@ -147,7 +147,7 @@ export const SignUp = () => {
                 className="w-full font-extrabold rounded-lg h-[50px] text-md bg-indigo-600 hover:bg-indigo-700"
                 disabled={isSendOtpLoading}
               >
-                {isSendOtpLoading ? LABEL.SENDING : LABEL.SIGN_UP }
+                {isSendOtpLoading ? LABEL.SENDING : LABEL.SIGN_UP}
               </Button>
             </form>
           </Form>
@@ -155,11 +155,16 @@ export const SignUp = () => {
           <div className="space-y-6">
             <MailCheck className="mx-auto sm:w-16 sm:h-16 lg:w-14 lg:h-14" />
             <div>
-              <p className="font-semibold text-3xl text-gray-600">{LABEL.WE_JUST_EMAILED_YOU}</p>
+              <p className="font-semibold text-3xl text-gray-600">
+                {LABEL.WE_JUST_EMAILED_YOU}
+              </p>
               <p className="text-sm text-gray-500">
-                {LABEL.PLEASE_ENTER_THE_CODE_WE_JUST_EMAILED_YOU}:{' '}
-                <br />
-                <span className="font-medium text-base">{form.getValues('email') ? form.getValues('email') : 'dummy@gmail.com'}</span>
+                {LABEL.PLEASE_ENTER_THE_CODE_WE_JUST_EMAILED_YOU}: <br />
+                <span className="font-medium text-base">
+                  {form.getValues('email')
+                    ? form.getValues('email')
+                    : 'dummy@gmail.com'}
+                </span>
               </p>
               <p className="text-gray-500 mt-4">{LABEL.CONFIRMATION_CODE}</p>
             </div>
@@ -197,7 +202,7 @@ export const SignUp = () => {
                 onClick={onResendOtp}
                 disabled={isSendOtpLoading}
               >
-                {isSendOtpLoading ? LABEL.SENDING : LABEL.RESENDING_CODE }
+                {isSendOtpLoading ? LABEL.SENDING : LABEL.RESENDING_CODE}
               </Button>
             </div>
           </div>

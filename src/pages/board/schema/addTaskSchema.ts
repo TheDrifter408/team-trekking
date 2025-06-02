@@ -1,9 +1,9 @@
 import { z } from 'zod';
 
 const AssigneeObject = z.object({
-    id: z.number(),
-    name: z.string(),
-    avatar:z.string(),
+  id: z.number(),
+  name: z.string(),
+  avatar: z.string(),
 });
 
 const addTaskSchema = z.object({

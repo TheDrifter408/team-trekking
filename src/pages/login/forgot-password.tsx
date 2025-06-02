@@ -8,8 +8,15 @@ import { useNavigate } from 'react-router-dom';
 import { AuthLayout } from './components/auth-layout';
 import { AuthCard } from './components/auth-card';
 import { FormInputField } from './components/form-input.tsx';
-import { emailInputSchema, passwordResetSchema } from '@/lib/config/validationSchema.tsx';
-import { usePostForgotPasswordMutation, usePostSendOtpMutation, usePostVerifyOtpMutation } from '@/service/rtkQuery.ts';
+import {
+  emailInputSchema,
+  passwordResetSchema,
+} from '@/lib/config/validationSchema.tsx';
+import {
+  usePostForgotPasswordMutation,
+  usePostSendOtpMutation,
+  usePostVerifyOtpMutation,
+} from '@/service/rtkQuery.ts';
 import {
   InputOTP,
   InputOTPGroup,
@@ -22,14 +29,13 @@ import { toast } from 'sonner';
 
 export const ForgotPassword = () => {
   const navigate = useNavigate();
-  const [
-    sendOtp,
-    { isLoading: isSendOtpLoading },
-  ] = usePostSendOtpMutation();
+  const [sendOtp, { isLoading: isSendOtpLoading }] = usePostSendOtpMutation();
 
   const [isOtpSent, setIsOtpSent] = useState(false);
-  const [verifyOtp, { isLoading:isVerifyOtpLoading }] = usePostVerifyOtpMutation();
-  const [passwordReset, { isLoading:isPasswordResetLoading } ] = usePostForgotPasswordMutation();
+  const [verifyOtp] =
+    usePostVerifyOtpMutation();
+  const [passwordReset, { isLoading: isPasswordResetLoading }] =
+    usePostForgotPasswordMutation();
   const [otp, setOtp] = useState('');
   const [step, setStep] = useState<'email' | 'otp' | 'new_password'>('email');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -48,12 +54,12 @@ export const ForgotPassword = () => {
   const passwordResetForm = useForm({
     resolver: zodResolver(passwordResetSchema),
     defaultValues: {
-      password:'',
-      confirmPassword:''
-    }
+      password: '',
+      confirmPassword: '',
+    },
   });
-  
-  const onSubmit = async (data:z.infer<typeof emailInputSchema>) => {
+
+  const onSubmit = async (data: z.infer<typeof emailInputSchema>) => {
     const otpForm = {
       email: data.email,
       otpType: otpType,
@@ -77,9 +83,8 @@ export const ForgotPassword = () => {
       await verifyOtp(verifyOtpForm);
       setStep('new_password');
     } catch (error) {
-      setErrorMessage(error.message || 'Failed to Verify OTP'); 
+      setErrorMessage('Failed to Verify OTP');
     }
-    
   };
 
   const onResendOtp = async () => {
@@ -92,17 +97,19 @@ export const ForgotPassword = () => {
       await sendOtp(otpForm);
       setErrorMessage(null);
     } catch (error) {
-      setErrorMessage(error.message || LABEL.FAILED_TO_SEND_VERIFICATION_CODE);
+      setErrorMessage(LABEL.FAILED_TO_SEND_VERIFICATION_CODE);
     }
   };
 
-  const onPasswordResetSubmit = async (data:z.infer<typeof passwordResetSchema>) => {
+  const onPasswordResetSubmit = async (
+    data: z.infer<typeof passwordResetSchema>
+  ) => {
     const resetPasswordForm = {
       ...data,
       email: form.getValues('email'),
-      otp:otp,
-      roleId: UserRole.User
-    }
+      otp: otp,
+      roleId: UserRole.User,
+    };
     try {
       await passwordReset(resetPasswordForm);
       toast.success('Password has been reset!');
@@ -110,12 +117,12 @@ export const ForgotPassword = () => {
     } catch (error) {
       toast.error('Something went wrong please try again.');
     }
-  }
+  };
 
   return (
     <AuthLayout isLoginPage={false}>
       <AuthCard
-        title={isOtpSent ? LABEL.VERIFY_YOUR_EMAIL : LABEL.FORGOT_YOUR_PASSWORD }
+        title={isOtpSent ? LABEL.VERIFY_YOUR_EMAIL : LABEL.FORGOT_YOUR_PASSWORD}
         isOtpSent={true}
         onGoogleClick={() => {}}
       >
@@ -142,14 +149,16 @@ export const ForgotPassword = () => {
                 className="w-full rounded-lg h-[50px] font-extrabold text-md bg-indigo-600 hover:bg-indigo-700"
                 disabled={isSendOtpLoading}
               >
-                {isSendOtpLoading ? LABEL.SENDING : LABEL.SEND_VERIFICATION_CODE}
+                {isSendOtpLoading
+                  ? LABEL.SENDING
+                  : LABEL.SEND_VERIFICATION_CODE}
               </Button>
             </form>
           </Form>
         )}
 
         {/* Step 2: OTP Input */}
-        { step === 'otp' && (
+        {step === 'otp' && (
           <div className="space-y-6">
             <p className="text-center text-sm text-gray-500">
               {LABEL.WE_JUST_EMAILED_YOU}:{' '}
@@ -190,20 +199,23 @@ export const ForgotPassword = () => {
                 onClick={onResendOtp}
                 disabled={isSendOtpLoading}
               >
-                {isSendOtpLoading ? LABEL.SENDING : LABEL.RESENDING_CODE }
+                {isSendOtpLoading ? LABEL.SENDING : LABEL.RESENDING_CODE}
               </Button>
             </div>
           </div>
         )}
-        { /* Step 3: Input new Password */}
-        { step === 'new_password' && (
+        {/* Step 3: Input new Password */}
+        {step === 'new_password' && (
           <Form {...passwordResetForm}>
-            <form onSubmit={passwordResetForm.handleSubmit(onPasswordResetSubmit)} className="space-y-4">
+            <form
+              onSubmit={passwordResetForm.handleSubmit(onPasswordResetSubmit)}
+              className="space-y-4"
+            >
               <FormInputField
                 control={passwordResetForm.control}
                 name="password"
                 label="Password"
-                placeholder='Enter your new password'
+                placeholder="Enter your new password"
                 icon={Eye}
               />
               <FormInputField
@@ -213,9 +225,12 @@ export const ForgotPassword = () => {
                 placeholder="Confirm your password"
                 icon={Eye}
               />
-              <Button type="submit"
-              className='w-full rounded-lg h-[50px] font-bold text-md bg-indigo-600 hover:bg-indigo-700' disabled={isPasswordResetLoading}>
-                { isPasswordResetLoading ? LABEL.SENDING : LABEL.SEND }
+              <Button
+                type="submit"
+                className="w-full rounded-lg h-[50px] font-bold text-md bg-indigo-600 hover:bg-indigo-700"
+                disabled={isPasswordResetLoading}
+              >
+                {isPasswordResetLoading ? LABEL.SENDING : LABEL.SEND}
               </Button>
             </form>
           </Form>

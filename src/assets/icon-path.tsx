@@ -94,7 +94,7 @@ const iconPaths = {
   useradd: UserAdd,
   tag: Tag,
   edit: Edit,
-  signUpBG: SignUpBG
+  signUpBG: SignUpBG,
 } as const;
 
 type IconName = keyof typeof iconPaths;

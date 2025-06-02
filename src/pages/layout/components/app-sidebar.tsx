@@ -2,7 +2,11 @@
 
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import { Archive, ChevronDown, CompassIcon, Eye, Grid3X3, MoreHorizontal, Plus, Share2 } from 'lucide-react';
+import {
+  CompassIcon,
+  Plus,
+  Share2,
+} from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
   Sidebar,
@@ -159,7 +163,7 @@ export const AppSidebar = ({
               </Button>
               {spaceData.map((space) => (
                 <SidebarSpaceItems key={space.id} name={space.name}>
-                  {space.folders.map((folder: any) => (
+                  {space.folders.map((folder) => (
                     <SidebarFolderItems
                       key={folder.id}
                       name={folder.name}

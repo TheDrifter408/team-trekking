@@ -1,5 +1,6 @@
 import { LucideIcon } from 'lucide-react';
 import { LABEL } from '@/lib/constants/strings.ts';
+import { Folder } from '@/types/interfaces/Folder';
 
 export interface Space {
   id: number;
@@ -133,4 +134,9 @@ export interface Task {
   subTask?: Task[];
   subTaskCount?: number;
   checkListCount?: number;
+}
+
+export interface SidebarFolderItemsProps {
+  name: string;
+  folder: Folder;
 }
