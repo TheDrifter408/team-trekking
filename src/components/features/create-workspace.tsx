@@ -6,8 +6,8 @@ import React, {
   ChangeEvent,
 } from 'react';
 import { Check } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import { Icon } from '@/assets/icon-path';
+import { cn } from '@/lib/utils.ts';
+import { Icon } from '@/assets/icon-path.tsx';
 import {
   Dialog,
   DialogContent,
@@ -15,9 +15,9 @@ import {
   DialogHeader,
   DialogTitle,
   DialogOverlay,
-} from '@/components/shadcn-ui/dialog';
-import { Button } from '@/components/shadcn-ui/button';
-import { Input } from '@/components/shadcn-ui/input';
+} from '@/components/shadcn-ui/dialog.tsx';
+import { Button } from '@/components/shadcn-ui/button.tsx';
+import { Input } from '@/components/shadcn-ui/input.tsx';
 import {
   ManagePurposeProps,
   ManageFeaturesProps,

@@ -30,9 +30,9 @@ import {
   TooltipTrigger,
 } from '@/components/shadcn-ui/tooltip';
 import { Separator } from '@/components/shadcn-ui/separator';
-import { CreateFolder } from '@/components/create-folder';
-import { CreateList } from '@/components/create-list';
-import { InviteUser } from '@/components/invite-user.tsx';
+import { CreateFolder } from '@/components/features/create-folder.tsx';
+import { CreateList } from '@/components/features/create-list.tsx';
+import { InviteUser } from '@/components/features/invite-user.tsx';
 
 interface SidebarActionsMenuProps {
   showOptionsMenu?: boolean;

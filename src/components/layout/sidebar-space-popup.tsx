@@ -28,9 +28,9 @@ import {
   TooltipTrigger,
 } from '@/components/shadcn-ui/tooltip.tsx';
 import { Separator } from '@/components/shadcn-ui/separator.tsx';
-import { CreateFolder } from '@/components/create-folder.tsx';
+import { CreateFolder } from '@/components/features/create-folder.tsx';
 import { useState } from 'react';
-import { CreateList } from '@/components/create-list.tsx';
+import { CreateList } from '@/components/features/create-list.tsx';
 
 export const SidebarSpacePopup = () => {
   const [createFolderOpen, setCreateFolderOpen] = useState(false);

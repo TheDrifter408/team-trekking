@@ -23,7 +23,7 @@ import {
   X,
   Ellipsis,
 } from 'lucide-react';
-import { ShareTask } from '@/components/share-task.tsx';
+import { ShareTask } from '@/components/features/share-task.tsx';
 
 export const PageHeader = () => {
   const [openShareTask, setOpenShareTask] = useState<boolean>(false);

@@ -6,13 +6,13 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '@/components/shadcn-ui/dialog';
-import { Button } from '@/components/shadcn-ui/button';
-import { Input } from '@/components/shadcn-ui/input';
-import { Label } from '@/components/shadcn-ui/label';
+} from '@/components/shadcn-ui/dialog.tsx';
+import { Button } from '@/components/shadcn-ui/button.tsx';
+import { Input } from '@/components/shadcn-ui/input.tsx';
+import { Label } from '@/components/shadcn-ui/label.tsx';
 import { X, Mail, AlertCircle, Loader2 } from 'lucide-react';
-import { Badge } from '@/components/shadcn-ui/badge';
-import { Alert, AlertDescription } from '@/components/shadcn-ui/alert';
+import { Badge } from '@/components/shadcn-ui/badge.tsx';
+import { Alert, AlertDescription } from '@/components/shadcn-ui/alert.tsx';
 
 interface InviteUserProps {
   inviteUserOpen: boolean;

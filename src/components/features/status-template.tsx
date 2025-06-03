@@ -5,7 +5,7 @@ import {
   DialogTitle,
   DialogHeader,
   DialogFooter,
-} from '@/components/shadcn-ui/dialog';
+} from '@/components/shadcn-ui/dialog.tsx';
 import {
   DropdownMenuItem,
   DropdownMenuTrigger,
@@ -19,15 +19,15 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/shadcn-ui/select';
+} from '@/components/shadcn-ui/select.tsx';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from '@/components/shadcn-ui/tooltip';
+} from '@/components/shadcn-ui/tooltip.tsx';
 import { taskTemplates } from '@/mock';
-import { Input } from '@/components/shadcn-ui/input';
+import { Input } from '@/components/shadcn-ui/input.tsx';
 import { Info, GripVertical, Ellipsis } from 'lucide-react';
 import { Button } from '@/components/shadcn-ui/button.tsx';
 import { cn } from '@/lib/utils.ts';

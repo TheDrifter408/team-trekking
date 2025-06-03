@@ -17,10 +17,10 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/shadcn-ui/dropdown-menu';
+} from '@/components/shadcn-ui/dropdown-menu.tsx';
 import { Droplet, Ban } from 'lucide-react';
 import { Separator } from '@/components/shadcn-ui/separator.tsx';
-import { StatusView } from '@/components/status-view';
+import { StatusView } from '@/components/features/status-view.tsx';
 import { taskStatuses } from '@/mock';
 
 interface Props {

@@ -1,14 +1,10 @@
 import { useState, useMemo, useCallback } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
-import { Main } from '@/components/layout/main.tsx';
-import { getColumns } from '@/components/data-table/columns.tsx';
 import { HeaderType } from '@/types/props/Common.ts';
 import { ListCard } from '@/pages/list/components/list-card.tsx';
 import { PageHeader } from '@/components/layout/page-header';
-import { DataTable } from '@/components/data-table/data-table2.tsx';
-import { generateTasks } from '@/mock';
-
-const generatedTasks = generateTasks(100);
+import { DataTable } from '@/components/data-table/data-table.tsx';
+import { columns } from '@/components/data-table/columns.tsx';
+import { mockTasks } from '@/mock';
 
 export const List = () => {
   const currentPage = useMemo(
@@ -26,77 +22,36 @@ export const List = () => {
     ],
     []
   );
-
-  const [tasks, setTasks] = useState(generatedTasks);
-
   const [isTableExpanded, setIsTableExpanded] = useState(true);
-  const [filterValue, setFilterValue] = useState('');
-  const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [hoveredRowId, setHoveredRowId] = useState<string | null>(null);
 
-  const onToggleSelect = useCallback((id: string) => {
-    setSelectedIds((prev) =>
-      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
-    );
+  const onMouseEnter = useCallback((id: string) => {
+    setHoveredRowId(id);
   }, []);
-
-  const handleDataChange = useCallback((newData: string[]) => {
-    const updatedTasks = JSON.parse(JSON.stringify(newData));
-    setTasks(updatedTasks);
+  const onMouseLeave = useCallback(() => {
+    setHoveredRowId(null);
   }, []);
-
   const onToggleExpand = useCallback(() => {
     setIsTableExpanded(!isTableExpanded);
   }, [isTableExpanded]);
 
-  const handleRowMouseEnter = useCallback((id: string) => {
-    setHoveredRowId(id);
-  }, []);
-
-  const handleRowMouseLeave = useCallback(() => {
-    setHoveredRowId(null);
-  }, []);
-
-  const columns = useMemo(() => {
-    return getColumns(selectedIds, onToggleSelect, hoveredRowId);
-  }, [selectedIds, onToggleSelect, hoveredRowId]);
-
   return (
-    <div>
+    <div className="h-screen flex-1 overflow-hidden flex-col">
       <PageHeader currentPage={currentPage} parents={parents} />
-      <Main>
-        <div className="px-3">
+      <div className="flex-1 min-h-0 flex flex-col">
+        <div className="px-3 mt-2 flex-shrink-0">
           <ListCard
             isTableExpanded={isTableExpanded}
             onToggleExpand={onToggleExpand}
           />
-          <AnimatePresence initial={false}>
-            {isTableExpanded && (
-              <motion.div
-                key="table"
-                initial={{ height: 0 }}
-                animate={{ height: 'auto' }}
-                exit={{ height: 0 }}
-                transition={{
-                  duration: 0.4,
-                  ease: [0.7, 0, 0.84, 0],
-                }}
-                style={{ overflow: 'hidden', transformOrigin: 'top' }}
-              >
-                <DataTable
-                  columns={columns}
-                  data={tasks}
-                  onDataChange={handleDataChange}
-                  filterValue={filterValue}
-                  onFilterChange={setFilterValue}
-                  onRowMouseEnter={handleRowMouseEnter}
-                  onRowMouseLeave={handleRowMouseLeave}
-                />
-              </motion.div>
-            )}
-          </AnimatePresence>
         </div>
-      </Main>
+        <DataTable
+          onRowHover={onMouseEnter}
+          onRowLeave={onMouseLeave}
+          columns={columns(hoveredRowId)}
+          data={mockTasks}
+        />
+      </div>
     </div>
   );
 };
