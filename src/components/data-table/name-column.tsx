@@ -2,6 +2,9 @@ import { Button } from '@/components/shadcn-ui/button.tsx';
 import { Icon } from '@/assets/icon-path.tsx';
 import {
   Tooltip,
+  TextTooltip,
+  TooltipContent,
+  TooltipTrigger,
 } from '@/components/shadcn-ui/tooltip';
 import { Task } from '@/types/props/Common.ts';
 import React, { ReactNode, useState } from 'react';
@@ -46,8 +49,8 @@ export const NameColumn = ({ task, isHovered }: Props) => {
   );
 };
 
-import { Dialog, DialogContent } from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input.tsx';
+import { Dialog, DialogContent } from '@/components/shadcn-ui/dialog';
+import { Input } from '@/components/shadcn-ui/input.tsx';
 import { Plus } from 'lucide-react';
 
 // Mock tag data - matches the colors from the image
@@ -78,7 +81,7 @@ const TagDialog = ({
     tag.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const handleTagClick = (tag) => {
+  const onTagClick = () => {
     setIsDialogOpen(false);
   };
 
@@ -102,7 +105,7 @@ const TagDialog = ({
             {filteredTags.map((tag) => (
               <button
                 key={tag.id}
-                onClick={() => handleTagClick(tag)}
+                onClick={onTagClick}
                 className="w-full flex items-start p-2 rounded hover:bg-gray-50 transition-colors"
               >
                 <span
@@ -120,9 +123,7 @@ const TagDialog = ({
                 (tag) => tag.name.toLowerCase() === searchTerm.toLowerCase()
               ) && (
                 <button
-                  onClick={() =>
-                    handleTagClick({ name: searchTerm, color: '#F3F4F6' })
-                  }
+                  onClick={onTagClick}
                   className="w-full flex items-center gap-2 p-2 rounded hover:bg-gray-50 transition-colors text-left"
                 >
                   <Plus className="w-4 h-4 text-gray-400 flex-shrink-0" />
@@ -181,6 +182,26 @@ const TaskModifiers = ({ isHovered }: { isHovered: boolean }) => {
 };
 
 const SubTaskSummary = ({ task }: { task: Task }) => {
+  const subTask = task?.subTask ?? [];
+
+  const summaryMap = new Map<
+    string,
+    { name: string; color: string; count: number }
+  >();
+
+  for (let i = 0; i < subTask.length; i++) {
+    const { name, color } = subTask[i].status;
+    const key = `${name}_${color}`;
+
+    if (summaryMap.has(key)) {
+      summaryMap.get(key)!.count += 1;
+    } else {
+      summaryMap.set(key, { name, color, count: 1 });
+    }
+  }
+
+  const summary = Array.from(summaryMap.values());
+
   return (
     <>
       {(task.subTaskCount ?? 0) > 0 && (
@@ -193,10 +214,10 @@ const SubTaskSummary = ({ task }: { task: Task }) => {
           </TooltipTrigger>
           <TooltipContent className="w-fit">
             <div className="flex flex-col gap-1">
-              {getSubTaskStatusSummary(task).map(({ name, count, color }) => (
-                <div key={name} className={'flex items-center gap-2'}>
+              {summary.map(({ name, count, color }) => (
+                <div key={name + color} className="flex items-center gap-2">
                   <div
-                    className={'w-3 h-3 rounded-sm'}
+                    className="w-3 h-3 rounded-sm"
                     style={{ background: color }}
                   />
                   {count} {name}
@@ -234,13 +255,13 @@ const DescriptionSummary = ({ task }: { task: Task }) => {
 const IconButton = ({
   children,
   className = '',
-  tooltipText,
+  // tooltipText,
   ...props
 }: React.ButtonHTMLAttributes<HTMLButtonElement> & {
   children: ReactNode;
   tooltipText?: string;
 }) => {
-  const button = (
+  return (
     <Button
       {...props}
       className={cn(className, 'py-[5px] px-[7px]')}
