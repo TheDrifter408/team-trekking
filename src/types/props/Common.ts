@@ -180,3 +180,25 @@ export interface TaskActivityNotificationsProps {
   taskNotificationUsers: TaskNotificationUsers[];
   markNotificationAsRead: (notificationId: number) => void;
 }
+
+export interface Project {
+  id: string;
+  name: string;
+}
+
+export interface DuplicateData {
+  taskName: string;
+  project: string;
+  copyOption: string;
+  copyActivity: boolean;
+  sendNotifications: boolean;
+}
+
+export interface DuplicateTaskDialogProps {
+  isOpen?: boolean;
+  onClose?: () => void;
+  onDuplicate?: (data: DuplicateData) => void;
+  initialTaskName?: string;
+  projects?: Project[];
+  defaultProject?: string;
+}

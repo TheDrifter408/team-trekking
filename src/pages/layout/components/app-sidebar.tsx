@@ -57,11 +57,6 @@ export const AppSidebar = ({
 
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
 
-  const onHandleDuplicate = (data): void => {
-    console.log('Duplicating task with data:', data);
-    // Handle the duplication logic here
-  };
-
   const onHandleOpenDialog = (): void => {
     setIsDialogOpen(true);
   };
@@ -242,7 +237,6 @@ export const AppSidebar = ({
       <TaskDialog
         isOpen={isDialogOpen}
         onClose={onHandleCloseDialog}
-        onDuplicate={onHandleDuplicate}
         initialTaskName="02.1 Creating Folder"
         projects={sampleProjectsData}
         defaultProject="final-initiative"
