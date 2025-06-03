@@ -13,18 +13,18 @@ import { CalendarIcon, MoveRight } from 'lucide-react';
 import { type DateRange } from 'react-day-picker';
 
 import { cn } from '@/lib/utils';
-import { Calendar } from '@/components/ui/calendar';
+import { Calendar } from '@/components/shadcn-ui/calendar';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from '@/components/ui/popover';
+} from '@/components/shadcn-ui/popover';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from '@/components/ui/tooltip';
+} from '@/components/shadcn-ui/tooltip';
 
 export function DatePickerWithRange({
   className,

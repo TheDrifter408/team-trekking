@@ -10,7 +10,7 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { InboxItem } from '@/types/props/Common.ts';
-import { Button } from '@/components/ui/button.tsx';
+import { Button } from '@/components/shadcn-ui/button.tsx';
 
 interface Props {
   items: InboxItem[];

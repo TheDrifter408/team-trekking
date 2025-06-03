@@ -31,13 +31,17 @@ import {
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from '@/components/shadcn-ui/avatar';
 import { SortableChecklistRow } from '@/pages/task/components/sortable-checklist-row.tsx';
-import { Label } from '@/components/ui/label';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import { Label } from '@/components/shadcn-ui/label';
+import { Button } from '@/components/shadcn-ui/button';
+import { Badge } from '@/components/shadcn-ui/badge';
 import { TaskMetaRow } from './components/task-meta-row';
-import { Input } from '@/components/ui/input.tsx';
+import { Input } from '@/components/shadcn-ui/input.tsx';
 import { AssigneeAvatar } from '@/components/assignee-avatar.tsx';
 import { DocEditor } from './components/doc-editor.tsx';
 import { Subtask } from '@/pages/task/components/Subtask.tsx';
@@ -98,8 +102,8 @@ export const Task: React.FC = () => {
     checklist: mockChecklist,
   });
 
-  const [isAddTask, setIsAddTask] = useState<boolean>(false);
-  const [isAddChecklist, setIsAddChecklist] = useState<boolean>(false);
+  //const [isAddTask, setIsAddTask] = useState<boolean>(false);
+  //const [isAddChecklist, setIsAddChecklist] = useState<boolean>(false);
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -109,7 +113,7 @@ export const Task: React.FC = () => {
   );
 
   const onPressAddSubtask = () => {
-    setIsAddTask(true);
+    //setIsAddTask(true);
   };
 
   const handleChecklistToggle = (itemId: string) => {
@@ -186,7 +190,7 @@ export const Task: React.FC = () => {
   };
 
   const onPressAddChecklist = () => {
-    setIsAddChecklist(true);
+    // setIsAddChecklist(true);
   };
 
   return (

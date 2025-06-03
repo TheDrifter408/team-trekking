@@ -13,11 +13,11 @@ import {
   SidebarHeader,
   SidebarRail,
   useSidebar,
-} from '@/components/ui/sidebar';
+} from '@/components/shadcn-ui/sidebar';
 import { sampleProjectsData, sidebarData, spaceData } from '@/mock';
 import { NavGroup } from '@/components/layout/nav-group.tsx';
-import { Collapsible } from '@/components/ui/collapsible.tsx';
-import { Button } from '@/components/ui/button.tsx';
+import { Collapsible } from '@/components/shadcn-ui/collapsible.tsx';
+import { Button } from '@/components/shadcn-ui/button.tsx';
 import { SidebarSpaceItems } from '@/components/layout/sidebar-space-items.tsx';
 import { SidebarFolderItems } from '@/components/layout/sidebar-folder-items.tsx';
 import { SidebarListItems } from '@/components/layout/sidebar-list-items.tsx';
@@ -26,7 +26,7 @@ import {
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from '@/components/ui/tooltip.tsx';
+} from '@/components/shadcn-ui/tooltip.tsx';
 import { CreateSpace } from '@/components/space/create-space.tsx';
 import { InviteUser } from '@/components/invite-user.tsx';
 import { NavUser } from '@/components/layout/nav-user.tsx';

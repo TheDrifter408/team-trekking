@@ -2,13 +2,13 @@ import { HTMLAttributes } from 'react';
 import { Link } from 'react-router';
 import { IconMenu } from '@tabler/icons-react';
 import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/shadcn-ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+} from '@/components/shadcn-ui/dropdown-menu';
 
 interface TopNavProps extends HTMLAttributes<HTMLElement> {
   links: {

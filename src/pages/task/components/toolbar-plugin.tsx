@@ -20,8 +20,8 @@ import {
 } from '@lexical/rich-text';
 import { $setBlocksType } from '@lexical/selection';
 import { $createParagraphNode } from 'lexical';
-import { Button } from '@/components/ui/button.tsx';
-import { Label } from '@/components/ui/label.tsx';
+import { Button } from '@/components/shadcn-ui/button.tsx';
+import { Label } from '@/components/shadcn-ui/label.tsx';
 import { cn } from '@/lib/utils.ts';
 import {
   HEADINGS,

@@ -1,11 +1,11 @@
-import { Button } from '@/components/ui/button.tsx';
+import { Button } from '@/components/shadcn-ui/button.tsx';
 import { Icon } from '@/assets/icon-path.tsx';
 import {
   Tooltip,
   TooltipTrigger,
   TooltipContent,
   TooltipProvider,
-} from '@/components/ui/tooltip';
+} from '@/components/shadcn-ui/tooltip';
 import { Task } from '@/types/props/Common.ts';
 
 interface Props {

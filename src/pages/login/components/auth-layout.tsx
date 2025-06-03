@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/shadcn-ui/button';
 import { useNavigate } from 'react-router-dom';
 import { LABEL } from '@/lib/constants/appStrings.ts';
 import { Icon } from '@/assets/icon-path';

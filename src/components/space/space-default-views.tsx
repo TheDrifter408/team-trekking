@@ -4,9 +4,9 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog.tsx';
-import { Switch } from '@/components/ui/switch';
-import { Button } from '@/components/ui/button';
+} from '@/components/shadcn-ui/dialog.tsx';
+import { Switch } from '@/components/shadcn-ui/switch';
+import { Button } from '@/components/shadcn-ui/button';
 import { requiredViews } from '@/mock';
 
 interface Props {

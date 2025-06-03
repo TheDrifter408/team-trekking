@@ -8,8 +8,8 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Button } from '@/components/ui/button';
+} from '@/components/shadcn-ui/dropdown-menu';
+import { Button } from '@/components/shadcn-ui/button';
 import { ChevronRight } from 'lucide-react';
 import {
   ContextMenuProps,

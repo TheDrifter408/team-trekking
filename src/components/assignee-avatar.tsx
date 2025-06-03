@@ -3,13 +3,13 @@ import {
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from '@/components/ui/tooltip.tsx';
+} from '@/components/shadcn-ui/tooltip.tsx';
 import {
   Avatar,
   AvatarFallback,
   AvatarImage,
-} from '@/components/ui/avatar.tsx';
-import { Button } from '@/components/ui/button.tsx';
+} from '@/components/shadcn-ui/avatar.tsx';
+import { Button } from '@/components/shadcn-ui/button.tsx';
 import { IconX } from '@tabler/icons-react';
 import { cn } from '@/lib/utils';
 

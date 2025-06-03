@@ -3,9 +3,9 @@ import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from '@/components/ui/collapsible';
+} from '@/components/shadcn-ui/collapsible';
 import { Folder, ListIcon } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/shadcn-ui/button';
 import { cn } from '@/lib/utils';
 import { IconCaretRightFilled } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';

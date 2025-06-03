@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Form } from '@/components/ui/form';
+import { Button } from '@/components/shadcn-ui/button';
+import { Form } from '@/components/shadcn-ui/form';
 import { LockKeyhole, Mail } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';

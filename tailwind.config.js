@@ -113,7 +113,7 @@ export default {
       sans: [
         ' "Segoe UI"',
         '-apple-system',
-        'system-ui',
+        'system-shadcn-ui',
         'BlinkMacSystemFont',
         'Roboto',
         '"Helvetica Neue"',

@@ -15,9 +15,9 @@ import {
   DialogHeader,
   DialogTitle,
   DialogOverlay,
-} from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+} from '@/components/shadcn-ui/dialog';
+import { Button } from '@/components/shadcn-ui/button';
+import { Input } from '@/components/shadcn-ui/input';
 import {
   ManagePurposeProps,
   ManageFeaturesProps,

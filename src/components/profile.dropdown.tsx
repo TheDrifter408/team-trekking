@@ -1,6 +1,10 @@
 import { Link } from 'react-router';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from '@/components/shadcn-ui/avatar';
+import { Button } from '@/components/shadcn-ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,7 +14,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuShortcut,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+} from '@/components/shadcn-ui/dropdown-menu';
 import { ChevronDown } from 'lucide-react';
 import { UserResponse } from '@/types/request-response/ApiResponse.ts';
 import { getInitials } from '@/lib/utils.ts';

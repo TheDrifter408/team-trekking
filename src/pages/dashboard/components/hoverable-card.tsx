@@ -1,6 +1,6 @@
-import { Card, CardHeader, CardTitle } from '@/components/ui/card.tsx';
+import { Card, CardHeader, CardTitle } from '@/components/shadcn-ui/card.tsx';
 import { cn } from '@/lib/utils.ts';
-import { Button } from '@/components/ui/button.tsx';
+import { Button } from '@/components/shadcn-ui/button.tsx';
 import { IconArrowsDiagonal } from '@tabler/icons-react';
 import { ReactNode, useState } from 'react';
 

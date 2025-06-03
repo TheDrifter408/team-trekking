@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { cn } from '@/lib/utils.ts';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/shadcn-ui/button';
 import {
   Sheet,
   SheetClose,
@@ -8,7 +8,7 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from '@/components/ui/sheet';
+} from '@/components/shadcn-ui/sheet';
 import {
   IconChevronLeft,
   IconChevronRight,
@@ -18,7 +18,7 @@ import {
   IconCirclePlus,
 } from '@tabler/icons-react';
 import { LABEL } from '@/lib/constants/appStrings.ts';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/shadcn-ui/card';
 
 interface CardItem {
   id: string;

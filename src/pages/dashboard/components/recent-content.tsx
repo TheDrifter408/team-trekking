@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { recentData } from '@/mock';
 import { Circle, List } from 'lucide-react';
-import { CardContent } from '@/components/ui/card';
+import { CardContent } from '@/components/shadcn-ui/card';
 import { HoverableCard } from './hoverable-card';
 import { cn } from '@/lib/utils';
 

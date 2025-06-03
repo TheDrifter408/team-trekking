@@ -5,7 +5,7 @@ import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from '@/components/ui/collapsible';
+} from '@/components/shadcn-ui/collapsible';
 import {
   SidebarGroup,
   SidebarMenu,
@@ -15,8 +15,8 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
   useSidebar,
-} from '@/components/ui/sidebar';
-import { Badge } from '../ui/badge';
+} from '@/components/shadcn-ui/sidebar';
+import { Badge } from '@/components/shadcn-ui/badge';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -24,7 +24,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '../ui/dropdown-menu';
+} from '@/components/shadcn-ui/dropdown-menu';
 import {
   NavCollapsible,
   NavItem,

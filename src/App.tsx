@@ -4,7 +4,7 @@ import configureAppStore from '@/stores/store.ts';
 import AppRoutes from '@/routes';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { PageHeaderContextProvider } from '@/lib/context/page-header-context.tsx';
-import { Toaster } from './components/ui/sonner';
+import { Toaster } from '@/components/shadcn-ui/sonner';
 
 function App() {
   const store = configureAppStore();

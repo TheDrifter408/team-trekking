@@ -1,22 +1,22 @@
 import { useState } from 'react';
-import { Label } from '@/components/ui/label';
+import { Label } from '@/components/shadcn-ui/label';
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog';
+} from '@/components/shadcn-ui/dialog';
 import { IconInnerShadowBottomRight } from '@tabler/icons-react';
 import { ChevronDown, ChevronRight, GripVertical } from 'lucide-react';
-import { Separator } from '@/components/ui/separator';
+import { Separator } from '@/components/shadcn-ui/separator';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Button } from '@/components/ui/button';
+} from '@/components/shadcn-ui/dropdown-menu';
+import { Button } from '@/components/shadcn-ui/button';
 import {
   DndContext,
   closestCenter,

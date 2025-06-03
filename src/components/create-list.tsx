@@ -5,10 +5,10 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog.tsx';
-import { Label } from '@/components/ui/label.tsx';
-import { Input } from '@/components/ui/input.tsx';
-import { Button } from '@/components/ui/button.tsx';
+} from '@/components/shadcn-ui/dialog.tsx';
+import { Label } from '@/components/shadcn-ui/label.tsx';
+import { Input } from '@/components/shadcn-ui/input.tsx';
+import { Button } from '@/components/shadcn-ui/button.tsx';
 
 interface Props {
   createListOpen?: boolean;

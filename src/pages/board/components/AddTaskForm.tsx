@@ -5,11 +5,11 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
+} from '@/components/shadcn-ui/form';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Input } from '@/components/ui/input';
+import { Input } from '@/components/shadcn-ui/input';
 import { Dispatch, KeyboardEvent, SetStateAction, useState } from 'react';
 import { addTaskSchema } from '../schema/addTaskSchema';
 import { faker } from '@faker-js/faker';
@@ -17,27 +17,27 @@ import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from '@/components/ui/popover';
-import { Button } from '@/components/ui/button';
+} from '@/components/shadcn-ui/popover';
+import { Button } from '@/components/shadcn-ui/button';
 import {
   Command,
   CommandEmpty,
   CommandInput,
   CommandItem,
   CommandList,
-} from '@/components/ui/command';
-import { Badge } from '@/components/ui/badge';
+} from '@/components/shadcn-ui/command';
+import { Badge } from '@/components/shadcn-ui/badge';
 import { DateRange } from 'react-day-picker';
 import { addDays, format } from 'date-fns';
 import { CalendarIcon } from 'lucide-react';
-import { Calendar } from '@/components/ui/calendar';
+import { Calendar } from '@/components/shadcn-ui/calendar';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
+} from '@/components/shadcn-ui/select';
 import { Assignee, PriorityType } from '@/mock';
 import { LABEL } from '@/lib/constants/appStrings.ts';
 

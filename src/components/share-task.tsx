@@ -8,14 +8,18 @@ import {
   DialogTitle,
   DialogDescription,
   DialogClose,
-} from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { Switch } from '@/components/ui/switch';
-import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
-import { X, Lock, Globe, Link, ChevronDown, PenSquare } from 'lucide-react';
+} from '@/components/shadcn-ui/dialog';
+import { Input } from '@/components/shadcn-ui/input';
+import { Switch } from '@/components/shadcn-ui/switch';
+import { Button } from '@/components/shadcn-ui/button';
+import { Label } from '@/components/shadcn-ui/label';
+import { ScrollArea } from '@/components/shadcn-ui/scroll-area';
+import {
+  Avatar,
+  AvatarImage,
+  AvatarFallback,
+} from '@/components/shadcn-ui/avatar';
+import { X, Lock, Globe, Link, ChevronDown } from 'lucide-react';
 import { IconCaretRightFilled, IconCaretDownFilled } from '@tabler/icons-react';
 import { cn } from '@/lib/utils';
 import { taskNotificationUsers } from '@/mock';

@@ -1,18 +1,18 @@
 import { useState } from 'react';
-import { SidebarTrigger } from '@/components/ui/sidebar';
-import { Button } from '@/components/ui/button';
+import { SidebarTrigger } from '@/components/shadcn-ui/sidebar';
+import { Button } from '@/components/shadcn-ui/button';
 import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbList,
-} from '@/components/ui/breadcrumb';
+} from '@/components/shadcn-ui/breadcrumb';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from '@/components/ui/tooltip';
+} from '@/components/shadcn-ui/tooltip';
 import {
   ChevronUp,
   ChevronDown,

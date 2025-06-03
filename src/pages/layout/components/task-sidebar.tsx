@@ -18,20 +18,21 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
-} from '@/components/ui/sidebar.tsx';
-import { Textarea } from '@/components/ui/textarea.tsx';
-import { Button, ButtonProps } from '@/components/ui/button.tsx';
+} from '@/components/shadcn-ui/sidebar.tsx';
+import { Textarea } from '@/components/shadcn-ui/textarea.tsx';
+import { Button } from '@/components/shadcn-ui/button.tsx';
 import { cn } from '@/lib/utils.ts';
-import { Separator } from '@/components/ui/separator.tsx';
+import { Separator } from '@/components/shadcn-ui/separator.tsx';
 import { SearchBox } from '@/pages/task/components/search-activity.tsx';
 import { TaskActivityNotifications } from '@/pages/task/components/task-activity-notifications.tsx';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu.tsx';
+} from '@/components/shadcn-ui/dropdown-menu.tsx';
 import { filterOptions, taskNotificationUsers } from '@/mock';
 import { TaskActivityFilters } from '@/pages/task/components/task-activity-filters.tsx';
+import { ButtonProps } from '@headlessui/react';
 
 // This is sample activity data
 const activityData: any[] = [];

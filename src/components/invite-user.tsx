@@ -6,13 +6,13 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+} from '@/components/shadcn-ui/dialog';
+import { Button } from '@/components/shadcn-ui/button';
+import { Input } from '@/components/shadcn-ui/input';
+import { Label } from '@/components/shadcn-ui/label';
 import { X, Mail, AlertCircle, Loader2 } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Badge } from '@/components/shadcn-ui/badge';
+import { Alert, AlertDescription } from '@/components/shadcn-ui/alert';
 
 interface InviteUserProps {
   inviteUserOpen: boolean;
@@ -100,7 +100,7 @@ export const InviteUser = ({
       setCurrentEmail('');
       setError(null);
       setInviteUserOpen(false);
-    } catch (err) {
+    } catch {
       setError('Failed to send invitations. Please try again.');
     } finally {
       setIsSubmitting(false);

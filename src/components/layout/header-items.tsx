@@ -1,9 +1,9 @@
-import { Input } from '@/components/ui/input.tsx';
-import { Button } from '@/components/ui/button.tsx';
+import { Input } from '@/components/shadcn-ui/input.tsx';
+import { Button } from '@/components/shadcn-ui/button.tsx';
 import { PlusCircle } from 'lucide-react';
 import { ThemeSwitch } from '@/components/theme-switch.tsx';
 import { ProfileDropdown } from '@/components/profile.dropdown.tsx';
-import { SidebarTrigger } from '@/components/ui/sidebar.tsx';
+import { SidebarTrigger } from '@/components/shadcn-ui/sidebar.tsx';
 
 export const HeaderItems = () => {
   return (

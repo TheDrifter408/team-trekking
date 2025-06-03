@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Dialog, DialogContentPlain } from '@/components/ui/dialog';
+import { Dialog, DialogContentPlain } from '@/components/shadcn-ui/dialog';
 import { TUTORIAL_TIMER } from '@/lib/constants/appConstant';
 
 export const TutorialDialog = () => {

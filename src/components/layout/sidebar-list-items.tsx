@@ -1,13 +1,18 @@
 import { ListIcon } from 'lucide-react';
-import { Button } from '@/components/ui/button.tsx';
+import { Button } from '@/components/shadcn-ui/button.tsx';
 import { cn } from '@/lib/utils.ts';
 import { useNavigate } from 'react-router-dom';
 import { ContextMenu } from '@/components/context-menu.tsx';
 import { Icon } from '@/assets/icon-path.tsx';
 import { listMenuConfig } from '@/lib/constants/staticData.ts';
 
+interface ListItemProps {
+  id: string;
+  name: string;
+}
+
 interface Props {
-  listItem: any;
+  listItem: ListItemProps;
 }
 
 export const SidebarListItems = ({ listItem }: Props) => {

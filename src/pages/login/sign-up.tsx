@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Form } from '@/components/ui/form';
+import { Button } from '@/components/shadcn-ui/button';
+import { Form } from '@/components/shadcn-ui/form';
 import { LockKeyhole, Mail, MailCheck, User } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -18,7 +18,7 @@ import {
   InputOTP,
   InputOTPGroup,
   InputOTPSlot,
-} from '@/components/ui/input-otp';
+} from '@/components/shadcn-ui/input-otp';
 import { LABEL } from '@/lib/constants/appStrings.ts';
 import { z } from 'zod';
 import { OtpType, RegistrationType, UserRole } from '@/lib/constants/enum.ts';

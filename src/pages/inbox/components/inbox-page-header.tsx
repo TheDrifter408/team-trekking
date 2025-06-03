@@ -10,7 +10,7 @@ import {
   Inbox,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/shadcn-ui/button';
 import { InboxTabType } from '@/types/props/Common.ts';
 
 interface Props {
@@ -18,7 +18,7 @@ interface Props {
   onTabChange?: (tab: InboxTabType) => void;
 }
 
-const inboxTabConfig: Record<InboxTabType, { icon: any; label: string }> = {
+const inboxTabConfig: Record<InboxTabType, { icon: string; label: string }> = {
   IMPORTANT: {
     icon: Star,
     label: 'Important',
