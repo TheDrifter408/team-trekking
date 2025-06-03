@@ -2,8 +2,8 @@ import { useState, useMemo, useCallback } from 'react';
 import { HeaderType } from '@/types/props/Common.ts';
 import { ListCard } from '@/pages/list/components/list-card.tsx';
 import { PageHeader } from '@/components/layout/page-header';
-import { DataTable } from '@/components/dataTable/data-table.tsx';
-import { columns } from '@/components/dataTable/columns.tsx';
+import { DataTable } from '@/components/data-table/data-table.tsx';
+import { columns } from '@/components/data-table/columns.tsx';
 import { mockTasks } from '@/mock';
 
 export const List = () => {
