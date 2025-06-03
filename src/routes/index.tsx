@@ -1,7 +1,7 @@
 import { lazy, Suspense } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import PrivateRoute from '@/routes/privateRoute.tsx';
-import { Fallback } from './fallback-route.tsx';
+import { Fallback } from '../pages/fallback/fallback-route.tsx';
 
 const AppLayout = lazy(() => import('@/pages/layout/app-layout.tsx'));
 const HeaderLayout = lazy(() => import('@/pages/layout/header-layout.tsx'));
