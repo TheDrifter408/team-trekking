@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/shadcn-ui/button';
 import { useNavigate } from 'react-router-dom';
-import { LABEL } from '@/lib/constants/strings.ts';
+import { LABEL } from '@/lib/constants/appStrings.ts';
 import { Icon } from '@/assets/icon-path';
 interface AuthLayoutProps {
   children: ReactNode;
@@ -17,7 +17,10 @@ export const AuthLayout = ({
   return (
     <div className="min-h-screen bg-accent relative z-0">
       <div className="absolute top-0 left-0 -z-50 w-screen h-screen inset-0 overflow-hidden">
-        <Icon name="signUpBG" className="h-full w-full scale-x-105 translate-y-28" />
+        <Icon
+          name="signUpBG"
+          className="h-full w-full scale-x-105 translate-y-28"
+        />
       </div>
       {/* Header */}
       <div className="px-8 flex sticky top-0 justify-between items-center h-24">
@@ -29,16 +32,14 @@ export const AuthLayout = ({
         </div>
         <div className="flex items-center space-x-4">
           <span className="text-base font-medium text-right">
-            {isLoginPage
-              ? LABEL.DONT_HAVE_AN_ACCOUNT
-              : LABEL.ALREADY_A_MEMBER }
+            {isLoginPage ? LABEL.DONT_HAVE_AN_ACCOUNT : LABEL.ALREADY_A_MEMBER}
           </span>
           <Button
             size="lg"
             onClick={() => navigate(isLoginPage ? '/signup' : '/login')}
             className="text-base bg-indigo-600 !font-extrabold hover:bg-indigo-700 rounded-[9px] shadow-[0_10px_25px_#6347ea80]"
           >
-            {isLoginPage ? LABEL.SIGN_UP : LABEL.LOGIN }
+            {isLoginPage ? LABEL.SIGN_UP : LABEL.LOGIN}
           </Button>
         </div>
       </div>
@@ -51,13 +52,13 @@ export const AuthLayout = ({
         <span className={'text-sm'}>
           {isLoginPage
             ? LABEL.DONT_HAVE_AN_ACCOUNT
-            : LABEL.ALREADY_HAVE_AN_ACCOUNT }
+            : LABEL.ALREADY_HAVE_AN_ACCOUNT}
           <Button
             variant={'link'}
             className={'m-0 text-sm pl-1'}
             onClick={() => navigate(isLoginPage ? '/signup' : '/login')}
           >
-            {isLoginPage ? LABEL.SIGN_UP : LABEL.LOGIN }
+            {isLoginPage ? LABEL.SIGN_UP : LABEL.LOGIN}
           </Button>
         </span>
       </div>

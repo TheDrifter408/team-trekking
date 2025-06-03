@@ -24,7 +24,11 @@ import { TaskCard } from './components/task-card.tsx';
 import { HeaderType } from '@/types/props/Common.ts';
 import { PageHeader } from '@/components/layout/page-header.tsx';
 import { useTheme } from '@/lib/context/theme-context.tsx';
-
+import { LABEL } from '@/lib/constants/appStrings.ts';
+import { Card } from '@/components/shadcn-ui/card.tsx';
+import { Button } from '@/components/shadcn-ui/button.tsx';
+import { ChevronUp } from 'lucide-react';
+import { cn } from '@/lib/utils.ts';
 export const Board = () => {
   // Get the Theme
   const { theme } = useTheme();
@@ -32,6 +36,22 @@ export const Board = () => {
   const [columns, setColumns] = useState<Column[]>(mockColumns);
   const [activeTask, setActiveTask] = useState<Task | null>(null);
   const [activeColumnId, setActiveColumnId] = useState<string | null>(null);
+  // keep a record of the columns that are collapsed and that aren't
+  const [collapsedColumns, setCollapsedColumns] = useState<
+    Record<string, boolean>
+  >(
+    columns.reduce(
+      (acc, c) => {
+        acc[c.id] = false;
+        return acc;
+      },
+      {} as Record<string, boolean>
+    )
+  );
+  const [showCollapsed, setShowCollapsed] = useState<boolean>(false);
+  // function to check whether a specific column is collapsed
+  const isCollapsed = (columnId: string) => collapsedColumns[columnId];
+  const collapsedCount = Object.values(collapsedColumns).filter(Boolean).length;
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -244,6 +264,16 @@ export const Board = () => {
     return null;
   };
 
+  const updateCollapsed = (column: Column) => {
+    setCollapsedColumns((prev) => ({
+      ...prev,
+      [column.id]: !prev[column.id],
+    }));
+    if (collapsedCount === 0) {
+      setShowCollapsed(false);
+    }
+  };
+
   const currentPage = {
     type: 'FOLDER' as HeaderType,
     label: 'space Shuttle',
@@ -265,21 +295,70 @@ export const Board = () => {
             onDragEnd={handleDragEnd}
             onDragCancel={handleDragCancel}
           >
-            <div className="flex gap-4 px-4 pb-4 w-max">
-              {columns.map((column) => (
-                <SortableContext
-                  key={column.id}
-                  items={column.tasks.map((task) => task.id)}
-                  strategy={verticalListSortingStrategy}
+            <div className="flex gap-4 pl-2 pb-4 w-max">
+              <Card
+                className={cn(
+                  'flex w-10 min-h-36 items-center text-black self-start gap-0 py-0',
+                  collapsedCount > 0 ? '' : 'hidden'
+                )}
+                onClick={() => setShowCollapsed((prev) => !prev)}
+              >
+                <div className="mt-12 w-min h-min flex rotate-90 text-left">
+                  <span className="text-nowrap">
+                    {collapsedCount} {LABEL.COLLAPSED}
+                  </span>
+                </div>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  className={cn(
+                    'h-6 w-6 mt-9 z-50 transition-transform',
+                    showCollapsed ? ' -rotate-90' : 'rotate-90'
+                  )}
                 >
-                  <BoardColumn
-                    setColumns={setColumns}
-                    column={column}
-                    className="flex-shrink-0 self-start w-[244px]"
-                    isActiveColumn={column.id === activeColumnId}
-                  />
-                </SortableContext>
-              ))}
+                  <ChevronUp />
+                </Button>
+              </Card>
+              <div
+                className={cn(
+                  'grid grid-flow-col h-min gap-2 transition-all duration-450',
+                  showCollapsed
+                    ? 'opacity-100 max-w-[1000px]'
+                    : 'opacity-0 max-w-0'
+                )}
+              >
+                {columns
+                  .filter((c) => isCollapsed(c.id))
+                  .map((column) => {
+                    return (
+                      <BoardColumn
+                        setColumns={setColumns}
+                        key={column.id}
+                        column={column}
+                        isCollapsed={isCollapsed(column.id)}
+                        updateCollapsed={updateCollapsed}
+                      />
+                    );
+                  })}
+              </div>
+              {columns
+                .filter((c) => !isCollapsed(c.id))
+                .map((column) => (
+                  <SortableContext
+                    key={column.id}
+                    items={column.tasks.map((task) => task.id)}
+                    strategy={verticalListSortingStrategy}
+                  >
+                    <BoardColumn
+                      setColumns={setColumns}
+                      column={column}
+                      className=""
+                      updateCollapsed={updateCollapsed}
+                      isActiveColumn={column.id === activeColumnId}
+                      isCollapsed={isCollapsed(column.id)}
+                    />
+                  </SortableContext>
+                ))}
             </div>
 
             {/* Drag Overlay - This ensures the dragged task appears on top */}

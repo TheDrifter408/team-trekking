@@ -3,8 +3,8 @@ import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from '@/components/ui/collapsible.tsx';
-import { Button } from '@/components/ui/button.tsx';
+} from '@/components/shadcn-ui/collapsible.tsx';
+import { Button } from '@/components/shadcn-ui/button.tsx';
 import { IconCaretRightFilled } from '@tabler/icons-react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
@@ -13,7 +13,7 @@ import {
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from '@/components/ui/tooltip';
+} from '@/components/shadcn-ui/tooltip';
 import { UpdateSpace } from '@/components/space/update-space.tsx';
 import { getInitials } from '@/lib/utils.ts';
 import { ContextMenu } from '@/components/context-menu.tsx';

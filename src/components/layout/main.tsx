@@ -14,8 +14,8 @@ export const Main = ({ fixed = true, className, ...props }: MainProps) => {
         'px-1 py-5',
         fixed && 'fixed-main flex flex-grow flex-col',
         'border-t border-l rounded-sm',
-        'w-full overflow-auto', // Changed from overflow-x-auto to overflow-auto 
-        className 
+        'w-full overflow-auto', // Changed from overflow-x-auto to overflow-auto
+        className
       )}
       {...props}
     />

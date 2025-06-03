@@ -1,6 +1,11 @@
 import { ReactNode } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from '@/components/shadcn-ui/card';
+import { Button } from '@/components/shadcn-ui/button';
 import { FcGoogle } from 'react-icons/fc';
 
 interface AuthCardProps {

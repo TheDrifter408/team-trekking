@@ -37,18 +37,18 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog.tsx';
-import { Button } from '@/components/ui/button.tsx';
+} from '@/components/shadcn-ui/dialog.tsx';
+import { Button } from '@/components/shadcn-ui/button.tsx';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from '@/components/ui/tooltip.tsx';
-import { Input } from '@/components/ui/input.tsx';
-import { Separator } from '@/components/ui/separator.tsx';
-import { Textarea } from '@/components/ui/textarea.tsx';
-import { Switch } from '@/components/ui/switch.tsx';
+} from '@/components/shadcn-ui/tooltip.tsx';
+import { Input } from '@/components/shadcn-ui/input.tsx';
+import { Separator } from '@/components/shadcn-ui/separator.tsx';
+import { Textarea } from '@/components/shadcn-ui/textarea.tsx';
+import { Switch } from '@/components/shadcn-ui/switch.tsx';
 import { cn, getInitials } from '@/lib/utils.ts';
 import {
   Select,
@@ -56,12 +56,12 @@ import {
   SelectGroup,
   SelectItem,
   SelectTrigger,
-} from '@/components/ui/select.tsx';
+} from '@/components/shadcn-ui/select.tsx';
 import { DefaultViews } from '@/components/space/space-default-views.tsx';
 import { DropDownContent } from '@/components/space/space-icon-name-dropdown.tsx';
 import { StatusTemplate } from '@/components/space/status-template';
 import { ColorOption, IconOption } from '@/types/props/Common.ts';
-import { taskNotificationUsers, taskStatuses } from '@/mock';
+import { taskNotificationUsers } from '@/mock';
 
 interface Props {
   isActive: boolean;

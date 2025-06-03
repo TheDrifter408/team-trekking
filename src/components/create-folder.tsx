@@ -6,10 +6,10 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog.tsx';
-import { Label } from '@/components/ui/label.tsx';
-import { Input } from '@/components/ui/input.tsx';
-import { Button } from '@/components/ui/button.tsx';
+} from '@/components/shadcn-ui/dialog.tsx';
+import { Label } from '@/components/shadcn-ui/label.tsx';
+import { Input } from '@/components/shadcn-ui/input.tsx';
+import { Button } from '@/components/shadcn-ui/button.tsx';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,9 +17,9 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+} from '@/components/shadcn-ui/dropdown-menu';
 import { Droplet, Ban } from 'lucide-react';
-import { Separator } from '@/components/ui/separator.tsx';
+import { Separator } from '@/components/shadcn-ui/separator.tsx';
 import { StatusView } from '@/components/status-view';
 import { taskStatuses } from '@/mock';
 

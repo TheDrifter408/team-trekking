@@ -3,32 +3,21 @@ import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from '@/components/ui/collapsible';
+} from '@/components/shadcn-ui/collapsible';
 import { Folder, ListIcon } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/shadcn-ui/button';
 import { cn } from '@/lib/utils';
 import { IconCaretRightFilled } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';
 import { Icon } from '@/assets/icon-path.tsx';
 import { folderMenuConfig } from '@/lib/constants/staticData.ts';
 import { ContextMenu } from '@/components/context-menu.tsx';
+import { SidebarFolderItemsProps } from '@/types/props/Common';
 
-interface Props {
-  name: string;
-  folder: {
-    id: number;
-    name: string;
-    lists: [
-      {
-        name: string;
-        id: number;
-        taskNumber: number;
-      },
-    ];
-  };
-}
-
-export const SidebarFolderItems = ({ name, folder }: Props) => {
+export const SidebarFolderItems = ({
+  name,
+  folder,
+}: SidebarFolderItemsProps) => {
   const navigate = useNavigate();
   const [isHovered, setIsHovered] = useState(false);
   const [isButtonEntered, setIsButtonEntered] = useState(false);

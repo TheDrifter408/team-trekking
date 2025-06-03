@@ -1,4 +1,4 @@
-import { Button } from '@/components/ui/button.tsx';
+import { Button } from '@/components/shadcn-ui/button.tsx';
 import { Icon } from '@/assets/icon-path';
 import { cn } from '@/lib/utils.ts';
 

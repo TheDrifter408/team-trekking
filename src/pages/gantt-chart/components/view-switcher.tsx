@@ -1,7 +1,7 @@
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/shadcn-ui/button';
 import { ViewMode } from 'gantt-task-react';
-import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/shadcn-ui/label';
+import { Switch } from '@/components/shadcn-ui/switch';
 
 type ViewSwitcherProps = {
   isChecked: boolean;

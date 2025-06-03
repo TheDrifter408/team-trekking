@@ -5,8 +5,8 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu.tsx';
-import { Button } from '@/components/ui/button.tsx';
+} from '@/components/shadcn-ui/dropdown-menu.tsx';
+import { Button } from '@/components/shadcn-ui/button.tsx';
 import { IconDots } from '@tabler/icons-react';
 import {
   Archive,
@@ -26,8 +26,8 @@ import {
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from '@/components/ui/tooltip.tsx';
-import { Separator } from '@/components/ui/separator.tsx';
+} from '@/components/shadcn-ui/tooltip.tsx';
+import { Separator } from '@/components/shadcn-ui/separator.tsx';
 import { CreateFolder } from '@/components/create-folder.tsx';
 import { useState } from 'react';
 import { CreateList } from '@/components/create-list.tsx';

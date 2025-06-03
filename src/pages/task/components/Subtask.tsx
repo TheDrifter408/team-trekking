@@ -1,20 +1,22 @@
-import { Button } from '@/components/ui/button.tsx';
+import { Button } from '@/components/shadcn-ui/button.tsx';
 import { Plus } from 'lucide-react';
-import { closestCenter, DndContext } from '@dnd-kit/core';
+import { closestCenter, DndContext, DragEndEvent } from '@dnd-kit/core';
 import {
   SortableContext,
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import { SortableTaskRow } from '@/pages/task/components/sortable-task-row.tsx';
+import { ChangeEvent } from 'react';
+import { Task } from '@/types/props/Common';
 
 interface SubtaskProps {
-  onPressAddSubtask: (task: any) => void;
+  onPressAddSubtask: () => void;
   sensors: any;
-  onHandleSubtaskSelect: (task: any) => void;
-  onHandleSubtaskDragEnd: (task: any) => void;
-  onHandleSelectAllSubtasks: (task: any) => void;
-  selectedSubtasks: (task: any) => void;
-  task: any;
+  onHandleSubtaskSelect: (taskId: number) => void;
+  onHandleSubtaskDragEnd: (event: DragEndEvent) => void;
+  onHandleSelectAllSubtasks: (event: ChangeEvent<HTMLInputElement>) => void;
+  selectedSubtasks: Set<number>;
+  task: Task;
 }
 
 export const Subtask = ({
@@ -51,7 +53,7 @@ export const Subtask = ({
                   <input
                     type="checkbox"
                     onChange={onHandleSelectAllSubtasks}
-                    checked={selectedSubtasks.size === task.subtasks.length}
+                    checked={selectedSubtasks.size === task.subTask?.length}
                     className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                   />
                 </th>
@@ -77,18 +79,23 @@ export const Subtask = ({
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               <SortableContext
-                items={task.subtasks.map((st) => st.id)}
+                items={
+                  task.subTask !== undefined
+                    ? task.subTask.map((st) => st.id)
+                    : []
+                }
                 strategy={verticalListSortingStrategy}
               >
-                {task.subtasks.map((subtask) => (
-                  <SortableTaskRow
-                    key={subtask.id}
-                    id={subtask.id}
-                    selected={selectedSubtasks.has(subtask.id)}
-                    onSelect={() => onHandleSubtaskSelect(subtask.id)}
-                    subtask={subtask}
-                  />
-                ))}
+                {task.subTask !== undefined &&
+                  task.subTask.map((subtask) => (
+                    <SortableTaskRow
+                      key={subtask.id}
+                      id={subtask.id}
+                      selected={selectedSubtasks.has(subtask.id)}
+                      onSelect={() => onHandleSubtaskSelect(subtask.id)}
+                      subtask={subtask}
+                    />
+                  ))}
               </SortableContext>
             </tbody>
           </table>

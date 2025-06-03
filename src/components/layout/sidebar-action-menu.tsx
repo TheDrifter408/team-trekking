@@ -6,8 +6,8 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Button } from '@/components/ui/button';
+} from '@/components/shadcn-ui/dropdown-menu';
+import { Button } from '@/components/shadcn-ui/button';
 import { IconDots } from '@tabler/icons-react';
 import {
   Archive,
@@ -28,8 +28,8 @@ import {
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from '@/components/ui/tooltip';
-import { Separator } from '@/components/ui/separator';
+} from '@/components/shadcn-ui/tooltip';
+import { Separator } from '@/components/shadcn-ui/separator';
 import { CreateFolder } from '@/components/create-folder';
 import { CreateList } from '@/components/create-list';
 import { InviteUser } from '@/components/invite-user.tsx';
@@ -63,7 +63,7 @@ export const SidebarActionsMenu = ({
   const [listName, setListName] = useState('');
   const [inviteUserOpen, setInviteUserOpen] = useState(false);
 
-  const onInviteUsers = (email: string[]) => {};
+  const onInviteUsers = () => {};
 
   const onCreateList = () => {
     setListName('');

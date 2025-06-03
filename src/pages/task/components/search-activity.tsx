@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { Search } from 'lucide-react';
-import { Input } from '@/components/ui/input.tsx';
+import { Input } from '@/components/shadcn-ui/input.tsx';
 
 interface Props {
   searchQuery: string;

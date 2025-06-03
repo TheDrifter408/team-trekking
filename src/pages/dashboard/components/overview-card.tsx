@@ -1,12 +1,12 @@
 import React from 'react';
-import { Label } from '@/components/ui/label.tsx';
-import { Separator } from '@/components/ui/separator.tsx';
+import { Label } from '@/components/shadcn-ui/label.tsx';
+import { Separator } from '@/components/shadcn-ui/separator.tsx';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from '@/components/ui/tooltip.tsx';
+} from '@/components/shadcn-ui/tooltip.tsx';
 
 interface Item {
   id: number;

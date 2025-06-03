@@ -1,7 +1,7 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
 import Cookies from 'js-cookie';
-import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar';
+import { SidebarProvider, SidebarInset } from '@/components/shadcn-ui/sidebar';
 import { TaskSidebar } from './components/task-sidebar.tsx';
 import { AppHeader } from '@/pages/layout/components/app-header.tsx';
 import { PageHeader } from '@/pages/task/components/page-header';

@@ -8,7 +8,7 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+} from '@/components/shadcn-ui/dropdown-menu';
 
 interface TimeTrackerProps {
   initialTime: string;
@@ -16,11 +16,7 @@ interface TimeTrackerProps {
   taskId?: string;
 }
 
-export function TimeTracker({
-  initialTime,
-  onTimeUpdate,
-  taskId,
-}: TimeTrackerProps) {
+export function TimeTracker({ initialTime, onTimeUpdate }: TimeTrackerProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isRunning, setIsRunning] = useState(false);
   const [elapsedTime, setElapsedTime] = useState(0);
@@ -29,7 +25,7 @@ export function TimeTracker({
   // Use refs to store values that shouldn't trigger re-renders
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const startTimeRef = useRef<number>(0);
-  const initialTimeRef = useRef(initialTime);
+  // const initialTimeRef = useRef(initialTime);
   const lastUpdateTimeRef = useRef<string | null>(null);
 
   // Format seconds to "Xh Ym Zs" format

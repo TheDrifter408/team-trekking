@@ -1,26 +1,21 @@
 import { Dispatch, SetStateAction, useState } from 'react';
-import {
-  ChevronLeft,
-  Circle,
-  ChevronRight,
-  Ellipsis,
-  Plus,
-} from 'lucide-react';
+import { ChevronLeft, Circle, Ellipsis, Plus } from 'lucide-react';
 import { useDroppable } from '@dnd-kit/core';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/shadcn-ui/button';
+import { Card, CardContent, CardHeader } from '@/components/shadcn-ui/card';
 import { Column, Priority, Task, TaskStatus } from '@/mock';
 import { SortableTaskCard } from './sortable-task-card';
 import { z } from 'zod';
 import { addTaskSchema } from '../schema/addTaskSchema';
 import { AddTaskForm } from './AddTaskForm';
 import { faker } from '@faker-js/faker';
-import { useTheme } from '@/lib/context/theme-context';
 interface BoardColumnProps {
   column: Column;
   className?: string;
   isActiveColumn?: boolean;
-  setColumns: Dispatch<SetStateAction<Column[]>>
+  setColumns: Dispatch<SetStateAction<Column[]>>;
+  updateCollapsed: (column: Column) => void;
+  isCollapsed: boolean;
 }
 
 export const BoardColumn = ({
@@ -28,19 +23,20 @@ export const BoardColumn = ({
   className,
   isActiveColumn,
   setColumns,
+  updateCollapsed,
+  isCollapsed,
 }: BoardColumnProps) => {
-  const { theme } = useTheme();
-  const [isCollapsed, setIsCollapsed] = useState(false);
   const [onEnterHeader, setOnEnterHeader] = useState(false);
   const [addingTask, setAddingTask] = useState(false);
-  const IconComponent = column.icon;
 
   const onSubmit = (values: z.infer<typeof addTaskSchema>) => {
     // Assign the correct enum value from user input for status and priority
-    const status:TaskStatus = TaskStatus[column.title.toUpperCase()as keyof typeof TaskStatus];
-    const priority:Priority = Priority[values.priority.toUpperCase() as keyof typeof Priority];
+    const status: TaskStatus =
+      TaskStatus[column.title.toUpperCase() as keyof typeof TaskStatus];
+    const priority: Priority =
+      Priority[values.priority.toUpperCase() as keyof typeof Priority];
     // Create a new Task
-    const newTask:Task = {
+    const newTask: Task = {
       id: faker.string.uuid(),
       name: values.name,
       description: '',
@@ -51,7 +47,7 @@ export const BoardColumn = ({
       priority,
       subtask: [],
       checklistCount: 0,
-    }
+    };
     setColumns((prev) => {
       const updated = [...prev];
       const col = updated.find((c) => c.id === column.id);
@@ -60,18 +56,18 @@ export const BoardColumn = ({
       }
       return updated;
     });
-  }
+  };
 
   const AddTaskOnClick = () => {
     setAddingTask((prev) => !prev);
-  }
+  };
 
   const { setNodeRef, isOver } = useDroppable({
     id: column.id,
   });
 
-  const toggleCollapse = () => {
-    setIsCollapsed(!isCollapsed);
+  const toggleCollapse = (column: Column) => {
+    updateCollapsed(column);
   };
   const lightenColor = (hex: string, percent: number) => {
     const num = parseInt(hex.replace('#', ''), 16);
@@ -97,36 +93,23 @@ export const BoardColumn = ({
   if (isCollapsed) {
     return (
       <Card
-        className={`transition-all text-black duration-300 flex flex-col h-[200px] w-12 ${className}`}
-        style={{ backgroundColor: `${column.color}` }}
+        className={`transition-all text-black duration-300 flex items-center min-h-32 gap-10 w-10 py-14 self-start ${className}`}
+        style={{ backgroundColor: '#fff' }}
+        onClick={() => toggleCollapse(column)}
       >
-        <CardHeader className="p-2 flex items-center justify-center">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={toggleCollapse}
-            className="h-6 w-6 p-0"
+        <CardContent className="flex items-center p-2 rotate-90 w-auto h-full">
+          <div
+            className="flex items-center gap-2 w-full transition-transform delay-100 duration-300 whitespace-nowrap rounded shadow-sm p-1"
+            style={{ backgroundColor: `${column.color}` }}
           >
-            <ChevronRight className="h-4 w-4" />
-          </Button>
-        </CardHeader>
-        <CardContent className="p-2 flex flex-1 justify-center items-center">
-          <div className="flex w-full mt-12 transform -rotate-90 whitespace-nowrap">
-            {IconComponent && (
-              <IconComponent
-                className="h-4 w-4 mr-2"
-                style={{ color: column.color }}
-              />
-            )}
-            <CardTitle className="text-sm font-medium">
-              {column.title}
-              {column.tasks.length > 0 && (
-                <span className="ml-2 bg-accent text-primary rounded-full px-2 py-1 text-xs">
-                  {column.tasks.length}
-                </span>
-              )}
-            </CardTitle>
+            <Circle size={16} className="text-white" />
+            <span className="text-sm text-black pr-1">
+              {column.title.toUpperCase()}
+            </span>
           </div>
+          <span className="ml-2 text-sm">
+            {column.tasks.length > 0 ? column.tasks.length : ''}
+          </span>
         </CardContent>
       </Card>
     );
@@ -153,15 +136,21 @@ export const BoardColumn = ({
             style={{ backgroundColor: column.color }}
           >
             <Circle size={16} />
-            <span className='text-sm text-black pr-1'>{column.title}</span>
+            <span className="text-sm text-black pr-1">
+              {column.title.toUpperCase()}
+            </span>
           </div>
-          <span className="text-muted-foreground font-medium text-sm px-1">
+          <span className="font-medium text-sm px-1">
             {column.tasks.length}
           </span>
         </div>
         <div className="flex">
           {onEnterHeader && (
-            <Button onClick={toggleCollapse} variant={'ghost'} size={'icon_sm'}>
+            <Button
+              onClick={() => toggleCollapse(column)}
+              variant={'ghost'}
+              size={'icon_sm'}
+            >
               <ChevronLeft className={'text-muted-foreground'} />
             </Button>
           )}
@@ -182,16 +171,17 @@ export const BoardColumn = ({
         {column.tasks.map((task: Task) => (
           <SortableTaskCard key={task.id} task={task} />
         ))}
-        {
-          addingTask ? 
-          <AddTaskForm onSubmit={onSubmit} setAddingTask={setAddingTask} /> :
-          <Button 
-            onClick={AddTaskOnClick} 
-              className="w-full rounded-lg bg-inherit hover:bg-gray-50 text-base text-muted-foreground font-medium justify-start">
+        {addingTask ? (
+          <AddTaskForm onSubmit={onSubmit} setAddingTask={setAddingTask} />
+        ) : (
+          <Button
+            onClick={AddTaskOnClick}
+            className="w-full rounded-lg bg-inherit hover:bg-gray-50 text-base text-muted-foreground font-medium justify-start"
+          >
             <Plus size={16} className="text-muted-foreground" />
             Add Task
           </Button>
-        }
+        )}
       </CardContent>
     </Card>
   );

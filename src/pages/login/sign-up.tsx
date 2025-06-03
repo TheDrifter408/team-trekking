@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Form } from '@/components/ui/form';
+import { Button } from '@/components/shadcn-ui/button';
+import { Form } from '@/components/shadcn-ui/form';
 import { LockKeyhole, Mail, MailCheck, User } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -8,8 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { AuthLayout } from './components/auth-layout.tsx';
 import { AuthCard } from './components/auth-card.tsx';
 import { FormInputField } from './components/form-input.tsx';
-import { signUpSchema } from '@/lib/config/validationSchema.tsx';
-import { OtpType, RegistrationType, UserRole } from '@/lib/constants/app.ts';
+import { signUpSchema } from '@/lib/validation/validationSchema.tsx';
 import {
   usePostSendOtpMutation,
   usePostVerifyOtpMutation,
@@ -19,9 +18,10 @@ import {
   InputOTP,
   InputOTPGroup,
   InputOTPSlot,
-} from '@/components/ui/input-otp';
-import { LABEL } from '@/lib/constants/strings.ts';
+} from '@/components/shadcn-ui/input-otp';
+import { LABEL } from '@/lib/constants/appStrings.ts';
 import { z } from 'zod';
+import { OtpType, RegistrationType, UserRole } from '@/lib/constants/enum.ts';
 
 export const SignUp = () => {
   const navigate = useNavigate();
@@ -101,7 +101,7 @@ export const SignUp = () => {
     <AuthLayout isLoginPage={false}>
       <AuthCard
         isOtpSent={isOtpSent}
-        title={isOtpSent ? LABEL.VERIFY_YOUR_EMAIL : LABEL.SECONDS_TO_SIGN_UP }
+        title={isOtpSent ? LABEL.VERIFY_YOUR_EMAIL : LABEL.SECONDS_TO_SIGN_UP}
         onGoogleClick={() => {}}
       >
         {!isSendOtpSuccess ? (
@@ -147,7 +147,7 @@ export const SignUp = () => {
                 className="w-full font-extrabold rounded-lg h-[50px] text-md bg-indigo-600 hover:bg-indigo-700"
                 disabled={isSendOtpLoading}
               >
-                {isSendOtpLoading ? LABEL.SENDING : LABEL.SIGN_UP }
+                {isSendOtpLoading ? LABEL.SENDING : LABEL.SIGN_UP}
               </Button>
             </form>
           </Form>
@@ -155,11 +155,16 @@ export const SignUp = () => {
           <div className="space-y-6">
             <MailCheck className="mx-auto sm:w-16 sm:h-16 lg:w-14 lg:h-14" />
             <div>
-              <p className="font-semibold text-3xl text-gray-600">{LABEL.WE_JUST_EMAILED_YOU}</p>
+              <p className="font-semibold text-3xl text-gray-600">
+                {LABEL.WE_JUST_EMAILED_YOU}
+              </p>
               <p className="text-sm text-gray-500">
-                {LABEL.PLEASE_ENTER_THE_CODE_WE_JUST_EMAILED_YOU}:{' '}
-                <br />
-                <span className="font-medium text-base">{form.getValues('email') ? form.getValues('email') : 'dummy@gmail.com'}</span>
+                {LABEL.PLEASE_ENTER_THE_CODE_WE_JUST_EMAILED_YOU}: <br />
+                <span className="font-medium text-base">
+                  {form.getValues('email')
+                    ? form.getValues('email')
+                    : 'dummy@gmail.com'}
+                </span>
               </p>
               <p className="text-gray-500 mt-4">{LABEL.CONFIRMATION_CODE}</p>
             </div>
@@ -197,7 +202,7 @@ export const SignUp = () => {
                 onClick={onResendOtp}
                 disabled={isSendOtpLoading}
               >
-                {isSendOtpLoading ? LABEL.SENDING : LABEL.RESENDING_CODE }
+                {isSendOtpLoading ? LABEL.SENDING : LABEL.RESENDING_CODE}
               </Button>
             </div>
           </div>

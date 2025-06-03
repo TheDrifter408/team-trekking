@@ -1,9 +1,17 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from '@/components/shadcn-ui/card';
 import { FolderClosed } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-
+interface FolderProps {
+  id: string;
+  name: string;
+}
 interface Props {
-  foldersData: any[];
+  foldersData: FolderProps[];
 }
 
 export const SpaceOverview = ({ foldersData }: Props) => {

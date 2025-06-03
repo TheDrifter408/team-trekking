@@ -3,11 +3,11 @@ import {
   DropdownMenu,
   DropdownMenuContentOnly,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu.tsx';
-import { Button } from '@/components/ui/button.tsx';
-import { Separator } from '@/components/ui/separator.tsx';
+} from '@/components/shadcn-ui/dropdown-menu.tsx';
+import { Button } from '@/components/shadcn-ui/button.tsx';
+import { Separator } from '@/components/shadcn-ui/separator.tsx';
 import { Search } from 'lucide-react';
-import { Input } from '@/components/ui/input.tsx';
+import { Input } from '@/components/shadcn-ui/input.tsx';
 import { DropDownProps } from '@/types/props/Common.ts';
 
 function DropDownContent({

@@ -2,7 +2,7 @@ import { Task } from '@/types/props/Common.ts';
 import { ColumnDef } from '@tanstack/table-core';
 import { NameColumn } from '@/components/data-table/name-column.tsx';
 import { SelectColumn } from '@/components/data-table/select-column.tsx';
-import { COLUMN_META } from '@/lib/constants';
+import { COLUMN_META } from '@/lib/constants/appConstant';
 
 export const columns = (hoveredRowId: string | null): ColumnDef<Task>[] => [
   {

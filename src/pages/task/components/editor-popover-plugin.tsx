@@ -5,8 +5,8 @@ import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from '@/components/ui/popover';
-import { Button } from '@/components/ui/button';
+} from '@/components/shadcn-ui/popover';
+import { Button } from '@/components/shadcn-ui/button';
 
 export const SlashCommandPlugin = () => {
   const [editor] = useLexicalComposerContext();

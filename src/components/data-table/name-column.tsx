@@ -1,11 +1,8 @@
-import { Button } from '@/components/ui/button.tsx';
+import { Button } from '@/components/shadcn-ui/button.tsx';
 import { Icon } from '@/assets/icon-path.tsx';
 import {
-  TextTooltip,
-  TooltipContent,
-  TooltipTrigger,
   Tooltip,
-} from '@/components/ui/tooltip';
+} from '@/components/shadcn-ui/tooltip';
 import { Task } from '@/types/props/Common.ts';
 import React, { ReactNode, useState } from 'react';
 import { cn } from '@/lib/utils.ts';
@@ -16,7 +13,6 @@ interface Props {
 }
 
 export const NameColumn = ({ task, isHovered }: Props) => {
-  console.log(isHovered, 'isHovered');
   return (
     <div className="flex items-center min-w-[260px] gap-[12px] overflow-hidden">
       <div className="w-[40px] flex-shrink-0 flex justify-between items-center">
@@ -83,7 +79,6 @@ const TagDialog = ({
   );
 
   const handleTagClick = (tag) => {
-    console.log('Selected tag:', tag);
     setIsDialogOpen(false);
   };
 
@@ -255,33 +250,4 @@ const IconButton = ({
       {children}
     </Button>
   );
-
-  return tooltipText ? (
-    <TextTooltip delayDuration={400} message={tooltipText}>
-      {button}
-    </TextTooltip>
-  ) : (
-    button
-  );
-};
-
-const getSubTaskStatusSummary = (task: Task) => {
-  const map = new Map<string, { count: number; color: string }>();
-
-  task.subTask?.forEach((sub) => {
-    const name = sub.status.name;
-    const color = sub.status.color;
-
-    if (map.has(name)) {
-      map.get(name)!.count += 1;
-    } else {
-      map.set(name, { count: 1, color });
-    }
-  });
-
-  return Array.from(map.entries()).map(([name, { count, color }]) => ({
-    name,
-    count,
-    color,
-  }));
 };

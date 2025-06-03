@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { recentData } from '@/mock';
 import { Circle, List } from 'lucide-react';
-import { CardContent } from '@/components/ui/card';
+import { CardContent } from '@/components/shadcn-ui/card';
 import { HoverableCard } from './hoverable-card';
 import { cn } from '@/lib/utils';
 
@@ -14,12 +14,6 @@ interface Props {
 const RecentContent = ({ isExpanded, onExpand, cardTitle }: Props) => (
   <Recents isExpanded={isExpanded} onExpand={onExpand} cardTitle={cardTitle} />
 );
-
-interface RecentsProps {
-  isExpanded: boolean;
-  onExpand: (title: string) => void;
-  cardTitle: string;
-}
 
 const Recents: FC<Props> = ({ isExpanded, onExpand, cardTitle }) => (
   <HoverableCard

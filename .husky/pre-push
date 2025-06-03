@@ -1,19 +1,46 @@
 #!/bin/sh
 
+set -e
+
 echo "🔍 Running pre-push checks..."
 
 # Prevent pushing to main
 BRANCH_NAME=$(git rev-parse --abbrev-ref HEAD)
+echo "📍 Current branch: $BRANCH_NAME"
+
 if [ "$BRANCH_NAME" = "main" ]; then
   echo "❌ Pushing directly to main is not allowed!"
   exit 1
 fi
 
 # Check branch name format
-if ! echo "$BRANCH_NAME" | grep -Eq '^(architecture|feature|update|bugfix|hotfix|release)/[a-z0-9._-]+$'; then
+if ! echo "$BRANCH_NAME" | grep -Eq '^(architecture|feature|update|bugfix|hotfix|release)-[a-z0-9._-]+$'; then
   echo "❌ Invalid branch name: $BRANCH_NAME"
-  echo "Allowed format: [architecture|feature|update|bugfix|hotfix|release], feature/xyz,  bugfix/abc"
+  echo "Allowed format: [architecture|feature|update|bugfix|hotfix|release]-your-branch-name"
   exit 1
 fi
+
+# Fetch the latest develop branch for comparison
+echo "🔄 Fetching origin/develop..."
+git fetch origin develop
+
+# Get changed JS/TS files compared to develop
+FILES=$(git diff --name-only origin/develop...HEAD | grep -E '\.(js|ts|jsx|tsx)$' || true)
+
+if [ -z "$FILES" ]; then
+  echo "✅ No JS/TS files changed compared to develop. Skipping ESLint."
+  exit 0
+fi
+
+echo "🔎 Linting changed files:"
+echo "$FILES"
+
+# 🧹 Run ESLint
+echo "🔍 Running ESLint for unused imports..."
+npx eslint $FILES --max-warnings=0 || {
+  echo "🚫 ESLint found issues (e.g., unused imports)."
+  echo "❌ Push aborted due to lint errors."
+  exit 1
+}
 
 echo "✅ All pre-push checks passed!"
