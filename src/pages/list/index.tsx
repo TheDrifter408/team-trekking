@@ -1,4 +1,5 @@
 import { useState, useMemo, useCallback } from 'react';
+import { ExpandedState } from '@tanstack/react-table';
 import { HeaderType } from '@/types/props/Common.ts';
 import { ListCard } from '@/pages/list/components/list-card.tsx';
 import { PageHeader } from '@/components/layout/page-header';
@@ -22,18 +23,31 @@ export const List = () => {
     ],
     []
   );
+
   const [isTableExpanded, setIsTableExpanded] = useState(true);
   const [hoveredRowId, setHoveredRowId] = useState<string | null>(null);
+  const [expandedRows, setExpandedRows] = useState<ExpandedState>({});
 
   const onMouseEnter = useCallback((id: string) => {
     setHoveredRowId(id);
   }, []);
+
   const onMouseLeave = useCallback(() => {
     setHoveredRowId(null);
   }, []);
+
   const onToggleExpand = useCallback(() => {
     setIsTableExpanded(!isTableExpanded);
   }, [isTableExpanded]);
+
+  const handleExpandedChange = useCallback((expanded: ExpandedState) => {
+    setExpandedRows(expanded);
+  }, []);
+
+  const handleSelectionChange = useCallback((selectedIds: string[]) => {
+    console.log('Selected rows:', selectedIds);
+    // Handle selection change logic here
+  }, []);
 
   return (
     <div className="h-screen flex-1 overflow-hidden flex-col">
@@ -48,11 +62,15 @@ export const List = () => {
         <DataTable
           onRowHover={onMouseEnter}
           onRowLeave={onMouseLeave}
+          onSelectionChange={handleSelectionChange}
           columns={columns(hoveredRowId)}
           data={mockTasks}
+          expandedRows={expandedRows}
+          onExpandedChange={handleExpandedChange}
         />
       </div>
     </div>
   );
 };
+
 export default List;

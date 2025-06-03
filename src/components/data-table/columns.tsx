@@ -23,12 +23,14 @@ export const columns = (hoveredRowId: string | null): ColumnDef<Task>[] => [
     enableColumnFilter: false,
   },
   {
+    id: 'name', // Use id instead of accessorKey for expand functionality
     accessorKey: COLUMN_META.ACCESSOR_KEY.NAME,
     header: () => COLUMN_META.HEADER.NAME,
     cell: ({ row }) => (
       <NameColumn
         task={row.original}
         isHovered={row.original.id.toString() === hoveredRowId}
+        row={row} // Pass the row object for expand functionality
       />
     ),
     minSize: 20,
