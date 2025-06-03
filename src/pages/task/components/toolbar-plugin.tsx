@@ -1,11 +1,5 @@
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { useEffect, useState } from 'react';
-import {
-  HEADINGS,
-  LOW_PRIORITY,
-  TextAction,
-  textOptions,
-} from '@/lib/constants';
 import { useKeyBindings } from '@/lib/hooks/use-key-bindings.tsx';
 import {
   $getSelection,
@@ -26,15 +20,21 @@ import {
 } from '@lexical/rich-text';
 import { $setBlocksType } from '@lexical/selection';
 import { $createParagraphNode } from 'lexical';
-import { Button } from '@/components/ui/button.tsx';
-import { Label } from '@/components/ui/label.tsx';
+import { Button } from '@/components/shadcn-ui/button.tsx';
+import { Label } from '@/components/shadcn-ui/label.tsx';
 import { cn } from '@/lib/utils.ts';
+import {
+  HEADINGS,
+  LOW_PRIORITY,
+  TEXT_ACTIONS,
+  TEXT_OPTIONS,
+} from '@/lib/constants/appConstant.ts';
 export const ToolbarPlugin = () => {
   // Get access to the editor
   const [editor] = useLexicalComposerContext();
   const [disableMap, setDisableMap] = useState<{ [id: string]: boolean }>({
-    [TextAction.Undo]: true,
-    [TextAction.Redo]: true,
+    [TEXT_ACTIONS.Undo]: true,
+    [TEXT_ACTIONS.Redo]: true,
   });
   const [selectionMap, setSelectionMap] = useState<{ [id: string]: boolean }>(
     {}
@@ -46,13 +46,13 @@ export const ToolbarPlugin = () => {
     if ($isRangeSelection(selection)) {
       // Update text formatting states
       const newSelectionMap = {
-        [TextAction.Bold]: selection.hasFormat('bold'),
-        [TextAction.Italic]: selection.hasFormat('italic'),
-        [TextAction.Underline]: selection.hasFormat('underline'),
-        [TextAction.Strikethrough]: selection.hasFormat('strikethrough'),
-        [TextAction.Superscript]: selection.hasFormat('superscript'),
-        [TextAction.Code]: selection.hasFormat('code'),
-        [TextAction.Highlight]: selection.hasFormat('highlight'),
+        [TEXT_ACTIONS.Bold]: selection.hasFormat('bold'),
+        [TEXT_ACTIONS.Italic]: selection.hasFormat('italic'),
+        [TEXT_ACTIONS.Underline]: selection.hasFormat('underline'),
+        [TEXT_ACTIONS.Strikethrough]: selection.hasFormat('strikethrough'),
+        [TEXT_ACTIONS.Superscript]: selection.hasFormat('superscript'),
+        [TEXT_ACTIONS.Code]: selection.hasFormat('code'),
+        [TEXT_ACTIONS.Highlight]: selection.hasFormat('highlight'),
       };
       setSelectionMap(newSelectionMap);
 
@@ -91,7 +91,7 @@ export const ToolbarPlugin = () => {
         (payload) => {
           setDisableMap((prevDisabledMap) => ({
             ...prevDisabledMap,
-            [TextAction.Undo]: !payload,
+            [TEXT_ACTIONS.Undo]: !payload,
           }));
           return false;
         },
@@ -102,7 +102,7 @@ export const ToolbarPlugin = () => {
         (payload) => {
           setDisableMap((prevDisabledMap) => ({
             ...prevDisabledMap,
-            [TextAction.Redo]: !payload,
+            [TEXT_ACTIONS.Redo]: !payload,
           }));
           return false;
         },
@@ -113,51 +113,51 @@ export const ToolbarPlugin = () => {
 
   const onAction = (id: string) => {
     switch (id) {
-      case TextAction.Bold: {
+      case TEXT_ACTIONS.Bold: {
         editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'bold');
         break;
       }
-      case TextAction.Italic: {
+      case TEXT_ACTIONS.Italic: {
         editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'italic');
         break;
       }
-      case TextAction.Underline: {
+      case TEXT_ACTIONS.Underline: {
         editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'underline');
         break;
       }
-      case TextAction.Strikethrough: {
+      case TEXT_ACTIONS.Strikethrough: {
         editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'strikethrough');
         break;
       }
-      case TextAction.Superscript: {
+      case TEXT_ACTIONS.Superscript: {
         editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'superscript');
         break;
       }
-      case TextAction.Highlight: {
+      case TEXT_ACTIONS.Highlight: {
         editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'highlight');
         break;
       }
-      case TextAction.Code: {
+      case TEXT_ACTIONS.Code: {
         editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'code');
         break;
       }
-      case TextAction.LeftAlign: {
+      case TEXT_ACTIONS.LeftAlign: {
         editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, 'left');
         break;
       }
-      case TextAction.RightAlign: {
+      case TEXT_ACTIONS.RightAlign: {
         editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, 'right');
         break;
       }
-      case TextAction.CenterAlign: {
+      case TEXT_ACTIONS.CenterAlign: {
         editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, 'center');
         break;
       }
-      case TextAction.Undo: {
+      case TEXT_ACTIONS.Undo: {
         editor.dispatchCommand(UNDO_COMMAND, undefined);
         break;
       }
-      case TextAction.Redo: {
+      case TEXT_ACTIONS.Redo: {
         editor.dispatchCommand(REDO_COMMAND, undefined);
         break;
       }
@@ -223,7 +223,7 @@ export const ToolbarPlugin = () => {
 
           <div className="grid grid-cols-2 col-span-2 mt-2 gap-2">
             {/* Text formatting buttons */}
-            {textOptions.map((option) => {
+            {TEXT_OPTIONS.map((option) => {
               // Determine if this button is currently active/selected
               const isSelected = selectionMap[option.id] || false;
 

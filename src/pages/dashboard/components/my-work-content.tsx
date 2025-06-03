@@ -1,13 +1,18 @@
 import { FC, useState } from 'react';
 import { myWorkData } from '@/mock';
-import { CardContent } from '@/components/ui/card';
+import { CardContent } from '@/components/shadcn-ui/card';
 import { HoverableCard } from './hoverable-card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from '@/components/shadcn-ui/tabs';
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from '@/components/ui/collapsible';
+} from '@/components/shadcn-ui/collapsible';
 import {
   IconCalendar,
   IconCaretDownFilled,
@@ -17,7 +22,7 @@ import {
   IconTrash,
   IconUser,
 } from '@tabler/icons-react';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/shadcn-ui/button';
 import { cn } from '@/lib/utils';
 import {
   MyWorkTask,

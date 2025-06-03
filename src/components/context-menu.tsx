@@ -8,8 +8,8 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Button } from '@/components/ui/button';
+} from '@/components/shadcn-ui/dropdown-menu';
+import { Button } from '@/components/shadcn-ui/button';
 import { ChevronRight } from 'lucide-react';
 import {
   ContextMenuProps,
@@ -17,7 +17,7 @@ import {
   MenuSection,
   SubmenuItem,
 } from '@/types/interfaces/ContextMenu.ts';
-import { LABEL } from '@/lib/constants/strings.ts';
+import { LABEL } from '@/lib/constants/appStrings.ts';
 
 // Updated ContextMenu Component with reduced vertical gaps
 export const ContextMenu: React.FC<ContextMenuProps> = ({

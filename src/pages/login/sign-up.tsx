@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Form } from '@/components/ui/form';
+import { Button } from '@/components/shadcn-ui/button';
+import { Form } from '@/components/shadcn-ui/form';
 import { LockKeyhole, Mail, MailCheck, User } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -8,8 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { AuthLayout } from './components/auth-layout.tsx';
 import { AuthCard } from './components/auth-card.tsx';
 import { FormInputField } from './components/form-input.tsx';
-import { signUpSchema } from '@/lib/config/validationSchema.tsx';
-import { OtpType, RegistrationType, UserRole } from '@/lib/constants/app.ts';
+import { signUpSchema } from '@/lib/validation/validationSchema.tsx';
 import {
   usePostSendOtpMutation,
   usePostVerifyOtpMutation,
@@ -19,9 +18,10 @@ import {
   InputOTP,
   InputOTPGroup,
   InputOTPSlot,
-} from '@/components/ui/input-otp';
-import { LABEL } from '@/lib/constants/strings.ts';
+} from '@/components/shadcn-ui/input-otp';
+import { LABEL } from '@/lib/constants/appStrings.ts';
 import { z } from 'zod';
+import { OtpType, RegistrationType, UserRole } from '@/lib/constants/enum.ts';
 
 export const SignUp = () => {
   const navigate = useNavigate();

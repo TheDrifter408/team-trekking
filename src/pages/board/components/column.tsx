@@ -1,8 +1,8 @@
 import { Dispatch, SetStateAction, useState } from 'react';
 import { ChevronLeft, Circle, Ellipsis, Plus } from 'lucide-react';
 import { useDroppable } from '@dnd-kit/core';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { Button } from '@/components/shadcn-ui/button';
+import { Card, CardContent, CardHeader } from '@/components/shadcn-ui/card';
 import { Column, Priority, Task, TaskStatus } from '@/mock';
 import { SortableTaskCard } from './sortable-task-card';
 import { z } from 'zod';

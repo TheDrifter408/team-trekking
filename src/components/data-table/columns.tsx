@@ -2,12 +2,12 @@
 
 import { ColumnDef } from '@tanstack/react-table';
 import { Task } from '@/types/props/Common.ts';
-import { NameColumn } from '@/components/dataTable/name-column.tsx';
-import { SelectColumn } from '@/components/dataTable/select-column.tsx';
-import { AssigneeColumn } from '@/components/dataTable/assignee-column.tsx';
-import { ProgressColumn } from '@/components/dataTable/progress-column.tsx';
-import { PriorityColumn } from '@/components/dataTable/priority-column.tsx';
-import { COLUMN_META } from '@/lib/constants';
+import { NameColumn } from '@/components/data-table/name-column.tsx';
+import { SelectColumn } from '@/components/data-table/select-column.tsx';
+import { AssigneeColumn } from '@/components/data-table/assignee-column.tsx';
+import { ProgressColumn } from '@/components/data-table/progress-column.tsx';
+import { PriorityColumn } from '@/components/data-table/priority-column.tsx';
+import { COLUMN_META } from '@/lib/constants/appConstant';
 
 export const getColumns = (
   selectedIds: string[],

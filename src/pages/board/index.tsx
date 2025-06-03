@@ -24,9 +24,9 @@ import { TaskCard } from './components/task-card.tsx';
 import { HeaderType } from '@/types/props/Common.ts';
 import { PageHeader } from '@/components/layout/page-header.tsx';
 import { useTheme } from '@/lib/context/theme-context.tsx';
-import { LABEL } from '@/lib/constants/strings.ts';
-import { Card } from '@/components/ui/card.tsx';
-import { Button } from '@/components/ui/button.tsx';
+import { LABEL } from '@/lib/constants/appStrings.ts';
+import { Card } from '@/components/shadcn-ui/card.tsx';
+import { Button } from '@/components/shadcn-ui/button.tsx';
 import { ChevronUp } from 'lucide-react';
 import { cn } from '@/lib/utils.ts';
 export const Board = () => {

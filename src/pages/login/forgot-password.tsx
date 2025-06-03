@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Form } from '@/components/ui/form';
+import { Button } from '@/components/shadcn-ui/button';
+import { Form } from '@/components/shadcn-ui/form';
 import { Eye, Mail } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -11,7 +11,7 @@ import { FormInputField } from './components/form-input.tsx';
 import {
   emailInputSchema,
   passwordResetSchema,
-} from '@/lib/config/validationSchema.tsx';
+} from '@/lib/validation/validationSchema.tsx';
 import {
   usePostForgotPasswordMutation,
   usePostSendOtpMutation,
@@ -21,11 +21,11 @@ import {
   InputOTP,
   InputOTPGroup,
   InputOTPSlot,
-} from '@/components/ui/input-otp';
+} from '@/components/shadcn-ui/input-otp';
 import { z } from 'zod';
-import { LABEL } from '@/lib/constants/strings.ts';
-import { OtpType, RegistrationType, UserRole } from '@/lib/constants/app.ts';
+import { LABEL } from '@/lib/constants/appStrings.ts';
 import { toast } from 'sonner';
+import { OtpType, RegistrationType, UserRole } from '@/lib/constants/enum.ts';
 
 export const ForgotPassword = () => {
   const navigate = useNavigate();
@@ -81,7 +81,7 @@ export const ForgotPassword = () => {
     try {
       await verifyOtp(verifyOtpForm);
       setStep('new_password');
-    } catch (error) {
+    } catch {
       setErrorMessage('Failed to Verify OTP');
     }
   };
@@ -95,7 +95,7 @@ export const ForgotPassword = () => {
       };
       await sendOtp(otpForm);
       setErrorMessage(null);
-    } catch (error) {
+    } catch {
       setErrorMessage(LABEL.FAILED_TO_SEND_VERIFICATION_CODE);
     }
   };
@@ -113,7 +113,7 @@ export const ForgotPassword = () => {
       await passwordReset(resetPasswordForm);
       toast.success('Password has been reset!');
       navigate('/home');
-    } catch (error) {
+    } catch {
       toast.error('Something went wrong please try again.');
     }
   };

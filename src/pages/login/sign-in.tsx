@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Form } from '@/components/ui/form';
+import { Button } from '@/components/shadcn-ui/button';
+import { Form } from '@/components/shadcn-ui/form';
 import { LockKeyhole, Mail } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -8,12 +8,12 @@ import { useNavigate } from 'react-router-dom';
 import { AuthLayout } from './components/auth-layout';
 import { AuthCard } from './components/auth-card';
 import { FormInputField } from './components/form-input.tsx';
-import { loginSchema } from '@/lib/config/validationSchema.tsx';
+import { loginSchema } from '@/lib/validation/validationSchema.tsx';
 import { usePostSignInMutation } from '@/service/rtkQuery.ts';
-import { UserRole } from '@/lib/constants/app.ts';
 import { UserResponse } from '@/types/request-response/ApiResponse.ts';
 import { useTMTStore } from '@/stores/zustand/index.tsx';
 import { z } from 'zod';
+import { UserRole } from '@/lib/constants/enum.ts';
 
 export const Login = () => {
   const navigate = useNavigate();

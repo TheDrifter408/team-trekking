@@ -14,9 +14,9 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from '@/components/ui/breadcrumb';
+} from '@/components/shadcn-ui/breadcrumb';
 import { HeaderType } from '@/types/props/Common.ts';
-import { Button } from '@/components/ui/button.tsx';
+import { Button } from '@/components/shadcn-ui/button.tsx';
 import { ViewType } from '@/lib/context/page-header-context.tsx';
 import { Calendar, Grid, LayoutDashboard, List } from 'lucide-react';
 import { LucideIcon } from 'lucide-react';

@@ -4,43 +4,30 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+} from '@/components/shadcn-ui/dialog';
+import { Button } from '@/components/shadcn-ui/button';
+import { Input } from '@/components/shadcn-ui/input';
+import { Label } from '@/components/shadcn-ui/label';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { Switch } from '@/components/ui/switch';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+} from '@/components/shadcn-ui/select';
+import { Switch } from '@/components/shadcn-ui/switch';
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from '@/components/shadcn-ui/tabs';
 import { Check, List, SlidersHorizontal, Snowflake } from 'lucide-react';
 import { LABEL } from '@/lib/constants';
-
-interface Project {
-  id: string;
-  name: string;
-}
-
-interface DuplicateData {
-  taskName: string;
-  project: string;
-  copyOption: string;
-  copyActivity: boolean;
-  sendNotifications: boolean;
-}
-
-interface DuplicateTaskDialogProps {
-  isOpen?: boolean;
-  onClose?: () => void;
-  onDuplicate?: (data: DuplicateData) => void;
-  initialTaskName?: string;
-  projects?: Project[];
-  defaultProject?: string;
-}
+import {
+  DuplicateData,
+  DuplicateTaskDialogProps,
+} from '@/types/props/Common.ts';
 
 const TaskDialog: React.FC<DuplicateTaskDialogProps> = ({
   isOpen = false,
@@ -57,7 +44,7 @@ const TaskDialog: React.FC<DuplicateTaskDialogProps> = ({
   const [copyActivity, setCopyActivity] = useState<boolean>(false);
   const [sendNotifications, setSendNotifications] = useState<boolean>(true);
 
-  const handleDuplicate = (): void => {
+  const onHandleDuplicate = (): void => {
     const duplicateData: DuplicateData = {
       taskName,
       project: selectedProject,
@@ -69,7 +56,7 @@ const TaskDialog: React.FC<DuplicateTaskDialogProps> = ({
     onClose();
   };
 
-  const handleCancel = (): void => {
+  const onHandleCancel = (): void => {
     // Reset form state
     setTaskName(initialTaskName);
     setSelectedProject(defaultProject);
@@ -79,7 +66,7 @@ const TaskDialog: React.FC<DuplicateTaskDialogProps> = ({
     onClose();
   };
 
-  const handleTaskNameChange = (
+  const onHandleTaskNameChange = (
     e: React.ChangeEvent<HTMLInputElement>
   ): void => {
     setTaskName(e.target.value);
@@ -91,7 +78,7 @@ const TaskDialog: React.FC<DuplicateTaskDialogProps> = ({
         <DialogHeader className="px-6 py-5 border-b border-gray-200">
           <div className="flex items-center justify-between">
             <DialogTitle className="text-xl font-semibold text-gray-900">
-              Duplicate task
+              {LABEL.DUPLICATE_TASK}
             </DialogTitle>
           </div>
         </DialogHeader>
@@ -103,14 +90,14 @@ const TaskDialog: React.FC<DuplicateTaskDialogProps> = ({
               htmlFor="task-name"
               className="text-sm font-medium text-gray-700"
             >
-              New task name
+              {LABEL.NEW_TASK_NAME}
             </Label>
             <div className="relative">
               <Check className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-green-600" />
               <Input
                 id="task-name"
                 value={taskName}
-                onChange={handleTaskNameChange}
+                onChange={onHandleTaskNameChange}
                 className="pl-10 h-11 border-gray-300 rounded-md focus:border-blue-500 focus:ring-blue-500"
                 placeholder="Enter task name"
               />
@@ -120,7 +107,7 @@ const TaskDialog: React.FC<DuplicateTaskDialogProps> = ({
           {/* Project Selection */}
           <div className="space-y-3">
             <Label className="text-sm font-medium text-gray-700">
-              Where should this task be created?
+              {LABEL.WHERE_SHOULD_THIS_TASK_BE_CREATED}
             </Label>
             <Select value={selectedProject} onValueChange={setSelectedProject}>
               <SelectTrigger className="h-11 border-gray-300">
@@ -138,7 +125,7 @@ const TaskDialog: React.FC<DuplicateTaskDialogProps> = ({
                   ))
                 ) : (
                   <SelectItem value="final-initiative">
-                    Final-Initiative
+                    {LABEL.FINAL_INITIATIVE}
                   </SelectItem>
                 )}
               </SelectContent>
@@ -214,7 +201,7 @@ const TaskDialog: React.FC<DuplicateTaskDialogProps> = ({
           <div className="flex items-start justify-between py-3">
             <div className="space-y-1 flex-1 pr-4">
               <Label className="text-sm font-medium text-gray-900">
-                Send notifications
+                {LABEL.SEND_NOTIFICATIONS}
               </Label>
               <p className="text-sm text-gray-600 leading-relaxed">
                 {LABEL.NOTIFY_TEAM_MEMBERS_ABOUT_THE_NEW_DUPLICATED_TASK}
@@ -232,13 +219,13 @@ const TaskDialog: React.FC<DuplicateTaskDialogProps> = ({
         <div className="flex justify-end gap-3 px-6 py-4 border-t border-gray-200 bg-gray-50">
           <Button
             variant="outline"
-            onClick={handleCancel}
+            onClick={onHandleCancel}
             className="px-6 py-2 border-gray-300 text-gray-700 hover:bg-gray-100"
           >
             {LABEL.CANCEL}
           </Button>
           <Button
-            onClick={handleDuplicate}
+            onClick={onHandleDuplicate}
             disabled={!taskName.trim()}
             className="px-6 py-2 bg-theme-main-light hover:bg-theme-main-light text-white font-medium"
           >

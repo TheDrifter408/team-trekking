@@ -3,7 +3,7 @@ import { Bell, BellOff } from 'lucide-react';
 import {
   DropdownMenuItem,
   DropdownMenuSeparator,
-} from '@/components/ui/dropdown-menu.tsx';
+} from '@/components/shadcn-ui/dropdown-menu.tsx';
 import { TaskActivityNotificationsProps } from '@/types/props/Common';
 
 export const TaskActivityNotifications = ({

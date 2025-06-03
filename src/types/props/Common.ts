@@ -1,5 +1,5 @@
 import { LucideIcon } from 'lucide-react';
-import { LABEL } from '@/lib/constants/strings.ts';
+import { LABEL } from '@/lib/constants/appStrings.ts';
 import { Folder } from '@/types/interfaces/Folder';
 
 export interface Space {
@@ -179,4 +179,26 @@ export interface TaskActivityNotificationsProps {
   setWatching: (watching: boolean) => void;
   taskNotificationUsers: TaskNotificationUsers[];
   markNotificationAsRead: (notificationId: number) => void;
+}
+
+export interface Project {
+  id: string;
+  name: string;
+}
+
+export interface DuplicateData {
+  taskName: string;
+  project: string;
+  copyOption: string;
+  copyActivity: boolean;
+  sendNotifications: boolean;
+}
+
+export interface DuplicateTaskDialogProps {
+  isOpen?: boolean;
+  onClose?: () => void;
+  onDuplicate?: (data: DuplicateData) => void;
+  initialTaskName?: string;
+  projects?: Project[];
+  defaultProject?: string;
 }

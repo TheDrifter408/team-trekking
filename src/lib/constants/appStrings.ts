@@ -54,4 +54,9 @@ export const LABEL = {
     'Include the full history and activity on the task in the new task.',
   NOTIFY_TEAM_MEMBERS_ABOUT_THE_NEW_DUPLICATED_TASK:
     'Notify team members about the new duplicated task.',
+  SEND_NOTIFICATIONS: 'Send notifications',
+  NEW_TASK_NAME: 'New task name',
+  DUPLICATE_TASK: 'Duplicate task',
+  WHERE_SHOULD_THIS_TASK_BE_CREATED: 'Where should this task be created?',
+  FINAL_INITIATIVE: 'Final-Initiative',
 };

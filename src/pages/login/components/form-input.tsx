@@ -4,9 +4,9 @@ import {
   FormField,
   FormItem,
   FormMessage,
-} from '@/components/ui/form';
-import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
+} from '@/components/shadcn-ui/form';
+import { Label } from '@/components/shadcn-ui/label';
+import { Input } from '@/components/shadcn-ui/input';
 import { LucideIcon } from 'lucide-react';
 
 interface FormInputFieldProps {

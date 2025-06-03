@@ -11,9 +11,9 @@ import {
 } from 'lucide-react';
 import { IconCaretDownFilled, IconCaretRightFilled } from '@tabler/icons-react';
 import { TaskDescriptionIcon } from '@/assets/icons.tsx';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/shadcn-ui/card';
 import { format } from 'date-fns';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/shadcn-ui/button';
 import { cn } from '@/lib/utils.ts';
 
 // Moved outside component to avoid re-creation on each render

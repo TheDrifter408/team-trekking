@@ -1,9 +1,9 @@
 'use client';
 
 import { SidebarIcon } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { useSidebar } from '@/components/ui/sidebar';
-import { Input } from '@/components/ui/input.tsx';
+import { Button } from '@/components/shadcn-ui/button';
+import { useSidebar } from '@/components/shadcn-ui/sidebar';
+import { Input } from '@/components/shadcn-ui/input.tsx';
 import { PlusCircle } from 'lucide-react';
 import { ThemeSwitch } from '@/components/theme-switch.tsx';
 import { ProfileDropdown } from '@/components/profile.dropdown.tsx';

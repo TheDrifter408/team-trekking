@@ -5,12 +5,12 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog.tsx';
-import { Label } from '@/components/ui/label.tsx';
-import { Input } from '@/components/ui/input.tsx';
-import { Button } from '@/components/ui/button.tsx';
-import { Textarea } from '@/components/ui/textarea.tsx';
-import { Switch } from '@/components/ui/switch.tsx';
+} from '@/components/shadcn-ui/dialog.tsx';
+import { Label } from '@/components/shadcn-ui/label.tsx';
+import { Input } from '@/components/shadcn-ui/input.tsx';
+import { Button } from '@/components/shadcn-ui/button.tsx';
+import { Textarea } from '@/components/shadcn-ui/textarea.tsx';
+import { Switch } from '@/components/shadcn-ui/switch.tsx';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,7 +18,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu.tsx';
+} from '@/components/shadcn-ui/dropdown-menu.tsx';
 import {
   Ban,
   Bell,

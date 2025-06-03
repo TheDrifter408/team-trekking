@@ -1,11 +1,11 @@
 import { useState, useMemo, useCallback } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Main } from '@/components/layout/main.tsx';
-import { getColumns } from '@/components/dataTable/columns.tsx';
+import { getColumns } from '@/components/data-table/columns.tsx';
 import { HeaderType } from '@/types/props/Common.ts';
 import { ListCard } from '@/pages/list/components/list-card.tsx';
 import { PageHeader } from '@/components/layout/page-header';
-import { DataTable } from '@/components/dataTable/data-table2.tsx';
+import { DataTable } from '@/components/data-table/data-table2.tsx';
 import { generateTasks } from '@/mock';
 
 const generatedTasks = generateTasks(100);
@@ -40,7 +40,7 @@ export const List = () => {
     );
   }, []);
 
-  const handleDataChange = useCallback((newData: any[]) => {
+  const handleDataChange = useCallback((newData: string[]) => {
     const updatedTasks = JSON.parse(JSON.stringify(newData));
     setTasks(updatedTasks);
   }, []);
@@ -59,7 +59,7 @@ export const List = () => {
 
   const columns = useMemo(() => {
     return getColumns(selectedIds, onToggleSelect, hoveredRowId);
-  }, [selectedIds, onToggleSelect]);
+  }, [selectedIds, onToggleSelect, hoveredRowId]);
 
   return (
     <div>
