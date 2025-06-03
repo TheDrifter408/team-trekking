@@ -10,10 +10,10 @@ import { AuthCard } from './components/auth-card';
 import { FormInputField } from './components/form-input.tsx';
 import { loginSchema } from '@/lib/config/validationSchema.tsx';
 import { usePostSignInMutation } from '@/service/rtkQuery.ts';
-import { UserRole } from '@/lib/constants/app.ts';
 import { UserResponse } from '@/types/request-response/ApiResponse.ts';
 import { useTMTStore } from '@/stores/zustand/index.tsx';
 import { z } from 'zod';
+import { UserRole } from '@/lib/constants/enum.ts';
 
 export const Login = () => {
   const navigate = useNavigate();

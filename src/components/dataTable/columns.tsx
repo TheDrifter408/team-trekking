@@ -7,7 +7,7 @@ import { SelectColumn } from '@/components/dataTable/select-column.tsx';
 import { AssigneeColumn } from '@/components/dataTable/assignee-column.tsx';
 import { ProgressColumn } from '@/components/dataTable/progress-column.tsx';
 import { PriorityColumn } from '@/components/dataTable/priority-column.tsx';
-import { COLUMN_META } from '@/lib/constants';
+import { COLUMN_META } from '@/lib/constants/appConstant';
 
 export const getColumns = (
   selectedIds: string[],

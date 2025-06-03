@@ -17,7 +17,7 @@ import {
   MenuSection,
   SubmenuItem,
 } from '@/types/interfaces/ContextMenu.ts';
-import { LABEL } from '@/lib/constants/strings.ts';
+import { LABEL } from '@/lib/constants/appStrings.ts';
 
 // Updated ContextMenu Component with reduced vertical gaps
 export const ContextMenu: React.FC<ContextMenuProps> = ({

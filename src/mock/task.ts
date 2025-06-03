@@ -6,7 +6,7 @@ import {
   Checklist,
 } from '@/types/props/Common.ts';
 import { faker } from '@faker-js/faker';
-import { LABEL } from '@/lib/constants/strings.ts';
+import { LABEL } from '@/lib/constants/appStrings.ts';
 
 const priorities: TaskPriority[] = [
   LABEL.LOW,

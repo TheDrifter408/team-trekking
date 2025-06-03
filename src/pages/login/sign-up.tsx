@@ -9,7 +9,6 @@ import { AuthLayout } from './components/auth-layout.tsx';
 import { AuthCard } from './components/auth-card.tsx';
 import { FormInputField } from './components/form-input.tsx';
 import { signUpSchema } from '@/lib/config/validationSchema.tsx';
-import { OtpType, RegistrationType, UserRole } from '@/lib/constants/app.ts';
 import {
   usePostSendOtpMutation,
   usePostVerifyOtpMutation,
@@ -20,8 +19,9 @@ import {
   InputOTPGroup,
   InputOTPSlot,
 } from '@/components/ui/input-otp';
-import { LABEL } from '@/lib/constants/strings.ts';
+import { LABEL } from '@/lib/constants/appStrings.ts';
 import { z } from 'zod';
+import { OtpType, RegistrationType, UserRole } from '@/lib/constants/enum.ts';
 
 export const SignUp = () => {
   const navigate = useNavigate();

@@ -1,5 +1,5 @@
 import { LucideIcon } from 'lucide-react';
-import { LABEL } from '@/lib/constants/strings.ts';
+import { LABEL } from '@/lib/constants/appStrings.ts';
 import { Folder } from '@/types/interfaces/Folder';
 
 export interface Space {

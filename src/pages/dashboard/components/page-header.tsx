@@ -17,7 +17,7 @@ import {
   IconCheck,
   IconCirclePlus,
 } from '@tabler/icons-react';
-import { LABEL } from '@/lib/constants/strings';
+import { LABEL } from '@/lib/constants/appStrings.ts';
 import { Card, CardContent } from '@/components/ui/card';
 
 interface CardItem {

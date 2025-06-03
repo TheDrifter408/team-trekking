@@ -1,6 +1,6 @@
 import { Task } from '@/types/props/Common.ts';
 import { Icon } from '@/assets/icon-path';
-import { LABEL } from '@/lib/constants/strings.ts';
+import { LABEL } from '@/lib/constants/appStrings.ts';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils.ts';
 

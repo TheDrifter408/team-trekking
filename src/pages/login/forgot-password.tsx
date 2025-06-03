@@ -23,9 +23,9 @@ import {
   InputOTPSlot,
 } from '@/components/ui/input-otp';
 import { z } from 'zod';
-import { LABEL } from '@/lib/constants/strings.ts';
-import { OtpType, RegistrationType, UserRole } from '@/lib/constants/app.ts';
+import { LABEL } from '@/lib/constants/appStrings.ts';
 import { toast } from 'sonner';
+import { OtpType, RegistrationType, UserRole } from '@/lib/constants/enum.ts';
 
 export const ForgotPassword = () => {
   const navigate = useNavigate();
@@ -81,7 +81,7 @@ export const ForgotPassword = () => {
     try {
       await verifyOtp(verifyOtpForm);
       setStep('new_password');
-    } catch (error) {
+    } catch {
       setErrorMessage('Failed to Verify OTP');
     }
   };
@@ -95,7 +95,7 @@ export const ForgotPassword = () => {
       };
       await sendOtp(otpForm);
       setErrorMessage(null);
-    } catch (error) {
+    } catch {
       setErrorMessage(LABEL.FAILED_TO_SEND_VERIFICATION_CODE);
     }
   };
@@ -113,7 +113,7 @@ export const ForgotPassword = () => {
       await passwordReset(resetPasswordForm);
       toast.success('Password has been reset!');
       navigate('/home');
-    } catch (error) {
+    } catch {
       toast.error('Something went wrong please try again.');
     }
   };

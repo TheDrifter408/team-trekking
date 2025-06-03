@@ -1,7 +1,7 @@
-import { LOW_PRIORITY, TextAction } from '@/lib/constants';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { useEffect } from 'react';
 import { KEY_ENTER_COMMAND } from 'lexical';
+import { LOW_PRIORITY, TEXT_ACTIONS } from '../constants/appConstant';
 
 export const useKeyBindings = ({
   onAction,
@@ -15,19 +15,19 @@ export const useKeyBindings = ({
       KEY_ENTER_COMMAND,
       (event) => {
         if (event?.key === 'B' && event?.ctrlKey) {
-          onAction(TextAction.Bold);
+          onAction(TEXT_ACTIONS.Bold);
         }
         if (event?.key === 'I' && event?.ctrlKey) {
-          onAction(TextAction.Italic);
+          onAction(TEXT_ACTIONS.Italic);
         }
         if (event?.key === 'U' && event?.ctrlKey) {
-          onAction(TextAction.Underline);
+          onAction(TEXT_ACTIONS.Underline);
         }
         if (event?.key === 'Z' && event?.ctrlKey) {
-          onAction(TextAction.Undo);
+          onAction(TEXT_ACTIONS.Undo);
         }
         if (event?.key === 'Y' && event?.ctrlKey) {
-          onAction(TextAction.Redo);
+          onAction(TEXT_ACTIONS.Redo);
         }
         return false;
       },

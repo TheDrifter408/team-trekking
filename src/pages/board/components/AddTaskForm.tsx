@@ -39,7 +39,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Assignee, PriorityType } from '@/mock';
-import { LABEL } from '@/lib/constants/strings';
+import { LABEL } from '@/lib/constants/appStrings.ts';
 
 const assignees: Assignee[] = [];
 const priorities: PriorityType[] = ['HIGH', 'LOW', 'MIDDLE', 'NONE'];

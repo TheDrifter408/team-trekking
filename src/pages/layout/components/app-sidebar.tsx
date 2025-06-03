@@ -31,7 +31,7 @@ import { CreateSpace } from '@/components/space/create-space.tsx';
 import { InviteUser } from '@/components/invite-user.tsx';
 import { NavUser } from '@/components/layout/nav-user.tsx';
 import { Icon } from '@/assets/icon-path.tsx';
-import { LABEL } from '@/lib/constants/strings.ts';
+import { LABEL } from '@/lib/constants/appStrings.ts';
 import { ContextMenu } from '@/components/context-menu.tsx';
 import { spacesMenuConfig } from '@/lib/constants/staticData.ts';
 import TaskDialog from '@/components/task-dialog.tsx';

@@ -1,13 +1,16 @@
 'use client';
 
 import { useState } from 'react';
-import { WELCOME_MESSAGE } from '@/lib/constants';
-import { HOME_CARD_TITLE, HomeCardList } from '@/lib/constants';
 import { PageHeader } from './components/page-header';
 import { RecentContent } from '@/pages/dashboard/components/recent-content.tsx';
 import { MyWorkContent } from '@/pages/dashboard/components/my-work-content.tsx';
 import { AssignedCommentsContent } from '@/pages/dashboard/components/assigned-comments-content.tsx';
 import { TutorialDialog } from '@/components/tutotial-dialog';
+import {
+  HARD_CARD_LIST,
+  HOME_CARD_TITLE,
+} from '@/lib/constants/appConstant.ts';
+import { getWelcomeMessage } from '@/lib/utils.ts';
 
 enum Direction {
   NEXT = 'next',
@@ -16,7 +19,7 @@ enum Direction {
 
 const Dashboard = () => {
   const [expandedCardId, setExpandedCardId] = useState<string | null>(null);
-  const [cardsList, setCardsList] = useState(HomeCardList);
+  const [cardsList, setCardsList] = useState(HARD_CARD_LIST);
 
   const isCardExpanded = expandedCardId !== null;
 
@@ -70,7 +73,7 @@ const Dashboard = () => {
         {!isCardExpanded && (
           <>
             <span className="text-3xl font-semibold ml-3">
-              {WELCOME_MESSAGE}
+              {getWelcomeMessage()}
             </span>
             <div className="grid grid-cols-2 gap-4 my-2">
               {isCardAdded(HOME_CARD_TITLE.RECENTS) && (
