@@ -1,5 +1,6 @@
-import { useState } from 'react';
-import { ChevronDown, Icon, Plus } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { ChevronDown, Plus } from 'lucide-react';
+import { Icon } from '@/assets/icon-path.tsx';  
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,14 +15,9 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from '@/components/shadcn-ui/sidebar';
-import { CreateWorkspace } from '@/components/features/create-workspace.tsx';
-import {
-  Tooltip,
-  TooltipArrow,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@radix-ui/react-tooltip';
+import { CreateWorkspace } from '@/components/features/create-workspace';
+import { Tooltip, TooltipArrow, TooltipContent, TooltipProvider, TooltipTrigger } from '@radix-ui/react-tooltip';
+import { LABEL } from '@/lib/constants';
 
 export function WorkspaceSwitcher({
   workspaces,
@@ -38,6 +34,15 @@ export function WorkspaceSwitcher({
   const { isMobile } = useSidebar();
   const [isOpen, setIsOpen] = useState(false);
   const [activeWorkspace, setActiveWorkspace] = useState(workspaces[0]);
+  const [showSearch, setShowSearch] = useState(false);
+  const [searchWorkspace, setSearchWorkspace] = useState('');
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (showSearch && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [showSearch]);
 
   const onOpenDialog = () => {
     setTimeout(() => {
@@ -54,24 +59,18 @@ export function WorkspaceSwitcher({
               size="lg"
               className="h-10 w-full data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
-              <div
-                className="flex aspect-square size-6 items-center justify-center rounded-md text-sidebar-primary-foreground"
-                style={{
-                  backgroundColor:
-                    activeWorkspace.logo === undefined
-                      ? activeWorkspace.color
-                      : undefined,
-                }}
-              >
+              <div className="flex aspect-square size-6 items-center justify-center rounded-md text-sidebar-primary-foreground" style={{ backgroundColor: activeWorkspace.logo === undefined ? activeWorkspace.color : undefined }}>
                 {activeWorkspace.logo ? (
-                  <img
-                    src={activeWorkspace.logo}
-                    alt={activeWorkspace.name}
-                    className="size-4 shrink-0 object-cover w-full h-full rounded-md"
-                  />
-                ) : (
-                  <div>{activeWorkspace.name?.charAt(0).toUpperCase()}</div>
-                )}
+                    <img
+                      src={activeWorkspace.logo}
+                      alt={activeWorkspace.name}
+                      className="size-4 shrink-0 object-cover w-full h-full rounded-md"
+                    />
+                  ) : (
+                    <div>
+                      {activeWorkspace.name?.charAt(0).toUpperCase()}
+                    </div>
+                  )}
               </div>
               <div className="grid flex-1 text-left text-lg leading-tight">
                 <span className="truncate font-semibold">
@@ -87,17 +86,111 @@ export function WorkspaceSwitcher({
             side={isMobile ? 'bottom' : 'bottom'}
             sideOffset={4}
           >
-            <DropdownMenuLabel className="text-xs text-muted-foreground">
-              <div className="flex items-center justify-between">
-                <div>Switch Workspace</div>
-                <Icon name={'search'} iconNode={[]} />
+            <div className="flex items-center gap-2 px-2 py-3 w-full">
+              <div className="flex aspect-square size-8 items-center justify-center rounded-md text-sidebar-primary-foreground" style={{ backgroundColor: activeWorkspace.logo === undefined ? activeWorkspace.color : undefined }}>
+                {activeWorkspace.logo ? (
+                    <img
+                      src={activeWorkspace.logo}
+                      alt={activeWorkspace.name}
+                      className="size-4 shrink-0 object-cover w-full h-full rounded-md"
+                    />
+                  ) : (
+                    <div>
+                      {activeWorkspace.name?.charAt(0).toUpperCase()}
+                    </div>
+                  )}
               </div>
-            </DropdownMenuLabel>
-            <div
-              className={`max-h-[250px] ${workspaces.length >= 5 ? 'overflow-y-auto' : ''}`}
-            >
-              {workspaces.map(
-                (workspace) =>
+              <div className="grid leading-tight">
+                <span className="truncate text-[14px]">
+                  {activeWorkspace.name}
+                </span>
+                <span className="truncate font-normal text-sm text-gray-500">
+                  {activeWorkspace.plan} . {activeWorkspace.member} {LABEL.MEMBERS}
+                </span>
+              </div>
+            </div>
+            <div>
+              <div className="cursor-pointer flex items-center gap-2 px-2 py-1 hover:bg-gray-200 rounded-md">
+                  <Icon name={'setting'}></Icon>
+                  <span className="truncate text-base font-normal text-gray-900">
+                    {LABEL.SETTINGS}
+                  </span>
+              </div>
+              <div className="cursor-pointer flex items-center gap-2 px-2 py-1 hover:bg-gray-200 rounded-md">
+                  <Icon name={'setting'}></Icon>
+                  <span className="truncate text-base font-normal text-gray-900">
+                    {LABEL.UPGRADE}
+                  </span>
+              </div>
+              <div className="cursor-pointer flex items-center gap-2 px-2 py-1 hover:bg-gray-200 rounded-md">
+                  <Icon name={'users'}></Icon>
+                  <span className="truncate text-base font-normal text-gray-900">
+                    {LABEL.MANAGE_USERS}
+                  </span>
+              </div>
+            </div>
+            <div className=''>
+              <DropdownMenuSeparator />
+              <div className="cursor-pointer flex items-center gap-2 px-2 py-1 hover:bg-gray-200 rounded-md">
+                  <Icon name={'setting'}></Icon>
+                  <span className="truncate text-base font-normal text-gray-900">
+                    {LABEL.APP_CENTER}
+                  </span>
+              </div>
+              <div className="cursor-pointer flex items-center gap-2 px-2 py-1 hover:bg-gray-200 rounded-md">
+                  <Icon name={'setting'}></Icon>
+                  <span className="truncate text-base font-normal text-gray-900">
+                    {LABEL.TEMPLATE_CENTER}
+                  </span>
+              </div>
+              <div className="cursor-pointer flex items-center gap-2 px-2 py-1 hover:bg-gray-200 rounded-md">
+                  <Icon name={'fieldscreate'}></Icon>
+                  <span className="truncate text-base font-normal text-gray-900">
+                    {LABEL.CUSTOM_FIELD_MANAGER}
+                  </span>
+              </div>
+              <div className="cursor-pointer flex items-center gap-2 px-2 py-1 hover:bg-gray-200 rounded-md">
+                  <Icon name={'thunder'}></Icon>
+                  <span className="truncate text-base font-normal text-gray-900">
+                    {LABEL.AUTOMATIONS_MANAGER}
+                  </span>
+              </div>
+            </div>
+            <div className='bg-workspace-popover'>
+              <DropdownMenuSeparator />
+              <DropdownMenuLabel className="text-xs text-muted-foreground">
+                  <div className='flex items-center justify-between'>
+                    {!showSearch && (
+                      <div>{LABEL.SWITCH_WORKSPACE}</div>
+                    )}
+                    {showSearch && (
+                      <div className="flex items-center border border-gray-900 rounded-md px-2 py-1 w-full shadow-sm gap-1">
+                        <Icon name={'search'}></Icon>
+                        <input
+                          ref={inputRef}
+                          type="text"
+                          placeholder="Search Workspaces..."
+                          value={searchWorkspace}
+                          onChange={(e) => setSearchWorkspace(e.target.value)}
+                          className="outline-none flex-1 text-sm bg-transparent text-gray-900"
+                        />
+                        <button onClick={() => setShowSearch(false)}>
+                          <Icon name={'close'} className='text-gray-900'></Icon>
+                        </button>
+                      </div>
+                    )}
+                    
+                    {!showSearch && (
+                      <div
+                       className='hover:bg-gray-200 curser-pointer p-2 rounded-md'
+                       onClick={() => setShowSearch(true)}>
+                      <Icon name={'search'} className='size-3'></Icon>
+                    </div>
+                    )}
+                  </div>
+                </DropdownMenuLabel>
+              <div className={`max-h-[250px] ${workspaces.length >= 5 ? 'overflow-y-auto' : ''}`}>
+                {workspaces.map((workspace, index) => (
                   workspace.id !== activeWorkspace.id && (
                     <DropdownMenuItem
                       key={workspace.name}
@@ -140,35 +233,30 @@ export function WorkspaceSwitcher({
                             side="top"
                             sideOffset={4}
                           >
-                            <TooltipArrow
-                              className="fill-black"
+                            <TooltipArrow className="fill-black"
                               style={{
                                 width: '10px',
                                 height: '5px',
                               }}
                             />
-                            <p className="font-medium text-sm">
-                              {workspace.member} Members
-                            </p>
+                            <p className="font-medium text-sm">{workspace.member} {LABEL.MEMBERS}</p>
                           </TooltipContent>
                         </Tooltip>
                       </TooltipProvider>
                     </DropdownMenuItem>
                   )
-              )}
+                ))}
+              </div>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem className="gap-2 p-2 hover:!bg-gray-200 focus:!outline-none cursor-pointer" onClick={onOpenDialog}>
+                <div className="flex size-6 items-center justify-center rounded-md border bg-background">
+                  <Plus className="size-4" />
+                </div>
+                <div className="font-medium text-muted-foreground ">
+                  {LABEL.CREATE_WORKSPACE}
+                </div>
+              </DropdownMenuItem>
             </div>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem
-              className="gap-2 p-2 hover:!bg-gray-200 focus:!outline-none cursor-pointer"
-              onClick={onOpenDialog}
-            >
-              <div className="flex size-6 items-center justify-center rounded-md border bg-background">
-                <Plus className="size-4" />
-              </div>
-              <div className="font-medium text-muted-foreground ">
-                Create workspace
-              </div>
-            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
         <CreateWorkspace
