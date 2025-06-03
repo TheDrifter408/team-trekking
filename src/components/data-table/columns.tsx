@@ -2,6 +2,7 @@ import { Task } from '@/types/props/Common.ts';
 import { ColumnDef } from '@tanstack/table-core';
 import { NameColumn } from '@/components/data-table/name-column.tsx';
 import { SelectColumn } from '@/components/data-table/select-column.tsx';
+import { PriorityColumn } from '@/components/data-table/priority-column.tsx';
 import { COLUMN_META } from '@/lib/constants/appConstant';
 
 export const columns = (hoveredRowId: string | null): ColumnDef<Task>[] => [
@@ -28,5 +29,14 @@ export const columns = (hoveredRowId: string | null): ColumnDef<Task>[] => [
         isHovered={row.original.id.toString() === hoveredRowId}
       />
     ),
+    minSize: 20,
+    maxSize: 30,
+  },
+  {
+    accessorKey: COLUMN_META.ACCESSOR_KEY.PRIORITY,
+    header: () => COLUMN_META.HEADER.PRIORITY,
+    cell: ({ row }) => <PriorityColumn task={row.original} />,
+    minSize: 10,
+    maxSize: 10,
   },
 ];
