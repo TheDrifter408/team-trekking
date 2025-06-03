@@ -16,11 +16,7 @@ interface TimeTrackerProps {
   taskId?: string;
 }
 
-export function TimeTracker({
-  initialTime,
-  onTimeUpdate,
-  taskId,
-}: TimeTrackerProps) {
+export function TimeTracker({ initialTime, onTimeUpdate }: TimeTrackerProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isRunning, setIsRunning] = useState(false);
   const [elapsedTime, setElapsedTime] = useState(0);
