@@ -15,7 +15,7 @@ import {
   IconVectorSpline,
   IconX,
 } from '@tabler/icons-react';
-import { DatePickerWithRange } from '@/components/date-picker.tsx';
+import { DatePickerWithRange } from '@/components/common/date-picker.tsx';
 import {
   closestCenter,
   DndContext,
@@ -42,7 +42,7 @@ import { Button } from '@/components/shadcn-ui/button';
 import { Badge } from '@/components/shadcn-ui/badge';
 import { TaskMetaRow } from './components/task-meta-row';
 import { Input } from '@/components/shadcn-ui/input.tsx';
-import { AssigneeAvatar } from '@/components/assignee-avatar.tsx';
+import { AssigneeAvatar } from '@/components/common/assignee-avatar.tsx';
 import { DocEditor } from './components/doc-editor.tsx';
 import { Subtask } from '@/pages/task/components/Subtask.tsx';
 

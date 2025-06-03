@@ -8,7 +8,7 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuTrigger,
-} from '@/components/shadcn-ui/dropdown-menu';
+} from '@/components/shadcn-ui/dropdown-menu.tsx';
 
 interface TimeTrackerProps {
   initialTime: string;

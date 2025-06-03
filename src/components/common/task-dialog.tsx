@@ -4,24 +4,24 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from '@/components/shadcn-ui/dialog';
-import { Button } from '@/components/shadcn-ui/button';
-import { Input } from '@/components/shadcn-ui/input';
-import { Label } from '@/components/shadcn-ui/label';
+} from '@/components/shadcn-ui/dialog.tsx';
+import { Button } from '@/components/shadcn-ui/button.tsx';
+import { Input } from '@/components/shadcn-ui/input.tsx';
+import { Label } from '@/components/shadcn-ui/label.tsx';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/shadcn-ui/select';
-import { Switch } from '@/components/shadcn-ui/switch';
+} from '@/components/shadcn-ui/select.tsx';
+import { Switch } from '@/components/shadcn-ui/switch.tsx';
 import {
   Tabs,
   TabsContent,
   TabsList,
   TabsTrigger,
-} from '@/components/shadcn-ui/tabs';
+} from '@/components/shadcn-ui/tabs.tsx';
 import { Check, List, SlidersHorizontal, Snowflake } from 'lucide-react';
 import { LABEL } from '@/lib/constants';
 import {

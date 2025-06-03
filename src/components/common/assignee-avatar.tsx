@@ -11,7 +11,7 @@ import {
 } from '@/components/shadcn-ui/avatar.tsx';
 import { Button } from '@/components/shadcn-ui/button.tsx';
 import { IconX } from '@tabler/icons-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/utils.ts';
 
 interface Props {
   assignee: string;

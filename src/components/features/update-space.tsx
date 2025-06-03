@@ -57,9 +57,9 @@ import {
   SelectItem,
   SelectTrigger,
 } from '@/components/shadcn-ui/select.tsx';
-import { DefaultViews } from '@/components/space/space-default-views.tsx';
-import { DropDownContent } from '@/components/space/space-icon-name-dropdown.tsx';
-import { StatusTemplate } from '@/components/space/status-template';
+import { DefaultViews } from '@/components/common/space-default-views.tsx';
+import { DropDownContent } from '@/components/common/space-icon-name-dropdown.tsx';
+import { StatusTemplate } from '@/components/features/status-template.tsx';
 import { ColorOption, IconOption } from '@/types/props/Common.ts';
 import { taskNotificationUsers } from '@/mock';
 

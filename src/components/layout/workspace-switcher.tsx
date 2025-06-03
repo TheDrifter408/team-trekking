@@ -14,7 +14,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from '@/components/shadcn-ui/sidebar';
-import { CreateWorkspace } from '@/components/create-workspace.tsx';
+import { CreateWorkspace } from '@/components/features/create-workspace.tsx';
 import {
   Tooltip,
   TooltipArrow,

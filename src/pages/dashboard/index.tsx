@@ -5,7 +5,7 @@ import { PageHeader } from './components/page-header';
 import { RecentContent } from '@/pages/dashboard/components/recent-content.tsx';
 import { MyWorkContent } from '@/pages/dashboard/components/my-work-content.tsx';
 import { AssignedCommentsContent } from '@/pages/dashboard/components/assigned-comments-content.tsx';
-import { TutorialDialog } from '@/components/tutotial-dialog';
+import { TutorialDialog } from '@/components/features/tutotial-dialog.tsx';
 import {
   HARD_CARD_LIST,
   HOME_CARD_TITLE,

@@ -3,8 +3,8 @@ import {
   Avatar,
   AvatarFallback,
   AvatarImage,
-} from '@/components/shadcn-ui/avatar';
-import { Button } from '@/components/shadcn-ui/button';
+} from '@/components/shadcn-ui/avatar.tsx';
+import { Button } from '@/components/shadcn-ui/button.tsx';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,7 +14,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuShortcut,
   DropdownMenuTrigger,
-} from '@/components/shadcn-ui/dropdown-menu';
+} from '@/components/shadcn-ui/dropdown-menu.tsx';
 import { ChevronDown } from 'lucide-react';
 import { UserResponse } from '@/types/request-response/ApiResponse.ts';
 import { getInitials } from '@/lib/utils.ts';

@@ -27,14 +27,14 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/shadcn-ui/tooltip.tsx';
-import { CreateSpace } from '@/components/space/create-space.tsx';
-import { InviteUser } from '@/components/invite-user.tsx';
+import { CreateSpace } from '@/components/features/create-space.tsx';
+import { InviteUser } from '@/components/features/invite-user.tsx';
 import { NavUser } from '@/components/layout/nav-user.tsx';
 import { Icon } from '@/assets/icon-path.tsx';
 import { LABEL } from '@/lib/constants/appStrings.ts';
-import { ContextMenu } from '@/components/context-menu.tsx';
+import { ContextMenu } from '@/components/common/context-menu.tsx';
 import { spacesMenuConfig } from '@/lib/constants/staticData.ts';
-import TaskDialog from '@/components/task-dialog.tsx';
+import TaskDialog from '@/components/common/task-dialog.tsx';
 import { WorkspaceSwitcher } from '@/components/layout/workspace-switcher.tsx';
 
 export const AppSidebar = ({

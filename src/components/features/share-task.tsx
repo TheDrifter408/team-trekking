@@ -8,20 +8,20 @@ import {
   DialogTitle,
   DialogDescription,
   DialogClose,
-} from '@/components/shadcn-ui/dialog';
-import { Input } from '@/components/shadcn-ui/input';
-import { Switch } from '@/components/shadcn-ui/switch';
-import { Button } from '@/components/shadcn-ui/button';
-import { Label } from '@/components/shadcn-ui/label';
-import { ScrollArea } from '@/components/shadcn-ui/scroll-area';
+} from '@/components/shadcn-ui/dialog.tsx';
+import { Input } from '@/components/shadcn-ui/input.tsx';
+import { Switch } from '@/components/shadcn-ui/switch.tsx';
+import { Button } from '@/components/shadcn-ui/button.tsx';
+import { Label } from '@/components/shadcn-ui/label.tsx';
+import { ScrollArea } from '@/components/shadcn-ui/scroll-area.tsx';
 import {
   Avatar,
   AvatarImage,
   AvatarFallback,
-} from '@/components/shadcn-ui/avatar';
+} from '@/components/shadcn-ui/avatar.tsx';
 import { X, Lock, Globe, Link, ChevronDown } from 'lucide-react';
 import { IconCaretRightFilled, IconCaretDownFilled } from '@tabler/icons-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/utils.ts';
 import { taskNotificationUsers } from '@/mock';
 
 interface ShareTaskProps {
