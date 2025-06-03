@@ -84,6 +84,9 @@ const COLUMN_META = {
     PROGRESS: 'progress',
     ASSIGNEES: 'assignees',
     PRIORITY: 'priority',
+    START_DATE: 'start_date',
+    END_DATE: 'end_date',
+    ESTIMATED_TIME: 'estimated_time',
   },
   HEADER: {
     SELECT: 'Select',
@@ -92,6 +95,9 @@ const COLUMN_META = {
     PROGRESS: 'Progress',
     ASSIGNEES: 'Assignees',
     PRIORITY: 'Priority',
+    START_DATE: 'Start Date',
+    END_DATE: 'End Date',
+    ESTIMATED_TIME: 'Estimated Time',
   },
 };
 const TEXT_ACTIONS = {
