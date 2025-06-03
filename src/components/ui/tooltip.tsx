@@ -71,8 +71,8 @@ function TextTooltip({
   align?: 'start' | 'center' | 'end';
 }) {
   return (
-    <TooltipProvider delayDuration={delayDuration}>
-      <Tooltip>
+    <TooltipProvider>
+      <Tooltip delayDuration={delayDuration}>
         <TooltipTrigger asChild>{children}</TooltipTrigger>
         <TooltipContent side={side} align={align}>
           {message}

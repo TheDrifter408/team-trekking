@@ -125,7 +125,7 @@ export function DataTable<TData>({
                 {row.getVisibleCells().map((cell) => (
                   <TableCell
                     key={cell.id}
-                    className="px-2 py-2 overflow-hidden"
+                    className="px-2 overflow-hidden"
                     style={{
                       width: cell.column.getSize(),
                       minWidth: cell.column.columnDef.minSize,
