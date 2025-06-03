@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { AuthLayout } from './components/auth-layout';
 import { AuthCard } from './components/auth-card';
 import { FormInputField } from './components/form-input.tsx';
-import { loginSchema } from '@/lib/config/validationSchema.tsx';
+import { loginSchema } from '@/lib/validation/validationSchema.tsx';
 import { usePostSignInMutation } from '@/service/rtkQuery.ts';
 import { UserResponse } from '@/types/request-response/ApiResponse.ts';
 import { useTMTStore } from '@/stores/zustand/index.tsx';

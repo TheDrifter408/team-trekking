@@ -11,7 +11,7 @@ import { FormInputField } from './components/form-input.tsx';
 import {
   emailInputSchema,
   passwordResetSchema,
-} from '@/lib/config/validationSchema.tsx';
+} from '@/lib/validation/validationSchema.tsx';
 import {
   usePostForgotPasswordMutation,
   usePostSendOtpMutation,

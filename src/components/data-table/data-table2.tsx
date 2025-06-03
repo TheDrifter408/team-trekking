@@ -23,6 +23,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { cn } from '@/lib/utils.ts';
+import { RowData } from '@tanstack/table-core/src/types.ts';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -57,7 +58,7 @@ export function DataTable<TData, TValue>({
   const [columnPinning, setColumnPinning] = useState<ColumnPinningState>(() => {
     // Ensure columns have IDs before setting up pinning
     const firstColumnId =
-      columns[0]?.id || (columns[0] as any)?.accessorKey || '0';
+      columns[0]?.id || (columns[0] as RowData)?.accessorKey || '0';
     return {
       left: columns.length > 0 ? [firstColumnId] : [],
     };
@@ -79,7 +80,7 @@ export function DataTable<TData, TValue>({
     onRowSelectionChange: setRowSelection,
     onColumnPinningChange: setColumnPinning,
     onExpandedChange: setExpanded,
-    getSubRows: (row: any) => row.subRows,
+    getSubRows: (row: RowData) => row.subRows,
     state: {
       rowSelection,
       columnPinning,
@@ -163,7 +164,7 @@ const DataTableRow = <TData,>({
 }: DataTableRowProps<TData>) => {
   const onMouseEnter = () => {
     if (onRowMouseEnter) {
-      onRowMouseEnter((row.original as any).id.toString());
+      onRowMouseEnter((row.original as RowData).id.toString());
     }
   };
 

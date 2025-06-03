@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, ReactNode } from 'react';
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -38,6 +38,7 @@ import {
   useSortable,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
+import { RowData } from '@tanstack/table-core/src/types.ts';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -56,7 +57,13 @@ function SortableTableRow({
   id,
   onMouseEnter,
   onMouseLeave,
-}: any) {
+}: {
+  row: RowData;
+  children: ReactNode;
+  id: string;
+  onMouseEnter: (id: string) => void;
+  onMouseLeave: (id: string) => void;
+}) {
   const { attributes, listeners, setNodeRef, transform, isDragging } =
     useSortable({ id });
 
@@ -125,7 +132,7 @@ export function DataTable<TData, TValue>({
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
     getExpandedRowModel: getExpandedRowModel(),
-    getSubRows: (row: any) => row.subRows,
+    getSubRows: (row: RowData) => row.subRows,
     onExpandedChange: setExpanded,
     onColumnPinningChange: setColumnPinning,
     state: {
@@ -140,7 +147,7 @@ export function DataTable<TData, TValue>({
 
   // Get top-level rows only for drag and drop
   const rootRows = table.getRowModel().rows.filter((row) => row.depth === 0);
-  const rootIds = rootRows.map((row) => (row.original as any).id);
+  const rootIds = rootRows.map((row) => (row.original as RowData).id);
 
   // Set up sensors for drag and drop
   const sensors = useSensors(
@@ -228,7 +235,7 @@ export function DataTable<TData, TValue>({
                   return (
                     <SortableTableRow
                       key={row.id}
-                      id={(row.original as any).id}
+                      id={(row.original as RowData).id}
                       row={row}
                       onMouseEnter={onRowMouseEnter}
                       onMouseLeave={onRowMouseLeave}
@@ -264,7 +271,7 @@ export function DataTable<TData, TValue>({
                       className="hover:bg-muted transition-all duration-150 cursor-pointer"
                       onMouseEnter={() =>
                         onRowMouseEnter &&
-                        onRowMouseEnter((row.original as any).id)
+                        onRowMouseEnter((row.original as RowData).id)
                       }
                       onMouseLeave={onRowMouseLeave}
                     >

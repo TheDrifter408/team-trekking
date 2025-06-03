@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { AuthLayout } from './components/auth-layout.tsx';
 import { AuthCard } from './components/auth-card.tsx';
 import { FormInputField } from './components/form-input.tsx';
-import { signUpSchema } from '@/lib/config/validationSchema.tsx';
+import { signUpSchema } from '@/lib/validation/validationSchema.tsx';
 import {
   usePostSendOtpMutation,
   usePostVerifyOtpMutation,
