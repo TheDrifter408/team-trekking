@@ -2,12 +2,17 @@ import { Task } from '@/types/props/Common.ts';
 import { Icon } from '@/assets/icon-path';
 import { LABEL } from '@/lib/constants/appStrings.ts';
 import { Button } from '@/components/shadcn-ui/button';
+import { PriorityPopover } from '@/components/common/priority-popover.tsx';
 import { cn } from '@/lib/utils.ts';
+import { useState } from 'react';
 
 interface Props {
   task: Task;
 }
 export const PriorityColumn = ({ task }: Props) => {
+  const [isHovered, setIsHovered] = useState(false);
+  const [isPopoverOpen, setIsPopoverOpen] = useState(false);
+
   const priority = task?.priority;
   let priorityBg = '';
   if (priority === LABEL.LOW)
@@ -19,15 +24,22 @@ export const PriorityColumn = ({ task }: Props) => {
   else priorityBg = 'text-content-danger';
 
   const priorityIcon = priorityBg?.length > 0 ? 'priority02' : 'priority';
+
   return (
-    <div>
-      <Button
-        variant={'ghost'}
-        size={'auto'}
-        className={cn(priorityBg, 'hover:scale-105')}
-      >
-        <Icon name={priorityIcon} />
-      </Button>
+    <div
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      className={`${isHovered ? 'border' : ''} w-[60px] h-full rounded hover:bg-accent items-center flex`}
+    >
+      <PriorityPopover isOpen={isPopoverOpen} setIsOpen={setIsPopoverOpen}>
+        <Button
+          variant="ghost"
+          size="auto"
+          className={cn(priorityBg, `hover:scale-105 hover:text-${priorityBg}`)}
+        >
+          <Icon name={priorityIcon} />
+        </Button>
+      </PriorityPopover>
     </div>
   );
 };
