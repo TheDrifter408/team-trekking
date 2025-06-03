@@ -59,4 +59,5 @@ export const LABEL = {
   DUPLICATE_TASK: 'Duplicate task',
   WHERE_SHOULD_THIS_TASK_BE_CREATED: 'Where should this task be created?',
   FINAL_INITIATIVE: 'Final-Initiative',
+  SEARCH_OR_CREATE_NEW: 'Search or create new',
 };
