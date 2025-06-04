@@ -84,8 +84,10 @@ export function DataTable<TData>({
   const parentRef = useRef<HTMLDivElement>(null);
   const ROW_HEIGHT = 36;
 
+  const expandedRowsModel = table.getExpandedRowModel();
+
   const rowVirtualizer = useVirtualizer({
-    count: table.getRowModel().rows.length,
+    count: expandedRowsModel.rows.length,
     getScrollElement: () => parentRef.current,
     estimateSize: () => ROW_HEIGHT,
     overscan: 10,
@@ -99,7 +101,7 @@ export function DataTable<TData>({
       ref={parentRef}
       className="h-screen pb-[40px] px-3 overflow-auto rounded-md"
     >
-      <Table className={'table-fixed'}>
+      <Table>
         <TableHeader className="sticky top-0 z-10 bg-background">
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
@@ -126,15 +128,13 @@ export function DataTable<TData>({
         </TableHeader>
         <TableBody style={{ position: 'relative', height: `${totalSize}px` }}>
           {virtualRows.map((virtualRow) => {
-            const row = table.getRowModel().rows[virtualRow.index];
+            const row = expandedRowsModel.rows[virtualRow.index];
             const isSubRow = row.depth > 0;
 
             return (
               <TableRow
                 key={row.id}
-                onMouseEnter={() =>
-                  onRowHover((row.original as any).id.toString())
-                }
+                onMouseEnter={() => onRowHover(row.original.id.toString())}
                 onMouseLeave={onRowLeave}
                 data-state={row.getIsSelected() && 'selected'}
                 className={`

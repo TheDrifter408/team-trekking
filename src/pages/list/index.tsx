@@ -40,20 +40,17 @@ export const List = () => {
     setIsTableExpanded(!isTableExpanded);
   }, [isTableExpanded]);
 
-  const handleExpandedChange = useCallback((expanded: ExpandedState) => {
+  const onExpandedChange = useCallback((expanded: ExpandedState) => {
     setExpandedRows(expanded);
   }, []);
 
-  const handleSelectionChange = useCallback((selectedIds: string[]) => {
-    console.log('Selected rows:', selectedIds);
-    // Handle selection change logic here
-  }, []);
+  const onSelectionChange = useCallback(() => {}, []);
 
   return (
-    <div className="h-screen flex-1 overflow-hidden flex-col">
+    <div className="flex flex-col h-screen overflow-hidden">
       <PageHeader currentPage={currentPage} parents={parents} />
-      <div className="flex-1 min-h-0 flex flex-col">
-        <div className="px-3 mt-2 flex-shrink-0">
+      <div className="flex-1  min-h-0 flex flex-col">
+        <div className="px-0 mt-2 flex-shrink-0">
           <ListCard
             isTableExpanded={isTableExpanded}
             onToggleExpand={onToggleExpand}
@@ -62,11 +59,11 @@ export const List = () => {
         <DataTable
           onRowHover={onMouseEnter}
           onRowLeave={onMouseLeave}
-          onSelectionChange={handleSelectionChange}
+          onSelectionChange={onSelectionChange}
           columns={columns(hoveredRowId)}
           data={mockTasks}
           expandedRows={expandedRows}
-          onExpandedChange={handleExpandedChange}
+          onExpandedChange={onExpandedChange}
         />
       </div>
     </div>
