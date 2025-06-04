@@ -75,6 +75,7 @@ import Thunder from '@/assets/icons/thunder.svg?react';
 import FieldsCreate from '@/assets/icons/fields-create.svg?react';
 
 const iconPaths = {
+  search: Search,
   description: Description,
   add01: Add01,
   add02: Add02,
@@ -108,7 +109,6 @@ const iconPaths = {
   edit: Edit,
   signUpBG: SignUpBG,
   setting: Setting,
-  search: Search,
   close: Close,
   users: Users,
   thunder: Thunder,

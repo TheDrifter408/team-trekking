@@ -82,7 +82,7 @@ export function DataTable<TData>({
   });
 
   const parentRef = useRef<HTMLDivElement>(null);
-  const ROW_HEIGHT = 36;
+  const ROW_HEIGHT = 40;
 
   const expandedRowsModel = table.getExpandedRowModel();
 

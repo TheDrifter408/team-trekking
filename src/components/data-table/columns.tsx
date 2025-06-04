@@ -18,8 +18,8 @@ export const columns = (hoveredRowId: string | null): ColumnDef<Task>[] => [
         isHovered={row.original.id.toString() === hoveredRowId}
       />
     ),
-    minSize: 30,
-    maxSize: 40,
+    minSize: 35,
+    maxSize: 45,
     enableSorting: false,
     enableColumnFilter: false,
   },

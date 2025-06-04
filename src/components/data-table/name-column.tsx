@@ -82,7 +82,7 @@ export const NameColumn = ({ task, isHovered, row }: Props) => {
             <TextTooltip message={task.name}>
               <span
                 className={cn(
-                  'text-base font-medium cursor-pointer hover:text-theme-main truncate max-w-[190px]'
+                  'text-base text-content-default font-medium cursor-pointer hover:text-theme-main-dark hover:font-medium truncate max-w-[190px]'
                 )}
                 onClick={() => navigate(`/task`)}
                 onDoubleClick={() => setIsEditing(true)}

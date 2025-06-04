@@ -217,6 +217,9 @@
   body {
     @apply bg-background text-foreground;
   }
+  html {
+    @apply tracking-wide;
+    @apply text-content-default;
+  }
 }
-html {
-}
+
