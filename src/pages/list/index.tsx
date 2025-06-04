@@ -1,4 +1,5 @@
 import { useState, useMemo, useCallback } from 'react';
+import { ExpandedState } from '@tanstack/react-table';
 import { HeaderType } from '@/types/props/Common.ts';
 import { ListCard } from '@/pages/list/components/list-card.tsx';
 import { PageHeader } from '@/components/layout/page-header';
@@ -22,24 +23,34 @@ export const List = () => {
     ],
     []
   );
+
   const [isTableExpanded, setIsTableExpanded] = useState(true);
   const [hoveredRowId, setHoveredRowId] = useState<string | null>(null);
+  const [expandedRows, setExpandedRows] = useState<ExpandedState>({});
 
   const onMouseEnter = useCallback((id: string) => {
     setHoveredRowId(id);
   }, []);
+
   const onMouseLeave = useCallback(() => {
     setHoveredRowId(null);
   }, []);
+
   const onToggleExpand = useCallback(() => {
     setIsTableExpanded(!isTableExpanded);
   }, [isTableExpanded]);
 
+  const onExpandedChange = useCallback((expanded: ExpandedState) => {
+    setExpandedRows(expanded);
+  }, []);
+
+  const onSelectionChange = useCallback(() => {}, []);
+
   return (
-    <div className="h-screen flex-1 overflow-hidden flex-col">
+    <div className="flex flex-col h-screen overflow-hidden">
       <PageHeader currentPage={currentPage} parents={parents} />
-      <div className="flex-1 min-h-0 flex flex-col">
-        <div className="px-3 mt-2 flex-shrink-0">
+      <div className="flex-1  min-h-0 flex flex-col">
+        <div className="px-0 mt-2 flex-shrink-0">
           <ListCard
             isTableExpanded={isTableExpanded}
             onToggleExpand={onToggleExpand}
@@ -48,11 +59,15 @@ export const List = () => {
         <DataTable
           onRowHover={onMouseEnter}
           onRowLeave={onMouseLeave}
+          onSelectionChange={onSelectionChange}
           columns={columns(hoveredRowId)}
           data={mockTasks}
+          expandedRows={expandedRows}
+          onExpandedChange={onExpandedChange}
         />
       </div>
     </div>
   );
 };
+
 export default List;

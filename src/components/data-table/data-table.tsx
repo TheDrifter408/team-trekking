@@ -6,6 +6,8 @@ import {
   getCoreRowModel,
   RowSelectionState,
   useReactTable,
+  getExpandedRowModel,
+  ExpandedState,
 } from '@tanstack/react-table';
 import {
   Table,
@@ -25,6 +27,8 @@ interface DataTableProps<TData> {
   onRowHover: (id: string) => void;
   onRowLeave: () => void;
   onSelectionChange?: (selectedIds: string[]) => void;
+  expandedRows?: ExpandedState;
+  onExpandedChange?: (expanded: ExpandedState) => void;
 }
 
 export function DataTable<TData>({
@@ -33,15 +37,20 @@ export function DataTable<TData>({
   onRowHover,
   onRowLeave,
   onSelectionChange,
+  expandedRows = {},
+  onExpandedChange,
 }: DataTableProps<TData>) {
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
+  const [expanded, setExpanded] = useState<ExpandedState>(expandedRows);
 
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
+    getExpandedRowModel: getExpandedRowModel(),
     state: {
       rowSelection,
+      expanded,
     },
     onRowSelectionChange: (updater) => {
       const newSelection =
@@ -56,15 +65,29 @@ export function DataTable<TData>({
         onSelectionChange(selectedIds);
       }
     },
+    onExpandedChange: (updater) => {
+      const newExpanded =
+        typeof updater === 'function' ? updater(expanded) : updater;
+      setExpanded(newExpanded);
+      onExpandedChange?.(newExpanded);
+    },
     enableRowSelection: true,
-    getRowId: (row: any) => row.id.toString(), // Ensure row IDs are strings
+    enableExpanding: true,
+    getRowId: (row: any) => row.id.toString(),
+    getSubRows: (row: any) => row.subTask || [], // Define how to get subrows
+    getRowCanExpand: (row) => {
+      const original = row.original as any;
+      return (original.subTask && original.subTask.length > 0) || false;
+    },
   });
 
   const parentRef = useRef<HTMLDivElement>(null);
-  const ROW_HEIGHT = 36; // Increased for better spacing
+  const ROW_HEIGHT = 36;
+
+  const expandedRowsModel = table.getExpandedRowModel();
 
   const rowVirtualizer = useVirtualizer({
-    count: table.getRowModel().rows.length,
+    count: expandedRowsModel.rows.length,
     getScrollElement: () => parentRef.current,
     estimateSize: () => ROW_HEIGHT,
     overscan: 10,
@@ -78,7 +101,7 @@ export function DataTable<TData>({
       ref={parentRef}
       className="h-screen pb-[40px] px-3 overflow-auto rounded-md"
     >
-      <Table className={'table-fixed'}>
+      <Table>
         <TableHeader className="sticky top-0 z-10 bg-background">
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
@@ -105,16 +128,19 @@ export function DataTable<TData>({
         </TableHeader>
         <TableBody style={{ position: 'relative', height: `${totalSize}px` }}>
           {virtualRows.map((virtualRow) => {
-            const row = table.getRowModel().rows[virtualRow.index];
+            const row = expandedRowsModel.rows[virtualRow.index];
+            const isSubRow = row.depth > 0;
+
             return (
               <TableRow
                 key={row.id}
-                onMouseEnter={() =>
-                  onRowHover((row.original as any).id.toString())
-                }
+                onMouseEnter={() => onRowHover(row.original.id.toString())}
                 onMouseLeave={onRowLeave}
                 data-state={row.getIsSelected() && 'selected'}
-                className="absolute left-0 top-0 w-full table-fixed border-b border-border group"
+                className={`
+                  absolute left-0 top-0 w-full table-fixed border-b border-border group
+                  ${isSubRow ? 'bg-gray-50/50 dark:bg-gray-900/50' : ''}
+                `}
                 style={{
                   height: `${ROW_HEIGHT}px`,
                   transform: `translateY(${virtualRow.start}px)`,
@@ -130,6 +156,10 @@ export function DataTable<TData>({
                       width: cell.column.getSize(),
                       minWidth: cell.column.columnDef.minSize,
                       maxWidth: cell.column.columnDef.maxSize,
+                      paddingLeft:
+                        cell.column.id === 'name' && isSubRow
+                          ? `${row.depth * 20 + 8}px`
+                          : undefined,
                     }}
                   >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}

@@ -10,38 +10,57 @@ import { TagDialog } from '@/components/common/tag-dialog.tsx';
 import { Task } from '@/types/props/Common.ts';
 import { Icon } from '@/assets/icon-path.tsx';
 import { cn } from '@/lib/utils.ts';
+import { Row } from '@tanstack/react-table';
+import { useNavigate } from 'react-router-dom';
 
 interface Props {
   task: Task;
   isHovered: boolean;
+  row?: Row<Task>;
 }
 
-export const NameColumn = ({ task, isHovered }: Props) => {
+export const NameColumn = ({ task, isHovered, row }: Props) => {
+  const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
   const [editedName, setEditedName] = useState(task.name);
 
+  const isSubRow = (row?.depth && row.depth > 0) || false;
+  const canExpand = row?.getCanExpand();
+  const isExpanded = row?.getIsExpanded();
+
   const onRenameSubmit = () => {
     if (editedName.trim()) {
-      // call a save function here, or emit the change
       setIsEditing(false);
+    }
+  };
+
+  const onExpandToggle = () => {
+    if (row && canExpand) {
+      row.toggleExpanded();
     }
   };
 
   return (
     <div className="flex items-center min-w-[260px] gap-[12px] overflow-hidden">
       <div className="w-[40px] flex-shrink-0 flex justify-between items-center">
-        <IconButton>
+        <IconButton onClick={onExpandToggle}>
           <Icon
             name="expandsubtask"
-            className="text-content-tertiary -rotate-90"
+            className={cn(
+              'text-content-tertiary transition-transform duration-200',
+              isExpanded ? '' : '-rotate-90'
+            )}
           />
         </IconButton>
+
+        {/* Status Icon */}
         <TextTooltip message={task.status.name}>
           <IconButton style={{ color: task.status.color }}>
             <Icon name="progress2" className={`text-${task.status.color}`} />
           </IconButton>
         </TextTooltip>
       </div>
+
       <div className="ml-[12px] flex flex-col overflow-hidden">
         <div className="flex items-center overflow-hidden">
           {isEditing ? (
@@ -62,19 +81,25 @@ export const NameColumn = ({ task, isHovered }: Props) => {
           ) : (
             <TextTooltip message={task.name}>
               <span
-                className="text-lg font-medium text-content-default cursor-pointer hover:text-theme-main truncate max-w-[140px]"
+                className={cn(
+                  'text-base font-medium cursor-pointer hover:text-theme-main truncate max-w-[190px]'
+                )}
+                onClick={() => navigate(`/task`)}
                 onDoubleClick={() => setIsEditing(true)}
               >
                 {task.name}
               </span>
             </TextTooltip>
           )}
-          <div className="flex-shrink-0 flex ml-2 ">
-            <SubTaskSummary task={task} />
+
+          <div className="flex-shrink-0 flex ml-2">
+            {/* Only show subtask summary for parent tasks */}
+            {!isSubRow && <SubTaskSummary task={task} />}
             <DescriptionSummary task={task} />
             <TaskModifiers
               isHovered={isHovered}
               onRename={() => setIsEditing(true)}
+              isSubRow={isSubRow}
             />
           </div>
         </div>
@@ -86,9 +111,11 @@ export const NameColumn = ({ task, isHovered }: Props) => {
 const TaskModifiers = ({
   isHovered,
   onRename,
+  isSubRow = false,
 }: {
   isHovered: boolean;
   onRename: () => void;
+  isSubRow?: boolean;
 }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -106,12 +133,17 @@ const TaskModifiers = ({
               className="w-4 h-4 text-gray-500 hover:text-blue-600"
             />
           </IconButton>
-          <IconButton tooltipText="Add Subtask">
-            <Icon
-              name="add02"
-              className="w-4 h-4 text-gray-500 hover:text-blue-600"
-            />
-          </IconButton>
+
+          {/* Only show "Add Subtask" for parent tasks */}
+          {!isSubRow && (
+            <IconButton tooltipText="Add Subtask">
+              <Icon
+                name="add02"
+                className="w-4 h-4 text-gray-500 hover:text-blue-600"
+              />
+            </IconButton>
+          )}
+
           <IconButton tooltipText="Rename" onClick={onRename}>
             <Icon
               name="edit"
