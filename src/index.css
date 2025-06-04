@@ -46,6 +46,7 @@
     --content-danger:rgba(198, 42,47, 1);
     --content-onboarding-secondary:rgb(79, 87, 98);
     --content-progress: rgb(48, 164, 108);
+    --workspace-popover-background: rgb(249, 249, 249);
   }
   .dark {
     --background: rgba(17, 17, 17, 1);
