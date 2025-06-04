@@ -11,29 +11,30 @@ import { Task } from '@/types/props/Common.ts';
 import { Icon } from '@/assets/icon-path.tsx';
 import { cn } from '@/lib/utils.ts';
 import { Row } from '@tanstack/react-table';
+import { useNavigate } from 'react-router-dom';
 
 interface Props {
   task: Task;
   isHovered: boolean;
-  row?: Row<Task>; // Add row prop to access expand functionality
+  row?: Row<Task>;
 }
 
 export const NameColumn = ({ task, isHovered, row }: Props) => {
+  const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
   const [editedName, setEditedName] = useState(task.name);
 
-  const isSubRow = row?.depth && row.depth > 0;
+  const isSubRow = (row?.depth && row.depth > 0) || false;
   const canExpand = row?.getCanExpand();
   const isExpanded = row?.getIsExpanded();
 
   const onRenameSubmit = () => {
     if (editedName.trim()) {
-      // call a save function here, or emit the change
       setIsEditing(false);
     }
   };
 
-  const handleExpandToggle = () => {
+  const onExpandToggle = () => {
     if (row && canExpand) {
       row.toggleExpanded();
     }
@@ -42,20 +43,15 @@ export const NameColumn = ({ task, isHovered, row }: Props) => {
   return (
     <div className="flex items-center min-w-[260px] gap-[12px] overflow-hidden">
       <div className="w-[40px] flex-shrink-0 flex justify-between items-center">
-        {/* Expand/Collapse Button */}
-        {canExpand ? (
-          <IconButton onClick={handleExpandToggle}>
-            <Icon
-              name="expandsubtask"
-              className={cn(
-                'text-content-tertiary transition-transform duration-200',
-                isExpanded ? '' : '-rotate-90'
-              )}
-            />
-          </IconButton>
-        ) : (
-          <div className="w-[32px]" /> // Spacer for alignment when no expand button
-        )}
+        <IconButton onClick={onExpandToggle}>
+          <Icon
+            name="expandsubtask"
+            className={cn(
+              'text-content-tertiary transition-transform duration-200',
+              isExpanded ? '' : '-rotate-90'
+            )}
+          />
+        </IconButton>
 
         {/* Status Icon */}
         <TextTooltip message={task.status.name}>
@@ -86,11 +82,9 @@ export const NameColumn = ({ task, isHovered, row }: Props) => {
             <TextTooltip message={task.name}>
               <span
                 className={cn(
-                  'text-lg font-medium cursor-pointer hover:text-theme-main truncate max-w-[140px]',
-                  isSubRow
-                    ? 'text-content-secondary text-base' // Subtasks styled differently
-                    : 'text-content-default'
+                  'text-base text-content-default font-medium cursor-pointer hover:text-theme-main-dark hover:font-medium truncate max-w-[190px]'
                 )}
+                onClick={() => navigate(`/task`)}
                 onDoubleClick={() => setIsEditing(true)}
               >
                 {task.name}

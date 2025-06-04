@@ -39,7 +39,7 @@
     --sidebar-ring: 217.2 91.2% 59.8%;
     --content-tertiary: rgba(123, 123, 123, 1);
     --content-success:rgba(61, 214, 140, 1);
-    --content-default: rgba(32,32,32, 1);
+    --content-default: #202020;
     --content-secondary: rgba(180, 180, 180, 1);
     --content-warning: rgba(255, 204, 77, 1);
     --content-normal: rgba(99, 71, 234, 1);
@@ -216,6 +216,9 @@
   body {
     @apply bg-background text-foreground;
   }
+  html {
+    @apply tracking-wide;
+    @apply text-content-default;
+  }
 }
-html {
-}
+

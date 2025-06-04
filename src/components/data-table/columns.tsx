@@ -15,53 +15,46 @@ export const columns = (hoveredRowId: string | null): ColumnDef<Task>[] => [
       <SelectColumn
         isSelected={row.getIsSelected()}
         onSelect={() => row.toggleSelected()}
+        isHovered={row.original.id.toString() === hoveredRowId}
       />
     ),
-    minSize: 10,
-    maxSize: 10,
+    minSize: 35,
+    maxSize: 45,
     enableSorting: false,
     enableColumnFilter: false,
   },
   {
-    id: 'name', // Use id instead of accessorKey for expand functionality
+    id: 'name',
     accessorKey: COLUMN_META.ACCESSOR_KEY.NAME,
     header: () => COLUMN_META.HEADER.NAME,
     cell: ({ row }) => (
       <NameColumn
         task={row.original}
         isHovered={row.original.id.toString() === hoveredRowId}
-        row={row} // Pass the row object for expand functionality
+        row={row}
       />
     ),
-    minSize: 20,
-    maxSize: 30,
+    minSize: 300,
+    maxSize: 400,
   },
   {
     accessorKey: COLUMN_META.ACCESSOR_KEY.PRIORITY,
     header: () => COLUMN_META.HEADER.PRIORITY,
     cell: ({ row }) => <PriorityColumn task={row.original} />,
-    minSize: 10,
-    maxSize: 10,
   },
   {
     accessorKey: COLUMN_META.ACCESSOR_KEY.PROGRESS,
     header: () => COLUMN_META.HEADER.PROGRESS,
     cell: ({ row }) => <ProgressColumn task={row.original} />,
-    minSize: 5,
-    maxSize: 5,
   },
   {
     accessorKey: COLUMN_META.ACCESSOR_KEY.START_DATE,
     header: () => COLUMN_META.HEADER.START_DATE,
     cell: ({ row }) => <DateColumn task={row.original} dateType="start" />,
-    minSize: 10,
-    maxSize: 10,
   },
   {
     accessorKey: COLUMN_META.ACCESSOR_KEY.END_DATE,
     header: () => COLUMN_META.HEADER.END_DATE,
     cell: ({ row }) => <DateColumn task={row.original} dateType="end" />,
-    minSize: 10,
-    maxSize: 10,
   },
 ];

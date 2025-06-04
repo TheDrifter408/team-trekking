@@ -87,7 +87,7 @@ export function SingleDatePicker({
                     <div className="flex items-center gap-2">
                       <span
                         className={cn(
-                          'text-lg',
+                          'text-base text-content-default leading-4',
                           differenceInDays(new Date(), date) > 0
                             ? 'text-red-600' // Past dates in red
                             : 'text-content-default' // Future/current dates in normal color
@@ -98,7 +98,7 @@ export function SingleDatePicker({
                     </div>
                   </TooltipTrigger>
                   <TooltipContent>
-                    <p className={'font-medium '}>{formatFullDate(date)}</p>
+                    <p className={'font-medium'}>{formatFullDate(date)}</p>
                   </TooltipContent>
                 </Tooltip>
               </TooltipProvider>

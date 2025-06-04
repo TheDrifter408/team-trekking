@@ -60,9 +60,12 @@ import Tag from '@/assets/icons/tag.svg?react';
 
 import Edit from '@/assets/icons/edit.svg?react';
 
+import Search from '@/assets/icons/search-icon.svg?react';
+
 import SignUpBG from '@/assets/backgrounds/auth-gradient-background.svg?react';
 
 const iconPaths = {
+  search: Search,
   description: Description,
   add01: Add01,
   add02: Add02,
