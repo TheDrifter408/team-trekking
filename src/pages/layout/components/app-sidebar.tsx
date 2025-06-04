@@ -97,10 +97,10 @@ export const AppSidebar = ({
     <Sidebar
       collapsible={'icon'}
       className={cn(
-        'h-[calc(100%-40px)]',
+        'h-[calc(100%-45px)]',
         'peer-data-[state=collapsed]:w-[calc(100%-var(--sidebar-width-icon))]',
         'peer-data-[state=expanded]:w-[calc(100%-var(--sidebar-width))]',
-        'mt-[40px]'
+        'mt-[46px]'
       )}
       {...props}
     >
@@ -119,7 +119,7 @@ export const AppSidebar = ({
                 /* onMouseEnter={() => setEnterSpaceGroup(true)}
                  onMouseLeave={() => setEnterSpaceGroup(false)}*/
               >
-                <SidebarGroupLabel className="text-xs font-medium  tracking-wider">
+                <SidebarGroupLabel className="text-xs font-medium tracking-wider">
                   {LABEL.SPACES}
                 </SidebarGroupLabel>
                 <div className="flex gap-2">

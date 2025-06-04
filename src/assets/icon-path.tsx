@@ -60,8 +60,6 @@ import Tag from '@/assets/icons/tag.svg?react';
 
 import Edit from '@/assets/icons/edit.svg?react';
 
-import Search from '@/assets/icons/search-icon.svg?react';
-
 import SignUpBG from '@/assets/backgrounds/auth-gradient-background.svg?react';
 
 import Setting from '@/assets/icons/seting-icon.svg?react';
@@ -111,7 +109,6 @@ const iconPaths = {
   edit: Edit,
   signUpBG: SignUpBG,
   setting: Setting,
-  search: Search,
   close: Close,
   users: Users,
   thunder: Thunder,
