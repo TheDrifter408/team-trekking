@@ -58,6 +58,7 @@ export default {
           progress: 'var(--content-progress)',
           'onboarding-secondary': 'var(--content-onboarding-secondary)',
         },
+        "workspace-popover": 'var(--workspace-popover-background)',
         background: 'var(--background)',
         foreground: 'hsl(var(--foreground))',
         card: {

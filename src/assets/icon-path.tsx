@@ -64,6 +64,18 @@ import Search from '@/assets/icons/search-icon.svg?react';
 
 import SignUpBG from '@/assets/backgrounds/auth-gradient-background.svg?react';
 
+import Setting from '@/assets/icons/seting-icon.svg?react';
+
+import Search from '@/assets/icons/search-icon.svg?react';
+
+import Close from '@/assets/icons/close-icon.svg?react';
+
+import Users from '@/assets/icons/users.svg?react';
+
+import Thunder from '@/assets/icons/thunder.svg?react';
+
+import FieldsCreate from '@/assets/icons/fields-create.svg?react';
+
 const iconPaths = {
   search: Search,
   description: Description,
@@ -98,6 +110,12 @@ const iconPaths = {
   tag: Tag,
   edit: Edit,
   signUpBG: SignUpBG,
+  setting: Setting,
+  search: Search,
+  close: Close,
+  users: Users,
+  thunder: Thunder,
+  fieldscreate: FieldsCreate,
 } as const;
 
 type IconName = keyof typeof iconPaths;

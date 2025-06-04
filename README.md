@@ -1,54 +1,102 @@
-# React + TypeScript + Vite
-
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+# 📁 Project Folder Structure
+```
+team-trekking-front-end/
+├── .husky/                # Git hooks (pre-commit/pre-push)
+├── public/                # Static public files (e.g., index.html, favicon)
+├── src/                   # Source code
+│   ├── assets/            # Static assets like images, icons, fonts
+│   ├── components/        # Reusable UI components (buttons, dialogs, etc.)
+│   │   ├── layout/        # Layout-related components (e.g., sidebar, header)
+│   │   ├── shadcn-ui/     # Customized shadcn/ui components
+│   │   └── space/         # Feature-specific components for the 'space' module
+│   ├── lib/               # Utility code shared across the app
+│   │   ├── config/        # App-level configurations (e.g., environment setup)
+│   │   ├── constants/     # Common constants used throughout the app
+│   │   ├── context/       # React Context providers
+│   │   ├── hooks/         # Custom React hooks
+│   │   ├── validation/    # Zod validation schemas
+│   │   └── utils.ts       # General utility functions
+│   ├── mock/              # Mock data for testing or prototyping
+│   ├── pages/             # Page-level components (mapped to routes)
+│   │   ├── board/         
+│   │   ├── calendar/
+│   │   ├── dashboard/
+│   │   ├── folder/
+│   │   ├── gantt-chart/
+│   │   ├── inbox/
+│   │   ├── layout/
+│   │   ├── list/
+│   │   ├── login/
+│   │   ├── space/
+│   │   └── task/
+│   ├── routes/            # React Router route definitions
+│   ├── service/           # Axios instance and RTK base query setup
+│   │   ├── axiosInstance.ts
+│   │   ├── baseQuery.ts
+│   │   └── rtkQuery.ts
+│   ├── stores/            # Zustand stores and middlewares
+│   │   └── zustand/
+│   │       ├── apiErrorMiddleware.ts
+│   │       └── store.ts
+│   ├── types/             # TypeScript type definitions
+│   │   ├── interfaces/    
+│   │   ├── props/
+│   │   └── request-response/
+│   ├── App.tsx            # Root application component
+│   ├── index.css          # Tailwind base styles
+│   ├── main.tsx           # App entry point
+│   └── vite-env.d.ts      # Vite-specific TypeScript definitions
+├── .gitignore             # Files ignored by Git
+├── .prettierrc            # Prettier config
+├── .prettierignore        # Ignore rules for Prettier
+├── eslint.config.js       # ESLint config
+├── components.json        # Custom component registry (used by shadcn/ui)
+├── index.html             # Main HTML template for Vite
+├── package.json           # Project metadata and dependencies
+└── tsconfig.json          # TypeScript configuration
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+# 🧠 Developer Notes
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+### ✅ Why this structure?
+- Separation of concerns: Components, logic, utilities, and pages are isolated and easy to locate.
+-	Scalability: Designed to support new features without clutter.
+-	Team-friendly: New devs can contribute quickly by following folder conventions.
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
+### 🔧 Key Libraries Used
+- 	Zustand: Lightweight state management in src/stores/
+- 	RTK Query: API integration via src/service/rtkQuery.ts
+- 	Axios: Custom instance in src/service/axiosInstance.ts
+- 	React Router: Route definitions in src/routes/
+- 	Tailwind CSS: Utility-first styling via index.css
+- 	shadcn/ui: Modular UI components in components/shadcn-ui/
+- 	Zod: Schema validation in lib/validation/
+- 	ESLint + Prettier + Husky: Code quality enforced with pre-commit hooks
+
+# 🚀 Run Guide for Developers
+This guide helps developers clone, install, run, lint, and build the project efficiently.
+
+### ✅ 1. Clone the Repository
 ```
+git clone https://gitlab.com/tarun02001/team-trekking-front-end.git
+```
+Navigate into the project folder:
+```
+cd team-trekking-front-end
+```
+
+### ✅ 2. Install Dependencies
+Use npm to install all required packages:
+```
+npm install 
+```
+Or
+```
+npm install --legecy-peer-deps
+```
+### ✅ 3. Start the Development Server
+```
+npm run dev
+```
+
+

@@ -86,6 +86,8 @@ export function DataTable<TData>({
 
   const expandedRowsModel = table.getExpandedRowModel();
 
+  const expandedRowsModel = table.getExpandedRowModel();
+
   const rowVirtualizer = useVirtualizer({
     count: expandedRowsModel.rows.length,
     getScrollElement: () => parentRef.current,
