@@ -88,7 +88,7 @@ let taskIdCounter = 1;
 
 const generateTask = (level = 1): Task => {
   const task: Task = {
-    id: taskIdCounter++,
+    id: (taskIdCounter++).toString(),
     name: faker.lorem.sentence(3),
     progress: faker.number.int({ min: 0, max: 100 }),
     status: getRandomStatus(),

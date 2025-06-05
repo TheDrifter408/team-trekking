@@ -29,7 +29,7 @@ export const PriorityColumn = ({ task }: Props) => {
     <div
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className={`${isHovered ? 'border' : ''} w-[60px] h-full rounded hover:bg-accent items-center flex`}
+      className={`${isHovered ? 'border' : ''} w-full h-full rounded hover:bg-accent items-center flex`}
     >
       <PriorityPopover isOpen={isPopoverOpen} setIsOpen={setIsPopoverOpen}>
         <Button
