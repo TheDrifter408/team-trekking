@@ -3,7 +3,14 @@
 echo "🔍 Running pre-commit checks..."
 
 # Get staged JS/TS files excluding .husky directory
-FILES=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.(js|ts|jsx|tsx)$' | grep -v '^.husky/' || true)
+RAW_FILES=$(git diff --name-only origin/develop...HEAD | grep -E '\.(js|ts|jsx|tsx)$' || true)
+
+FILES=""
+for file in $RAW_FILES; do
+  if [ -f "$file" ]; then
+    FILES="$FILES $file"
+  fi
+done
 
 if [ -z "$FILES" ]; then
   echo "✅ No JS/TS files to check."

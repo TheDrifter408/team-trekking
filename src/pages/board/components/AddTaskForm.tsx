@@ -13,6 +13,7 @@ import {
   Dispatch,
   KeyboardEvent,
   SetStateAction,
+  useCallback,
   useRef,
   useState,
 } from 'react';
@@ -42,9 +43,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/shadcn-ui/select';
-import { Assignee, PriorityType } from '@/mock';
+import { Assignee } from '@/mock';
 import { LABEL } from '@/lib/constants/appStrings.ts';
 import { useClickOutside } from '@/lib/hooks/use-click-outside';
+import { PriorityType } from '@/lib/constants';
 
 const assignees: Assignee[] = [];
 const priorities: PriorityType[] = ['HIGH', 'LOW', 'MIDDLE', 'NONE'];
@@ -86,7 +88,7 @@ export const AddTaskForm = ({
     },
   });
 
-  const handleKeyDown = (e: KeyboardEvent<HTMLFormElement>) => {
+  const onKeyDown = (e: KeyboardEvent<HTMLFormElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       form.handleSubmit(onSubmit)();
@@ -99,20 +101,20 @@ export const AddTaskForm = ({
   const assigneePopoverRef = useRef<HTMLDivElement>(null);
   const priorityRef = useRef<HTMLDivElement>(null);
 
-  useClickOutside(
-    [formRef, datePopoverRef, assigneePopoverRef, priorityRef],
-    () => {
-      if (addingTask) {
-        setAddingTask(false);
-      }
+  const refs = [formRef, datePopoverRef, assigneePopoverRef, priorityRef];
+  const handleClickOutside = useCallback(() => {
+    if (addingTask) {
+      setAddingTask(false);
     }
-  );
+  }, [addingTask, setAddingTask]);
+
+  useClickOutside(refs, handleClickOutside);
 
   return (
     <Form {...form}>
       <form
         ref={formRef}
-        onKeyDown={handleKeyDown}
+        onKeyDown={onKeyDown}
         className={'bg-white p-2 rounded-xl'}
       >
         <FormField

@@ -1,6 +1,6 @@
 import { LucideIcon } from 'lucide-react';
 import { LABEL } from '@/lib/constants/appStrings.ts';
-import { Folder } from '@/types/interfaces/Folder';
+import { Folder } from '@/types/props/Layout.ts';
 import { Dispatch, SetStateAction } from 'react';
 
 export interface Space {

@@ -95,4 +95,16 @@ export interface ManageToolsProps {
   onToggleTool: (tool: string) => void;
 }
 
+export interface List {
+  name: string;
+  id: number;
+  taskNumber: number;
+}
+
+export interface Folder {
+  id: number;
+  name: string;
+  lists: List[];
+}
+
 export type { SidebarData, NavGroup, NavItem, NavCollapsible, NavLink };

@@ -22,7 +22,6 @@ import { BoardColumn } from './components/column.tsx';
 import { TaskCard } from './components/task-card.tsx';
 import { HeaderType } from '@/types/props/Common.ts';
 import { PageHeader } from '@/components/layout/page-header.tsx';
-import { useTheme } from '@/lib/context/theme-context.tsx';
 import { LABEL } from '@/lib/constants/appStrings.ts';
 import { Card } from '@/components/shadcn-ui/card.tsx';
 import { Button } from '@/components/shadcn-ui/button.tsx';
@@ -32,9 +31,6 @@ import { Column, Task } from '@/types/props/Common.ts';
 import { StrictPointerSensor } from '@/lib/classes/StrictPointerSensor.ts';
 
 export const Board = () => {
-  // Get the Theme
-  const { theme } = useTheme();
-
   const [columns, setColumns] = useState<Column[]>(mockColumns);
   const [activeTask, setActiveTask] = useState<Task | null>(null);
   const [activeColumnId, setActiveColumnId] = useState<string | null>(null);
@@ -71,7 +67,7 @@ export const Board = () => {
     })
   );
 
-  const handleDragStart = (event: DragStartEvent) => {
+  const onDragStart = (event: DragStartEvent) => {
     const { active } = event;
     const taskId = active.id as string;
 
@@ -92,7 +88,7 @@ export const Board = () => {
     }
   };
 
-  const handleDragOver = (event: DragOverEvent) => {
+  const onDragOver = (event: DragOverEvent) => {
     const { active, over } = event;
 
     if (!over) return;
@@ -200,7 +196,7 @@ export const Board = () => {
     }
   };
 
-  const handleDragEnd = (event: DragEndEvent) => {
+  const onDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
 
     if (!over) {
@@ -259,7 +255,7 @@ export const Board = () => {
     setActiveColumnId(null);
   };
 
-  const handleDragCancel = () => {
+  const onDragCancel = () => {
     setActiveTask(null);
     setActiveColumnId(null);
   };
@@ -311,15 +307,15 @@ export const Board = () => {
   return (
     <>
       <PageHeader currentPage={currentPage} parents={parents} />
-      <Main className={theme === 'dark' ? 'dark' : 'light'}>
+      <Main>
         <div className="relative overflow-x-auto h-full text-foreground transition-colors duration-300">
           <DndContext
             sensors={sensors}
             collisionDetection={closestCenter}
-            onDragStart={handleDragStart}
-            onDragOver={handleDragOver}
-            onDragEnd={handleDragEnd}
-            onDragCancel={handleDragCancel}
+            onDragStart={onDragStart}
+            onDragOver={onDragOver}
+            onDragEnd={onDragEnd}
+            onDragCancel={onDragCancel}
           >
             {/* Container for draggables */}
             <div

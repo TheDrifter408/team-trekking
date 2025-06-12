@@ -30,19 +30,20 @@ import {
   WandSparkles,
 } from 'lucide-react';
 import { MenuSection } from '@/types/interfaces/ContextMenu.ts';
-
+import { LABEL } from './appStrings';
+import { ACTION } from './appConstant';
 export const spacesMenuConfig: MenuSection[] = [
   {
     items: [
       {
         icon: Plus,
-        label: 'Create Space',
-        action: 'create_space',
+        label: LABEL.CREATE_SPACE,
+        action: ACTION.CREATE_SPACE,
       },
       {
         icon: Grid3X3,
-        label: 'Manage Spaces',
-        action: 'manage_spaces',
+        label: LABEL.MANAGE_SPACES,
+        action: ACTION.MANAGE_SPACES,
       },
     ],
   },
@@ -50,8 +51,8 @@ export const spacesMenuConfig: MenuSection[] = [
     items: [
       {
         icon: ChevronDown,
-        label: 'Expand all Folders',
-        action: 'expand_folders',
+        label: LABEL.EXPAND_ALL_FOLDERS,
+        action: ACTION.EXPAND_FOLDERS,
       },
     ],
   },
@@ -60,16 +61,16 @@ export const spacesMenuConfig: MenuSection[] = [
       {
         type: 'toggle',
         icon: Eye,
-        label: 'Show all Spaces',
+        label: LABEL.SHOW_ALL_SPACES,
         enabled: false,
-        action: 'toggle_show_spaces',
+        action: ACTION.TOGGLE_SHOW_SPACES,
       },
       {
         type: 'toggle',
         icon: Archive,
-        label: 'Show archived',
+        label: LABEL.SHOW_ARCHIVED,
         enabled: false,
-        action: 'toggle_show_archived',
+        action: ACTION.TOGGLE_SHOW_ARCHIVED,
       },
     ],
   },
@@ -81,13 +82,13 @@ export const folderMenuConfig: MenuSection[] = [
     items: [
       {
         icon: Edit,
-        label: 'Rename',
-        action: 'rename',
+        label: LABEL.RENAME,
+        action: ACTION.RENAME,
       },
       {
         icon: Link,
-        label: 'Copy link',
-        action: 'copy_link',
+        label: LABEL.COPY_LINK,
+        action: ACTION.COPY_LINK,
       },
     ],
   },
@@ -96,31 +97,31 @@ export const folderMenuConfig: MenuSection[] = [
       {
         type: 'submenu',
         icon: Plus,
-        label: 'Create new',
+        label: LABEL.CREATE_NEW,
         submenu: [
-          { label: 'Page', action: 'create_page' },
-          { label: 'Database', action: 'create_database' },
-          { label: 'Board', action: 'create_board' },
+          { label: LABEL.PAGE, action: ACTION.CREATE_PAGE },
+          { label: LABEL.DATABASE, action: ACTION.CREATE_DATABASE },
+          { label: LABEL.BOARD, action: ACTION.CREATE_BOARD },
         ],
       },
       {
         type: 'submenu',
         icon: Settings,
-        label: 'Folder settings',
+        label: LABEL.FOLDER_SETTINGS,
         submenu: [
-          { label: 'General', action: 'settings_general' },
-          { label: 'Permissions', action: 'settings_permissions' },
-          { label: 'Export', action: 'settings_export' },
+          { label: LABEL.GENERAL, action: ACTION.SETTINGS_GENERAL },
+          { label: LABEL.PERMISSIONS, action: ACTION.SETTINGS_PERMISSIONS },
+          { label: LABEL.EXPORT, action: ACTION.SETTINGS_EXPORT },
         ],
       },
       {
         type: 'submenu',
         icon: File,
-        label: 'Templates',
+        label: LABEL.TEMPLATES,
         submenu: [
-          { label: 'Create Template', action: 'create_template' },
-          { label: 'Browse Templates', action: 'browse_templates' },
-          { label: 'My Templates', action: 'my_templates' },
+          { label: LABEL.CREATE_TEMPLATE, action: ACTION.CREATE_TEMPLATE },
+          { label: LABEL.BROWSE_TEMPLATES, action: ACTION.BROWSE_TEMPLATES },
+          { label: LABEL.MY_TEMPLATES, action: ACTION.MY_TEMPLATES },
         ],
       },
     ],
@@ -129,8 +130,8 @@ export const folderMenuConfig: MenuSection[] = [
     items: [
       {
         icon: Star,
-        label: 'Add to Favorites',
-        action: 'add_favorites',
+        label: LABEL.ADD_TO_FAVORITES,
+        action: ACTION.ADD_FAVORITES,
       },
     ],
   },
@@ -139,21 +140,21 @@ export const folderMenuConfig: MenuSection[] = [
       {
         type: 'submenu',
         icon: FolderOpen,
-        label: 'Move',
+        label: LABEL.MOVE,
         submenu: [
-          { label: 'To Workspace', action: 'move_workspace' },
-          { label: 'To Folder', action: 'move_folder' },
+          { label: LABEL.TO_WORKSPACE, action: ACTION.MOVE_WORKSPACE },
+          { label: LABEL.TO_WORKSPACE, action: ACTION.MOVE_FOLDER },
         ],
       },
       {
         icon: Copy,
-        label: 'Duplicate',
-        action: 'duplicate',
+        label: LABEL.DUPLICATE,
+        action: ACTION.DUPLICATE,
       },
       {
         icon: Archive,
-        label: 'Archive',
-        action: 'archive',
+        label: LABEL.ARCHIVE,
+        action: ACTION.ARCHIVE,
       },
     ],
   },
@@ -162,8 +163,8 @@ export const folderMenuConfig: MenuSection[] = [
       {
         type: 'destructive',
         icon: Trash2,
-        label: 'Delete',
-        action: 'delete',
+        label: LABEL.DELETE,
+        action: ACTION.DELETE,
       },
     ],
   },
@@ -172,8 +173,8 @@ export const folderMenuConfig: MenuSection[] = [
     items: [
       {
         type: 'button',
-        label: 'Sharing & Permissions',
-        action: 'sharing',
+        label: LABEL.SHARING_AND_PERMISSIONS,
+        action: ACTION.SHARING,
       },
     ],
   },
@@ -185,13 +186,13 @@ export const listMenuConfig: MenuSection[] = [
     items: [
       {
         icon: Edit,
-        label: 'Rename',
-        action: 'rename',
+        label: LABEL.RENAME,
+        action: ACTION.RENAME,
       },
       {
         icon: Link,
-        label: 'Copy link',
-        action: 'copy_link',
+        label: LABEL.COPY_LINK,
+        action: ACTION.COPY_LINK,
       },
     ],
   },
@@ -200,43 +201,43 @@ export const listMenuConfig: MenuSection[] = [
       {
         type: 'submenu',
         icon: Plus,
-        label: 'Create new',
+        label: LABEL.CREATE_NEW,
         submenu: [
-          { label: 'Task', action: 'create_task' },
-          { label: 'Subtask', action: 'create_subtask' },
+          { label: LABEL.TASK, action: ACTION.CREATE_TASK },
+          { label: LABEL.SUBTASK, action: ACTION.CREATE_SUBTASK },
         ],
       },
       {
         icon: List,
-        label: 'Convert List to Sprint',
-        action: 'convert_sprint',
+        label: LABEL.CONVERT_LIST_TO_SPRINT,
+        action: ACTION.CONVERT_SPRINT,
       },
       {
         type: 'submenu',
         icon: Palette,
-        label: 'Color & Icon',
+        label: LABEL.COLOR_AND_ICON,
         submenu: [
-          { label: 'Change Icon', action: 'change_icon' },
-          { label: 'Change Color', action: 'change_color' },
+          { label: LABEL.CHANGE_ICON, action: ACTION.CHANGE_ICON },
+          { label: LABEL.CHANGE_COLOR, action: ACTION.CHANGE_COLOR },
         ],
       },
       {
         type: 'submenu',
         icon: Settings,
-        label: 'List settings',
+        label: LABEL.LIST_SETTINGS,
         submenu: [
-          { label: 'General', action: 'settings_general' },
-          { label: 'Permissions', action: 'settings_permissions' },
+          { label: LABEL.GENERAL, action: ACTION.SETTINGS_GENERAL },
+          { label: LABEL.PERMISSIONS, action: ACTION.SETTINGS_PERMISSIONS },
         ],
       },
       {
         type: 'submenu',
         icon: File,
-        label: 'Templates',
-        rightText: 'Default set',
+        label: LABEL.TEMPLATES,
+        rightText: LABEL.DEFAULT_SET,
         submenu: [
-          { label: 'Create Template', action: 'create_template' },
-          { label: 'Browse Templates', action: 'browse_templates' },
+          { label: LABEL.CREATE_TEMPLATE, action: ACTION.CREATE_TEMPLATE },
+          { label: LABEL.BROWSE_TEMPLATES, action: ACTION.BROWSE_TEMPLATES },
         ],
       },
     ],
@@ -245,28 +246,28 @@ export const listMenuConfig: MenuSection[] = [
     items: [
       {
         icon: Info,
-        label: 'List Info',
-        action: 'list_info',
+        label: LABEL.LIST_INFO,
+        action: ACTION.LIST_INFO,
       },
       {
         icon: Star,
-        label: 'Add to Favorites',
-        action: 'add_favorites',
+        label: LABEL.ADD_TO_FAVORITES,
+        action: ACTION.ADD_FAVORITES,
       },
       {
         type: 'submenu',
         icon: Settings,
-        label: 'Default task type',
+        label: LABEL.DEFAULT_TASK_TYPE,
         submenu: [
-          { label: 'Task', action: 'default_task' },
-          { label: 'Bug', action: 'default_bug' },
-          { label: 'Feature', action: 'default_feature' },
+          { label: LABEL.TASK, action: ACTION.DEFAULT_TASK },
+          { label: LABEL.BUG, action: ACTION.DEFAULT_BUG },
+          { label: LABEL.FEATURE, action: ACTION.DEFAULT_FEATURE },
         ],
       },
       {
         icon: Mail,
-        label: 'Email to List',
-        action: 'email_list',
+        label: LABEL.EMAIL_TO_LIST,
+        action: ACTION.EMAIL_LIST,
       },
     ],
   },
@@ -275,21 +276,21 @@ export const listMenuConfig: MenuSection[] = [
       {
         type: 'submenu',
         icon: FolderOpen,
-        label: 'Move',
+        label: LABEL.MOVE,
         submenu: [
-          { label: 'To Workspace', action: 'move_workspace' },
-          { label: 'To Folder', action: 'move_folder' },
+          { label: LABEL.TO_WORKSPACE, action: ACTION.MOVE_WORKSPACE },
+          { label: LABEL.TO_FOLDER, action: ACTION.MOVE_FOLDER },
         ],
       },
       {
         icon: Copy,
-        label: 'Duplicate',
-        action: 'duplicate',
+        label: LABEL.DUPLICATE,
+        action: ACTION.DUPLICATE,
       },
       {
         icon: Archive,
-        label: 'Archive',
-        action: 'archive',
+        label: LABEL.ARCHIVE,
+        action: ACTION.ARCHIVE,
       },
     ],
   },
@@ -298,8 +299,8 @@ export const listMenuConfig: MenuSection[] = [
       {
         type: 'destructive',
         icon: Trash2,
-        label: 'Delete',
-        action: 'delete',
+        label: LABEL.DELETE,
+        action: ACTION.DELETE,
       },
     ],
   },
@@ -308,12 +309,13 @@ export const listMenuConfig: MenuSection[] = [
     items: [
       {
         type: 'button',
-        label: 'Sharing & Permissions',
-        action: 'sharing',
+        label: LABEL.SHARING_AND_PERMISSIONS,
+        action: ACTION.SHARING,
       },
     ],
   },
 ];
+
 
 // Board Column context menu
 export const columnMenuConfig: MenuSection[] = [
@@ -321,13 +323,13 @@ export const columnMenuConfig: MenuSection[] = [
     items: [
       {
         icon: ArrowLeftToLine,
-        label: 'Collapse group',
-        action: 'collapse_group',
+        label: LABEL.COLLAPSE_GROUP,
+        action: ACTION.COLLAPSE_GROUP,
       },
       {
         icon: ArchiveIcon,
-        label: 'Archive All in this group',
-        action: 'archive_group',
+        label: LABEL.ARCHIVE_ALL_IN_GROUP,
+        action: ACTION.ARCHIVE_GROUP,
       },
     ],
   },
@@ -335,18 +337,18 @@ export const columnMenuConfig: MenuSection[] = [
     items: [
       {
         icon: CheckCheck,
-        label: 'Select all',
-        action: 'select_all',
+        label: LABEL.SELECT_ALL,
+        action: ACTION.SELECT_ALL,
       },
       {
         icon: Pencil,
-        label: 'Rename',
-        action: 'rename',
+        label: LABEL.RENAME,
+        action: ACTION.RENAME,
       },
       {
         icon: Disc2,
-        label: 'Edit Statuses',
-        action: 'edit_statuses',
+        label: LABEL.EDIT_STATUSES,
+        action: ACTION.EDIT_STATUSES,
       },
     ],
   },
@@ -358,71 +360,71 @@ export const boardTaskMenuConfig: MenuSection[] = [
     items: [
       {
         icon: Pencil,
-        label: 'Rename',
-        action: 'rename',
+        label: LABEL.RENAME,
+        action: ACTION.RENAME,
       },
       {
         icon: Plus,
-        label: 'Add to',
-        action: 'add_to',
+        label: LABEL.ADD_TO,
+        action: ACTION.ADD_TO,
       },
       {
         icon: Repeat2,
-        label: 'Convert to',
+        label: LABEL.CONVERT_TO,
         type: 'submenu',
         submenu: [
           {
-            label: 'List',
-            action: 'convert_to_list',
+            label: LABEL.LIST,
+            action: ACTION.CONVERT_TO_LIST,
           },
           {
-            label: 'Task',
-            action: 'convert_to_task',
+            label: LABEL.TASK,
+            action: ACTION.CONVERT_TO_TASK,
           },
         ],
       },
       {
         icon: Box,
-        label: 'Task Type',
+        label: LABEL.TASK_TYPE,
         type: 'submenu',
         submenu: [
           {
-            label: 'Task',
-            action: 'change_type_to_task',
+            label: LABEL.TASK,
+            action: ACTION.CHANGE_TYPE_TO_TASK,
           },
           {
-            label: 'Milestone',
-            action: 'change_type_to_milestone',
+            label: LABEL.MILESTONE,
+            action: ACTION.CHANGE_TYPE_TO_MILESTONE,
           },
           {
-            label: 'Form Response',
-            action: 'change_type_to_form_response',
+            label: LABEL.FORM_RESPONSE,
+            action: ACTION.CHANGE_TYPE_TO_FORM_RESPONSE,
           },
           {
-            label: 'Bug',
-            action: 'change_type_to_bug',
+            label: LABEL.BUG,
+            action: ACTION.CHANGE_TYPE_TO_BUG,
           },
         ],
       },
       {
         icon: Copy,
-        label: 'Duplicate',
-        action: 'duplicate_task',
+        label: LABEL.DUPLICATE,
+        action: ACTION.DUPLICATE_TASK,
       },
       {
         icon: AlarmClock,
-        label: 'Remind Me',
-        action: 'remind_me_task',
+        label: LABEL.REMIND_ME,
+        action: ACTION.REMIND_ME_TASK,
       },
       {
         icon: Inbox,
-        label: 'Send email to task',
-        action: 'send_email_to_task',
+        label: LABEL.SEND_EMAIL_TO_TASK,
+        action: ACTION.SEND_EMAIL_TO_TASK,
       },
       {
         icon: MergeIcon,
-        label: 'Merge',
-        action: 'merge_task',
+        label: LABEL.MERGE,
+        action: ACTION.MERGE_TASK,
       },
     ],
   },
@@ -430,25 +432,25 @@ export const boardTaskMenuConfig: MenuSection[] = [
     items: [
       {
         icon: AlignVerticalDistributeStart,
-        label: 'Dependencies',
-        action: 'toggle_dependencies_dialog',
+        label: LABEL.DEPENDENCIES,
+        action: ACTION.TOGGLE_DEPENDENCIES_DIALOG,
       },
       {
         icon: WandSparkles,
-        label: 'Templates',
+        label: LABEL.TEMPLATES,
         type: 'submenu',
         submenu: [
           {
-            label: 'Browse Templates',
-            action: 'toggle_tempates_dialog',
+            label: LABEL.BROWSE_TEMPLATES,
+            action: ACTION.TOGGLE_TEMPATES_DIALOG,
           },
           {
-            label: 'Save as Template',
-            action: 'save_as_template',
+            label: LABEL.SAVE_AS_TEMPLATE,
+            action: ACTION.SAVE_AS_TEMPLATE,
           },
           {
-            label: 'Update existing Template',
-            action: 'update_existing_template',
+            label: LABEL.UPDATE_EXISTING_TEMPLATE,
+            action: ACTION.UPDATE_EXISTING_TEMPLATE,
           },
         ],
       },
