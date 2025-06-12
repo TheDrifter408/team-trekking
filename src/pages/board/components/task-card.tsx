@@ -23,14 +23,8 @@ import { TaskCardProps } from '@/types/props/Common';
 import { useClickOutside } from '@/lib/hooks/use-click-outside';
 import { useAutoFocus } from '@/lib/hooks/use-auto-focus';
 import { MenuItem, SubmenuItem } from '@/types/interfaces/ContextMenu';
-
-// Moved outside component to avoid re-creation on each render
-const PRIORITY_COLORS = {
-  high: 'rgb(198, 42, 47)',
-  mid: 'rgb(255, 197, 61)',
-  low: 'rgb(62, 99, 221)',
-  default: 'rgb(187, 187, 187)',
-};
+import { useTheme } from '@/lib/context/theme-context';
+import { PRIORITY_COLORS } from '@/mock';
 
 const TaskCard = ({
   task,
@@ -39,6 +33,7 @@ const TaskCard = ({
   isSubtask = false,
   isDragOverlay = false,
 }: TaskCardProps) => {
+  const { theme } = useTheme();
   const [showSubtasks, setShowSubtasks] = useState(false);
   const [onEnterTask, setOnEnterTask] = useState(false);
   const [isContextMenuOpen, setIsContextMenuOpen] = useState(false);
@@ -97,10 +92,10 @@ const TaskCard = ({
   const style =
     transform && !isDragOverlay
       ? {
-          transform: CSS.Translate.toString(transform),
-          opacity: isDragging ? 0.5 : 1,
-          zIndex: isDragging ? 50 : 'auto',
-        }
+        transform: CSS.Translate.toString(transform),
+        opacity: isDragging ? 0.5 : 1,
+        zIndex: isDragging ? 50 : 'auto',
+      }
       : undefined;
 
   const toggleSubtasks = (e: MouseEvent) => {
@@ -174,7 +169,7 @@ const TaskCard = ({
           'bg-background cursor-pointer transition-all duration-150 relative py-2',
           isSubtask && 'border-l-4 border-l-primary/30 ',
           isDragOverlay &&
-            'w-[244px] shadow-2xl ring-2 ring-primary z-50 scale-[1.03] border-primary/80 rotate-1 bg-background'
+          'w-[244px] shadow-2xl ring-2 ring-primary z-50 scale-[1.03] border-primary/80 rotate-1 bg-background'
         )}
         {...(isSubtask || isDragOverlay ? {} : { ...attributes, ...listeners })}
         onMouseEnter={() => setOnEnterTask(true)}
@@ -199,10 +194,12 @@ const TaskCard = ({
             </div>
             <div
               className={cn(
-                'absolute top-0 right-0 flex bg-white border rounded-xl z-10 transition-opacity duration-100 shadow-sm',
+                'absolute top-0 right-0 flex border rounded-xl z-10 transition-opacity duration-100 shadow-sm',
                 onEnterTask && !isEditingTaskName
                   ? 'opacity-100 visible'
-                  : 'opacity-0 invisible'
+                  : 'opacity-0 invisible',
+                theme === 'dark' ? 'bg-black' : 'bg-white'
+
               )}
             >
               <Button
@@ -270,8 +267,8 @@ const TaskCard = ({
               <span className="text-sm text-muted-foreground font-semibold">
                 {task.startDate && task.dueDate
                   ? `${formatDate(task.startDate)}` +
-                    '-' +
-                    `${formatDate(task.dueDate)}`
+                  '-' +
+                  `${formatDate(task.dueDate)}`
                   : ''}
               </span>
             </div>

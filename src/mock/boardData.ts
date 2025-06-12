@@ -8,6 +8,7 @@ import {
   CheckSquare as CompletedIcon,
 } from 'lucide-react';
 import { Column, Task } from '@/types/props/Common';
+import { Priority } from '@/lib/constants';
 // Then in the icons object:
 const icons = {
   backlog: BacklogIcon,
@@ -33,13 +34,7 @@ export enum TaskStatus {
   REJECTED = 'rejected',
   APPROVED = 'approved',
 }
-export enum Priority {
-  NONE = 'none',
-  LOW = 'low',
-  MIDDLE = 'mid',
-  HIGH = 'high',
-}
-export type PriorityType = keyof typeof Priority;
+
 export type TaskStatusType = keyof typeof TaskStatus | TaskStatus;
 
 // Function to create random assignees
@@ -93,6 +88,14 @@ const createRandomTasks = (status: TaskStatus, count: number): Task[] => {
     };
   });
 };
+
+export const PRIORITY_COLORS = {
+  high: 'rgb(198, 42, 47)',
+  mid: 'rgb(255, 197, 61)',
+  low: 'rgb(62, 99, 221)',
+  default: 'rgb(187, 187, 187)',
+};
+
 // Create mock columns with tasks
 export const mockColumns: Column[] = [
   {
