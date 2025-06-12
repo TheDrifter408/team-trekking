@@ -13,6 +13,7 @@ import {
   Dispatch,
   KeyboardEvent,
   SetStateAction,
+  useCallback,
   useRef,
   useState,
 } from 'react';
@@ -99,14 +100,14 @@ export const AddTaskForm = ({
   const assigneePopoverRef = useRef<HTMLDivElement>(null);
   const priorityRef = useRef<HTMLDivElement>(null);
 
-  useClickOutside(
-    [formRef, datePopoverRef, assigneePopoverRef, priorityRef],
-    () => {
-      if (addingTask) {
-        setAddingTask(false);
-      }
+  const refs = [formRef, datePopoverRef, assigneePopoverRef, priorityRef];
+  const handleClickOutside = useCallback(() => {
+    if (addingTask) {
+      setAddingTask(false);
     }
-  );
+  }, [addingTask, setAddingTask]);
+
+  useClickOutside(refs, handleClickOutside);
 
   return (
     <Form {...form}>
