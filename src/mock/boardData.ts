@@ -7,7 +7,7 @@ import {
   FlaskRoundIcon as TestingIcon,
   CheckSquare as CompletedIcon,
 } from 'lucide-react';
-
+import { Column, Task } from '@/types/props/Common';
 // Then in the icons object:
 const icons = {
   backlog: BacklogIcon,
@@ -41,28 +41,6 @@ export enum Priority {
 }
 export type PriorityType = keyof typeof Priority;
 export type TaskStatusType = keyof typeof TaskStatus | TaskStatus;
-export interface Subtask extends Task {
-  parentId?: string;
-}
-export interface Task {
-  id: string;
-  name: string;
-  description: string;
-  status: TaskStatus;
-  dueDate: string;
-  startDate: string;
-  assignees: Assignee[];
-  priority: Priority;
-  subtask: Subtask[];
-  checklistCount: number;
-}
-export interface Column {
-  id: string;
-  title: string;
-  color: string;
-  icon: any;
-  tasks: Task[];
-}
 
 // Function to create random assignees
 const createRandomAssignees = (count: number): Assignee[] => {
@@ -78,28 +56,40 @@ const createRandomTasks = (status: TaskStatus, count: number): Task[] => {
   return Array.from({ length: count }, () => {
     const subtaskCount = faker.number.int({ min: 0, max: 3 });
     return {
-      id: faker.string.uuid(),
+      id: faker.number.int(),
       name: faker.company.catchPhrase(),
       description: faker.lorem.paragraph(),
-      status,
+      progress: faker.number.int(),
+      status: {
+        id: faker.number.int(),
+        name: status,
+        color: status,
+        category: status,
+      },
       dueDate: faker.date.future().toISOString(),
       startDate: faker.date.past().toISOString(),
       assignees: createRandomAssignees(faker.number.int({ min: 1, max: 3 })),
       priority: faker.helpers.enumValue(Priority),
-      subtask: Array.from({ length: subtaskCount }, () => ({
-        id: faker.string.uuid(),
+      subTask: Array.from({ length: subtaskCount }, () => ({
+        id: faker.number.int(),
         name: faker.hacker.phrase(),
         description: faker.lorem.sentence(),
-        status: faker.helpers.enumValue(TaskStatus),
+        progress: faker.number.int(),
+        status: {
+          id: faker.number.int(),
+          name: status,
+          color: status,
+          category: status,
+        },
         dueDate: faker.date.future().toISOString(),
         startDate: faker.date.past().toISOString(),
         assignees: createRandomAssignees(faker.number.int({ min: 0, max: 2 })),
         priority: faker.helpers.enumValue(Priority),
-        subtask: [],
+        subTask: [],
         checklistCount: faker.number.int({ min: 0, max: 5 }),
         parentId: faker.string.uuid(),
       })),
-      checklistCount: faker.number.int({ min: 0, max: 10 }),
+      checkListCount: faker.number.int({ min: 0, max: 10 }),
     };
   });
 };
@@ -142,6 +132,42 @@ export const mockColumns: Column[] = [
   },
   {
     id: 'col-6',
+    title: 'Completed',
+    color: '#86efac', // green-300
+    icon: icons.completed,
+    tasks: [
+      ...createRandomTasks(TaskStatus.APPROVED, 3),
+      ...createRandomTasks(TaskStatus.CANCELLED, 1),
+      ...createRandomTasks(TaskStatus.REJECTED, 1),
+    ],
+  },
+  {
+    id: 'col-7',
+    title: 'Testing',
+    color: '#a7f3d0', // emerald-200
+    icon: icons.testing,
+    tasks: createRandomTasks(TaskStatus.TESTING, 2),
+  },
+  {
+    id: 'col-8',
+    title: 'Completed',
+    color: '#86efac', // green-300
+    icon: icons.completed,
+    tasks: [
+      ...createRandomTasks(TaskStatus.APPROVED, 3),
+      ...createRandomTasks(TaskStatus.CANCELLED, 1),
+      ...createRandomTasks(TaskStatus.REJECTED, 1),
+    ],
+  },
+  {
+    id: 'col-9',
+    title: 'Testing',
+    color: '#a7f3d0', // emerald-200
+    icon: icons.testing,
+    tasks: createRandomTasks(TaskStatus.TESTING, 2),
+  },
+  {
+    id: 'col-10',
     title: 'Completed',
     color: '#86efac', // green-300
     icon: icons.completed,

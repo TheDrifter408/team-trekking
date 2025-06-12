@@ -16,6 +16,18 @@ import {
   Palette,
   Info,
   Mail,
+  ArrowLeftToLine,
+  ArchiveIcon,
+  CheckCheck,
+  Pencil,
+  Disc2,
+  Repeat2,
+  Box,
+  AlarmClock,
+  Inbox,
+  MergeIcon,
+  AlignVerticalDistributeStart,
+  WandSparkles,
 } from 'lucide-react';
 import { MenuSection } from '@/types/interfaces/ContextMenu.ts';
 
@@ -298,6 +310,147 @@ export const listMenuConfig: MenuSection[] = [
         type: 'button',
         label: 'Sharing & Permissions',
         action: 'sharing',
+      },
+    ],
+  },
+];
+
+// Board Column context menu
+export const columnMenuConfig: MenuSection[] = [
+  {
+    items: [
+      {
+        icon: ArrowLeftToLine,
+        label: 'Collapse group',
+        action: 'collapse_group',
+      },
+      {
+        icon: ArchiveIcon,
+        label: 'Archive All in this group',
+        action: 'archive_group',
+      },
+    ],
+  },
+  {
+    items: [
+      {
+        icon: CheckCheck,
+        label: 'Select all',
+        action: 'select_all',
+      },
+      {
+        icon: Pencil,
+        label: 'Rename',
+        action: 'rename',
+      },
+      {
+        icon: Disc2,
+        label: 'Edit Statuses',
+        action: 'edit_statuses',
+      },
+    ],
+  },
+];
+
+// Board Column Task Context menu
+export const boardTaskMenuConfig: MenuSection[] = [
+  {
+    items: [
+      {
+        icon: Pencil,
+        label: 'Rename',
+        action: 'rename',
+      },
+      {
+        icon: Plus,
+        label: 'Add to',
+        action: 'add_to',
+      },
+      {
+        icon: Repeat2,
+        label: 'Convert to',
+        type: 'submenu',
+        submenu: [
+          {
+            label: 'List',
+            action: 'convert_to_list',
+          },
+          {
+            label: 'Task',
+            action: 'convert_to_task',
+          },
+        ],
+      },
+      {
+        icon: Box,
+        label: 'Task Type',
+        type: 'submenu',
+        submenu: [
+          {
+            label: 'Task',
+            action: 'change_type_to_task',
+          },
+          {
+            label: 'Milestone',
+            action: 'change_type_to_milestone',
+          },
+          {
+            label: 'Form Response',
+            action: 'change_type_to_form_response',
+          },
+          {
+            label: 'Bug',
+            action: 'change_type_to_bug',
+          },
+        ],
+      },
+      {
+        icon: Copy,
+        label: 'Duplicate',
+        action: 'duplicate_task',
+      },
+      {
+        icon: AlarmClock,
+        label: 'Remind Me',
+        action: 'remind_me_task',
+      },
+      {
+        icon: Inbox,
+        label: 'Send email to task',
+        action: 'send_email_to_task',
+      },
+      {
+        icon: MergeIcon,
+        label: 'Merge',
+        action: 'merge_task',
+      },
+    ],
+  },
+  {
+    items: [
+      {
+        icon: AlignVerticalDistributeStart,
+        label: 'Dependencies',
+        action: 'toggle_dependencies_dialog',
+      },
+      {
+        icon: WandSparkles,
+        label: 'Templates',
+        type: 'submenu',
+        submenu: [
+          {
+            label: 'Browse Templates',
+            action: 'toggle_tempates_dialog',
+          },
+          {
+            label: 'Save as Template',
+            action: 'save_as_template',
+          },
+          {
+            label: 'Update existing Template',
+            action: 'update_existing_template',
+          },
+        ],
       },
     ],
   },

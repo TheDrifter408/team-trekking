@@ -1,22 +1,16 @@
-import { Dispatch, SetStateAction, useState } from 'react';
+import { useState } from 'react';
 import { ChevronLeft, Circle, Ellipsis, Plus } from 'lucide-react';
 import { useDroppable } from '@dnd-kit/core';
 import { Button } from '@/components/shadcn-ui/button';
 import { Card, CardContent, CardHeader } from '@/components/shadcn-ui/card';
-import { Column, Priority, Task, TaskStatus } from '@/mock';
 import { SortableTaskCard } from './sortable-task-card';
 import { z } from 'zod';
-import { addTaskSchema } from '../schema/addTaskSchema';
+import { addTaskSchema } from '@/lib/validation/validationSchema';
 import { AddTaskForm } from './AddTaskForm';
 import { faker } from '@faker-js/faker';
-interface BoardColumnProps {
-  column: Column;
-  className?: string;
-  isActiveColumn?: boolean;
-  setColumns: Dispatch<SetStateAction<Column[]>>;
-  updateCollapsed: (column: Column) => void;
-  isCollapsed: boolean;
-}
+import { ContextMenu } from '@/components/common/context-menu';
+import { columnMenuConfig } from '@/lib/constants/staticData';
+import { BoardColumnProps, Task, Column } from '@/types/props/Common';
 
 export const BoardColumn = ({
   column,
@@ -30,23 +24,24 @@ export const BoardColumn = ({
   const [addingTask, setAddingTask] = useState(false);
 
   const onSubmit = (values: z.infer<typeof addTaskSchema>) => {
-    // Assign the correct enum value from user input for status and priority
-    const status: TaskStatus =
-      TaskStatus[column.title.toUpperCase() as keyof typeof TaskStatus];
-    const priority: Priority =
-      Priority[values.priority.toUpperCase() as keyof typeof Priority];
     // Create a new Task
     const newTask: Task = {
-      id: faker.string.uuid(),
+      id: faker.number.int(),
       name: values.name,
       description: '',
-      status,
+      progress: 0,
+      status: {
+        id: faker.number.int(),
+        name: column.title.toUpperCase(),
+        color: column.color,
+        category: column.color,
+      },
       dueDate: values.date.to ? values.date.to.toUTCString() : '',
       startDate: values.date.from ? values.date.from.toUTCString() : '',
       assignees: values.assignees ? values.assignees : [],
-      priority,
-      subtask: [],
-      checklistCount: 0,
+      priority: values.priority.toUpperCase(),
+      subTask: [],
+      checkListCount: 0,
     };
     setColumns((prev) => {
       const updated = [...prev];
@@ -117,9 +112,11 @@ export const BoardColumn = ({
 
   return (
     <Card
-      ref={setNodeRef}
+      ref={(node) => {
+        setNodeRef(node);
+      }}
       className={`
-        w-[244px] py-1 gap-1 h-auto transition-all duration-300 ${className}
+        w-[244px] py-1 gap-1 h-min transition-all duration-300 ${className}
         ${isOver ? 'ring-2 ring-primary' : ''}
         ${isActiveColumn ? 'ring-1 ring-primary/30' : ''}
       `}
@@ -154,10 +151,27 @@ export const BoardColumn = ({
               <ChevronLeft className={'text-muted-foreground'} />
             </Button>
           )}
-          <Button variant={'ghost'} className={'!px-0 !mx-0'} size={'icon_sm'}>
-            <Ellipsis className={'text-muted-foreground'} />
-          </Button>
-          <Button size={'icon_sm'} className={'!px-0'} variant={'ghost'}>
+          <ContextMenu
+            trigger={
+              <Button
+                variant={'ghost'}
+                className={'!px-0 !mx-0'}
+                size={'icon_sm'}
+              >
+                <Ellipsis className={'text-muted-foreground'} />
+              </Button>
+            }
+            sections={columnMenuConfig}
+            width={'w-fit'}
+            onItemClick={() => {}}
+          />
+
+          <Button
+            onClick={AddTaskOnClick}
+            size={'icon_sm'}
+            className={'!px-0'}
+            variant={'ghost'}
+          >
             <Plus className={'text-muted-foreground'} />
           </Button>
         </div>
@@ -172,7 +186,11 @@ export const BoardColumn = ({
           <SortableTaskCard key={task.id} task={task} />
         ))}
         {addingTask ? (
-          <AddTaskForm onSubmit={onSubmit} setAddingTask={setAddingTask} />
+          <AddTaskForm
+            onSubmit={onSubmit}
+            addingTask={addingTask}
+            setAddingTask={setAddingTask}
+          />
         ) : (
           <Button
             onClick={AddTaskOnClick}
