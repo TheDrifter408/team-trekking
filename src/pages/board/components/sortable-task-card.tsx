@@ -1,13 +1,9 @@
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { Task } from '@/mock';
+import { SortableTaskCardProps } from '@/types/props/Common';
 import { TaskCard } from './task-card';
 
-interface SortableTaskCardProps {
-  task: Task;
-}
-
-export function SortableTaskCard({ task }: SortableTaskCardProps) {
+export const SortableTaskCard = ({ task }: SortableTaskCardProps) => {
   const {
     attributes,
     listeners,
@@ -30,8 +26,14 @@ export function SortableTaskCard({ task }: SortableTaskCardProps) {
   };
 
   return (
-    <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
+    <div
+      ref={setNodeRef}
+      style={style}
+      {...attributes}
+      {...listeners}
+      data-draggable="true"
+    >
       <TaskCard task={task} isDragOverlay={false} />
     </div>
   );
-}
+};

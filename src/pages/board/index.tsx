@@ -1,9 +1,8 @@
-import { useState } from 'react';
+import { MouseEvent, useRef, useState } from 'react';
 import {
   DndContext,
   closestCenter,
   KeyboardSensor,
-  PointerSensor,
   useSensor,
   useSensors,
   DragEndEvent,
@@ -18,7 +17,7 @@ import {
   sortableKeyboardCoordinates,
 } from '@dnd-kit/sortable';
 import { Main } from '@/components/layout/main.tsx';
-import { mockColumns, Column, Task } from '@/mock';
+import { mockColumns } from '@/mock/boardData.ts';
 import { BoardColumn } from './components/column.tsx';
 import { TaskCard } from './components/task-card.tsx';
 import { HeaderType } from '@/types/props/Common.ts';
@@ -29,6 +28,9 @@ import { Card } from '@/components/shadcn-ui/card.tsx';
 import { Button } from '@/components/shadcn-ui/button.tsx';
 import { ChevronUp } from 'lucide-react';
 import { cn } from '@/lib/utils.ts';
+import { Column, Task } from '@/types/props/Common.ts';
+import { StrictPointerSensor } from '@/lib/classes/StrictPointerSensor.ts';
+
 export const Board = () => {
   // Get the Theme
   const { theme } = useTheme();
@@ -53,10 +55,15 @@ export const Board = () => {
   const isCollapsed = (columnId: string) => collapsedColumns[columnId];
   const collapsedCount = Object.values(collapsedColumns).filter(Boolean).length;
 
+  const [isDraggingScroll, setIsDraggingScroll] = useState(false);
+  const [dragStartX, setDragStartX] = useState(0);
+  const [scrollStartX, setScrollStartX] = useState(0);
+  const draggableContainerRef = useRef<HTMLDivElement>(null);
+
   const sensors = useSensors(
-    useSensor(PointerSensor, {
+    useSensor(StrictPointerSensor, {
       activationConstraint: {
-        distance: 8,
+        distance: 4,
       },
     }),
     useSensor(KeyboardSensor, {
@@ -69,14 +76,14 @@ export const Board = () => {
     const taskId = active.id as string;
 
     // Find the task in all columns
-    const draggedTask = findTaskInColumns(taskId);
+    const draggedTask = findTaskInColumns(Number(taskId));
 
     if (draggedTask) {
       setActiveTask(draggedTask);
 
       // Find which column the task is from
       const sourceColumn = columns.find((column) =>
-        column.tasks.some((task) => task.id === taskId)
+        column.tasks.some((task) => task.id === Number(taskId))
       );
 
       if (sourceColumn) {
@@ -90,8 +97,8 @@ export const Board = () => {
 
     if (!over) return;
 
-    const activeId = active.id as string;
-    const overId = over.id as string;
+    const activeId = active.id as number;
+    const overId = over.id as number;
 
     // Find the columns
     const activeColumnIndex = columns.findIndex((column) =>
@@ -109,7 +116,7 @@ export const Board = () => {
     if (!isOverATask) {
       // We're dragging over a column, not a task
       const overColumnIndex = columns.findIndex(
-        (column) => column.id === overId
+        (column) => column.id === overId.toString()
       );
 
       if (overColumnIndex !== -1 && activeColumnIndex !== overColumnIndex) {
@@ -202,8 +209,8 @@ export const Board = () => {
       return;
     }
 
-    const activeId = active.id as string;
-    const overId = over.id as string;
+    const activeId = active.id as number;
+    const overId = over.id as number;
 
     if (activeId === overId) {
       setActiveTask(null);
@@ -225,11 +232,13 @@ export const Board = () => {
     const [movedTask] = sourceCol.tasks.splice(taskIndex, 1);
 
     // Case 1: Dragging over a Column
-    const isOverColumn = newColumns.some((col) => col.id === overId);
+    const isOverColumn = newColumns.some((col) => col.id === overId.toString());
 
     if (isOverColumn) {
       // Find the index of the destination column
-      const destColIndex = newColumns.findIndex((col) => col.id === overId);
+      const destColIndex = newColumns.findIndex(
+        (col) => col.id === overId.toString()
+      );
       newColumns[destColIndex].tasks.push(movedTask);
     } else {
       // Case 2: Dragging it over another Task
@@ -256,7 +265,7 @@ export const Board = () => {
   };
 
   // Helper function to find a task in all columns
-  const findTaskInColumns = (taskId: string): Task | null => {
+  const findTaskInColumns = (taskId: number): Task | null => {
     for (const column of columns) {
       const task = column.tasks.find((t) => t.id === taskId);
       if (task) return task;
@@ -272,6 +281,23 @@ export const Board = () => {
     if (collapsedCount === 0) {
       setShowCollapsed(false);
     }
+  };
+
+  const onMouseDown = (e: MouseEvent) => {
+    if (!draggableContainerRef.current) return;
+    setIsDraggingScroll(true);
+    setDragStartX(e.clientX);
+    setScrollStartX(draggableContainerRef.current.scrollLeft);
+  };
+
+  const onMouseMove = (e: MouseEvent) => {
+    if (!isDraggingScroll || !draggableContainerRef.current) return; // disable scroll when drag is dnd is active
+    const deltaX = e.clientX - dragStartX;
+    draggableContainerRef.current.scrollLeft = scrollStartX - deltaX;
+  };
+
+  const onMouseUp = () => {
+    setIsDraggingScroll(false);
   };
 
   const currentPage = {
@@ -295,7 +321,15 @@ export const Board = () => {
             onDragEnd={handleDragEnd}
             onDragCancel={handleDragCancel}
           >
-            <div className="flex gap-4 pl-2 pb-4 w-max">
+            {/* Container for draggables */}
+            <div
+              ref={draggableContainerRef}
+              onMouseDown={onMouseDown}
+              onMouseMove={onMouseMove}
+              onMouseUp={onMouseUp}
+              className="flex gap-4 pl-2 pb-4 w-max"
+              style={{ touchAction: 'pan-y' }}
+            >
               <Card
                 className={cn(
                   'flex w-10 min-h-36 items-center text-black self-start gap-0 py-0',
@@ -304,7 +338,7 @@ export const Board = () => {
                 onClick={() => setShowCollapsed((prev) => !prev)}
               >
                 <div className="mt-12 w-min h-min flex rotate-90 text-left">
-                  <span className="text-nowrap">
+                  <span className="text-nowrap text-sm">
                     {collapsedCount} {LABEL.COLLAPSED}
                   </span>
                 </div>
