@@ -13,6 +13,7 @@ export interface TableHeaderSectionProps {
 
 export interface TableRowProps {
   row: Row<any>;
+  depth?: number;
   virtualRow: {
     index: number;
     start: number;

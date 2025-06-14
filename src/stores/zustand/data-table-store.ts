@@ -9,16 +9,20 @@ interface IDataTableStore {
   hoveredRowId: string | null;
   activeDialogRowId: string | null;
   selectedRowIds: Set<string>;
+  isAllRowSelected: boolean; // Changed to boolean flag
   toggleSelectedRow: (id: string) => void;
   isRowSelected: (id: string) => boolean;
+  toggleAllRows: () => void;
 }
 
 const getDefaultState = (): IDataTableStore => ({
   hoveredRowId: null,
   activeDialogRowId: null,
   selectedRowIds: new Set(),
+  isAllRowSelected: false,
   toggleSelectedRow: (id: string) => {},
   isRowSelected: (id: string) => false,
+  toggleAllRows: () => {},
 });
 
 export const createDataTableStore = (
@@ -43,6 +47,14 @@ export const createDataTableStore = (
       setHoveredRowId: (id: string | null) => set({ hoveredRowId: id }),
       setActiveDialogRowId: (id: string | null) =>
         set({ activeDialogRowId: id }),
+      toggleAllRows: () => {
+        set((state) => {
+          return {
+            isAllRowSelected: !state.isAllRowSelected,
+            selectedRowIds: new Set(),
+          };
+        });
+      },
     }))
   );
 };

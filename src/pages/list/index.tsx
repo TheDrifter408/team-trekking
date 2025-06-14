@@ -37,7 +37,7 @@ export const List = () => {
     <DataTableProvider value={store}>
       <div className="flex flex-col h-screen overflow-hidden">
         <PageHeader currentPage={currentPage} parents={parents} />
-        <div className="flex-1  min-h-0 flex flex-col px-0 mt-2 flex-shrink-0">
+        <div className="flex-1 min-h-0 flex flex-col px-[20px] mt-[40px] flex-shrink-0">
           <ListCard
             isTableExpanded={isTableExpanded}
             onToggleExpand={onToggleExpand}

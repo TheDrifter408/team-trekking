@@ -6,6 +6,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@/components/shadcn-ui/tooltip';
+import { useDataTableStore } from '@/stores/zustand/data-table-store';
 import { TagDialog } from '@/components/common/tag-dialog.tsx';
 import { Task } from '@/types/props/Common.ts';
 import { Icon } from '@/assets/icon-path.tsx';
@@ -15,18 +16,23 @@ import { useNavigate } from 'react-router-dom';
 
 interface Props {
   task: Task;
-  isHovered: boolean;
   row?: Row<Task>;
 }
 
-export const NameColumn = ({ task, isHovered, row }: Props) => {
+export const NameColumn = ({ task, row }: Props) => {
   const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
   const [editedName, setEditedName] = useState(task.name);
 
-  const isSubRow = (row?.depth && row.depth > 0) || false;
+  const hoveredRowId = useDataTableStore((s) => s.hoveredRowId);
+  const isHovered = hoveredRowId === row?.original.id;
+
+  const depth = row?.depth || 0;
   const canExpand = row?.getCanExpand();
   const isExpanded = row?.getIsExpanded();
+
+  const indentationLevel = Math.min(depth, 3); // Cap at 3 levels as per your requirement
+  const leftPadding = indentationLevel * 20;
 
   const onRenameSubmit = () => {
     if (editedName.trim()) {
@@ -41,13 +47,20 @@ export const NameColumn = ({ task, isHovered, row }: Props) => {
   };
 
   return (
-    <div className="flex items-center min-w-[260px] gap-[12px] overflow-hidden">
-      <div className="w-[40px] flex-shrink-0 flex justify-between items-center">
-        <IconButton onClick={onExpandToggle}>
+    <div
+      className="flex items-center min-w-[280px] gap-[12px] overflow-hidden"
+      style={{ paddingLeft: `${leftPadding}px` }}
+    >
+      <div className="max-w-[40px] flex-shrink-0 flex justify-between items-center">
+        <IconButton
+          className={'!px-0.5'}
+          onClick={onExpandToggle}
+          tooltipText={isExpanded ? 'Collapse subtasks' : 'Expand subtasks'}
+        >
           <Icon
             name="expandsubtask"
             className={cn(
-              'text-content-tertiary transition-transform duration-200',
+              'text-content-tertiary size-5 transition-transform duration-200',
               isExpanded ? '' : '-rotate-90'
             )}
           />
@@ -82,7 +95,7 @@ export const NameColumn = ({ task, isHovered, row }: Props) => {
             <TextTooltip message={task.name}>
               <span
                 className={cn(
-                  'text-base text-content-default font-medium cursor-pointer hover:text-theme-main-dark hover:font-medium truncate max-w-[190px]'
+                  'text-base text-content-default font-medium cursor-pointer hover:text-theme-main-dark hover:font-medium truncate max-w-[220px]'
                 )}
                 onClick={() => navigate(`/task`)}
                 onDoubleClick={() => setIsEditing(true)}
@@ -93,13 +106,12 @@ export const NameColumn = ({ task, isHovered, row }: Props) => {
           )}
 
           <div className="flex-shrink-0 flex ml-2">
-            {/* Only show subtask summary for parent tasks */}
-            {!isSubRow && <SubTaskSummary task={task} />}
+            <SubTaskSummary task={task} />
             <DescriptionSummary task={task} />
             <TaskModifiers
               isHovered={isHovered}
               onRename={() => setIsEditing(true)}
-              isSubRow={isSubRow}
+              depth={depth}
             />
           </div>
         </div>
@@ -111,14 +123,17 @@ export const NameColumn = ({ task, isHovered, row }: Props) => {
 const TaskModifiers = ({
   isHovered,
   onRename,
-  isSubRow = false,
+  depth = 0,
 }: {
   isHovered: boolean;
   onRename: () => void;
-  isSubRow?: boolean;
+  depth?: number;
 }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  // Only allow adding subtasks if we haven't reached the maximum depth
+  const canAddSubtask = depth < 2; // 0-based depth, so 2 means 3 levels total
 
   return (
     <div className="flex gap-0.5 ml-2">
@@ -134,8 +149,8 @@ const TaskModifiers = ({
             />
           </IconButton>
 
-          {/* Only show "Add Subtask" for parent tasks */}
-          {!isSubRow && (
+          {/* Only show "Add Subtask" for tasks that can have subtasks */}
+          {canAddSubtask && (
             <IconButton tooltipText="Add Subtask">
               <Icon
                 name="add02"
@@ -171,17 +186,26 @@ const SubTaskSummary = ({ task }: { task: Task }) => {
     { name: string; color: string; count: number }
   >();
 
-  for (let i = 0; i < subTask.length; i++) {
-    const { name, color } = subTask[i].status;
-    const key = `${name}_${color}`;
+  // Recursively count all nested subtasks
+  const countAllSubtasks = (tasks: Task[]): void => {
+    for (const subtask of tasks) {
+      const { name, color } = subtask.status;
+      const key = `${name}_${color}`;
 
-    if (summaryMap.has(key)) {
-      summaryMap.get(key)!.count += 1;
-    } else {
-      summaryMap.set(key, { name, color, count: 1 });
+      if (summaryMap.has(key)) {
+        summaryMap.get(key)!.count += 1;
+      } else {
+        summaryMap.set(key, { name, color, count: 1 });
+      }
+
+      // Recursively count nested subtasks
+      if (subtask.subTask && subtask.subTask.length > 0) {
+        countAllSubtasks(subtask.subTask);
+      }
     }
-  }
+  };
 
+  countAllSubtasks(subTask);
   const summary = Array.from(summaryMap.values());
 
   return (
@@ -237,13 +261,13 @@ const DescriptionSummary = ({ task }: { task: Task }) => {
 const IconButton = ({
   children,
   className = '',
-  // tooltipText,
+  tooltipText,
   ...props
 }: React.ButtonHTMLAttributes<HTMLButtonElement> & {
   children: ReactNode;
   tooltipText?: string;
 }) => {
-  return (
+  const ButtonComponent = (
     <Button
       {...props}
       className={cn(className, 'py-[5px] px-[7px]')}
@@ -253,4 +277,10 @@ const IconButton = ({
       {children}
     </Button>
   );
+
+  if (tooltipText) {
+    return <TextTooltip message={tooltipText}>{ButtonComponent}</TextTooltip>;
+  }
+
+  return ButtonComponent;
 };

@@ -3,6 +3,7 @@ import {
   getCoreRowModel,
   useReactTable,
   ColumnSizingState,
+  getExpandedRowModel,
 } from '@tanstack/react-table';
 import { useDataTableStore } from '@/stores/zustand/data-table-store';
 import { Columns } from '@/components/data-table/columns';
@@ -11,10 +12,7 @@ import { DataTableHeader } from './data-table-header';
 import { DataTableBody } from './data-table-body.tsx';
 import { DataTableProps } from '@/types/props/DataTableProps.ts';
 
-export const DataTable = ({
-  height = '600px',
-  className = '',
-}: DataTableProps) => {
+export const DataTable = ({ className = '' }: DataTableProps) => {
   const parentRef = useRef<HTMLDivElement>(null);
   const [colSizing, setColSizing] = useState<ColumnSizingState>({});
 
@@ -22,6 +20,9 @@ export const DataTable = ({
     data: mockTasks,
     columns: Columns,
     getCoreRowModel: getCoreRowModel(),
+    getExpandedRowModel: getExpandedRowModel(),
+    getSubRows: (row) => row.subTask,
+    enableExpanding: true,
     enableColumnResizing: true,
     columnResizeMode: 'onChange',
     enableColumnPinning: true,
@@ -35,13 +36,14 @@ export const DataTable = ({
     },
   });
 
+  // TODO: Hover states using zustand + context, hence not necessary to be in the parent. Manage from child
   const setHoveredRowId = useDataTableStore((s) => s.setHoveredRowId);
   const activeDialogRowId = useDataTableStore((s) => s.activeDialogRowId);
 
   return (
     <div
-      className={`rounded-md px-3 overflow-hidden flex flex-col ${className}`}
-      style={{ height }}
+      className={`rounded-md overflow-hidden flex flex-col ${className}`}
+      style={{ height: '100%' }}
     >
       <DataTableHeader table={table} />
       <DataTableBody

@@ -20,7 +20,6 @@ export const DataTableBody = ({
     count: rows.length,
     getScrollElement: () => parentRef.current,
     estimateSize: () => 48,
-    overscan: 10,
   });
 
   const virtualRows = rowVirtualizer.getVirtualItems();
@@ -31,8 +30,8 @@ export const DataTableBody = ({
       <div
         style={{
           height: `${totalHeight}px`,
-          position: 'relative',
           width: table.getTotalSize(),
+          contain: 'strict',
         }}
       >
         {virtualRows.map((virtualRow) => {
