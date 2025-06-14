@@ -15,8 +15,7 @@ export const DataTableHeaderSection = <TData,>({
   centerTotalSize,
 }: TableHeaderSectionProps<TData>) => {
   const getHeaderClassName = (position: Position) => {
-    const baseClasses =
-      'relative text-left px-4 py-3 text-sm font-medium border-r border-border';
+    const baseClasses = 'relative text-left px-4 py-1.5 text-sm';
     switch (position) {
       case 'left':
         return `${baseClasses} bg-muted/80 sticky left-0 z-20`;

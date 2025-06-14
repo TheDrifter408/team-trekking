@@ -3,8 +3,6 @@ import { HeaderType } from '@/types/props/Common.ts';
 import { ListCard } from '@/pages/list/components/list-card.tsx';
 import { PageHeader } from '@/components/layout/page-header';
 import { DataTable } from '@/components/data-table/data-table.tsx';
-import { tempColumns } from '@/components/data-table/temp-columns.tsx';
-import { mockTasks } from '@/mock';
 import {
   createDataTableStore,
   DataTableProvider,

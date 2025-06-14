@@ -13,7 +13,7 @@ export const ColumnResizer = <TData,>({
     <div
       onMouseDown={header.getResizeHandler()}
       onTouchStart={header.getResizeHandler()}
-      className="absolute top-1/2 right-0 cursor-col-resize w-px h-[10px] bg-muted hover:bg-muted-foreground transition-colors -translate-y-1/2"
+      className="absolute top-1/2 right-0 cursor-col-resize bg-muted hover:bg-muted-foreground transition-colors -translate-y-1/2"
       style={{
         userSelect: 'none',
         touchAction: 'none',
