@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import {
   getCoreRowModel,
   useReactTable,
@@ -15,6 +15,8 @@ import { DataTableProps } from '@/types/props/DataTableProps.ts';
 export const DataTable = ({ className = '' }: DataTableProps) => {
   const parentRef = useRef<HTMLDivElement>(null);
   const [colSizing, setColSizing] = useState<ColumnSizingState>({});
+
+  const setTable = useDataTableStore((state) => state.setTable);
 
   const table = useReactTable({
     data: mockTasks,
@@ -35,6 +37,8 @@ export const DataTable = ({ className = '' }: DataTableProps) => {
       },
     },
   });
+
+  setTable(table);
 
   // TODO: Hover states using zustand + context, hence not necessary to be in the parent. Manage from child
   const setHoveredRowId = useDataTableStore((s) => s.setHoveredRowId);

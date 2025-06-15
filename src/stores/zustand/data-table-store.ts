@@ -1,5 +1,6 @@
 import { createContext, useContext } from 'react';
 import { combine } from 'zustand/middleware';
+import { Table } from '@tanstack/react-table';
 import {
   createStore as createZustandStore,
   useStore as useZustandStore,
@@ -13,6 +14,8 @@ interface IDataTableStore {
   toggleSelectedRow: (id: string) => void;
   isRowSelected: (id: string) => boolean;
   toggleAllRows: () => void;
+  table?: Table<unknown>;
+  setTable: (table: Table<any>) => void;
 }
 
 const getDefaultState = (): IDataTableStore => ({
@@ -23,6 +26,8 @@ const getDefaultState = (): IDataTableStore => ({
   toggleSelectedRow: (id: string) => {},
   isRowSelected: (id: string) => false,
   toggleAllRows: () => {},
+  table: undefined,
+  setTable: (table: Table<any>) => {},
 });
 
 export const createDataTableStore = (
@@ -48,13 +53,12 @@ export const createDataTableStore = (
       setActiveDialogRowId: (id: string | null) =>
         set({ activeDialogRowId: id }),
       toggleAllRows: () => {
-        set((state) => {
-          return {
-            isAllRowSelected: !state.isAllRowSelected,
-            selectedRowIds: new Set(),
-          };
-        });
+        set((state) => ({
+          isAllRowSelected: !state.isAllRowSelected,
+          selectedRowIds: new Set(),
+        }));
       },
+      setTable: (table: Table<any>) => set({ table }),
     }))
   );
 };

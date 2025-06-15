@@ -11,6 +11,7 @@ import { OptionsColumn } from '@/components/data-table/options-column.tsx';
 import { useDataTableStore } from '@/stores/zustand/data-table-store';
 import { Button } from '@/components/shadcn-ui/button.tsx';
 import { Icon } from '@/assets/icon-path.tsx';
+import { useComponentStore } from '@/stores/zustand/component-state-store.ts';
 
 export const Columns: ColumnDef<Task>[] = [
   {
@@ -38,55 +39,73 @@ export const Columns: ColumnDef<Task>[] = [
   },
   {
     id: COLUMN_META.ACCESSOR_KEY.NAME,
-    header: () => COLUMN_META.HEADER.NAME,
+    header: COLUMN_META.HEADER.NAME,
     cell: ({ row }) => <NameColumn task={row.original} row={row} />,
     minSize: 280,
     maxSize: 400,
     enableResizing: true,
+    meta: {
+      icon: 'texticon',
+    },
   },
   {
     accessorKey: COLUMN_META.ACCESSOR_KEY.PRIORITY,
-    header: () => COLUMN_META.HEADER.PRIORITY,
+    header: COLUMN_META.HEADER.PRIORITY,
     cell: ({ row }) => <PriorityColumn task={row.original} />,
     minSize: 70,
     maxSize: 80,
     enableResizing: true,
+    meta: {
+      icon: 'priority02',
+    },
   },
   {
     accessorKey: COLUMN_META.ACCESSOR_KEY.PROGRESS,
-    header: () => COLUMN_META.HEADER.PROGRESS,
+    header: COLUMN_META.HEADER.PROGRESS,
     cell: ({ row }) => <ProgressColumn task={row.original} />,
     size: 190,
     minSize: 170,
     maxSize: 300,
     enableResizing: true,
+    meta: {
+      icon: 'progress2',
+    },
   },
   {
     accessorKey: COLUMN_META.ACCESSOR_KEY.START_DATE,
-    header: () => COLUMN_META.HEADER.START_DATE,
+    header: COLUMN_META.HEADER.START_DATE,
     cell: ({ row }) => <DateColumn task={row.original} dateType="start" />,
     size: 160,
     minSize: 140,
     maxSize: 200,
     enableResizing: true,
+    meta: {
+      icon: 'calendaradd',
+    },
   },
   {
     accessorKey: COLUMN_META.ACCESSOR_KEY.END_DATE,
-    header: () => COLUMN_META.HEADER.END_DATE,
+    header: COLUMN_META.HEADER.END_DATE,
     cell: ({ row }) => <DateColumn task={row.original} dateType="end" />,
     size: 160,
     minSize: 140,
     maxSize: 200,
     enableResizing: true,
+    meta: {
+      icon: 'calendar',
+    },
   },
   {
     accessorKey: COLUMN_META.ACCESSOR_KEY.OPTIONS,
     header: () => {
+      const openDrawer = useComponentStore((s) => s.openDrawer);
+      const closeDrawer = useComponentStore((s) => s.closeDrawer);
       return (
         <Button
           size={'auto'}
           variant={'ghost'}
           className={'hover:bg-accent p-2 w-full rounded-sm'}
+          onClick={() => openDrawer('list-drawer')}
         >
           <Icon name={'add01'} />
         </Button>
