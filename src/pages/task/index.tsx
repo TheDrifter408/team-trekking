@@ -45,6 +45,7 @@ import { Input } from '@/components/shadcn-ui/input.tsx';
 import { AssigneeAvatar } from '@/components/common/assignee-avatar.tsx';
 import { DocEditor } from './components/doc-editor.tsx';
 import { Subtask } from '@/pages/task/components/Subtask.tsx';
+import TaskStatusDialog from '@/components/common/task-status-dialog.tsx';
 
 export const Task: React.FC = () => {
   const [enterStatus, setEnterStatus] = useState<boolean>(false);
@@ -211,18 +212,20 @@ export const Task: React.FC = () => {
           hover={enterStatus}
           onHoverChange={setEnterStatus}
         >
-          <Button
-            variant="ghost"
-            size="sm"
-            className={cn(
-              'rounded-r-none text-white h-6 px-3 text-xs tracking-wide font-bold',
-              sampleTask.status.color,
-              `hover:${sampleTask.status.color}`
-            )}
-          >
-            {sampleTask.status.name.toUpperCase()}
-            <ChevronDown className="w-4 h-4 ml-2" />
-          </Button>
+          <TaskStatusDialog>
+            <Button
+              variant="ghost"
+              size="sm"
+              className={cn(
+                'rounded-r-none text-white h-6 px-3 text-xs tracking-wide font-bold',
+                sampleTask.status.color,
+                `hover:${sampleTask.status.color}`
+              )}
+            >
+              {sampleTask.status.name.toUpperCase()}
+              <ChevronDown className="w-4 h-4 ml-2" />
+            </Button>
+          </TaskStatusDialog>
           <Button
             variant="ghost"
             size="sm"
@@ -234,6 +237,7 @@ export const Task: React.FC = () => {
             <IconCheck size={15} />
           </Button>
         </TaskMetaRow>
+
         {/* START AND END DATES */}
         <TaskMetaRow
           icon={<IconCalendar className="text-base font-semibold" size={15} />}
