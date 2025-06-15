@@ -71,4 +71,13 @@ export const LABEL = {
   SWITCH_WORKSPACE: 'Switch Workspace',
   MEMBERS: 'Members',
   CREATE_WORKSPACE: 'Create Workspace',
+  SEARCH_STATUSES: 'Search statuses...',
+  NO_STATUS_FOUND_MATCHING: ' No status found matching',
+  SPRINT_BACKLOG: 'SPRINT BACKLOG',
+  STARTING: 'STARTING',
+  IN_PROGRESS: 'IN PROGRESS',
+  COMPLETED: 'COMPLETED',
+  IN_REVIEW: 'IN REVIEW',
+  REJECTED: 'REJECTED',
+  BLOCKED: 'BLOCKED',
 };
