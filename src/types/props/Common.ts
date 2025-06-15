@@ -1,6 +1,7 @@
 import { LucideIcon } from 'lucide-react';
 import { LABEL } from '@/lib/constants/appStrings.ts';
-import { Folder } from '@/types/interfaces/Folder';
+import { Folder } from '@/types/props/Layout.ts';
+import { Dispatch, SetStateAction } from 'react';
 
 export interface Space {
   id: number;
@@ -134,6 +135,7 @@ export interface Task {
   subTask?: Task[];
   subTaskCount?: number;
   checkListCount?: number;
+  parentId?: string;
 }
 
 export interface SidebarFolderItemsProps {
@@ -181,6 +183,52 @@ export interface TaskActivityNotificationsProps {
   markNotificationAsRead: (notificationId: number) => void;
 }
 
+export interface Project {
+  id: string;
+  name: string;
+}
+
+export interface DuplicateData {
+  taskName: string;
+  project: string;
+  copyOption: string;
+  copyActivity: boolean;
+  sendNotifications: boolean;
+}
+
+export interface DuplicateTaskDialogProps {
+  isOpen?: boolean;
+  onClose?: () => void;
+  onDuplicate?: (data: DuplicateData) => void;
+  initialTaskName?: string;
+  projects?: Project[];
+  defaultProject?: string;
+}
+export interface Column {
+  id: string;
+  title: string;
+  color: string;
+  icon: LucideIcon;
+  tasks: Task[];
+}
+export interface BoardColumnProps {
+  column: Column;
+  className?: string;
+  isActiveColumn?: boolean;
+  setColumns: Dispatch<SetStateAction<Column[]>>;
+  updateCollapsed: (column: Column) => void;
+  isCollapsed: boolean;
+}
+export interface TaskCardProps {
+  task: Task;
+  className?: string;
+  indentLevel?: number;
+  isSubtask?: boolean;
+  isDragOverlay?: boolean;
+}
+export interface SortableTaskCardProps {
+  task: Task;
+}
 export interface Project {
   id: string;
   name: string;
