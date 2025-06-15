@@ -98,9 +98,9 @@ const TaskCard = ({
       }
       : undefined;
 
-  const toggleSubtasks = (e: MouseEvent) => {
+  const toggleSubtasks = (e:MouseEvent) => {
+    setShowSubtasks((prev) =>!prev);
     e.stopPropagation();
-    setShowSubtasks(!showSubtasks);
   };
 
   const getPriorityColor = (priority: string) => {
@@ -121,7 +121,7 @@ const TaskCard = ({
 
   // Extract reusable UI elements
   const SubtaskToggleButton = () => (
-    <div
+    <button
       className="w-full py-1 px-2 hover:bg-accent rounded mt-2 gap-2 flex items-center"
       onMouseEnter={() => setOnEnterSubtask(true)}
       onMouseLeave={() => setOnEnterSubtask(false)}
@@ -153,7 +153,7 @@ const TaskCard = ({
       <span className="text-sm">
         {task.subTask ? task.subTask.length : 0} Subtasks
       </span>
-    </div>
+    </button>
   );
 
   const BadgeStyle =
@@ -248,7 +248,7 @@ const TaskCard = ({
               className="flex items-center justify-center gap-1 !py-[2px] !px-[4px] h-fit"
             >
               <CircleCheck size={12} className="text-muted-foreground" />
-              <span className="text-sm text-muted-foreground">
+              <span className="text-sm text-content-tertiary">
                 0/{task.checkListCount ? task.checkListCount : 0}
               </span>
             </Button>
@@ -264,7 +264,7 @@ const TaskCard = ({
             {/* Date badge */}
             <div className={cn(BadgeStyle, 'gap-1')}>
               <Calendar className="text-muted-foreground" size={12} />
-              <span className="text-sm text-muted-foreground font-semibold">
+              <span className="text-sm text-content-tertiary font-semibold">
                 {task.startDate && task.dueDate
                   ? `${formatDate(task.startDate)}` +
                   '-' +
@@ -289,7 +289,7 @@ const TaskCard = ({
                 className="text-muted-foreground"
                 size={12}
               />
-              <span className="text-sm font-medium text-muted-foreground capitalize">
+              <span className="text-sm font-medium text-content-tertiary capitalize">
                 {task.priority}
               </span>
             </div>
@@ -301,8 +301,8 @@ const TaskCard = ({
       </Card>
 
       {/* Subtasks */}
-      {hasSubtasks && showSubtasks && !isDragOverlay && (
-        <div className="ml-4 mt-1 space-y-2">
+      {showSubtasks && (
+        <div className="ml-2 mt-1 space-y-1">
           {task.subTask?.map((subtask) => (
             <TaskCard
               key={subtask.id}
