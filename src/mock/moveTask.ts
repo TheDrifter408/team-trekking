@@ -30,7 +30,7 @@ export const navigationData: MoveTaskData = {
     id: 'personal-list',
     label: 'Personal List',
     icon: Users,
-    onClick: () => console.log('Personal List clicked'),
+    onClick: () => {},
   },
   recents: [
     {
@@ -38,19 +38,19 @@ export const navigationData: MoveTaskData = {
       label: 'Architecture',
       icon: List,
       isActive: true,
-      onClick: () => console.log('Recent Architecture clicked'),
+      onClick: () => {},
     },
     {
       id: 'recent-onboarding',
       label: 'Onboarding',
       icon: List,
-      onClick: () => console.log('Recent Onboarding clicked'),
+      onClick: () => {},
     },
     {
       id: 'recent-settings',
       label: 'My Settings',
       icon: List,
-      onClick: () => console.log('Recent My Settings clicked'),
+      onClick: () => {},
     },
   ],
   spaces: [
@@ -59,7 +59,7 @@ export const navigationData: MoveTaskData = {
       label: 'Team Trekking',
       avatar: 'T',
       backgroundColor: 'bg-purple-600',
-      onClick: () => console.log('Team Trekking clicked'),
+      onClick: () => {},
     },
     {
       id: 'engineering',
@@ -72,7 +72,7 @@ export const navigationData: MoveTaskData = {
           label: 'Architecture',
           icon: List,
           isActive: true,
-          onClick: () => console.log('Engineering Architecture clicked'),
+          onClick: () => {},
         },
         {
           id: 'eng-onboarding',
@@ -84,23 +84,22 @@ export const navigationData: MoveTaskData = {
           id: 'eng-workspace-overview',
           label: 'Workspace overview',
           icon: List,
-          onClick: () => console.log('Engineering Workspace overview clicked'),
+          onClick: () => {},
         },
         {
           id: 'eng-workspace-setting',
           label: 'Workspace Setting',
           icon: List,
-          onClick: () => console.log('Engineering Workspace Setting clicked'),
+          onClick: () => {},
         },
         {
           id: 'eng-space-folder-list',
           label: 'Space, Folder & List',
           icon: List,
-          onClick: () =>
-            console.log('Engineering Space, Folder & List clicked'),
+          onClick: () => {},
         },
       ],
-      onClick: () => console.log('Engineering space clicked'),
+      onClick: () => {},
     },
   ],
 };
