@@ -24,6 +24,7 @@ import {
   Ellipsis,
 } from 'lucide-react';
 import { ShareTask } from '@/components/features/share-task.tsx';
+import MoveTask from '@/components/common/move-task.tsx';
 
 export const PageHeader = () => {
   const [openShareTask, setOpenShareTask] = useState<boolean>(false);
@@ -68,9 +69,13 @@ export const PageHeader = () => {
           </Breadcrumb>
           <div className="w-[1px] h-[16px] mx-4 bg-border" />
           <ToolTipContainer text="Move to parent task">
-            <Button size="icon_sm" variant="ghost">
-              <LogOut />
-            </Button>
+            <MoveTask
+              child={
+                <Button size="icon_sm" variant="ghost">
+                  <LogOut />
+                </Button>
+              }
+            />
           </ToolTipContainer>
           <ToolTipContainer text="Move to parent task">
             <Button size="icon_sm" variant="ghost">
