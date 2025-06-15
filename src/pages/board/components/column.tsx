@@ -70,8 +70,8 @@ export const BoardColumn = ({
   if (isCollapsed) {
     return (
       <Card
-        className={`transition-all text-black duration-300 flex items-center min-h-32 gap-10 w-10 py-14 self-start ${className}`}
-        style={{ backgroundColor: '#fff' }}
+        className={`transition-all duration-300 flex items-center min-h-32 gap-10 w-10 py-14 self-start ${className}`}
+        style={{ backgroundColor: hexToRgba(column.color, 0.2) }} // for adding 20% opacity to the column background color
         onClick={() => toggleCollapse(column)}
       >
         <CardContent className="flex items-center p-2 rotate-90 w-auto h-full">
@@ -96,7 +96,7 @@ export const BoardColumn = ({
     <Card
       ref={setNodeRef}
       className={`
-        min-w-[244px] py-1 gap-1 h-min transition-all duration-300 ${className}
+        min-w-[250px] py-1 gap-1 h-min transition-all duration-300 ${className}
         ${isOver ? 'ring-1 ring-primary' : ''}
         ${isActiveColumn ? 'ring-1 ring-primary/30' : ''}
       `}
@@ -174,7 +174,7 @@ export const BoardColumn = ({
         ) : (
           <Button
             onClick={AddTaskOnClick}
-            className="w-full rounded-lg bg-inherit hover:opacity-80 text-base text-muted-foreground hover:text-muted-foreground font-medium justify-start"
+            className="w-full rounded-lg bg-inherit hover:opacity-80 text-base text-content-tertiary font-medium justify-start"
           >
             <Plus size={16} className="text-muted-foreground" />
             Add Task

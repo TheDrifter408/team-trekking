@@ -245,12 +245,12 @@ export const Board = () => {
                 >
                   <Card
                     className={cn(
-                      'flex w-10 min-h-36 items-center text-black self-start gap-0 py-0',
+                      'flex w-10 ml-1 h-[150px] bg-inherit items-center gap-0 py-1',
                       collapsedCount > 0 ? '' : 'hidden'
                     )}
                     onClick={() => setShowCollapsed((prev) => !prev)}
                   >
-                    <div className="mt-12 w-min h-min flex rotate-90 text-left">
+                    <div className="mt-11 w-min h-min flex rotate-90 text-left">
                       <span className="text-nowrap text-sm">
                         {collapsedCount} {LABEL.COLLAPSED}
                       </span>
@@ -268,10 +268,10 @@ export const Board = () => {
                   </Card>
                   <div
                     className={cn(
-                      'grid grid-flow-col h-min gap-2 transition-all duration-450',
+                      'grid grid-flow-col gap-1 transition-all duration-450 -ml-5',
                       showCollapsed
-                        ? 'opacity-100 max-w-[1000px]'
-                        : 'opacity-0 max-w-0'
+                        ? 'opacity-100 w-min ml-0'
+                        : 'opacity-0 h-0 w-0'
                     )}
                   >
                     {columns
