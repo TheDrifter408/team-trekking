@@ -101,42 +101,42 @@ export const mockColumns: Column[] = [
   {
     id: 'col-1',
     title: 'Backlog',
-    color: '#c6c9cc', // slate-200
+    color: '#ffc53d', 
     icon: icons.backlog,
     tasks: createRandomTasks(TaskStatus.BACKLOG, 5),
   },
   {
     id: 'col-2',
     title: 'To Do',
-    color: '#bfdbfe', // blue-200
+    color: '#238b7f', 
     icon: icons.todo,
     tasks: createRandomTasks(TaskStatus.TODO, 4),
   },
   {
     id: 'col-3',
     title: 'In Progress',
-    color: '#fde68a', // amber-200
+    color: '#238b7f', 
     icon: icons.inProgress,
     tasks: createRandomTasks(TaskStatus.IN_PROGRESS, 3),
   },
   {
     id: 'col-4',
     title: 'Review',
-    color: '#c4b5fd', // violet-300
+    color: '#c36522', 
     icon: icons.review,
     tasks: createRandomTasks(TaskStatus.REVIEW, 2),
   },
   {
     id: 'col-5',
     title: 'Testing',
-    color: '#a7f3d0', // emerald-200
+    color: '#c36522', 
     icon: icons.testing,
     tasks: createRandomTasks(TaskStatus.TESTING, 2),
   },
   {
     id: 'col-6',
     title: 'Completed',
-    color: '#86efac', // green-300
+    color: '#227f6b', 
     icon: icons.completed,
     tasks: [
       ...createRandomTasks(TaskStatus.APPROVED, 3),
@@ -147,14 +147,14 @@ export const mockColumns: Column[] = [
   {
     id: 'col-7',
     title: 'Testing',
-    color: '#a7f3d0', // emerald-200
+    color: '#a7f3d0', 
     icon: icons.testing,
     tasks: createRandomTasks(TaskStatus.TESTING, 2),
   },
   {
     id: 'col-8',
     title: 'Completed',
-    color: '#86efac', // green-300
+    color: '#86efac', 
     icon: icons.completed,
     tasks: [
       ...createRandomTasks(TaskStatus.APPROVED, 3),
@@ -165,14 +165,14 @@ export const mockColumns: Column[] = [
   {
     id: 'col-9',
     title: 'Testing',
-    color: '#a7f3d0', // emerald-200
+    color: '#a7f3d0', 
     icon: icons.testing,
     tasks: createRandomTasks(TaskStatus.TESTING, 2),
   },
   {
     id: 'col-10',
     title: 'Completed',
-    color: '#86efac', // green-300
+    color: '#86efac', 
     icon: icons.completed,
     tasks: [
       ...createRandomTasks(TaskStatus.APPROVED, 3),

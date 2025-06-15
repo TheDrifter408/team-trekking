@@ -1,3 +1,4 @@
+import { Column } from '@/types/props/Common';
 import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
@@ -22,22 +23,33 @@ export const getWelcomeMessage = () => {
   return 'Good evening';
 };
 
-export const lightenColor = (hex: string, percent: number) => {
-  const num = parseInt(hex.replace('#', ''), 16);
-  const amt = Math.round(2.55 * percent);
-  const R = (num >> 16) + amt;
-  const G = ((num >> 8) & 0x00ff) + amt;
-  const B = (num & 0x0000ff) + amt;
+export const hexToRgba = (hex: string, alpha: number) => {
+  const sanitizedHex = hex.replace('#', '');
+  const num = parseInt(sanitizedHex, 16);
 
-  return (
-    '#' +
-    (
-      0x1000000 +
-      (R < 255 ? (R < 1 ? 0 : R) : 255) * 0x10000 +
-      (G < 255 ? (G < 1 ? 0 : G) : 255) * 0x100 +
-      (B < 255 ? (B < 1 ? 0 : B) : 255)
-    )
-      .toString(16)
-      .slice(1)
-  );
+  const r = (num >> 16) & 255;
+  const g = (num >> 8) & 255;
+  const b = num & 255;
+
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 };
+
+
+export const columnsEqual = (cols1: Column[], cols2: Column[]): boolean => {
+  if (cols1.length !== cols2.length) return false;
+
+  for (let i = 0; i < cols1.length; i++) {
+    const col1 = cols1[i];
+    const col2 = cols2[i];
+
+    if (col1.id !== col2.id) return false;
+
+    if (col1.tasks.length !== col2.tasks.length) return false;
+
+    for (let j = 0; j < col1.tasks.length; j++) {
+      if (col1.tasks[j].id !== col2.tasks[j].id) return false;
+    }
+  }
+
+  return true;
+}

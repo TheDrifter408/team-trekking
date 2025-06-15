@@ -11,7 +11,7 @@ import { faker } from '@faker-js/faker';
 import { ContextMenu } from '@/components/common/context-menu';
 import { columnMenuConfig } from '@/lib/constants/staticData';
 import { BoardColumnProps, Task, Column } from '@/types/props/Common';
-import { lightenColor } from '@/lib/utils.ts';
+import { hexToRgba } from '@/lib/utils.ts';
 
 export const BoardColumn = ({
   column,
@@ -94,15 +94,13 @@ export const BoardColumn = ({
 
   return (
     <Card
-      ref={(node) => {
-        setNodeRef(node);
-      }}
+      ref={setNodeRef}
       className={`
-        w-[244px] py-1 gap-1 h-min transition-all duration-300 ${className}
-        ${isOver ? 'ring-2 ring-primary' : ''}
+        min-w-[244px] py-1 gap-1 h-min transition-all duration-300 ${className}
+        ${isOver ? 'ring-1 ring-primary' : ''}
         ${isActiveColumn ? 'ring-1 ring-primary/30' : ''}
       `}
-      style={{ backgroundColor: lightenColor(column.color, 20) }} // lightens by 20%
+      style={{ backgroundColor: hexToRgba(column.color, 0.2) }} // for adding 20% opacity to the column background color
     >
       <CardHeader
         className="flex items-center justify-between !px-2"
@@ -176,7 +174,7 @@ export const BoardColumn = ({
         ) : (
           <Button
             onClick={AddTaskOnClick}
-            className="w-full rounded-lg bg-inherit hover:bg-gray-50 text-base text-muted-foreground font-medium justify-start"
+            className="w-full rounded-lg bg-inherit hover:opacity-80 text-base text-muted-foreground hover:text-muted-foreground font-medium justify-start"
           >
             <Plus size={16} className="text-muted-foreground" />
             Add Task
