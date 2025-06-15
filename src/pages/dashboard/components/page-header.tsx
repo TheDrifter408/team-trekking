@@ -116,7 +116,6 @@ const DefaultHeader: FC<{
       <IconHome size={16} />
       <span>Home</span>
     </div>
-
     <Sheet>
       <SheetTrigger asChild>
         <Button
