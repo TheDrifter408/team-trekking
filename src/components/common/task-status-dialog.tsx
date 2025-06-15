@@ -9,6 +9,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/shadcn-ui/dropdown-menu';
 import { Input } from '@/components/shadcn-ui/input';
+import { LABEL } from '@/lib/constants';
 
 interface ProgressIconProps {
   progress?: number;
@@ -117,31 +118,41 @@ const TaskStatusDialog: React.FC<TaskStatusUIProps> = ({ children }) => {
   const activeItems: StatusItem[] = [
     {
       id: 'STARTING',
-      label: 'STARTING',
+      label: LABEL.STARTING,
       color: 'text-orange-600',
       progress: 25,
     },
     {
       id: 'IN_PROGRESS',
-      label: 'IN PROGRESS',
+      label: LABEL.IN_PROGRESS,
       color: 'text-blue-600',
       progress: 65,
     },
     {
       id: 'COMPLETED',
-      label: 'COMPLETED',
+      label: LABEL.COMPLETED,
       color: 'text-green-600',
       progress: 100,
       isCompleted: true,
     },
     {
       id: 'IN_REVIEW',
-      label: 'IN REVIEW',
+      label: LABEL.IN_REVIEW,
       color: 'text-orange-600',
       progress: 85,
     },
-    { id: 'REJECTED', label: 'REJECTED', color: 'text-red-600', progress: 100 },
-    { id: 'BLOCKED', label: 'BLOCKED', color: 'text-orange-600', progress: 30 },
+    {
+      id: LABEL.REJECTED,
+      label: 'REJECTED',
+      color: 'text-red-600',
+      progress: 100,
+    },
+    {
+      id: LABEL.BLOCKED,
+      label: 'BLOCKED',
+      color: 'text-orange-600',
+      progress: 30,
+    },
   ];
 
   const closedItems: StatusItem[] = [
@@ -154,11 +165,11 @@ const TaskStatusDialog: React.FC<TaskStatusUIProps> = ({ children }) => {
     },
   ];
 
-  const handleStatusChange = (statusId: string): void => {
+  const onHandleStatusChange = (statusId: string): void => {
     setSelectedStatus(statusId);
   };
 
-  const handleSearchChange = useCallback(
+  const onHandleSearchChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       e.preventDefault();
       e.stopPropagation();
@@ -167,7 +178,7 @@ const TaskStatusDialog: React.FC<TaskStatusUIProps> = ({ children }) => {
     []
   );
 
-  const handleSearchClick = useCallback(
+  const onHandleSearchClick = useCallback(
     (e: React.MouseEvent<HTMLInputElement>) => {
       e.preventDefault();
       e.stopPropagation();
@@ -194,10 +205,10 @@ const TaskStatusDialog: React.FC<TaskStatusUIProps> = ({ children }) => {
             />
             <Input
               type="text"
-              placeholder="Search statuses..."
+              placeholder={LABEL.SEARCH_STATUSES}
               value={searchQuery}
-              onChange={handleSearchChange}
-              onClick={handleSearchClick}
+              onChange={onHandleSearchChange}
+              onClick={onHandleSearchClick}
               className="pl-9"
             />
           </div>
@@ -215,7 +226,7 @@ const TaskStatusDialog: React.FC<TaskStatusUIProps> = ({ children }) => {
             {filteredItems(statusItems).map((item: StatusItem) => (
               <DropdownMenuItem
                 key={item.id}
-                onClick={() => handleStatusChange(item.id)}
+                onClick={() => onHandleStatusChange(item.id)}
                 className="flex items-center justify-between cursor-pointer"
               >
                 <div className="flex items-center space-x-3">
@@ -245,7 +256,7 @@ const TaskStatusDialog: React.FC<TaskStatusUIProps> = ({ children }) => {
             {filteredItems(activeItems).map((item: StatusItem) => (
               <DropdownMenuItem
                 key={item.id}
-                onClick={() => handleStatusChange(item.id)}
+                onClick={() => onHandleStatusChange(item.id)}
                 className="flex items-center justify-between cursor-pointer"
               >
                 <div className="flex items-center space-x-3">
@@ -275,7 +286,7 @@ const TaskStatusDialog: React.FC<TaskStatusUIProps> = ({ children }) => {
             {filteredItems(closedItems).map((item: StatusItem) => (
               <DropdownMenuItem
                 key={item.id}
-                onClick={() => handleStatusChange(item.id)}
+                onClick={() => onHandleStatusChange(item.id)}
                 className="flex items-center justify-between cursor-pointer"
               >
                 <div className="flex items-center space-x-3">
@@ -300,7 +311,7 @@ const TaskStatusDialog: React.FC<TaskStatusUIProps> = ({ children }) => {
           filteredItems([...statusItems, ...activeItems, ...closedItems])
             .length === 0 && (
             <div className="p-4 text-center text-muted-foreground text-sm">
-              No status found matching "{searchQuery}"
+              {LABEL.NO_STATUS_FOUND_MATCHING} "{searchQuery}"
             </div>
           )}
       </DropdownMenuContent>
