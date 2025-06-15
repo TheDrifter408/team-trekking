@@ -11,4 +11,13 @@ enum OtpType {
   REGISTRATION = 'REGISTRATION',
   PASSWORD_REST = 'PASSWORD_RESET',
 }
-export { UserRole, RegistrationType, OtpType };
+
+enum Priority {
+  NONE = 'none',
+  LOW = 'low',
+  MIDDLE = 'mid',
+  HIGH = 'high',
+}
+export type PriorityType = keyof typeof Priority;
+
+export { UserRole, RegistrationType, OtpType, Priority };

@@ -1,22 +1,17 @@
-import { Dispatch, SetStateAction, useState } from 'react';
+import { useState } from 'react';
 import { ChevronLeft, Circle, Ellipsis, Plus } from 'lucide-react';
 import { useDroppable } from '@dnd-kit/core';
 import { Button } from '@/components/shadcn-ui/button';
 import { Card, CardContent, CardHeader } from '@/components/shadcn-ui/card';
-import { Column, Priority, Task, TaskStatus } from '@/mock';
 import { SortableTaskCard } from './sortable-task-card';
 import { z } from 'zod';
-import { addTaskSchema } from '../schema/addTaskSchema';
+import { addTaskSchema } from '@/lib/validation/validationSchema';
 import { AddTaskForm } from './AddTaskForm';
 import { faker } from '@faker-js/faker';
-interface BoardColumnProps {
-  column: Column;
-  className?: string;
-  isActiveColumn?: boolean;
-  setColumns: Dispatch<SetStateAction<Column[]>>;
-  updateCollapsed: (column: Column) => void;
-  isCollapsed: boolean;
-}
+import { ContextMenu } from '@/components/common/context-menu';
+import { columnMenuConfig } from '@/lib/constants/staticData';
+import { BoardColumnProps, Task, Column } from '@/types/props/Common';
+import { hexToRgba } from '@/lib/utils.ts';
 
 export const BoardColumn = ({
   column,
@@ -30,23 +25,24 @@ export const BoardColumn = ({
   const [addingTask, setAddingTask] = useState(false);
 
   const onSubmit = (values: z.infer<typeof addTaskSchema>) => {
-    // Assign the correct enum value from user input for status and priority
-    const status: TaskStatus =
-      TaskStatus[column.title.toUpperCase() as keyof typeof TaskStatus];
-    const priority: Priority =
-      Priority[values.priority.toUpperCase() as keyof typeof Priority];
     // Create a new Task
     const newTask: Task = {
-      id: faker.string.uuid(),
+      id: faker.number.int(),
       name: values.name,
       description: '',
-      status,
+      progress: 0,
+      status: {
+        id: faker.number.int(),
+        name: column.title.toUpperCase(),
+        color: column.color,
+        category: column.color,
+      },
       dueDate: values.date.to ? values.date.to.toUTCString() : '',
       startDate: values.date.from ? values.date.from.toUTCString() : '',
       assignees: values.assignees ? values.assignees : [],
-      priority,
-      subtask: [],
-      checklistCount: 0,
+      priority: values.priority.toUpperCase(),
+      subTask: [],
+      checkListCount: 0,
     };
     setColumns((prev) => {
       const updated = [...prev];
@@ -69,32 +65,13 @@ export const BoardColumn = ({
   const toggleCollapse = (column: Column) => {
     updateCollapsed(column);
   };
-  const lightenColor = (hex: string, percent: number) => {
-    const num = parseInt(hex.replace('#', ''), 16);
-    const amt = Math.round(2.55 * percent);
-    const R = (num >> 16) + amt;
-    const G = ((num >> 8) & 0x00ff) + amt;
-    const B = (num & 0x0000ff) + amt;
-
-    return (
-      '#' +
-      (
-        0x1000000 +
-        (R < 255 ? (R < 1 ? 0 : R) : 255) * 0x10000 +
-        (G < 255 ? (G < 1 ? 0 : G) : 255) * 0x100 +
-        (B < 255 ? (B < 1 ? 0 : B) : 255)
-      )
-        .toString(16)
-        .slice(1)
-    );
-  };
 
   // If collapsed, render a vertical column with sideways text
   if (isCollapsed) {
     return (
       <Card
-        className={`transition-all text-black duration-300 flex items-center min-h-32 gap-10 w-10 py-14 self-start ${className}`}
-        style={{ backgroundColor: '#fff' }}
+        className={`transition-all duration-300 flex items-center min-h-32 gap-10 w-10 py-14 self-start ${className}`}
+        style={{ backgroundColor: hexToRgba(column.color, 0.2) }} // for adding 20% opacity to the column background color
         onClick={() => toggleCollapse(column)}
       >
         <CardContent className="flex items-center p-2 rotate-90 w-auto h-full">
@@ -119,11 +96,11 @@ export const BoardColumn = ({
     <Card
       ref={setNodeRef}
       className={`
-        w-[244px] py-1 gap-1 h-auto transition-all duration-300 ${className}
-        ${isOver ? 'ring-2 ring-primary' : ''}
+        min-w-[250px] py-1 gap-1 h-min transition-all duration-300 ${className}
+        ${isOver ? 'ring-1 ring-primary' : ''}
         ${isActiveColumn ? 'ring-1 ring-primary/30' : ''}
       `}
-      style={{ backgroundColor: lightenColor(column.color, 20) }} // lightens by 20%
+      style={{ backgroundColor: hexToRgba(column.color, 0.2) }} // for adding 20% opacity to the column background color
     >
       <CardHeader
         className="flex items-center justify-between !px-2"
@@ -154,10 +131,27 @@ export const BoardColumn = ({
               <ChevronLeft className={'text-muted-foreground'} />
             </Button>
           )}
-          <Button variant={'ghost'} className={'!px-0 !mx-0'} size={'icon_sm'}>
-            <Ellipsis className={'text-muted-foreground'} />
-          </Button>
-          <Button size={'icon_sm'} className={'!px-0'} variant={'ghost'}>
+          <ContextMenu
+            trigger={
+              <Button
+                variant={'ghost'}
+                className={'!px-0 !mx-0'}
+                size={'icon_sm'}
+              >
+                <Ellipsis className={'text-muted-foreground'} />
+              </Button>
+            }
+            sections={columnMenuConfig}
+            width={'w-fit'}
+            onItemClick={() => { }}
+          />
+
+          <Button
+            onClick={AddTaskOnClick}
+            size={'icon_sm'}
+            className={'!px-0'}
+            variant={'ghost'}
+          >
             <Plus className={'text-muted-foreground'} />
           </Button>
         </div>
@@ -172,11 +166,15 @@ export const BoardColumn = ({
           <SortableTaskCard key={task.id} task={task} />
         ))}
         {addingTask ? (
-          <AddTaskForm onSubmit={onSubmit} setAddingTask={setAddingTask} />
+          <AddTaskForm
+            onSubmit={onSubmit}
+            addingTask={addingTask}
+            setAddingTask={setAddingTask}
+          />
         ) : (
           <Button
             onClick={AddTaskOnClick}
-            className="w-full rounded-lg bg-inherit hover:bg-gray-50 text-base text-muted-foreground font-medium justify-start"
+            className="w-full rounded-lg bg-inherit hover:opacity-80 text-base text-content-tertiary font-medium justify-start"
           >
             <Plus size={16} className="text-muted-foreground" />
             Add Task

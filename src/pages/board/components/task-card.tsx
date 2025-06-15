@@ -1,13 +1,15 @@
-import { useState, memo } from 'react';
+import { useState, memo, MouseEvent, useRef, KeyboardEvent } from 'react';
 import { useDraggable } from '@dnd-kit/core';
 import { CSS } from '@dnd-kit/utilities';
-import { Task } from '@/mock';
 import {
   Calendar,
   Flag,
   Spline,
   CircleCheck,
   CircleUserRound,
+  Check,
+  Pencil,
+  Ellipsis,
 } from 'lucide-react';
 import { IconCaretDownFilled, IconCaretRightFilled } from '@tabler/icons-react';
 import { TaskDescriptionIcon } from '@/assets/icons.tsx';
@@ -15,22 +17,14 @@ import { Card, CardContent } from '@/components/shadcn-ui/card';
 import { format } from 'date-fns';
 import { Button } from '@/components/shadcn-ui/button';
 import { cn } from '@/lib/utils.ts';
-
-// Moved outside component to avoid re-creation on each render
-const PRIORITY_COLORS = {
-  high: 'rgb(198, 42, 47)',
-  mid: 'rgb(255, 197, 61)',
-  low: 'rgb(62, 99, 221)',
-  default: 'rgb(187, 187, 187)',
-};
-
-interface TaskCardProps {
-  task: Task;
-  className?: string;
-  indentLevel?: number;
-  isSubtask?: boolean;
-  isDragOverlay?: boolean;
-}
+import { ContextMenu } from '@/components/common/context-menu';
+import { boardTaskMenuConfig } from '@/lib/constants/staticData';
+import { TaskCardProps } from '@/types/props/Common';
+import { useClickOutside } from '@/lib/hooks/use-click-outside';
+import { useAutoFocus } from '@/lib/hooks/use-auto-focus';
+import { MenuItem, SubmenuItem } from '@/types/interfaces/ContextMenu';
+import { useTheme } from '@/lib/context/theme-context';
+import { PRIORITY_COLORS } from '@/mock';
 
 const TaskCard = ({
   task,
@@ -39,10 +33,54 @@ const TaskCard = ({
   isSubtask = false,
   isDragOverlay = false,
 }: TaskCardProps) => {
+  const { theme } = useTheme();
   const [showSubtasks, setShowSubtasks] = useState(false);
+  const [onEnterTask, setOnEnterTask] = useState(false);
+  const [isContextMenuOpen, setIsContextMenuOpen] = useState(false);
   const [onEnterSubtask, setOnEnterSubtask] = useState(false);
+  const [isEditingTaskName, setIsEditingTaskName] = useState(true);
 
-  const hasSubtasks = task.subtask && task.subtask.length > 0;
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  const inputRef = useAutoFocus<HTMLDivElement>(isEditingTaskName);
+
+  const handleKeyDown = (e: KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      e.preventDefault(); // Prevent new line
+      inputRef.current?.blur();
+    } else if (e.key === 'Escape') {
+      setIsEditingTaskName(false);
+    }
+  };
+
+  useClickOutside([contentRef], () => {
+    if (isEditingTaskName) {
+      setIsEditingTaskName(false);
+    }
+  });
+
+  const onEditingTaskName = () => {
+    setIsEditingTaskName(true);
+  };
+
+  const handleContextMenuAction = (item: MenuItem | SubmenuItem) => {
+    switch (item.action) {
+      case 'rename':
+        setIsEditingTaskName(true);
+        break;
+      default:
+        return;
+    }
+  };
+
+  const hasSubtasks = task.subTask && task.subTask.length > 0;
+  // function to handle if the ContextMenu is Open
+  const onMouseLeave = (e: MouseEvent) => {
+    e.stopPropagation();
+    if (!isContextMenuOpen) {
+      setOnEnterTask(false);
+    }
+  };
 
   // Only make the main tasks draggable, not subtasks
   const { attributes, listeners, setNodeRef, transform, isDragging } =
@@ -54,15 +92,15 @@ const TaskCard = ({
   const style =
     transform && !isDragOverlay
       ? {
-          transform: CSS.Translate.toString(transform),
-          opacity: isDragging ? 0.5 : 1,
-          zIndex: isDragging ? 50 : 'auto',
-        }
+        transform: CSS.Translate.toString(transform),
+        opacity: isDragging ? 0.5 : 1,
+        zIndex: isDragging ? 50 : 'auto',
+      }
       : undefined;
 
-  const toggleSubtasks = (e: React.MouseEvent) => {
+  const toggleSubtasks = (e:MouseEvent) => {
+    setShowSubtasks((prev) =>!prev);
     e.stopPropagation();
-    setShowSubtasks(!showSubtasks);
   };
 
   const getPriorityColor = (priority: string) => {
@@ -79,19 +117,11 @@ const TaskCard = ({
       return 'Invalid date';
     }
   };
-
-  // Different classes based on drag state - using cn utility for cleaner class composition
-  const cardClasses = cn(
-    className,
-    'bg-background cursor-pointer transition-all duration-150',
-    isSubtask && 'border-l-4 border-l-primary/30 ',
-    isDragOverlay &&
-      'w-[244px] shadow-2xl ring-2 ring-primary z-50 scale-[1.03] border-primary/80 rotate-1 bg-background'
-  );
+  // check if the context menu is open or not
 
   // Extract reusable UI elements
   const SubtaskToggleButton = () => (
-    <div
+    <button
       className="w-full py-1 px-2 hover:bg-accent rounded mt-2 gap-2 flex items-center"
       onMouseEnter={() => setOnEnterSubtask(true)}
       onMouseLeave={() => setOnEnterSubtask(false)}
@@ -120,8 +150,10 @@ const TaskCard = ({
       ) : (
         <Spline strokeWidth={3} size={13} className="text-muted-foreground" />
       )}
-      <span className="text-sm">{task.subtask.length} Subtasks</span>
-    </div>
+      <span className="text-sm">
+        {task.subTask ? task.subTask.length : 0} Subtasks
+      </span>
+    </button>
   );
 
   const BadgeStyle =
@@ -132,15 +164,78 @@ const TaskCard = ({
       <Card
         ref={isSubtask || isDragOverlay ? undefined : setNodeRef}
         style={style}
-        className={cardClasses}
+        className={cn(
+          className,
+          'bg-background cursor-pointer transition-all duration-150 relative py-2',
+          isSubtask && 'border-l-4 border-l-primary/30 ',
+          isDragOverlay &&
+          'w-[244px] shadow-2xl ring-2 ring-primary z-50 scale-[1.03] border-primary/80 rotate-1 bg-background'
+        )}
         {...(isSubtask || isDragOverlay ? {} : { ...attributes, ...listeners })}
+        onMouseEnter={() => setOnEnterTask(true)}
+        onMouseLeave={(e) => onMouseLeave(e)}
       >
-        <CardContent className="px-3">
+        <CardContent className="px-3" ref={contentRef}>
           {/* task title */}
           <div className="flex justify-between items-start">
-            <span className="font-medium text-base line-clamp-2 flex-1">
+            <div
+              contentEditable={isEditingTaskName}
+              suppressContentEditableWarning // removing this attributes prints console warnings
+              ref={inputRef}
+              className={cn(
+                'font-medium text-base line-clamp-2 flex-1',
+                isEditingTaskName
+                  ? 'focus:outline-none focus-visible:ring-0 cursor-text'
+                  : ''
+              )}
+              onKeyDown={handleKeyDown}
+            >
               {task.name}
-            </span>
+            </div>
+            <div
+              className={cn(
+                'absolute top-0 right-0 flex border rounded-xl z-10 transition-opacity duration-100 shadow-sm',
+                onEnterTask && !isEditingTaskName
+                  ? 'opacity-100 visible'
+                  : 'opacity-0 invisible',
+                theme === 'dark' ? 'bg-black' : 'bg-white'
+
+              )}
+            >
+              <Button
+                size={'icon_sm'}
+                className={'!px-0 hover:shadow-sm'}
+                variant={'ghost'}
+              >
+                <Check />
+              </Button>
+              <Button
+                onClick={onEditingTaskName}
+                size={'icon_sm'}
+                className={'!px-0 hover:shadow-sm'}
+                variant={'ghost'}
+              >
+                <Pencil />
+              </Button>
+              <ContextMenu
+                trigger={
+                  <Button
+                    onClick={() => {
+                      setIsContextMenuOpen((prev) => !prev);
+                      setOnEnterTask((prev) => !prev);
+                    }}
+                    size={'icon_sm'}
+                    className={'!px-0 hover:shadow-sm'}
+                    variant={'ghost'}
+                  >
+                    <Ellipsis />
+                  </Button>
+                }
+                sections={boardTaskMenuConfig}
+                width="w-fit"
+                onItemClick={(item) => handleContextMenuAction(item)}
+              />
+            </div>
           </div>
 
           {/* task information buttons */}
@@ -148,18 +243,15 @@ const TaskCard = ({
             <button className="hover:bg-accent rounded-sm p-.5">
               <TaskDescriptionIcon />
             </button>
-
-            {task.checklistCount > 0 && (
-              <Button
-                variant="ghost"
-                className="flex items-center justify-center gap-1 !py-[2px] !px-[4px] h-fit"
-              >
-                <CircleCheck size={12} className="text-muted-foreground" />
-                <span className="text-sm text-muted-foreground">
-                  0/{task.checklistCount}
-                </span>
-              </Button>
-            )}
+            <Button
+              variant="ghost"
+              className="flex items-center justify-center gap-1 !py-[2px] !px-[4px] h-fit"
+            >
+              <CircleCheck size={12} className="text-muted-foreground" />
+              <span className="text-sm text-content-tertiary">
+                0/{task.checkListCount ? task.checkListCount : 0}
+              </span>
+            </Button>
           </div>
 
           {/* task badges */}
@@ -172,20 +264,32 @@ const TaskCard = ({
             {/* Date badge */}
             <div className={cn(BadgeStyle, 'gap-1')}>
               <Calendar className="text-muted-foreground" size={12} />
-              <span className="text-sm text-muted-foreground font-semibold">
-                {formatDate(task.startDate)} - {formatDate(task.dueDate)}
+              <span className="text-sm text-content-tertiary font-semibold">
+                {task.startDate && task.dueDate
+                  ? `${formatDate(task.startDate)}` +
+                  '-' +
+                  `${formatDate(task.dueDate)}`
+                  : ''}
               </span>
             </div>
 
             {/* Priority badge */}
             <div className={cn(BadgeStyle, 'gap-1')}>
               <Flag
-                fill={getPriorityColor(task.priority)}
-                color={getPriorityColor(task.priority)}
+                fill={
+                  task.priority
+                    ? getPriorityColor(task.priority)
+                    : 'bg-gray-500'
+                }
+                color={
+                  task.priority
+                    ? getPriorityColor(task.priority)
+                    : 'bg-gray-500'
+                }
                 className="text-muted-foreground"
                 size={12}
               />
-              <span className="text-sm font-medium text-muted-foreground capitalize">
+              <span className="text-sm font-medium text-content-tertiary capitalize">
                 {task.priority}
               </span>
             </div>
@@ -197,9 +301,9 @@ const TaskCard = ({
       </Card>
 
       {/* Subtasks */}
-      {hasSubtasks && showSubtasks && !isDragOverlay && (
-        <div className="ml-4 mt-1 space-y-2">
-          {task.subtask.map((subtask) => (
+      {showSubtasks && (
+        <div className="ml-2 mt-1 space-y-1">
+          {task.subTask?.map((subtask) => (
             <TaskCard
               key={subtask.id}
               task={subtask}
