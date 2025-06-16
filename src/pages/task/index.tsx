@@ -46,6 +46,7 @@ import { AssigneeAvatar } from '@/components/common/assignee-avatar.tsx';
 import { DocEditor } from './components/doc-editor.tsx';
 import { Subtask } from '@/pages/task/components/Subtask.tsx';
 import TaskStatusDialog from '@/components/common/task-status-dialog.tsx';
+import TimeEstimateDropDown from '@/components/common/estimate-time-dropdown.tsx';
 
 export const Task: React.FC = () => {
   const [enterStatus, setEnterStatus] = useState<boolean>(false);
@@ -304,15 +305,11 @@ export const Task: React.FC = () => {
           hover={enterEstimatedTime}
           onHoverChange={setEnterEstimatedTime}
         >
-          {sampleTask.estimatedTime === '' ? (
-            <span className="text-base text-muted-foreground font-medium">
-              Empty
-            </span>
-          ) : (
-            <span className="text-base font-regular">
-              {sampleTask.estimatedTime}h
-            </span>
-          )}
+          <div className="flex -space-x-2 ">
+            <TimeEstimateDropDown
+              children={<span className="text-sm">Empty</span>}
+            />
+          </div>
         </TaskMetaRow>
         {/* TRACK TIME */}
         <TaskMetaRow
