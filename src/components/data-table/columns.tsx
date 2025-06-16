@@ -99,7 +99,6 @@ export const Columns: ColumnDef<Task>[] = [
     accessorKey: COLUMN_META.ACCESSOR_KEY.OPTIONS,
     header: () => {
       const openDrawer = useComponentStore((s) => s.openDrawer);
-      const closeDrawer = useComponentStore((s) => s.closeDrawer);
       return (
         <Button
           size={'auto'}
