@@ -98,6 +98,7 @@ export const LABEL = {
   SHARING_AND_PERMISSIONS: 'Sharing & Permissions',
   LIST: 'List',
   TASK: 'Task',
+  TASKS: 'Tasks',
   SUBTASK: 'Subtask',
   CONVERT_LIST_TO_SPRINT: 'Convert List to Sprint',
   COLOR_AND_ICON: 'Color & Icon',
