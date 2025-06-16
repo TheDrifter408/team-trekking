@@ -347,14 +347,16 @@ export const Task: React.FC = () => {
               <Badge
                 key={index}
                 variant="outline"
-                className="flex items-center gap-1 bg-blue-50 text-blue-700 hover:bg-blue-100 group relative pr-6"
+                className={cn(
+                  'flex items-center gap-1 bg-blue-50 text-blue-700 hover:bg-blue-100 group relative',
+                  enterTags && 'pr-6'
+                )}
               >
-                <IconTag size={12} />
                 {tag}
                 {enterTags && (
                   <button
                     onClick={() => console.log('Remove tag:', tag)}
-                    className="absolute right-1 opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:text-red-500"
+                    className="absolute right-1 opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:text-gray-400"
                   >
                     <IconX size={10} />
                   </button>
