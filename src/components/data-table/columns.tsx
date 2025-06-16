@@ -42,7 +42,7 @@ export const Columns: ColumnDef<Task>[] = [
     id: COLUMN_META.ACCESSOR_KEY.NAME,
     header: COLUMN_META.HEADER.NAME,
     cell: ({ row }) => <NameColumn task={row.original} row={row} />,
-    minSize: 280,
+    minSize: 300,
     maxSize: 400,
     enableResizing: true,
     meta: {
