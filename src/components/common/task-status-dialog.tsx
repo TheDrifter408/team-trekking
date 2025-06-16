@@ -10,6 +10,7 @@ import {
 } from '@/components/shadcn-ui/dropdown-menu';
 import { Input } from '@/components/shadcn-ui/input';
 import { LABEL } from '@/lib/constants';
+import { cn } from '@/lib/utils';
 
 interface ProgressIconProps {
   progress?: number;
@@ -60,8 +61,8 @@ const ProgressIcon: React.FC<ProgressIconProps> = ({
 
   if (isCompleted) {
     return (
-      <div className="w-5 h-5 bg-green-500 rounded-full flex items-center justify-center">
-        <Check size={12} className="text-white" />
+      <div className="w-4 h-4 bg-green-500 rounded-full flex items-center justify-center">
+        <Check size={10} className="text-white" />
       </div>
     );
   }
@@ -236,7 +237,14 @@ const TaskStatusDialog: React.FC<TaskStatusUIProps> = ({ children }) => {
                     color={item.color}
                     isCompleted={item.isCompleted}
                   />
-                  <span className="text-sm">{item.label}</span>
+                  <span
+                    className={cn(
+                      'text-sm',
+                      selectedStatus === item.id && 'font-bold'
+                    )}
+                  >
+                    {item.label}
+                  </span>
                 </div>
                 {selectedStatus === item.id && (
                   <Check size={14} className="text-primary" />
@@ -266,7 +274,14 @@ const TaskStatusDialog: React.FC<TaskStatusUIProps> = ({ children }) => {
                     color={item.color}
                     isCompleted={item.isCompleted}
                   />
-                  <span className="text-sm">{item.label}</span>
+                  <span
+                    className={cn(
+                      'text-sm',
+                      selectedStatus === item.id && 'font-bold'
+                    )}
+                  >
+                    {item.label}
+                  </span>
                 </div>
                 {selectedStatus === item.id && (
                   <Check size={14} className="text-primary" />
@@ -296,7 +311,14 @@ const TaskStatusDialog: React.FC<TaskStatusUIProps> = ({ children }) => {
                     color={item.color}
                     isCompleted={item.isCompleted}
                   />
-                  <span className="text-sm">{item.label}</span>
+                  <span
+                    className={cn(
+                      'text-sm',
+                      selectedStatus === item.id && 'font-bold'
+                    )}
+                  >
+                    {item.label}
+                  </span>
                 </div>
                 {selectedStatus === item.id && (
                   <Check size={14} className="text-primary" />

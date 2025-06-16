@@ -35,7 +35,7 @@ export const TaskMetaRow = ({
       <div className="relative flex w-4/5">
         <div
           className={cn(
-            'flex w-full h-10 items-center gap-1 px-1 py-[2px] rounded-lg transition-colors',
+            'flex w-full h-8 items-center gap-1 px-1 py-[2px] rounded-lg transition-colors',
             hover ? 'bg-gray-100' : ''
           )}
           onMouseEnter={() => onHoverChange?.(true)}
