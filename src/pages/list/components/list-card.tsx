@@ -1,6 +1,8 @@
 import { Button } from '@/components/shadcn-ui/button.tsx';
 import { Icon } from '@/assets/icon-path';
 import { cn } from '@/lib/utils.ts';
+import TaskTypeDropdown from '@/components/common/task-type-dropdown.tsx';
+import { LABEL } from '@/lib/constants';
 
 interface Props {
   isTableExpanded: boolean;
@@ -19,7 +21,9 @@ export const ListCard = ({ isTableExpanded, onToggleExpand }: Props) => {
           )}
         />
       </Button>
-      <span className={'text-lg font-medium'}>Tasks</span>
+      <TaskTypeDropdown>
+        <span className={'text-lg font-medium'}>{LABEL.TASKS}</span>
+      </TaskTypeDropdown>
       <span className={'font-medium text-content-tertiary text-base'}>15</span>
       <Button size={'icon_sm'} variant={'ghost'}>
         <Icon name={'menu03'} className={'text-content-tertiary font-medium'} />
