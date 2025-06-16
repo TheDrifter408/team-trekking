@@ -53,8 +53,8 @@ export const Columns: ColumnDef<Task>[] = [
     accessorKey: COLUMN_META.ACCESSOR_KEY.PRIORITY,
     header: COLUMN_META.HEADER.PRIORITY,
     cell: ({ row }) => <PriorityColumn task={row.original} />,
-    minSize: 70,
-    maxSize: 80,
+    minSize: 105,
+    maxSize: 120,
     enableResizing: true,
     meta: {
       icon: 'priority02',
