@@ -129,7 +129,7 @@ export const LABEL = {
   ARCHIVE_ALL_IN_GROUP: 'Archive All in this group',
   MILESTONE: 'Milestone',
   FORM_RESPONSE: 'Form Response',
-  SEARCH_STATUSES: 'Search statuses...',
+  SEARCH_STATUSES: 'Search...',
   NO_STATUS_FOUND_MATCHING: ' No status found matching',
   SPRINT_BACKLOG: 'SPRINT BACKLOG',
   STARTING: 'STARTING',

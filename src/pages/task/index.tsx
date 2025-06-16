@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { mockChecklist, mockSubtasks, mockUsers, sampleTask } from '@/mock';
 import { cn } from '@/lib/utils';
-import { ChevronDown, PlayCircle, Plus } from 'lucide-react';
+import { ChevronDown, ChevronRight, PlayCircle, Plus } from 'lucide-react';
 import {
   IconCalendar,
   IconCheck,
@@ -210,28 +210,28 @@ export const Task: React.FC = () => {
         <TaskMetaRow
           icon={<IconCircleDot className="text-base font-semibold" size={15} />}
           label="Status"
-          hover={enterStatus}
-          onHoverChange={setEnterStatus}
         >
           <TaskStatusDialog>
             <Button
               variant="ghost"
               size="sm"
               className={cn(
-                'rounded-r-none text-white h-6 px-3 text-xs tracking-wide font-bold',
+                'rounded text-white hover:text-white h-6 px-2 text-xs tracking-wide font-bold flex items-center',
                 sampleTask.status.color,
                 `hover:${sampleTask.status.color}`
               )}
             >
               {sampleTask.status.name.toUpperCase()}
-              <ChevronDown className="w-4 h-4 ml-2" />
+              <span className="ml-2 pl-2 border-l border-white/40 flex items-center">
+                <ChevronRight className="w-4 h-4" />
+              </span>
             </Button>
           </TaskStatusDialog>
           <Button
             variant="ghost"
             size="sm"
             className={cn(
-              'h-6 px-2 rounded-l-none border border-l-0',
+              'h-6 px-2 rounded-[6px] border',
               `hover:${sampleTask.status.color}`
             )}
           >
