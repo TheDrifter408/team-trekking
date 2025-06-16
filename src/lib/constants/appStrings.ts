@@ -140,4 +140,13 @@ export const LABEL = {
   CHANGES_ARE_AUTOMATICALLY_SAVED: ' Changes are automatically saved',
   TIME_ESTIMATE: 'Time Estimate',
   TOTAL_WITH_SUBTASKS: ' TOTAL WITH SUBTASKS',
+  COPY_LINK_SHORT: 'Copy Link',
+  COPY_ID: 'Copy Id',
+  NEW_TAB: 'New Tab',
+  ADD_COLUMN: 'Add a column',
+  ANOTHER_LIST: 'Another List',
+  FAVORITES: 'Favorites',
+  PERSONAL_LIST: 'Personal List',
+  LINEUP: 'LineUp',
+  TRAY: 'Tray',
 };

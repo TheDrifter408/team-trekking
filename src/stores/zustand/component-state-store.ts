@@ -2,6 +2,7 @@ import { create } from 'zustand';
 
 type DrawerState = {
   isOpen: boolean;
+  data?: unknown;
 };
 
 type UIStore = {
@@ -25,7 +26,7 @@ export const useComponentStore = create<UIStore>((set, get) => ({
     set((state) => ({
       drawers: {
         ...state.drawers,
-        [id]: { ...state.drawers[id], isOpen: false },
+        [id]: { ...(state.drawers[id] ?? {}), isOpen: false },
       },
     })),
   toggleDrawer: (id) =>
@@ -34,7 +35,7 @@ export const useComponentStore = create<UIStore>((set, get) => ({
       return {
         drawers: {
           ...state.drawers,
-          [id]: { ...state.drawers[id], isOpen: !current },
+          [id]: { ...(state.drawers[id] ?? {}), isOpen: !current },
         },
       };
     }),
