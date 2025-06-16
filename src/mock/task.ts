@@ -100,7 +100,7 @@ const generateTask = (level = 1, maxDepth = 3): Task => {
     checklist: generateChecklist(),
     assignees: generateAssignees(),
     spendTime: `${faker.number.int({ min: 1, max: 40 })}h`,
-    estimatedTime: `${faker.number.int({ min: 1, max: 40 })}h`,
+    estimatedTime: `${faker.number.int({ min: 1, max: 360000000 })}`,
     priority: getRandomPriority(),
     subTask: [],
     subTaskCount: 0,

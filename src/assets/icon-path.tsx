@@ -80,7 +80,10 @@ import CalendarIcon from '@/assets/icons/calender-icon.svg?react';
 
 import CalendarAddIcon from '@/assets/icons/calendar-add.svg?react';
 
+import TimeEstimationIcon from '@/assets/icons/estimation-icon.svg?react';
+
 const iconPaths = {
+  timeestimation: TimeEstimationIcon,
   calendar: CalendarIcon,
   calendaradd: CalendarAddIcon,
   search: Search,

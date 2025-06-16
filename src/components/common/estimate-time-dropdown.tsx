@@ -1,93 +1,139 @@
-import React, { ReactNode, useState } from 'react';
-import { X, HelpCircle } from 'lucide-react';
-import { Button } from '@/components/shadcn-ui/button';
-import { Card, CardContent } from '@/components/shadcn-ui/card';
+import React, { ReactNode, useRef, useState } from 'react';
 import { Input } from '@/components/shadcn-ui/input';
 import {
   DropdownMenu,
+  DropdownMenuSeparator,
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from '@/components/shadcn-ui/dropdown-menu';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/shadcn-ui/popover';
+import { X } from 'lucide-react';
 import { LABEL } from '@/lib/constants';
+import humanizeDuration from 'humanize-duration';
 
 interface TimeEstimateComponentProps {
   children: ReactNode;
+  time?: string;
 }
 
-const TimeEstimateDropdown: React.FC<TimeEstimateComponentProps> = ({
-  children,
-}) => {
-  const [timeEstimate, setTimeEstimate] = useState<string>('2h');
-  const [totalTime] = useState<string>('4h 20m');
+const parseTimeString = (input: string): string => {
+  const parts = input.trim().toLowerCase().split(/[\s]+/);
+  let hours = 0;
+  let minutes = 0;
+  parts.forEach((part) => {
+    if (part.includes('h')) hours += parseInt(part.replace('h', ''), 10) || 0;
+    else if (part.includes('m'))
+      minutes += parseInt(part.replace('m', ''), 10) || 0;
+    else if (!isNaN(Number(part)))
+      hours === 0 ? (hours = Number(part)) : (minutes = Number(part));
+  });
+  const ms = (hours * 60 + minutes) * 60 * 1000;
+  if (ms === 0) return '';
+  return humanizeDuration(ms, { units: ['h', 'm'], round: true, spacer: ' ' });
+};
 
-  const onHandleTimeEstimateChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ): void => {
-    setTimeEstimate(event.target.value);
+export const TimeEstimateDropdown: React.FC<TimeEstimateComponentProps> = ({
+  children,
+  time,
+}) => {
+  const [inputValue, setInputValue] = useState<string>(time ?? '');
+  const [savedTimeEstimate, setSavedTimeEstimate] = useState<string>(
+    time ?? ''
+  );
+  const [suggestion, setSuggestion] = useState<string>('');
+  const [showSuggestion, setShowSuggestion] = useState<boolean>(false);
+  const ref = useRef<HTMLInputElement>(null);
+
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setInputValue(value);
+    const parsed = parseTimeString(value);
+    setSuggestion(parsed);
+    setShowSuggestion(!!parsed && parsed !== value);
   };
 
-  const onHandleClearTimeEstimate = (): void => {
-    setTimeEstimate('');
+  const onClear = () => {
+    setInputValue('');
+    setSuggestion('');
+    setShowSuggestion(false);
+  };
+
+  const onApplySuggestion = () => {
+    setInputValue(suggestion);
+    setSavedTimeEstimate(suggestion);
+    setShowSuggestion(false);
+  };
+
+  const onBlur = () => {
+    const parsed = parseTimeString(inputValue);
+    if (parsed) setSavedTimeEstimate(parsed);
+    setShowSuggestion(false);
   };
 
   return (
     <div className="w-full max-w-md mx-auto py-2">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
-
-        <DropdownMenuContent className="w-80 p-0" align="start">
-          <Card className="bg-white shadow-none border-0 rounded-2xl">
-            <CardContent className="px-3 py-2">
-              {/* Time Estimate Section */}
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-2">
-                  <span className="text-gray-900 font-medium text-[14px] leading-none">
-                    {LABEL.TIME_ESTIMATE}
-                  </span>
-                  <HelpCircle className="w-4 h-4 text-gray-400" />
-                </div>
-
-                <div className="flex items-center gap-2">
-                  <Input
-                    value={timeEstimate}
-                    onChange={onHandleTimeEstimateChange}
-                    placeholder="e.g., 2h, 30m, 1h 30m"
-                    className="w-28 h-8 text-sm border-gray-200 rounded-sm"
-                  />
-
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="w-6 h-6 p-0 text-gray-400 hover:text-gray-600"
-                    onClick={onHandleClearTimeEstimate}
-                  >
-                    <X className="w-4 h-4" />
-                  </Button>
-                </div>
+        <DropdownMenuContent className="w-[340px] p-0" align="start">
+          <div className="mx-[10px] mt-[10px] flex items-center justify-between h-[45px]">
+            <div className="flex items-center gap-x-2">
+              <span className="text-lg font-medium text-gray-900">
+                {LABEL.TIME_ESTIMATE}
+              </span>
+              <div className="bg-gray-300 font-bold text-white text-base rounded-full w-[20px] h-[20px] flex items-center justify-center">
+                ?
               </div>
+            </div>
+            <div className="relative">
+              <Popover open={showSuggestion}>
+                <PopoverTrigger asChild>
+                  <div className="relative">
+                    <Input
+                      className="w-[135px] !h-[35px] !text-base pr-8"
+                      value={inputValue}
+                      onChange={onChange}
+                      onBlur={onBlur}
+                      placeholder="e.g. 3h 20"
+                      onFocus={() => suggestion && setShowSuggestion(true)}
+                      ref={ref}
+                    />
+                    {inputValue && (
+                      <X
+                        className="absolute right-2 top-2.5 w-4 h-4 cursor-pointer text-gray-400 hover:text-gray-600"
+                        onClick={onClear}
+                      />
+                    )}
+                  </div>
+                </PopoverTrigger>
+                <PopoverContent
+                  onClick={onApplySuggestion}
+                  className="w-[185px] flex items-center justify-between gap-2 text-base text-gray-700 p-2 shadow-md z-50"
+                  sideOffset={4}
+                >
+                  <span>{suggestion}</span>
+                </PopoverContent>
+              </Popover>
+            </div>
+          </div>
 
-              {/* Divider */}
-              <div className="border-t border-gray-100 mb-4" />
-
-              {/* Total with Subtasks Section */}
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-gray-500 text-[8px] font-medium uppercase tracking-wide mb-0.5">
-                    {LABEL.TOTAL_WITH_SUBTASKS}
-                  </p>
-                  <p className="text-gray-900 text-base font-semibold leading-none">
-                    {totalTime}
-                  </p>
-                </div>
-
-                <div>
-                  <p className="text-gray-400 text-xs leading-tight">
-                    {LABEL.CHANGES_ARE_AUTOMATICALLY_SAVED}
-                  </p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+          <DropdownMenuSeparator />
+          <div className="flex mx-[10px] mt-[10px] justify-between items-center">
+            <div className="flex flex-col">
+              <p className="text-sm text-content-tertiary font-medium">
+                {LABEL.TOTAL_WITH_SUBTASKS}
+              </p>
+              <p className="font-medium text-base text-muted-foreground">
+                {savedTimeEstimate}
+              </p>
+            </div>
+            <p className="text-xs text-content-tertiary">
+              {LABEL.CHANGES_ARE_AUTOMATICALLY_SAVED}
+            </p>
+          </div>
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
