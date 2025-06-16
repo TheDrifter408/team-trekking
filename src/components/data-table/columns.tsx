@@ -12,6 +12,7 @@ import { useDataTableStore } from '@/stores/zustand/data-table-store';
 import { Button } from '@/components/shadcn-ui/button.tsx';
 import { Icon } from '@/assets/icon-path.tsx';
 import { useComponentStore } from '@/stores/zustand/component-state-store.ts';
+import { EstimateTimeColumn } from '@/components/data-table/estimate-time-column.tsx';
 
 export const Columns: ColumnDef<Task>[] = [
   {
@@ -69,6 +70,18 @@ export const Columns: ColumnDef<Task>[] = [
     enableResizing: true,
     meta: {
       icon: 'progress2',
+    },
+  },
+  {
+    accessorKey: COLUMN_META.ACCESSOR_KEY.ESTIMATED_TIME,
+    header: COLUMN_META.HEADER.ESTIMATED_TIME,
+    cell: ({ row }) => <EstimateTimeColumn task={row.original} />,
+    size: 180,
+    minSize: 160,
+    maxSize: 200,
+    enableResizing: true,
+    meta: {
+      icon: 'timeestimation',
     },
   },
   {
