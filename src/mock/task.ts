@@ -14,12 +14,14 @@ const priorities: TaskPriority[] = [
   LABEL.HIGH,
   LABEL.URGENT,
 ];
+
 const statusCategory = {
   OPEN: 'Open',
   ACTIVE: 'Active',
   DONE: 'Done',
   CLOSED: 'Closed',
 } as const;
+
 const statuses: TaskStatus[] = [
   {
     id: 1,
@@ -28,7 +30,7 @@ const statuses: TaskStatus[] = [
     category: statusCategory.OPEN,
   },
   {
-    id: 1,
+    id: 2,
     name: 'Sprint Backlog',
     color: '#ffc53d',
     category: statusCategory.OPEN,
@@ -86,9 +88,9 @@ const getRandomPriority = (): TaskPriority =>
 
 let taskIdCounter = 1;
 
-const generateTask = (level = 1): Task => {
+const generateTask = (level = 1, maxDepth = 3): Task => {
   const task: Task = {
-    id: taskIdCounter++,
+    id: (taskIdCounter++).toString(),
     name: faker.lorem.sentence(3),
     progress: faker.number.int({ min: 0, max: 100 }),
     status: getRandomStatus(),
@@ -105,21 +107,31 @@ const generateTask = (level = 1): Task => {
     checkListCount: 0,
   };
 
-  if (level < 5 && faker.datatype.boolean()) {
-    const subtaskCount = faker.number.int({ min: 0, max: 5 });
-    task.subTaskCount = subtaskCount;
-    task.checkListCount = task?.checklist?.length || 0;
-    task.subTask = Array.from({ length: subtaskCount }).map(() =>
-      generateTask(level + 1)
-    );
+  // Only generate subtasks if we haven't reached max depth and randomly decide to create them
+  if (level < maxDepth && faker.datatype.boolean({ probability: 0.5 })) {
+    // Reduce probability as depth increases to create more realistic hierarchies
+    const probability = level === 1 ? 0.6 : level === 2 ? 0.7 : 0.4;
+
+    if (faker.datatype.boolean({ probability })) {
+      const subtaskCount = faker.number.int({
+        min: 1,
+        max: level === 1 ? 5 : 3,
+      });
+      task.subTaskCount = subtaskCount;
+      task.checkListCount = task?.checklist?.length || 0;
+
+      task.subTask = Array.from({ length: subtaskCount }).map(() =>
+        generateTask(level + 1, maxDepth)
+      );
+    }
   }
 
   return task;
 };
 
-export const generateTasks = (count: number): Task[] => {
+export const generateTasks = (count: number, maxDepth = 3): Task[] => {
   taskIdCounter = 1;
-  return Array.from({ length: count }).map(() => generateTask());
+  return Array.from({ length: count }).map(() => generateTask(1, maxDepth));
 };
 
-export const mockTasks: Task[] = generateTasks(10);
+export const mockTasks: Task[] = generateTasks(100, 3);

@@ -120,7 +120,7 @@ export type TaskPriority =
   | typeof LABEL.HIGH
   | typeof LABEL.URGENT;
 export interface Task {
-  id: number;
+  id: string;
   name: string;
   progress: number;
   status: TaskStatus;

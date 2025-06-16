@@ -87,6 +87,7 @@ const COLUMN_META = {
     START_DATE: 'start_date',
     END_DATE: 'end_date',
     ESTIMATED_TIME: 'estimated_time',
+    OPTIONS: 'options',
   },
   HEADER: {
     SELECT: 'Select',
@@ -98,6 +99,7 @@ const COLUMN_META = {
     START_DATE: 'Start Date',
     END_DATE: 'End Date',
     ESTIMATED_TIME: 'Estimated Time',
+    OPTIONS: 'Options',
   },
 };
 const TEXT_ACTIONS = {

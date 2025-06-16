@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Task } from '@/types/props/Common.ts';
 import { Icon } from '@/assets/icon-path';
 import { LABEL } from '@/lib/constants/appStrings.ts';
@@ -25,11 +26,18 @@ export const PriorityColumn = ({ task }: Props) => {
 
   const priorityIcon = priorityBg?.length > 0 ? 'priority02' : 'priority';
 
+  useEffect(() => {
+    if (!isPopoverOpen) {
+      setIsHovered(false);
+    }
+  }, [isPopoverOpen]);
+
   return (
     <div
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className={`${isHovered ? 'border' : ''} w-[60px] h-full rounded hover:bg-accent items-center flex`}
+      onClick={() => setIsPopoverOpen(!isPopoverOpen)}
+      className={`${isHovered ? 'border-l border-r rounded-[2px]' : ''} w-full h-full cursor-pointer rounded hover:bg-accent items-center flex`}
     >
       <PriorityPopover isOpen={isPopoverOpen} setIsOpen={setIsPopoverOpen}>
         <Button

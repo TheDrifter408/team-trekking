@@ -74,7 +74,15 @@ import Thunder from '@/assets/icons/thunder.svg?react';
 
 import FieldsCreate from '@/assets/icons/fields-create.svg?react';
 
+import TextIcon from '@/assets/icons/text-icon.svg?react';
+
+import CalendarIcon from '@/assets/icons/calender-icon.svg?react';
+
+import CalendarAddIcon from '@/assets/icons/calendar-add.svg?react';
+
 const iconPaths = {
+  calendar: CalendarIcon,
+  calendaradd: CalendarAddIcon,
   search: Search,
   description: Description,
   add01: Add01,
@@ -113,6 +121,7 @@ const iconPaths = {
   users: Users,
   thunder: Thunder,
   fieldscreate: FieldsCreate,
+  texticon: TextIcon,
 } as const;
 
 type IconName = keyof typeof iconPaths;

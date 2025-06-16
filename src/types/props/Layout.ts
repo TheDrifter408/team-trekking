@@ -1,3 +1,4 @@
+import React from 'react';
 import { LinkProps } from '@tanstack/react-router';
 import { ChangeEvent, KeyboardEvent, MouseEvent } from 'react';
 
