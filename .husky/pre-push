@@ -14,9 +14,9 @@ if [ "$BRANCH_NAME" = "main" ]; then
 fi
 
 # Check branch name format
-if ! echo "$BRANCH_NAME" | grep -Eq '^(architecture|feature|update|bugfix|hotfix|release)-[a-z0-9._-]+$'; then
+if ! echo "$BRANCH_NAME" | grep -Eq '^(architecture|feature|design|update|bugfix|hotfix|release)-[a-z0-9._-]+$'; then
   echo "❌ Invalid branch name: $BRANCH_NAME"
-  echo "Allowed format: [architecture|feature|update|bugfix|hotfix|release]-your-branch-name"
+  echo "Allowed format: [architecture|feature|design|update|bugfix|hotfix|release]-your-branch-name"
   exit 1
 fi
 
