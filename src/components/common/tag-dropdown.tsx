@@ -1,4 +1,4 @@
-import React, { useState, createContext, useContext } from 'react';
+import React, { useState, createContext, useContext, useEffect } from 'react';
 import { X, Plus, Search } from 'lucide-react';
 import {
   TagDropdownContextType,
@@ -47,7 +47,7 @@ const TagChip: React.FC<{
   return (
     <span
       className={`
-        inline-flex items-center gap-1 rounded-[4px] border font-medium
+        inline-flex items-center gap-1 rounded-[4px] border font-medium !text-black
         ${getTagColor(tag.label)} ${sizeClasses}
       `}
     >
@@ -110,8 +110,8 @@ const TagDropdown: React.FC<TagDropdownProps> = ({
   };
 
   // Close dropdown when clicking outside
-  React.useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
+  useEffect(() => {
+    const onHandleClickOutside = (event: MouseEvent) => {
       const target = event.target as HTMLElement;
       if (!target.closest('[data-tag-dropdown]')) {
         setIsOpen(false);
@@ -119,9 +119,9 @@ const TagDropdown: React.FC<TagDropdownProps> = ({
     };
 
     if (isOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener('mousedown', onHandleClickOutside);
       return () =>
-        document.removeEventListener('mousedown', handleClickOutside);
+        document.removeEventListener('mousedown', onHandleClickOutside);
     }
   }, [isOpen]);
 
@@ -155,7 +155,7 @@ const TagDropdownTrigger: React.FC<TagDropdownTriggerProps> = ({
     selectedTags.includes(tag.id)
   );
 
-  const handleRemoveTag = (tagId: string) => {
+  const onHandleRemoveTag = (tagId: string) => {
     const newSelectedTags = selectedTags.filter((id) => id !== tagId);
     onTagsChange?.(newSelectedTags);
   };
@@ -181,7 +181,7 @@ const TagDropdownTrigger: React.FC<TagDropdownTriggerProps> = ({
           <TagChip
             key={tag.id}
             tag={tag}
-            onRemove={() => handleRemoveTag(tag.id)}
+            onRemove={() => onHandleRemoveTag(tag.id)}
             size="sm"
           />
         ))}
@@ -225,7 +225,7 @@ const TagDropdownContent: React.FC<TagDropdownContentProps> = ({
 
   if (!isOpen) return null;
 
-  const handleTagToggle = (tagId: string) => {
+  const onHandleTagToggle = (tagId: string) => {
     let newSelectedTags: string[];
 
     if (selectedTags.includes(tagId)) {
@@ -247,7 +247,7 @@ const TagDropdownContent: React.FC<TagDropdownContentProps> = ({
       )
     : availableTags;
 
-  const handleCreateTag = () => {
+  const onHandleCreateTag = () => {
     if (!allowCreate || !searchQuery.trim()) return;
 
     const newTagId = searchQuery.toLowerCase().replace(/\s+/g, '-');
@@ -270,7 +270,7 @@ const TagDropdownContent: React.FC<TagDropdownContentProps> = ({
     selectedTags.includes(tag.id)
   );
 
-  const handleRemoveTag = (tagId: string) => {
+  const onHandleRemoveTag = (tagId: string) => {
     const newSelectedTags = selectedTags.filter((id) => id !== tagId);
     onTagsChange?.(newSelectedTags);
   };
@@ -290,7 +290,7 @@ const TagDropdownContent: React.FC<TagDropdownContentProps> = ({
               <TagChip
                 key={tag.id}
                 tag={tag}
-                onRemove={() => handleRemoveTag(tag.id)}
+                onRemove={() => onHandleRemoveTag(tag.id)}
                 size="sm"
               />
             ))}
@@ -327,7 +327,7 @@ const TagDropdownContent: React.FC<TagDropdownContentProps> = ({
               <button
                 key={tag.id}
                 type="button"
-                onClick={() => !tag.disabled && handleTagToggle(tag.id)}
+                onClick={() => !tag.disabled && onHandleTagToggle(tag.id)}
                 disabled={tag.disabled}
                 className={`
                   flex items-center justify-between w-full px-3 py-2 text-sm text-left
@@ -349,7 +349,7 @@ const TagDropdownContent: React.FC<TagDropdownContentProps> = ({
               ) && (
                 <button
                   type="button"
-                  onClick={handleCreateTag}
+                  onClick={onHandleCreateTag}
                   className="flex items-center gap-2 w-full px-3 py-2 text-sm text-left hover:bg-gray-50 focus:outline-none focus:bg-gray-50 border-t border-gray-100"
                 >
                   <Plus className="h-4 w-4 text-gray-400" />
