@@ -246,13 +246,12 @@ export const CreateWorkspace: React.FC<Props> = ({
             )}
           </DialogTitle>
         </DialogHeader>
-
         <form
           onSubmit={(e) => e.preventDefault()}
           className="flex flex-col flex-1"
         >
           {/* Main content area with proper centering */}
-          <div className="flex-1 flex justify-center overflow-y-auto px-2 sm:px-4">
+          <div className="flex-1 flex justify-center overflow-y-auto px-2 sm:px-4 ">
             {renderStep()}
           </div>
 
@@ -283,10 +282,10 @@ const ManagePurpose: React.FC<ManagePurposeProps> = ({
 }) => {
   return (
     <div className="flex flex-col items-center pt-4 w-full max-w-4xl">
-      <h2 className="text-2xl sm:text-4xl font-medium text-content-onboarding-secondary text-center mb-6 sm:mb-8 px-4">
+      <h2 className="text-2xl sm:text-4xl font-bold text-content-default text-center mb-6 sm:mb-8 px-4">
         {LABEL.WHAT_WILL_YOU_USE_THIS_WORKSPACE_FOR}
       </h2>
-      <div className="min-h-48 w-full justify-center items-center flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-2">
+      <div className="h-full w-full justify-center items-center flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-2">
         {workspacePurposeOptions.map((option) => (
           <Button
             key={option}
@@ -317,22 +316,24 @@ const ManageFeatures: React.FC<ManageFeaturesProps> = ({
       <h2 className="text-2xl sm:text-4xl text-content-default font-bold mb-6 sm:mb-4 text-center px-4">
         {LABEL.WHAT_WOULD_YOU_LIKE_TO_MANAGE}
       </h2>
-      <div className="h-48 w-full justify-center items-center flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-2">
-        {manageOptions.map((option) => (
-          <Button
-            key={option}
-            onClick={() => onSelectOption(option)}
-            variant="outline"
-            className={cn(
-              'w-full sm:w-auto h-12 text-base sm:text-lg text-content-onboarding-secondary hover:bg-theme-main-dark hover:text-white hover:shadow-lg',
-              selectedOption === option
-                ? 'bg-theme-main-dark shadow-md shadow-theme-main text-white border-none'
-                : ''
-            )}
-          >
-            {option}
-          </Button>
-        ))}
+      <div className="h-full w-full flex items-center ">
+        <div className="h-48 w-full justify-center items-center flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-2">
+          {manageOptions.map((option) => (
+            <Button
+              key={option}
+              onClick={() => onSelectOption(option)}
+              variant="outline"
+              className={cn(
+                'w-full sm:w-auto h-12 text-base sm:text-lg text-content-onboarding-secondary hover:bg-theme-main-dark hover:text-white hover:shadow-lg',
+                selectedOption === option
+                  ? 'bg-theme-main-dark shadow-md shadow-theme-main text-white border-none'
+                  : ''
+              )}
+            >
+              {option}
+            </Button>
+          ))}
+        </div>
       </div>
     </div>
   );
@@ -397,37 +398,39 @@ const ManageTools: React.FC<ManageToolsProps> = ({
       <h2 className="text-2xl sm:text-4xl font-bold text-content-default mb-8 sm:mb-12 text-center px-4">
         Which tools would you like to integrate?
       </h2>
-      <div className="w-full justify-center items-center flex flex-col sm:flex-row sm:flex-wrap gap-3">
-        {toolOptions.map((tool) => {
-          const isSelected = selectedTools.includes(tool);
-          return (
-            <Button
-              key={tool}
-              variant="outline"
-              onClick={() => onToggleTool(tool)}
-              className={cn(
-                'w-full sm:w-auto h-12 sm:min-w-[160px] rounded-xl text-content-onboarding-secondary text-sm sm:text-base font-medium hover:shadow-lg transition-all duration-200',
-                isSelected && ' border-theme-main shadow-theme-main shadow-sm'
-              )}
-            >
-              <span className="flex-1 text-center">{tool}</span>
-              <div
+      <div className="h-full w-full flex items-center">
+        <div className="w-full  justify-center items-center flex flex-col sm:flex-row sm:flex-wrap gap-3">
+          {toolOptions.map((tool) => {
+            const isSelected = selectedTools.includes(tool);
+            return (
+              <Button
+                key={tool}
+                variant="outline"
+                onClick={() => onToggleTool(tool)}
                 className={cn(
-                  'h-4 w-4 ml-2 rounded border flex items-center justify-center transition-colors',
-                  isSelected ? '' : 'border-primary'
+                  'w-full sm:w-auto h-12 sm:min-w-[160px] rounded-xl text-content-onboarding-secondary text-sm sm:text-base font-medium hover:shadow-lg transition-all duration-200',
+                  isSelected && ' border-theme-main shadow-theme-main shadow-sm'
                 )}
               >
-                {isSelected && (
-                  <Check
-                    className="bg-theme-main-dark text-white"
-                    strokeWidth={2}
-                    size={12}
-                  />
-                )}
-              </div>
-            </Button>
-          );
-        })}
+                <span className="flex-1 text-center">{tool}</span>
+                <div
+                  className={cn(
+                    'h-4 w-4 ml-2 rounded border flex items-center justify-center transition-colors',
+                    isSelected ? '' : 'border-primary'
+                  )}
+                >
+                  {isSelected && (
+                    <Check
+                      className="bg-theme-main-dark text-white"
+                      strokeWidth={2}
+                      size={12}
+                    />
+                  )}
+                </div>
+              </Button>
+            );
+          })}
+        </div>
       </div>
     </div>
   );
@@ -442,32 +445,36 @@ const SelectFeatures: React.FC<SelectFeaturesProps> = ({
       <h2 className="text-2xl sm:text-4xl font-bold text-content-default mb-8 sm:mb-12 text-center px-4">
         {LABEL.WHICH_FEATURES_ARE_YOU_INTERESTED_IN}
       </h2>
-      <div className="w-full justify-center items-center flex flex-col sm:flex-row sm:flex-wrap gap-3 sm:gap-2">
-        {featureOptions.map((option) => {
-          const isSelected = selectedFeatures.includes(option);
-          return (
-            <Button
-              key={option}
-              variant="outline"
-              onClick={() => onToggleFeature(option)}
-              className={cn(
-                'w-full sm:w-auto h-12 rounded-xl text-content-onboarding-secondary text-sm sm:text-base font-medium',
-                isSelected &&
-                  'border-[1px] border-theme-main shadow-theme-main shadow-sm'
-              )}
-            >
-              <span className="flex-1 text-left">{option}</span>
-              <div
+      <div className="flex h-full w-full items-center">
+        <div className="w-full justify-center items-center flex flex-col sm:flex-row sm:flex-wrap gap-3 sm:gap-2">
+          {featureOptions.map((option) => {
+            const isSelected = selectedFeatures.includes(option);
+            return (
+              <Button
+                key={option}
+                variant="outline"
+                onClick={() => onToggleFeature(option)}
                 className={cn(
-                  'h-4 w-4 rounded border flex items-center justify-center transition-colors',
-                  isSelected ? 'bg-theme-main-dark' : 'border-primary'
+                  'w-full sm:w-auto h-12 rounded-xl text-content-onboarding-secondary text-sm sm:text-base font-medium',
+                  isSelected &&
+                    'border-[1px] border-theme-main shadow-theme-main shadow-sm'
                 )}
               >
-                {isSelected && <Check className="text-white" strokeWidth={2} />}
-              </div>
-            </Button>
-          );
-        })}
+                <span className="flex-1 text-left">{option}</span>
+                <div
+                  className={cn(
+                    'h-4 w-4 rounded border flex items-center justify-center transition-colors',
+                    isSelected ? 'bg-theme-main-dark' : 'border-primary'
+                  )}
+                >
+                  {isSelected && (
+                    <Check className="text-white" strokeWidth={2} />
+                  )}
+                </div>
+              </Button>
+            );
+          })}
+        </div>
       </div>
       <span className="text-xs sm:text-sm mt-2 text-center px-4">
         Don't worry, you will have access to all of these in your Workspace.
