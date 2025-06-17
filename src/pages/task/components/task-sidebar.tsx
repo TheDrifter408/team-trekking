@@ -23,6 +23,7 @@ import {
 import { Textarea } from '@/components/shadcn-ui/textarea.tsx';
 import { Button } from '@/components/shadcn-ui/button.tsx';
 import { cn } from '@/lib/utils.ts';
+import { Separator } from '@/components/shadcn-ui/separator.tsx';
 import { SearchBox } from '@/pages/task/components/search-activity.tsx';
 import { TaskActivityNotifications } from '@/pages/task/components/task-activity-notifications.tsx';
 import {
@@ -75,7 +76,7 @@ export function TaskSidebar({ ...props }) {
 
   const handleSendComment = () => {
     if (comment.trim()) {
-      console.log('Sending comment: ', comment);
+      console.log('Sending comment:', comment);
       setComment('');
     }
   };
@@ -129,14 +130,14 @@ export function TaskSidebar({ ...props }) {
     <Sidebar
       collapsible="icon"
       side={'right'}
-      className="top-[99px] !h-[calc(100svh-110px)] border-l overflow-hidden [&>[data-sidebar=sidebar]]:flex-row-reverse"
+      className="border-l h-full [&>[data-sidebar=sidebar]]:flex-row-reverse"
       {...props}
     >
       {/* Mini sidebar with icons */}
       <Sidebar
         collapsible="none"
         side={'right'}
-        className="!w-[calc(var(--sidebar-width-icon)_+_1px)] border-l"
+        className="border-l"
       >
         <SidebarContent>
           <SidebarGroup>
@@ -164,9 +165,9 @@ export function TaskSidebar({ ...props }) {
 
       {/* Expanded sidebar content */}
       <Sidebar collapsible="none" className="hidden flex-1 md:flex">
-        <SidebarHeader className="gap-3.5 border-b p-3">
+        <SidebarHeader className="gap-3 border-b p-3">
           <div className="flex w-full items-center justify-between">
-            <div className="text-2xl font-medium text-foreground">
+            <div className="text-base font-medium text-foreground">
               Activity
             </div>
             <div className="flex justify-end">
@@ -265,17 +266,18 @@ export function TaskSidebar({ ...props }) {
         </SidebarContent>
 
         {/* Row-based Comment input section at the bottom */}
-        <SidebarFooter className="border-t p-4 bg-white">
-          <div className="flex items-center border rounded-xl overflow-hidden px-2 ">
+        <SidebarFooter className="border-t p-4">
+          <div className="flex flex-row border rounded-md overflow-hidden">
             <Textarea
               placeholder="Add a comment..."
-              className="min-h-10 text-base border-none resize-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-1 py-2 px-4"
+              className="min-h-12 bg-background text-sm border-none resize-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-1 py-3 px-4"
               value={comment}
               onChange={(e) => setComment(e.target.value)}
             />
+            <Separator orientation="vertical" className="h-auto" />
             <Button
-              variant="outline"
-              className="p-4 bg-theme-main-dark text-white"
+              variant="ghost"
+              className="px-4 h-auto rounded-none bg-secondary"
               onClick={handleSendComment}
               disabled={!comment.trim()}
             >
