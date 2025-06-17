@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { mockChecklist, mockSubtasks, mockUsers, sampleTask } from '@/mock';
 import { cn } from '@/lib/utils';
-import { ChevronDown, ChevronRight, PlayCircle, Plus } from 'lucide-react';
+import { ChevronRight, PlayCircle, Plus } from 'lucide-react';
 import {
   IconCalendar,
   IconCheck,
@@ -9,11 +9,9 @@ import {
   IconFlagFilled,
   IconHourglassEmpty,
   IconListCheck,
-  IconTag,
   IconTagsFilled,
   IconUserFilled,
   IconVectorSpline,
-  IconX,
 } from '@tabler/icons-react';
 import { DatePickerWithRange } from '@/components/common/date-picker.tsx';
 import {
@@ -39,7 +37,6 @@ import {
 import { SortableChecklistRow } from '@/pages/task/components/sortable-checklist-row.tsx';
 import { Label } from '@/components/shadcn-ui/label';
 import { Button } from '@/components/shadcn-ui/button';
-import { Badge } from '@/components/shadcn-ui/badge';
 import { TaskMetaRow } from './components/task-meta-row';
 import { Input } from '@/components/shadcn-ui/input.tsx';
 import { AssigneeAvatar } from '@/components/common/assignee-avatar.tsx';
@@ -47,6 +44,8 @@ import { DocEditor } from './components/doc-editor.tsx';
 import { Subtask } from '@/pages/task/components/Subtask.tsx';
 import TaskStatusDialog from '@/components/common/task-status-dialog.tsx';
 import TimeEstimateDropDown from '@/components/common/estimate-time-dropdown.tsx';
+import TagDropdownWithSelection from '@/components/common/tag-dropdown.tsx';
+import { availableTags } from '@/mock/tagsData.ts';
 
 export const Task: React.FC = () => {
   const [enterStatus, setEnterStatus] = useState<boolean>(false);
@@ -57,6 +56,7 @@ export const Task: React.FC = () => {
   const [enterTrackTime, setEnterTrackTime] = useState<boolean>(false);
   const [enterTags, setEnterTags] = useState<boolean>(false);
   const [description, setDescription] = useState(sampleTask.description);
+  const [selectedTags, setSelectedTags] = useState<string[]>(['backend']);
 
   const priorityFlags: Record<string, string> = {
     low: 'rgb(29, 78, 216)', // blue-700
@@ -339,31 +339,13 @@ export const Task: React.FC = () => {
             <IconTagsFilled className={'text-base font-semibold'} size={15} />
           }
           label={'Tags'}
-          hover={enterTags}
           onHoverChange={setEnterTags}
         >
-          {sampleTask.tags && sampleTask.tags.length > 0 ? (
-            sampleTask.tags.map((tag, index) => (
-              <Badge
-                key={index}
-                variant="outline"
-                className="flex items-center gap-1 bg-blue-50 text-blue-700 hover:bg-blue-100 group relative pr-6"
-              >
-                <IconTag size={12} />
-                {tag}
-                {enterTags && (
-                  <button
-                    onClick={() => console.log('Remove tag:', tag)}
-                    className="absolute right-1 opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:text-red-500"
-                  >
-                    <IconX size={10} />
-                  </button>
-                )}
-              </Badge>
-            ))
-          ) : (
-            <span className="text-sm text-gray-400">No tags</span>
-          )}
+          <TagDropdownWithSelection
+            availableTags={availableTags}
+            selectedTags={selectedTags}
+            setSelectedTags={setSelectedTags}
+          />
         </TaskMetaRow>
       </div>
       <div className="mt-4">
