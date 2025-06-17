@@ -2,6 +2,9 @@ import {
   RecentActions,
   WorkData,
   AssignedComment,
+  Assignee,
+  Checklist,
+  Task,
 } from '@/types/props/Common.ts';
 
 export const spaceData = [
@@ -313,57 +316,61 @@ export const priorityColors: Record<string, string> = {
   low: 'bg-gray-500',
 };
 
-export const mockUsers = [
+export const mockUsers:Assignee[] = [
   {
-    id: '1',
+    id: 1,
     name: 'John Doe',
     avatar:
       'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
   },
   {
-    id: '2',
+    id: 2,
     name: 'Jane Smith',
     avatar:
       'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop',
   },
 ];
 
-export const mockSubtasks = [
+export const mockSubtasks:Task[] = [
   {
     id: '1',
-    title: 'Design UI components',
+    name: 'Design UI components',
     progress: 75,
     dueDate: '2024-03-25T15:00:00.000Z',
-    estimatedTime: 4,
+    estimatedTime: '4',
     priority: 'high',
-    status: 'in_progress',
+    status: { id:0, name: 'in_progress', color: "", category: ""},
+    subTask: [],
+    checklist: []
   },
   {
     id: '2',
-    title: 'Implement API integration',
+    name: 'Implement API integration',
     progress: 30,
     dueDate: '2024-03-28T15:00:00.000Z',
-    estimatedTime: 6,
+    estimatedTime: '6',
     priority: 'normal',
-    status: 'todo',
+    status: { id:1, name: 'todo', color: "", category: "" },
+    subTask: [],
+    checklist: []
   },
 ];
 
-export const mockChecklist = [
+export const mockChecklist:Checklist[] = [
   {
     id: '1',
-    content: 'Review requirements document',
-    completed: true,
+    name: 'Review requirements document',
+    isCompleted: true,
   },
   {
     id: '2',
-    content: 'Set up development environment',
-    completed: true,
+    name: 'Set up development environment',
+    isCompleted: true,
   },
   {
     id: '3',
-    content: 'Create component structure',
-    completed: false,
+    name: 'Create component structure',
+    isCompleted: false,
   },
 ];
 

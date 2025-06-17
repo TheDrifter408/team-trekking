@@ -50,16 +50,16 @@ export const SortableChecklistRow: FC<SortableChecklistRowProps> = ({
             <GripVertical className="w-4 h-4" />
           </button>
           <span
-            className={`text-sm ${item.completed ? 'line-through text-gray-400' : 'text-gray-700'}`}
+            className={`text-sm ${item.isCompleted ? 'line-through text-gray-400' : 'text-gray-700'}`}
           >
-            {item.content}
+            {item.name}
           </span>
         </div>
       </td>
       <td className="px-6 py-4 whitespace-nowrap">
         <input
           type="checkbox"
-          checked={item.completed}
+          checked={item.isCompleted}
           onChange={onToggle}
           className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
         />

@@ -105,7 +105,7 @@ export interface TaskStatus {
   category: string;
 }
 export interface Checklist {
-  id: number;
+  id: string;
   name: string;
   isCompleted: boolean;
 }
@@ -119,6 +119,19 @@ export type TaskPriority =
   | typeof LABEL.NORMAL
   | typeof LABEL.HIGH
   | typeof LABEL.URGENT;
+
+export interface Comment {
+  id:string,
+  user: Assignee;
+  content: string;
+  createdAt: string;
+}
+
+export interface Tag {
+  id: number;
+  name:string;
+  color: string;
+}
 export interface Task {
   id: string;
   name: string;
@@ -127,15 +140,17 @@ export interface Task {
   startDate?: string;
   dueDate?: string;
   description?: string;
-  checklist?: Checklist[];
+  checklist: Checklist[];
   assignees?: Assignee[];
   spendTime?: string;
   estimatedTime?: string;
   priority?: TaskPriority;
-  subTask?: Task[];
+  subTask: Task[];
   subTaskCount?: number;
   checkListCount?: number;
   parentId?: string;
+  comments?: Comment[];
+  tags?: Tag[];
 }
 
 export interface SidebarFolderItemsProps {
@@ -148,8 +163,8 @@ export interface SortableChecklistRowProps {
   selected: boolean;
   onSelect: () => void;
   item: {
-    content: string;
-    completed: true;
+    name: string;
+    isCompleted: boolean;
   };
   onToggle: () => void;
 }
@@ -161,13 +176,13 @@ export interface SortableTaskRowProps {
   subtask: Task;
 }
 interface Filter {
-  id: number;
+  id: string;
   label: string;
   checked: boolean;
 }
 export interface TaskActivityFiltersProps {
   filters: Filter[];
-  toggleFilter: (filterId: number) => void;
+  toggleFilter: (filterId: string) => void;
 }
 
 interface TaskNotificationUsers {

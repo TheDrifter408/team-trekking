@@ -1,6 +1,7 @@
 'use client';
 import {
   forwardRef,
+  MouseEvent,
   PropsWithChildren,
   useMemo,
   useRef,
@@ -71,7 +72,7 @@ export function TaskSidebar({ ...props }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [filters, setFilters] = useState(filterOptions);
   const [notifications, setNotifications] = useState(taskNotificationUsers);
-  const searchInputRef = useRef(null);
+  const searchInputRef = useRef<HTMLInputElement>(null);
 
   const handleSendComment = () => {
     if (comment.trim()) {
@@ -80,8 +81,8 @@ export function TaskSidebar({ ...props }) {
     }
   };
 
-  const toggleSearch = (e) => {
-    e.stopPropagation(); // Prevent the click from bubbling up
+  const toggleSearch = (e:MouseEvent) => {
+    e.stopPropagation();
     setShowSearch((prev) => !prev);
     if (!showSearch) {
       // Focus the search input when it appears
@@ -94,7 +95,7 @@ export function TaskSidebar({ ...props }) {
     }
   };
 
-  const toggleFilter = (id) => {
+  const toggleFilter = (id:string) => {
     setFilters(
       filters.map((filter) =>
         filter.id === id ? { ...filter, checked: !filter.checked } : filter
@@ -102,7 +103,7 @@ export function TaskSidebar({ ...props }) {
     );
   };
 
-  const markNotificationAsRead = (id) => {
+  const markNotificationAsRead = (id:number) => {
     setNotifications(
       notifications.map((notification) =>
         notification.id === id ? { ...notification, read: true } : notification
