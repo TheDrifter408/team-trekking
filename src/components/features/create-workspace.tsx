@@ -99,7 +99,13 @@ export const CreateWorkspace: React.FC<Props> = ({
   };
 
   // Form input handlers with proper types
-  const onSelectPurpose = (option: string): void => setSelectedPurpose(option);
+  const onSelectPurpose = (option: string): void => {
+    setSelectedPurpose(option);
+    if (step < totalSteps) {
+      setStep(step + 1);
+    }
+  };
+
   const onSelectOption = (option: string): void => setSelectedOption(option);
 
   const onAddEmail = (emailInput: string): void => {
