@@ -14,7 +14,6 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogOverlay,
 } from '@/components/shadcn-ui/dialog.tsx';
 import { Button } from '@/components/shadcn-ui/button.tsx';
 import { Input } from '@/components/shadcn-ui/input.tsx';
@@ -35,6 +34,7 @@ import {
   toolOptions,
 } from '@/mock';
 import { LABEL } from '@/lib/constants';
+import { emailInputSchema } from '@/lib/validation/validationSchema';
 import { useIsMobile } from '@/lib/hooks/use-mobile';
 
 interface Props {
@@ -345,6 +345,8 @@ const ManageFeatures: React.FC<ManageFeaturesProps> = ({
   );
 };
 
+import { useMemo } from 'react';
+
 const InvitePeople: React.FC<InvitePeopleProps> = ({
   email,
   selectedEmails,
@@ -354,13 +356,30 @@ const InvitePeople: React.FC<InvitePeopleProps> = ({
   containerRef,
   focusInput,
 }) => {
+  const isValidEmail = (email: string) =>
+    emailInputSchema.safeParse({ email }).success;
+
+  const showAddPopup = useMemo(
+    () => isValidEmail(email) && !selectedEmails.includes(email),
+    [email, selectedEmails]
+  );
+
+  const onAddEmail = () => {
+    const event = {
+      key: 'Enter',
+      preventDefault: () => {},
+    } as React.KeyboardEvent<HTMLInputElement>;
+
+    onKeyDown(event);
+  };
+
   return (
     <div className="items-center flex flex-col w-full max-w-2xl">
       <h2 className="text-2xl sm:text-4xl font-bold text-content-default mb-8 sm:mb-12 text-center px-4">
         {LABEL.INVITE_PEOPLE_TO_YOUR_WORKSPACE}
       </h2>
-      {/* Gradient border wrapper */}
-      <div className="min-h-12 rounded-lg gradient-border mb-8 w-full max-w-md mx-4 sm:mx-0">
+
+      <div className="min-h-12 rounded-lg gradient-border mb-8 w-full max-w-md mx-4 sm:mx-0 relative">
         <div className="min-h-12 rounded-lg py-2 items-center bg-white flex w-full">
           <div
             className="flex flex-wrap gap-2 px-3 sm:px-5 w-full"
@@ -390,6 +409,15 @@ const InvitePeople: React.FC<InvitePeopleProps> = ({
             />
           </div>
         </div>
+
+        {showAddPopup && (
+          <div
+            className="absolute top-full left-0 mt-2 w-full h-12 text-content-tertiary border rounded-md shadow z-10 flex items-center justify-between px-4 text-base sm:text-lg cursor-pointer hover:bg-gray-100"
+            onClick={onAddEmail}
+          >
+            + Add {email}
+          </div>
+        )}
       </div>
     </div>
   );
