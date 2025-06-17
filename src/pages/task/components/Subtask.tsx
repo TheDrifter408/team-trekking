@@ -90,9 +90,9 @@ export const Subtask = ({
                   task.subTask.map((subtask) => (
                     <SortableTaskRow
                       key={subtask.id}
-                      id={subtask.id}
-                      selected={selectedSubtasks.has(subtask.id)}
-                      onSelect={() => onHandleSubtaskSelect(subtask.id)}
+                      id={Number(subtask.id)}
+                      selected={selectedSubtasks.has(Number(subtask.id))}
+                      onSelect={() => onHandleSubtaskSelect(Number(subtask.id))}
                       subtask={subtask}
                     />
                   ))}
