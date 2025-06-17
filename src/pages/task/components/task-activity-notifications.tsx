@@ -4,6 +4,7 @@ import { useState, useMemo } from 'react';
 import { DropdownMenuSeparator } from '@/components/shadcn-ui/dropdown-menu.tsx';
 import { TaskActivityNotificationsProps } from '@/types/props/Common';
 import { LABEL } from '@/lib/constants';
+import { Input } from '@/components/shadcn-ui/input.tsx';
 
 export const TaskActivityNotifications = ({
   watching,
@@ -54,7 +55,7 @@ export const TaskActivityNotifications = ({
             <BellOff size={16} className="text-blue-600" />
             <div className="flex-1">
               <div className="text-lg text-blue-600 flex items-center gap-2">
-                Unwatch
+                {LABEL.UN_WATCH}
                 {watching && <Check size={16} className="text-blue-600" />}
               </div>
               <div className="text-sm text-gray-500 mt-1">
@@ -73,12 +74,12 @@ export const TaskActivityNotifications = ({
           size={16}
           className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
         />
-        <input
+        <Input
           type="text"
-          placeholder="Search Watchers..."
+          placeholder={LABEL.SEARCH_WATCHER}
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full pl-10 pr-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          className="w-full h-10 pl-10 pr-3 py-2 border border-gray-200 rounded-lg text-sm"
         />
       </div>
 

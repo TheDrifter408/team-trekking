@@ -157,4 +157,6 @@ export const LABEL = {
   NO_WATCHERS_FOUND_MATCHING: 'No watchers found matching',
   NO_WATCHERS_YET: 'No watchers yet',
   YOU: 'You',
+  UN_WATCH: 'Unwatch',
+  SEARCH_WATCHER: 'Search Watchers...',
 };
