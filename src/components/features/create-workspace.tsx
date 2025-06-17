@@ -78,11 +78,15 @@ export const CreateWorkspace: React.FC<Props> = ({
     if (step > 1) setStep(step - 1);
   };
 
-  const nextStep = (e: MouseEvent<HTMLButtonElement>): void => {
-    e.preventDefault();
+  const stepCalculation = () => {
     if (step < totalSteps) {
       setStep(step + 1);
     }
+  };
+
+  const nextStep = (e: MouseEvent<HTMLButtonElement>): void => {
+    e.preventDefault();
+    stepCalculation();
   };
 
   const onSubmit = (): void => {
@@ -104,12 +108,13 @@ export const CreateWorkspace: React.FC<Props> = ({
   // Form input handlers with proper types
   const onSelectPurpose = (option: string): void => {
     setSelectedPurpose(option);
-    if (step < totalSteps) {
-      setStep(step + 1);
-    }
+    stepCalculation();
   };
 
-  const onSelectOption = (option: string): void => setSelectedOption(option);
+  const onSelectOption = (option: string): void => {
+    setSelectedOption(option);
+    stepCalculation();
+  };
 
   const onAddEmail = (emailInput: string): void => {
     const trimmedEmail = emailInput.trim();
@@ -222,9 +227,10 @@ export const CreateWorkspace: React.FC<Props> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenDialog}>
-      <DialogOverlay className="bg-content-tertiary/10 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0" />
-
-      <DialogContent className="!max-w-[95vw] sm:!max-w-[70vw] h-[95vh] sm:h-[90vh] flex flex-col p-0">
+      <DialogContent
+        blur={true}
+        className="!max-w-[95vw] sm:!max-w-[55vw] h-[95vh] sm:h-[90vh] flex flex-col p-0"
+      >
         {/* Fixed Header */}
         <DialogHeader className="px-4 sm:px-6 py-4">
           <DialogTitle className="text-xl w-full px-2 sm:px-4 flex justify-between items-center">
@@ -507,7 +513,7 @@ const NameWorkspace: React.FC<NameWorkspaceProps> = ({
 };
 
 const ProgressBar: React.FC<ProgressBarProps> = ({ step, totalSteps }) => {
-  const progress = (step / totalSteps) * 100;
+  const progress = ((step - 1) / totalSteps) * 100;
   return (
     <div className="w-full mt-6 sm:mt-8 mb-4">
       <div className="h-1 w-full bg-gray-200 rounded-full overflow-hidden">
