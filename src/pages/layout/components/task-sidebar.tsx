@@ -75,7 +75,6 @@ export function TaskSidebar({ ...props }) {
 
   const handleSendComment = () => {
     if (comment.trim()) {
-      console.log('Sending comment: ', comment);
       setComment('');
     }
   };
