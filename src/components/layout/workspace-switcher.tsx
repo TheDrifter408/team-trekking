@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { ChevronDown, Plus } from 'lucide-react';
-import { Icon } from '@/assets/icon-path.tsx';  
+import { Icon } from '@/assets/icon-path.tsx';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,7 +16,13 @@ import {
   useSidebar,
 } from '@/components/shadcn-ui/sidebar';
 import { CreateWorkspace } from '@/components/features/create-workspace';
-import { Tooltip, TooltipArrow, TooltipContent, TooltipProvider, TooltipTrigger } from '@radix-ui/react-tooltip';
+import {
+  Tooltip,
+  TooltipArrow,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@radix-ui/react-tooltip';
 import { LABEL } from '@/lib/constants';
 
 export function WorkspaceSwitcher({
@@ -57,20 +63,26 @@ export function WorkspaceSwitcher({
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton
               size="lg"
-              className="h-10 w-full data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+              className="h-10 w-full data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground "
             >
-              <div className="flex aspect-square size-6 items-center justify-center rounded-md text-sidebar-primary-foreground" style={{ backgroundColor: activeWorkspace.logo === undefined ? activeWorkspace.color : undefined }}>
+              <div
+                className="flex aspect-square size-6 items-center justify-center rounded-md text-sidebar-primary-foreground"
+                style={{
+                  backgroundColor:
+                    activeWorkspace.logo === undefined
+                      ? activeWorkspace.color
+                      : undefined,
+                }}
+              >
                 {activeWorkspace.logo ? (
-                    <img
-                      src={activeWorkspace.logo}
-                      alt={activeWorkspace.name}
-                      className="size-4 shrink-0 object-cover w-full h-full rounded-md"
-                    />
-                  ) : (
-                    <div>
-                      {activeWorkspace.name?.charAt(0).toUpperCase()}
-                    </div>
-                  )}
+                  <img
+                    src={activeWorkspace.logo}
+                    alt={activeWorkspace.name}
+                    className="size-4 shrink-0 object-cover w-full h-full rounded-md"
+                  />
+                ) : (
+                  <div>{activeWorkspace.name?.charAt(0).toUpperCase()}</div>
+                )}
               </div>
               <div className="grid flex-1 text-left text-lg leading-tight">
                 <span className="truncate font-semibold">
@@ -81,174 +93,189 @@ export function WorkspaceSwitcher({
             </SidebarMenuButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent
-            className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
+            className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg h-[calc(100dvh-160px)] no-scrollbar"
             align="start"
             side={isMobile ? 'bottom' : 'bottom'}
             sideOffset={4}
           >
             <div className="flex items-center gap-2 px-2 py-3 w-full">
-              <div className="flex aspect-square size-8 items-center justify-center rounded-md text-sidebar-primary-foreground" style={{ backgroundColor: activeWorkspace.logo === undefined ? activeWorkspace.color : undefined }}>
+              <div
+                className="flex aspect-square size-8 items-center justify-center rounded-md text-sidebar-primary-foreground"
+                style={{
+                  backgroundColor:
+                    activeWorkspace.logo === undefined
+                      ? activeWorkspace.color
+                      : undefined,
+                }}
+              >
                 {activeWorkspace.logo ? (
-                    <img
-                      src={activeWorkspace.logo}
-                      alt={activeWorkspace.name}
-                      className="size-4 shrink-0 object-cover w-full h-full rounded-md"
-                    />
-                  ) : (
-                    <div>
-                      {activeWorkspace.name?.charAt(0).toUpperCase()}
-                    </div>
-                  )}
+                  <img
+                    src={activeWorkspace.logo}
+                    alt={activeWorkspace.name}
+                    className="size-4 shrink-0 object-cover w-full h-full rounded-md"
+                  />
+                ) : (
+                  <div>{activeWorkspace.name?.charAt(0).toUpperCase()}</div>
+                )}
               </div>
               <div className="grid leading-tight">
                 <span className="truncate text-[14px]">
                   {activeWorkspace.name}
                 </span>
                 <span className="truncate font-normal text-sm text-gray-500">
-                  {activeWorkspace.plan} . {activeWorkspace.member} {LABEL.MEMBERS}
+                  {activeWorkspace.plan} . {activeWorkspace.member}{' '}
+                  {LABEL.MEMBERS}
                 </span>
               </div>
             </div>
             <div>
               <div className="cursor-pointer flex items-center gap-2 px-2 py-1 hover:bg-gray-200 rounded-md">
-                  <Icon name={'setting'}></Icon>
-                  <span className="truncate text-base font-normal text-gray-900">
-                    {LABEL.SETTINGS}
-                  </span>
+                <Icon name={'setting'}></Icon>
+                <span className="truncate text-base font-normal text-gray-900">
+                  {LABEL.SETTINGS}
+                </span>
               </div>
               <div className="cursor-pointer flex items-center gap-2 px-2 py-1 hover:bg-gray-200 rounded-md">
-                  <Icon name={'setting'}></Icon>
-                  <span className="truncate text-base font-normal text-gray-900">
-                    {LABEL.UPGRADE}
-                  </span>
+                <Icon name={'setting'}></Icon>
+                <span className="truncate text-base font-normal text-gray-900">
+                  {LABEL.UPGRADE}
+                </span>
               </div>
               <div className="cursor-pointer flex items-center gap-2 px-2 py-1 hover:bg-gray-200 rounded-md">
-                  <Icon name={'users'}></Icon>
-                  <span className="truncate text-base font-normal text-gray-900">
-                    {LABEL.MANAGE_USERS}
-                  </span>
+                <Icon name={'users'}></Icon>
+                <span className="truncate text-base font-normal text-gray-900">
+                  {LABEL.MANAGE_USERS}
+                </span>
               </div>
             </div>
-            <div className=''>
+            <div className="">
               <DropdownMenuSeparator />
               <div className="cursor-pointer flex items-center gap-2 px-2 py-1 hover:bg-gray-200 rounded-md">
-                  <Icon name={'setting'}></Icon>
-                  <span className="truncate text-base font-normal text-gray-900">
-                    {LABEL.APP_CENTER}
-                  </span>
+                <Icon name={'setting'}></Icon>
+                <span className="truncate text-base font-normal text-gray-900">
+                  {LABEL.APP_CENTER}
+                </span>
               </div>
               <div className="cursor-pointer flex items-center gap-2 px-2 py-1 hover:bg-gray-200 rounded-md">
-                  <Icon name={'setting'}></Icon>
-                  <span className="truncate text-base font-normal text-gray-900">
-                    {LABEL.TEMPLATE_CENTER}
-                  </span>
+                <Icon name={'setting'}></Icon>
+                <span className="truncate text-base font-normal text-gray-900">
+                  {LABEL.TEMPLATE_CENTER}
+                </span>
               </div>
               <div className="cursor-pointer flex items-center gap-2 px-2 py-1 hover:bg-gray-200 rounded-md">
-                  <Icon name={'fieldscreate'}></Icon>
-                  <span className="truncate text-base font-normal text-gray-900">
-                    {LABEL.CUSTOM_FIELD_MANAGER}
-                  </span>
+                <Icon name={'fieldscreate'}></Icon>
+                <span className="truncate text-base font-normal text-gray-900">
+                  {LABEL.CUSTOM_FIELD_MANAGER}
+                </span>
               </div>
               <div className="cursor-pointer flex items-center gap-2 px-2 py-1 hover:bg-gray-200 rounded-md">
-                  <Icon name={'thunder'}></Icon>
-                  <span className="truncate text-base font-normal text-gray-900">
-                    {LABEL.AUTOMATIONS_MANAGER}
-                  </span>
+                <Icon name={'thunder'}></Icon>
+                <span className="truncate text-base font-normal text-gray-900">
+                  {LABEL.AUTOMATIONS_MANAGER}
+                </span>
               </div>
             </div>
-            <div className='bg-workspace-popover'>
+            <div className="bg-workspace-popover">
               <DropdownMenuSeparator />
               <DropdownMenuLabel className="text-xs text-muted-foreground">
-                  <div className='flex items-center justify-between'>
-                    {!showSearch && (
-                      <div>{LABEL.SWITCH_WORKSPACE}</div>
-                    )}
-                    {showSearch && (
-                      <div className="flex items-center border border-gray-900 rounded-md px-2 py-1 w-full shadow-sm gap-1">
-                        <Icon name={'search'}></Icon>
-                        <input
-                          ref={inputRef}
-                          type="text"
-                          placeholder="Search Workspaces..."
-                          value={searchWorkspace}
-                          onChange={(e) => setSearchWorkspace(e.target.value)}
-                          className="outline-none flex-1 text-sm bg-transparent text-gray-900"
-                        />
-                        <button onClick={() => setShowSearch(false)}>
-                          <Icon name={'close'} className='text-gray-900'></Icon>
-                        </button>
-                      </div>
-                    )}
-                    
-                    {!showSearch && (
-                      <div
-                       className='hover:bg-gray-200 curser-pointer p-2 rounded-md'
-                       onClick={() => setShowSearch(true)}>
-                      <Icon name={'search'} className='size-3'></Icon>
+                <div className="flex items-center justify-between">
+                  {!showSearch && <div>{LABEL.SWITCH_WORKSPACE}</div>}
+                  {showSearch && (
+                    <div className="flex items-center border border-gray-900 rounded-md px-2 py-1 w-full shadow-sm gap-1">
+                      <Icon name={'search'}></Icon>
+                      <input
+                        ref={inputRef}
+                        type="text"
+                        placeholder="Search Workspaces..."
+                        value={searchWorkspace}
+                        onChange={(e) => setSearchWorkspace(e.target.value)}
+                        className="outline-none flex-1 text-sm bg-transparent text-gray-900"
+                      />
+                      <button onClick={() => setShowSearch(false)}>
+                        <Icon name={'close'} className="text-gray-900"></Icon>
+                      </button>
                     </div>
-                    )}
-                  </div>
-                </DropdownMenuLabel>
-              <div className={`max-h-[250px] ${workspaces.length >= 5 ? 'overflow-y-auto' : ''}`}>
-                {workspaces.map((workspace, index) => (
-                  workspace.id !== activeWorkspace.id && (
-                    <DropdownMenuItem
-                      key={workspace.name}
-                      onClick={() => setActiveWorkspace(workspace)}
-                      className="gap-2 p-2 hover:!bg-gray-200 focus:!outline-none"
-                    >
-                      <TooltipProvider delayDuration={200}>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <div className="flex items-center justify-center gap-2 cursor-pointer">
-                              {workspace.logo ? (
-                                <div className="flex size-8 items-center justify-center rounded-sm">
-                                  <img
-                                    src={workspace.logo}
-                                    alt={workspace.name}
-                                    className="size-4 shrink-0 object-cover w-full h-full rounded-sm"
-                                  />
-                                </div>
-                              ) : (
-                                <div
-                                  className="flex aspect-square size-8 items-center justify-center rounded-md font-semibold text-sidebar-primary-foreground"
-                                  style={{ backgroundColor: workspace.color }}
-                                >
-                                  {workspace.name?.charAt(0).toUpperCase()}
-                                </div>
-                              )}
-                              <div className="grid flex-1">
-                                <span className="truncate text-base font-medium text-gray-900">
-                                  {workspace.name}
-                                </span>
-                                <span className="truncate text-xs text-gray-600">
-                                  {workspace.plan}
-                                </span>
-                              </div>
-                            </div>
-                          </TooltipTrigger>
+                  )}
 
-                          <TooltipContent
-                            className="bg-black text-white shadow-lg px-3 py-2 rounded-md"
-                            side="top"
-                            sideOffset={4}
-                          >
-                            <TooltipArrow className="fill-black"
-                              style={{
-                                width: '10px',
-                                height: '5px',
-                              }}
-                            />
-                            <p className="font-medium text-sm">{workspace.member} {LABEL.MEMBERS}</p>
-                          </TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
-                    </DropdownMenuItem>
-                  )
-                ))}
+                  {!showSearch && (
+                    <div
+                      className="hover:bg-gray-200 curser-pointer p-2 rounded-md"
+                      onClick={() => setShowSearch(true)}
+                    >
+                      <Icon name={'search'} className="size-3"></Icon>
+                    </div>
+                  )}
+                </div>
+              </DropdownMenuLabel>
+              <div
+                className={`max-h-[250px] ${workspaces.length >= 5 ? 'overflow-y-auto' : ''}`}
+              >
+                {workspaces.map(
+                  (workspace, index) =>
+                    workspace.id !== activeWorkspace.id && (
+                      <DropdownMenuItem
+                        key={workspace.name}
+                        onClick={() => setActiveWorkspace(workspace)}
+                        className="gap-2 p-2 hover:!bg-gray-200 focus:!outline-none"
+                      >
+                        <TooltipProvider delayDuration={200}>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <div className="flex items-center justify-center gap-2 cursor-pointer">
+                                {workspace.logo ? (
+                                  <div className="flex size-8 items-center justify-center rounded-sm">
+                                    <img
+                                      src={workspace.logo}
+                                      alt={workspace.name}
+                                      className="size-4 shrink-0 object-cover w-full h-full rounded-sm"
+                                    />
+                                  </div>
+                                ) : (
+                                  <div
+                                    className="flex aspect-square size-8 items-center justify-center rounded-md font-semibold text-sidebar-primary-foreground"
+                                    style={{ backgroundColor: workspace.color }}
+                                  >
+                                    {workspace.name?.charAt(0).toUpperCase()}
+                                  </div>
+                                )}
+                                <div className="grid flex-1">
+                                  <span className="truncate text-base font-medium text-gray-900">
+                                    {workspace.name}
+                                  </span>
+                                  <span className="truncate text-xs text-gray-600">
+                                    {workspace.plan}
+                                  </span>
+                                </div>
+                              </div>
+                            </TooltipTrigger>
+
+                            <TooltipContent
+                              className="bg-black text-white shadow-lg px-3 py-2 rounded-md"
+                              side="top"
+                              sideOffset={4}
+                            >
+                              <TooltipArrow
+                                className="fill-black"
+                                style={{
+                                  width: '10px',
+                                  height: '5px',
+                                }}
+                              />
+                              <p className="font-medium text-sm">
+                                {workspace.member} {LABEL.MEMBERS}
+                              </p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      </DropdownMenuItem>
+                    )
+                )}
               </div>
               <DropdownMenuSeparator />
-              <DropdownMenuItem className="gap-2 p-2 hover:!bg-gray-200 focus:!outline-none cursor-pointer" onClick={onOpenDialog}>
+              <DropdownMenuItem
+                className="gap-2 p-2 hover:!bg-gray-200 focus:!outline-none cursor-pointer"
+                onClick={onOpenDialog}
+              >
                 <div className="flex size-6 items-center justify-center rounded-md border bg-background">
                   <Plus className="size-4" />
                 </div>
