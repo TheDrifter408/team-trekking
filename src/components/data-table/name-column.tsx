@@ -89,7 +89,7 @@ export const NameColumn = ({ task, row }: Props) => {
                   setIsEditing(false);
                 }
               }}
-              className="text-theme-main-dark font-medium !text-lg !focus-none !ring-none !outline-none border-none "
+              className="text-theme-main-dark text-base bg-transparent font-medium !focus-none !ring-none !outline-none border-none "
             />
           ) : (
             <TextTooltip message={task.name}>
@@ -105,15 +105,17 @@ export const NameColumn = ({ task, row }: Props) => {
             </TextTooltip>
           )}
 
-          <div className="flex-shrink-0 flex ml-2">
-            <SubTaskSummary task={task} />
-            <DescriptionSummary task={task} />
-            <TaskModifiers
-              isHovered={isHovered}
-              onRename={() => setIsEditing(true)}
-              depth={depth}
-            />
-          </div>
+          {!isEditing && (
+            <div className="flex-shrink-0 flex ml-2">
+              <SubTaskSummary task={task} />
+              <DescriptionSummary task={task} />
+              <TaskModifiers
+                isHovered={isHovered}
+                onRename={() => setIsEditing(true)}
+                depth={depth}
+              />
+            </div>
+          )}
         </div>
       </div>
     </div>

@@ -3,7 +3,7 @@ import { HeaderType } from '@/types/props/Common.ts';
 import { ListCard } from '@/pages/list/components/list-card.tsx';
 import { PageHeader } from '@/components/layout/page-header';
 import { DataTable } from '@/components/data-table/data-table.tsx';
-import { ColumnDrawer } from '@/pages/list/components/column-drawer';
+import { ColumnDrawer } from '@/pages/list/components/column-drawer.tsx';
 import {
   createDataTableStore,
   DataTableProvider,
@@ -42,7 +42,7 @@ export const List = () => {
     <DataTableProvider value={store}>
       <div className="flex flex-col h-screen overflow-hidden">
         <PageHeader currentPage={currentPage} parents={parents} />
-        <div className="flex-1 min-h-0 flex flex-col px-[20px] mt-[40px] flex-shrink-0">
+        <div className="flex-1 min-h-0 flex flex-col px-[20px] mt-[40px] flex-shrink-0 w-full overflow-hidden">
           <ListCard
             isTableExpanded={isTableExpanded}
             onToggleExpand={onToggleExpand}

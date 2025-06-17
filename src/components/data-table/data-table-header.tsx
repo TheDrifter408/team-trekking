@@ -1,5 +1,6 @@
 import { flexRender, Header, Table } from '@tanstack/react-table';
 import { ColumnResizer } from './column-resizer';
+import { forwardRef } from 'react';
 
 type Position = 'left' | 'center' | 'right';
 
@@ -46,12 +47,17 @@ interface DataTableHeaderProps<TData> {
   table: Table<TData>;
 }
 
-export const DataTableHeader = <TData,>({
-  table,
-}: DataTableHeaderProps<TData>) => {
+export const DataTableHeader = forwardRef<
+  HTMLDivElement,
+  DataTableHeaderProps<any>
+>(({ table }, ref) => {
   return (
     <div className="border-b mt-4 bg-background sticky top-0 z-10">
-      <div className="flex">
+      <div
+        className="flex overflow-hidden" // Add overflow-hidden to prevent scrollbar
+        ref={ref}
+        style={{ width: table.getTotalSize() }} // Match the body width
+      >
         {table.getLeftHeaderGroups().map((group) => (
           <DataTableHeaderSection
             key={`left-${group.id}`}
@@ -79,4 +85,6 @@ export const DataTableHeader = <TData,>({
       </div>
     </div>
   );
-};
+});
+
+DataTableHeader.displayName = 'DataTableHeader';
