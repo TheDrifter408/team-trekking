@@ -190,6 +190,7 @@ interface TaskNotificationUsers {
   isWatching: boolean;
   avatar: string;
   userName: string;
+  lastActivity?: string;
 }
 export interface TaskActivityNotificationsProps {
   watching: boolean;
