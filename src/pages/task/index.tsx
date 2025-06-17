@@ -51,7 +51,6 @@ import { taskTypeConfig } from '@/lib/constants/staticData.ts';
 import { Task as TaskType } from '@/types/props/Common.ts';
 import { TagOption } from '@/types/interfaces/TagDropDown.ts';
 import TagDropdownWithSelection from '@/components/common/tag-dropdown.tsx';
-
 export const Task: React.FC = () => {
   const [enterDates, setEnterDates] = useState<boolean>(false);
   const [enterAssignee, setEnterAssignee] = useState<boolean>(false);
@@ -100,12 +99,12 @@ export const Task: React.FC = () => {
     description:
       'Create a new component for the dashboard that displays user statistics',
     status: {
-      id:0,
+      id: 0,
       name: 'In Progress',
       color: 'bg-green-500',
       category: 'development',
     },
-    progress:50,
+    progress: 50,
     priority: 'high',
     assignees: mockUsers,
     startDate: '2024-03-15T10:00:00.000Z',
@@ -120,7 +119,7 @@ export const Task: React.FC = () => {
         createdAt: '2024-03-15T10:00:00.000Z',
       },
     ],
-    tags: [{ id: 0, name: 'frontend', color: "" }, { id:1,name:'feature', color:"" }],
+    tags: [{ id: 0, name: 'frontend', color: "" }, { id: 1, name: 'feature', color: "" }],
     subTask: mockSubtasks,
     checklist: mockChecklist,
   });
@@ -217,16 +216,16 @@ export const Task: React.FC = () => {
   };
 
   return (
-    <div className={'mx-20 my-10 items-center'}>
-      {/* Show the parent task title if this is a subtask */}
-      <div className="space-y-2">
-        { 
+    <div className={'w-2/3 mx-auto my-10 items-center'}>
+      <div className="space-y-4">
+        {/* Show the parent task title if this is a subtask */}
+        {
           sampleTask.parentTask && (
             <div className="flex items-center gap-1 hover:bg-accent w-fit rounded-xl px-2 py-[2px]">
               <CornerLeftUp className="text-muted-foreground" size={14} />
               <Link to="" className="text-muted-foreground">{sampleTask.parentTask.name}</Link>
             </div>
-            
+
           )
         }
         {/* Component to display Task Type | Task ID */}
@@ -235,20 +234,20 @@ export const Task: React.FC = () => {
             <IconCircleLetterT className="rounded-lg" size={16} />
             <span className="px-2 capitalize">{sampleTask.type}</span>
             <div>
-            <ContextMenu
-              width='w-fit'
-              trigger={
-                <Button
-                  variant="ghost"
-                  size="icon_sm"
-                  className="h-6 w-6 hover:bg-transparent"
-                >
-                  <ChevronDown />
-                </Button>
-              }
-              sections={taskTypeConfig}
-            />
-          </div>
+              <ContextMenu
+                width='w-fit'
+                trigger={
+                  <Button
+                    variant="ghost"
+                    size="icon_sm"
+                    className="h-6 w-6 hover:bg-transparent"
+                  >
+                    <ChevronDown />
+                  </Button>
+                }
+                sections={taskTypeConfig}
+              />
+            </div>
           </div>
           <div>
             <span className="px-2">{sampleTask.id}</span>
@@ -263,10 +262,10 @@ export const Task: React.FC = () => {
             className="!text-3xl w-full !font-bold tracking-tight bg-transparent border-none focus-visible:ring-0 focus-visible:ring-offset-0 px-0"
           />
         </div>
-        <div className="grid sm:grid-cols-1 md:grid-cols-2 gap-2">
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-2">
           {/* Column one contains Status, Dates, Time Estimates, Track Time, Relationships */}
           <div className="space-y-1"> {/* Column 1 */}
-              {/* STATUSES */}
+            {/* STATUSES */}
             <TaskMetaRow
               icon={<IconCircleDot className="text-base font-semibold" size={15} />}
               label="Status"
@@ -364,7 +363,7 @@ export const Task: React.FC = () => {
                     key={assignee}
                     assignee={assignee}
                     enterAssignee={enterAssignee}
-                    onRemove={() => {}}
+                    onRemove={() => { }}
                   />
                 ))}
               </div>
@@ -414,7 +413,7 @@ export const Task: React.FC = () => {
       </div>
       <div className="mt-4">
         <div className="space-y-2">
-          <Label htmlFor="description">Description</Label>
+          <Label htmlFor="description" className='font-medium text-base'>Description</Label>
           <DocEditor
             placeholder={"Start writing or type '/' for commands"}
             value={description}
@@ -511,8 +510,6 @@ export const Task: React.FC = () => {
           </DndContext>
         </div>
       </div>
-
-      <div className="mb-[60px]"></div>
     </div>
   );
 };

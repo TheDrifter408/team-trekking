@@ -48,7 +48,7 @@ export const PageHeader = () => {
             <ChevronDown />
           </Button>
           <Breadcrumb className="pl-2">
-            <BreadcrumbList>
+            <BreadcrumbList className='flex-nowrap overflow-hidden text-nowrap'>
               <BreadcrumbItem className="space-x-1">
                 <div className="h-[16px] w-[16px] bg-blue-700 text-primary-foreground font-medium flex items-center justify-center rounded">
                   S
@@ -59,7 +59,7 @@ export const PageHeader = () => {
                 />
                 <BreadcrumbLink
                   href="/folder"
-                  className="text-primary font-medium rounded-md p-1 hover:bg-accent"
+                  className="text-primary font-medium p-0 md:p-1 rounded-md hover:bg-accent"
                 >
                   Space Shuttle
                 </BreadcrumbLink>
@@ -68,14 +68,14 @@ export const PageHeader = () => {
               <BreadcrumbItem>
                 <BreadcrumbLink
                   href="/folder"
-                  className="text-primary font-medium rounded-md p-1 hover:bg-accent"
+                  className="text-primary font-medium p-0 md:p-1 rounded-md hover:bg-accent"
                 >
                   Steps List
                 </BreadcrumbLink>
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
-          <div className="w-[1px] h-[16px] mx-4 bg-border" />
+          <div className="w-[1px] h-[16px] mx-2 md:mx-4 bg-border" />
           <ToolTipContainer text="Move to parent task">
             <MoveTask
               child={
@@ -91,7 +91,7 @@ export const PageHeader = () => {
             </Button>
           </ToolTipContainer>
         </div>
-        <div className="flex space-x-3 items-center justify-between">
+        <div className="flex space-x-1 md:space-x-3 items-center justify-between">
           <span className="text-sm">Created on Mar 2</span>
           <Button
             onClick={() => setOpenShareTask(true)}
