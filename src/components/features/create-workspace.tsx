@@ -233,7 +233,7 @@ export const CreateWorkspace: React.FC<Props> = ({
         className="!max-w-[95vw] sm:!max-w-[55vw] h-[95vh] sm:h-[90vh] flex flex-col p-0"
       >
         {/* Fixed Header */}
-        <DialogHeader className="px-4 sm:px-6 py-4">
+        <DialogHeader className="px-6 sm:px-6 pt-2 flex items-center w-full">
           <DialogTitle className="text-xl w-full px-2 sm:px-4 flex justify-between items-center">
             {!isMobile && (
               <>
