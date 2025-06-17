@@ -1,6 +1,7 @@
 import React, {
   useState,
   useRef,
+  useMemo,
   MouseEvent,
   KeyboardEvent,
   ChangeEvent,
@@ -236,7 +237,9 @@ export const CreateWorkspace: React.FC<Props> = ({
           <DialogTitle className="text-xl w-full px-2 sm:px-4 flex justify-between items-center">
             {!isMobile && (
               <>
-                <span className={'font-bold text-3xl'}>Team Trekking</span>
+                <span className={'font-bold text-3xl'}>
+                  {LABEL.TEAM_TREKKING}
+                </span>
                 <span className={'font-semibold text-2xl'}>
                   Welcome, Jawahiir Nabhan!
                 </span>
@@ -244,7 +247,7 @@ export const CreateWorkspace: React.FC<Props> = ({
             )}
             {isMobile && (
               <div className="w-full text-center">
-                <div className="text-lg font-bold">Team Trekking</div>
+                <div className="text-lg font-bold">{LABEL.TEAM_TREKKING}</div>
                 <div className="text-sm font-medium text-content-onboarding-secondary">
                   Welcome, Jawahiir Nabhan!
                 </div>
@@ -345,8 +348,6 @@ const ManageFeatures: React.FC<ManageFeaturesProps> = ({
   );
 };
 
-import { useMemo } from 'react';
-
 const InvitePeople: React.FC<InvitePeopleProps> = ({
   email,
   selectedEmails,
@@ -396,6 +397,7 @@ const InvitePeople: React.FC<InvitePeopleProps> = ({
             ))}
             <Input
               ref={inputRef}
+              autoComplete="off"
               type="text"
               className="flex-1 !text-base sm:!text-lg border-none outline-none !ring-0 focus-visible-none bg-transparent placeholder:text-base sm:placeholder:text-lg placeholder:text-content-onboarding-secondary"
               value={email}
@@ -415,7 +417,7 @@ const InvitePeople: React.FC<InvitePeopleProps> = ({
             className="absolute top-full left-0 mt-2 w-full h-12 text-content-tertiary border rounded-md shadow z-10 flex items-center justify-between px-4 text-base sm:text-lg cursor-pointer hover:bg-gray-100"
             onClick={onAddEmail}
           >
-            + Add {email}
+            + {LABEL.ADD} {email}
           </div>
         )}
       </div>
@@ -430,7 +432,7 @@ const ManageTools: React.FC<ManageToolsProps> = ({
   return (
     <div className="items-center flex flex-col w-full max-w-5xl">
       <h2 className="text-2xl sm:text-4xl font-bold text-content-default mb-8 sm:mb-12 text-center px-4">
-        Which tools would you like to integrate?
+        {LABEL.WHICH_TOOLS_WOULD_YOU_LIKE_TO_INTEGRATE}
       </h2>
       <div className="h-full w-full flex items-center">
         <div className="w-full  justify-center items-center flex flex-col sm:flex-row sm:flex-wrap gap-3">
@@ -511,7 +513,7 @@ const SelectFeatures: React.FC<SelectFeaturesProps> = ({
         </div>
       </div>
       <span className="text-xs sm:text-sm mt-2 text-center px-4">
-        Don't worry, you will have access to all of these in your Workspace.
+        {LABEL.DONT_WORRY_YOU_WILL_HAVE_ACCESS}
       </span>
     </div>
   );
@@ -533,7 +535,7 @@ const NameWorkspace: React.FC<NameWorkspaceProps> = ({
           onChange={(e) => setWorkspaceName(e.target.value)}
         />
         <span className="text-xs sm:text-sm text-content-tertiary mt-2 text-center">
-          Try the name of your organization.
+          {LABEL.TRY_THE_NAME_OF_YOUR_ORGANIZATION}
         </span>
       </div>
     </div>
@@ -575,8 +577,8 @@ const Footer: React.FC<FooterProps> = ({
           name={'dropdownarrow'}
           className={'rotate-90 size-3 sm:size-4 text-content-default'}
         />
-        <span className="hidden sm:inline">Back</span>
-        <span className="sm:hidden">Back</span>
+        <span className="hidden sm:inline">{LABEL.BACK}</span>
+        <span className="sm:hidden">{LABEL.BACK}</span>
       </Button>
     )}
     {step < totalSteps ? (
@@ -586,8 +588,8 @@ const Footer: React.FC<FooterProps> = ({
           'ml-auto w-24 sm:!w-[113px] bg-theme-main-dark !h-12 sm:!h-[58px] text-base sm:text-xl flex items-center rounded-lg'
         )}
       >
-        <span className="hidden sm:inline">Next</span>
-        <span className="sm:hidden">Next</span>
+        <span className="hidden sm:inline">{LABEL.NEXT}</span>
+        <span className="sm:hidden">{LABEL.NEXT}</span>
         <Icon
           name={'dropdownarrow'}
           className={'-rotate-90 size-3 sm:size-4'}
@@ -601,7 +603,7 @@ const Footer: React.FC<FooterProps> = ({
           'ml-auto w-24 sm:!w-[113px] bg-theme-main-dark !h-12 sm:!h-[58px] text-base sm:text-xl flex items-center rounded-lg'
         )}
       >
-        Finish
+        {LABEL.FINISH}
       </Button>
     )}
   </div>

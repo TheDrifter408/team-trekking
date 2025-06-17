@@ -1,5 +1,7 @@
 export const LABEL = {
+  TEAM_TREKKING: 'Team Trekking',
   ADDED: 'Added',
+  ADD: 'Add',
   ADD_TO_OVERVIEW: 'Add to overview',
   EVERYTHING: 'Everything',
   SHARED_WITH_ME: 'Shared with me',
@@ -15,6 +17,8 @@ export const LABEL = {
   WHAT_WOULD_YOU_LIKE_TO_MANAGE: 'What would you like to manage?',
   INVITE_PEOPLE_TO_YOUR_WORKSPACE: 'Invite people to your workspace',
   DO_YOU_USE_ANY_OF_THESE_TOOLS: 'Do you use any of these tools?',
+  WHICH_TOOLS_WOULD_YOU_LIKE_TO_INTEGRATE:
+    'Which tools would you like to integrate?',
   WHICH_FEATURES_ARE_YOU_INTERESTED_IN: 'Which features are you interested in?',
   LASTLY_WHAT_WOULD_YOU_LIKE_TO_NAME_YOUR_WORKSPACE:
     'Lastly, what would you like to name your workspace?',
@@ -150,4 +154,10 @@ export const LABEL = {
   PERSONAL_LIST: 'Personal List',
   LINEUP: 'LineUp',
   TRAY: 'Tray',
+  DONT_WORRY_YOU_WILL_HAVE_ACCESS:
+    "Don't worry, you will have access to all of these in your Workspace.",
+  TRY_THE_NAME_OF_YOUR_ORGANIZATION: 'Try the name of your organization.',
+  BACK: 'Back',
+  NEXT: 'Next',
+  FINISH: 'Finish',
 };
