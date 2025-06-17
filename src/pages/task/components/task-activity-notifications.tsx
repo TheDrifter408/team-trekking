@@ -3,6 +3,7 @@ import { Bell, BellOff, Search, Check } from 'lucide-react';
 import { useState, useMemo } from 'react';
 import { DropdownMenuSeparator } from '@/components/shadcn-ui/dropdown-menu.tsx';
 import { TaskActivityNotificationsProps } from '@/types/props/Common';
+import { LABEL } from '@/lib/constants';
 
 export const TaskActivityNotifications = ({
   watching,
@@ -36,7 +37,7 @@ export const TaskActivityNotifications = ({
             <div className="flex-1">
               <div className="text-lg text-gray-900">Watch</div>
               <div className="text-sm text-gray-500 mt-1">
-                Notify me on all activity for this task.
+                {LABEL.NOTIFY_ME_ON_ALL_ACTIVITY_FOR_THIS_TASK}
               </div>
             </div>
           </div>
@@ -57,7 +58,7 @@ export const TaskActivityNotifications = ({
                 {watching && <Check size={16} className="text-blue-600" />}
               </div>
               <div className="text-sm text-gray-500 mt-1">
-                Notify me only on @mentions or assignment.
+                {LABEL.NOTIFY_ME_ONLY_ON_MENTIONS_OR_ASSIGNMENT}
               </div>
             </div>
           </div>
@@ -127,7 +128,7 @@ export const TaskActivityNotifications = ({
               </div>
               {notification.userName === 'Me' && (
                 <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">
-                  You
+                  {LABEL.YOU}
                 </span>
               )}
             </div>
@@ -135,8 +136,8 @@ export const TaskActivityNotifications = ({
         ) : (
           <div className="p-4 text-center text-sm text-gray-500">
             {searchTerm
-              ? `No watchers found matching "${searchTerm}"`
-              : 'No watchers yet'}
+              ? `${LABEL.NO_WATCHERS_FOUND_MATCHING} "${searchTerm}"`
+              : LABEL.NO_WATCHERS_YET}
           </div>
         )}
       </div>

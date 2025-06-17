@@ -150,4 +150,11 @@ export const LABEL = {
   PERSONAL_LIST: 'Personal List',
   LINEUP: 'LineUp',
   TRAY: 'Tray',
+  NOTIFY_ME_ON_ALL_ACTIVITY_FOR_THIS_TASK:
+    'Notify me on all activity for this task.',
+  NOTIFY_ME_ONLY_ON_MENTIONS_OR_ASSIGNMENT:
+    'Notify me only on @mentions or assignment.',
+  NO_WATCHERS_FOUND_MATCHING: 'No watchers found matching',
+  NO_WATCHERS_YET: 'No watchers yet',
+  YOU: 'You',
 };
