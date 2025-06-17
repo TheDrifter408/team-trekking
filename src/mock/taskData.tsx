@@ -19,6 +19,7 @@ export const taskNotificationUsers = [
     isWatching: true,
     avatar: 'https://api.dicebear.com/7.x/personas/svg?seed=jawahiir',
     read: false,
+    lastActivity: 'Yesterday 9:00pm',
   },
   {
     id: 10,
@@ -122,7 +123,7 @@ export const sampleTask = {
   endDate: '',
   estimatedTime: '8',
   parentTask: {
-    id:2,
+    id: 2,
     name: 'Summer Vacation Planning',
   },
   tags: ['budget', 'planning'],
