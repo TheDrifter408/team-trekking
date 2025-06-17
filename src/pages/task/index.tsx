@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { mockChecklist, mockSubtasks, mockUsers, sampleTask } from '@/mock';
 import { cn } from '@/lib/utils';
-import { ChevronRight, PlayCircle, Plus } from 'lucide-react';
+import { ChevronDown, ChevronRight, CornerLeftUp, PlayCircle, Plus } from 'lucide-react';
 import {
   IconCalendar,
   IconCheck,
@@ -12,6 +12,7 @@ import {
   IconTagsFilled,
   IconUserFilled,
   IconVectorSpline,
+  IconCircleLetterT,
 } from '@tabler/icons-react';
 import { DatePickerWithRange } from '@/components/common/date-picker.tsx';
 import {
@@ -44,11 +45,14 @@ import { DocEditor } from './components/doc-editor.tsx';
 import { Subtask } from '@/pages/task/components/Subtask.tsx';
 import TaskStatusDialog from '@/components/common/task-status-dialog.tsx';
 import TimeEstimateDropDown from '@/components/common/estimate-time-dropdown.tsx';
+import { Link } from 'react-router-dom';
+import { ContextMenu } from '@/components/common/context-menu.tsx';
+import { taskTypeConfig } from '@/lib/constants/staticData.ts';
+import { Task as TaskType } from '@/types/props/Common.ts';
+import { TagOption } from '@/types/interfaces/TagDropDown.ts';
 import TagDropdownWithSelection from '@/components/common/tag-dropdown.tsx';
-import { availableTags } from '@/mock/tagsData.ts';
 
 export const Task: React.FC = () => {
-  const [enterStatus, setEnterStatus] = useState<boolean>(false);
   const [enterDates, setEnterDates] = useState<boolean>(false);
   const [enterAssignee, setEnterAssignee] = useState<boolean>(false);
   const [enterPriority, setEnterPriority] = useState<boolean>(false);
@@ -57,6 +61,18 @@ export const Task: React.FC = () => {
   const [enterTags, setEnterTags] = useState<boolean>(false);
   const [description, setDescription] = useState(sampleTask.description);
   const [selectedTags, setSelectedTags] = useState<string[]>(['backend']);
+
+  const availableTags: TagOption[] = [
+    { id: 'initiative', label: 'initiative' },
+    { id: 'backend', label: 'backend' },
+    { id: 'common-docs', label: 'common docs' },
+    { id: 'complex', label: 'complex' },
+    { id: 'fail1', label: 'fail1' },
+    { id: 'fail2', label: 'fail2' },
+    { id: 'fail3', label: 'fail3' },
+    { id: 'frontend', label: 'frontend' },
+    { id: 'ini', label: 'ini' },
+  ];
 
   const priorityFlags: Record<string, string> = {
     low: 'rgb(29, 78, 216)', // blue-700
@@ -73,24 +89,29 @@ export const Task: React.FC = () => {
     return [hours, minutes].filter(Boolean).join(' ');
   };
 
-  const [selectedSubtasks, setSelectedSubtasks] = useState<Set<string>>(
+  const [selectedSubtasks, setSelectedSubtasks] = useState<Set<number>>(
     new Set()
   );
-  const [selectedChecklistItems, setSelectedChecklistItems] = useState<
-    Set<string>
-  >(new Set());
-  const [task, setTask] = useState({
+  const [selectedChecklistItems, setSelectedChecklistItems] = useState<Set<string>>(new Set());
+
+  const [task, setTask] = useState<TaskType>({
     id: '1',
-    title: 'Implement new feature',
+    name: 'Implement new feature',
     description:
       'Create a new component for the dashboard that displays user statistics',
-    status: 'in_progress',
+    status: {
+      id:0,
+      name: 'In Progress',
+      color: 'bg-green-500',
+      category: 'development',
+    },
+    progress:50,
     priority: 'high',
     assignees: mockUsers,
     startDate: '2024-03-15T10:00:00.000Z',
     dueDate: '2024-03-20T15:00:00.000Z',
-    estimatedTime: 16,
-    timeSpent: 6.5,
+    estimatedTime: '16',
+    spendTime: '6.5',
     comments: [
       {
         id: '1',
@@ -99,8 +120,8 @@ export const Task: React.FC = () => {
         createdAt: '2024-03-15T10:00:00.000Z',
       },
     ],
-    tags: ['frontend', 'feature'],
-    subtasks: mockSubtasks,
+    tags: [{ id: 0, name: 'frontend', color: "" }, { id:1,name:'feature', color:"" }],
+    subTask: mockSubtasks,
     checklist: mockChecklist,
   });
 
@@ -121,8 +142,8 @@ export const Task: React.FC = () => {
   const handleChecklistToggle = (itemId: string) => {
     setTask({
       ...task,
-      checklist: task.checklist.map((item) =>
-        item.id === itemId ? { ...item, completed: !item.completed } : item
+      checklist: task.checklist?.map((item) =>
+        item.id === itemId ? { ...item, completed: !item.isCompleted } : item
       ),
     });
   };
@@ -131,11 +152,11 @@ export const Task: React.FC = () => {
     const { active, over } = event;
     if (over && active.id !== over.id) {
       setTask((task) => {
-        const oldIndex = task.subtasks.findIndex((t) => t.id === active.id);
-        const newIndex = task.subtasks.findIndex((t) => t.id === over.id);
+        const oldIndex = task.subTask.findIndex((t) => t.id === active.id);
+        const newIndex = task.subTask.findIndex((t) => t.id === over.id);
         return {
           ...task,
-          subtasks: arrayMove(task.subtasks, oldIndex, newIndex),
+          subtasks: arrayMove(task.subTask!, oldIndex, newIndex),
         };
       });
     }
@@ -157,7 +178,7 @@ export const Task: React.FC = () => {
 
   const handleSelectAllSubtasks = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.checked) {
-      setSelectedSubtasks(new Set(task.subtasks.map((st) => st.id)));
+      setSelectedSubtasks(new Set(task.subTask.map((st) => Number(st.id))));
     } else {
       setSelectedSubtasks(new Set());
     }
@@ -171,7 +192,7 @@ export const Task: React.FC = () => {
     }
   };
 
-  const handleSubtaskSelect = (id: string) => {
+  const handleSubtaskSelect = (id: number) => {
     const newSelected = new Set(selectedSubtasks);
     if (newSelected.has(id)) {
       newSelected.delete(id);
@@ -196,157 +217,200 @@ export const Task: React.FC = () => {
   };
 
   return (
-    <div className={' md:px-6 items-center'}>
-      <div className="space-y-0 mt-4">
+    <div className={'mx-20 my-10 items-center'}>
+      {/* Show the parent task title if this is a subtask */}
+      <div className="space-y-2">
+        { 
+          sampleTask.parentTask && (
+            <div className="flex items-center gap-1 hover:bg-accent w-fit rounded-xl px-2 py-[2px]">
+              <CornerLeftUp className="text-muted-foreground" size={14} />
+              <Link to="" className="text-muted-foreground">{sampleTask.parentTask.name}</Link>
+            </div>
+            
+          )
+        }
+        {/* Component to display Task Type | Task ID */}
+        <div className="flex items-center border border-accent rounded-lg w-min text-muted-foreground">
+          <div className="flex items-center px-1 border-r border-accent">
+            <IconCircleLetterT className="rounded-lg" size={16} />
+            <span className="px-2 capitalize">{sampleTask.type}</span>
+            <div>
+            <ContextMenu
+              width='w-fit'
+              trigger={
+                <Button
+                  variant="ghost"
+                  size="icon_sm"
+                  className="h-6 w-6 hover:bg-transparent"
+                >
+                  <ChevronDown />
+                </Button>
+              }
+              sections={taskTypeConfig}
+            />
+          </div>
+          </div>
+          <div>
+            <span className="px-2">{sampleTask.id}</span>
+          </div>
+        </div>
         {/* HEADER => TITLE */}
-        <div className="mb-4">
+        <div className="mb-4 flex items-center gap-2">
+          <IconVectorSpline className="text-black" size={16} />
           <Input
             type="text"
             value={sampleTask.name}
-            className="!text-2xl w-full !font-semibold tracking-tight bg-transparent border-none focus-visible:ring-0 focus-visible:ring-offset-0 px-0"
+            className="!text-3xl w-full !font-bold tracking-tight bg-transparent border-none focus-visible:ring-0 focus-visible:ring-offset-0 px-0"
           />
         </div>
-        {/* STATUSES */}
-        <TaskMetaRow
-          icon={<IconCircleDot className="text-base font-semibold" size={15} />}
-          label="Status"
-        >
-          <TaskStatusDialog>
-            <Button
-              variant="ghost"
-              size="sm"
-              className={cn(
-                'rounded text-white hover:text-white h-6 px-2 text-xs tracking-wide font-bold flex items-center',
-                sampleTask.status.color,
-                `hover:${sampleTask.status.color}`
-              )}
+        <div className="grid sm:grid-cols-1 md:grid-cols-2 gap-2">
+          {/* Column one contains Status, Dates, Time Estimates, Track Time, Relationships */}
+          <div className="space-y-1"> {/* Column 1 */}
+              {/* STATUSES */}
+            <TaskMetaRow
+              icon={<IconCircleDot className="text-base font-semibold" size={15} />}
+              label="Status"
             >
-              {sampleTask.status.name.toUpperCase()}
-              <span className="ml-2 pl-2 border-l border-white/40 flex items-center">
-                <ChevronRight className="w-4 h-4" />
-              </span>
-            </Button>
-          </TaskStatusDialog>
-          <Button
-            variant="ghost"
-            size="sm"
-            className={cn(
-              'h-6 px-2 rounded-[6px] border',
-              `hover:${sampleTask.status.color}`
-            )}
-          >
-            <IconCheck size={15} />
-          </Button>
-        </TaskMetaRow>
-
-        {/* START AND END DATES */}
-        <TaskMetaRow
-          icon={<IconCalendar className="text-base font-semibold" size={15} />}
-          label="Dates"
-          hover={enterDates}
-          onHoverChange={setEnterDates}
-        >
-          <DatePickerWithRange />
-        </TaskMetaRow>
-        {/* ASSIGNEES */}
-        <TaskMetaRow
-          icon={
-            <IconUserFilled className="text-base font-semibold" size={15} />
-          }
-          label="Assignees"
-          hover={enterAssignee}
-          onHoverChange={setEnterAssignee}
-        >
-          <div className="flex -space-x-2">
-            {sampleTask.assignees.map((assignee) => (
-              <AssigneeAvatar
-                key={assignee}
-                assignee={assignee}
-                enterAssignee={enterAssignee}
-                onRemove={() => {}}
-              />
-            ))}
-          </div>
-        </TaskMetaRow>
-        {/* PRIORITY */}
-        <TaskMetaRow
-          icon={
-            <IconFlagFilled className="text-base font-semibold" size={15} />
-          }
-          label="Priority"
-          hover={enterPriority}
-          onHoverChange={setEnterPriority}
-        >
-          <div className="flex -space-x-2">
-            {sampleTask.priority.length > 0 ? (
-              <div className="flex gap-2">
-                <IconFlagFilled
-                  size={19}
-                  color={priorityFlags[sampleTask.priority]}
+              <TaskStatusDialog>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className={cn(
+                    'rounded text-white hover:text-white h-6 px-2 text-xs tracking-wide font-bold flex items-center',
+                    sampleTask.status.color,
+                    `hover:${sampleTask.status.color}`
+                  )}
+                >
+                  {sampleTask.status.name.toUpperCase()}
+                  <span className="ml-2 pl-2 border-l border-white/40 flex items-center">
+                    <ChevronRight className="w-4 h-4" />
+                  </span>
+                </Button>
+              </TaskStatusDialog>
+              <Button
+                variant="ghost"
+                size="sm"
+                className={cn(
+                  'h-6 px-2 rounded-[6px] border',
+                  `hover:${sampleTask.status.color}`
+                )}
+              >
+                <IconCheck size={15} />
+              </Button>
+            </TaskMetaRow>
+            {/* START AND END DATES */}
+            <TaskMetaRow
+              icon={<IconCalendar className="text-base font-semibold" size={15} />}
+              label="Dates"
+              hover={enterDates}
+              onHoverChange={setEnterDates}
+            >
+              <DatePickerWithRange />
+            </TaskMetaRow>
+            {/* TIME ESTIMATE */}
+            <TaskMetaRow
+              icon={
+                <IconHourglassEmpty
+                  className={'text-base font-semibold'}
+                  size={15}
                 />
-                <span className="text-sm">
-                  {sampleTask.priority.toUpperCase()}
-                </span>
+              }
+              label={'Time Estimate'}
+              hover={enterEstimatedTime}
+              onHoverChange={setEnterEstimatedTime}
+            >
+              <div className="flex -space-x-2 ">
+                <TimeEstimateDropDown
+                  children={<span className="text-sm">Empty</span>}
+                />
               </div>
-            ) : (
-              <span className="text-sm text-muted-foreground">Empty</span>
-            )}
+            </TaskMetaRow>
+            {/* TRACK TIME */}
+            <TaskMetaRow
+              icon={
+                <IconHourglassEmpty
+                  className={'text-base font-semibold'}
+                  size={15}
+                />
+              }
+              label={'Time Track'}
+              hover={enterTrackTime}
+              onHoverChange={setEnterTrackTime}
+            >
+              {sampleTask.trackTime === '' ? (
+                <span className="text-base flex gap-2 items-center font-medium text-muted-foreground">
+                  <PlayCircle size={15} /> Add Time
+                </span>
+              ) : (
+                <span className="text-base font-regular">
+                  {formatTrackTime(sampleTask.trackTime)}
+                </span>
+              )}
+            </TaskMetaRow>
           </div>
-        </TaskMetaRow>
-        {/* TIME ESTIMATE */}
-        <TaskMetaRow
-          icon={
-            <IconHourglassEmpty
-              className={'text-base font-semibold'}
-              size={15}
-            />
-          }
-          label={'Time Estimate'}
-          hover={enterEstimatedTime}
-          onHoverChange={setEnterEstimatedTime}
-        >
-          <div className="flex -space-x-2 ">
-            <TimeEstimateDropDown
-              children={<span className="text-sm">Empty</span>}
-            />
+          <div className="space-y-1"> {/* Column 2 */}
+            {/* ASSIGNEES */}
+            <TaskMetaRow
+              icon={
+                <IconUserFilled className="text-base font-semibold" size={15} />
+              }
+              label="Assignees"
+              hover={enterAssignee}
+              onHoverChange={setEnterAssignee}
+            >
+              <div className="flex -space-x-2">
+                {sampleTask.assignees.map((assignee) => (
+                  <AssigneeAvatar
+                    key={assignee}
+                    assignee={assignee}
+                    enterAssignee={enterAssignee}
+                    onRemove={() => {}}
+                  />
+                ))}
+              </div>
+            </TaskMetaRow>
+            {/* PRIORITY */}
+            <TaskMetaRow
+              icon={
+                <IconFlagFilled className="text-base font-semibold" size={15} />
+              }
+              label="Priority"
+              hover={enterPriority}
+              onHoverChange={setEnterPriority}
+            >
+              <div className="flex -space-x-2">
+                {sampleTask.priority.length > 0 ? (
+                  <div className="flex gap-2">
+                    <IconFlagFilled
+                      size={19}
+                      color={priorityFlags[sampleTask.priority]}
+                    />
+                    <span className="text-sm">
+                      {sampleTask.priority.toUpperCase()}
+                    </span>
+                  </div>
+                ) : (
+                  <span className="text-sm text-muted-foreground">Empty</span>
+                )}
+              </div>
+            </TaskMetaRow>
+            {/* TAGS */}
+            <TaskMetaRow
+              icon={
+                <IconTagsFilled className={'text-base font-semibold'} size={15} />
+              }
+              label={'Tags'}
+              hover={enterTags}
+              onHoverChange={setEnterTags}
+            >
+              <TagDropdownWithSelection
+                availableTags={availableTags}
+                selectedTags={selectedTags}
+                setSelectedTags={setSelectedTags}
+              />
+            </TaskMetaRow>
           </div>
-        </TaskMetaRow>
-        {/* TRACK TIME */}
-        <TaskMetaRow
-          icon={
-            <IconHourglassEmpty
-              className={'text-base font-semibold'}
-              size={15}
-            />
-          }
-          label={'Time Track'}
-          hover={enterTrackTime}
-          onHoverChange={setEnterTrackTime}
-        >
-          {sampleTask.trackTime === '' ? (
-            <span className="text-base flex gap-2 items-center font-medium text-muted-foreground">
-              <PlayCircle size={15} /> Add Time
-            </span>
-          ) : (
-            <span className="text-base font-regular">
-              {formatTrackTime(sampleTask.trackTime)}
-            </span>
-          )}
-        </TaskMetaRow>
-        {/* TAGS */}
-        <TaskMetaRow
-          icon={
-            <IconTagsFilled className={'text-base font-semibold'} size={15} />
-          }
-          label={'Tags'}
-          onHoverChange={setEnterTags}
-        >
-          <TagDropdownWithSelection
-            availableTags={availableTags}
-            selectedTags={selectedTags}
-            setSelectedTags={setSelectedTags}
-          />
-        </TaskMetaRow>
+        </div>
       </div>
       <div className="mt-4">
         <div className="space-y-2">
@@ -355,7 +419,7 @@ export const Task: React.FC = () => {
             placeholder={"Start writing or type '/' for commands"}
             value={description}
             name={'task Description'}
-            onChange={(e) => setDescription(e.target.value)}
+            onChange={(e) => setDescription(e)}
           />
         </div>
       </div>
@@ -379,12 +443,12 @@ export const Task: React.FC = () => {
       <div className="mt-4">
         <Subtask
           task={task}
-          handleSelectAllSubtasks={handleSelectAllSubtasks}
+          onHandleSelectAllSubtasks={handleSelectAllSubtasks}
           selectedSubtasks={selectedSubtasks}
-          handleSubtaskDragEnd={handleSubtaskDragEnd}
+          onHandleSubtaskDragEnd={handleSubtaskDragEnd}
           onPressAddSubtask={onPressAddSubtask}
           sensors={sensors}
-          handleSubtaskSelect={handleSubtaskSelect}
+          onHandleSubtaskSelect={handleSubtaskSelect}
         />
       </div>
       <div className="mt-4">

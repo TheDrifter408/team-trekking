@@ -25,11 +25,19 @@ import {
 } from 'lucide-react';
 import { ShareTask } from '@/components/features/share-task.tsx';
 import MoveTask from '@/components/common/move-task.tsx';
+import { useNavigate } from 'react-router-dom';
 
 export const PageHeader = () => {
   const [openShareTask, setOpenShareTask] = useState<boolean>(false);
+
+  const navigate = useNavigate();
+
+  const onClickClose = () => {
+    navigate('/list');
+  }
+
   return (
-    <div className="h-[45px] bg-sidebar/80 border w-full flex items-center justify-between px-2">
+    <div className="py-2 bg-sidebar/80 border w-full flex items-center justify-between px-4">
       <TooltipProvider>
         <div className="flex items-center justify-between">
           <SidebarTrigger />
@@ -51,16 +59,16 @@ export const PageHeader = () => {
                 />
                 <BreadcrumbLink
                   href="/folder"
-                  className="text-primary font-medium text-sm"
+                  className="text-primary font-medium rounded-md p-1 hover:bg-accent"
                 >
                   Space Shuttle
                 </BreadcrumbLink>
               </BreadcrumbItem>
-              <Slash size={11} />
+              <Slash size={11} className="transform -rotate-[20deg]" />
               <BreadcrumbItem>
                 <BreadcrumbLink
                   href="/folder"
-                  className="text-primary font-medium text-sm"
+                  className="text-primary font-medium rounded-md p-1 hover:bg-accent"
                 >
                   Steps List
                 </BreadcrumbLink>
@@ -77,7 +85,7 @@ export const PageHeader = () => {
               }
             />
           </ToolTipContainer>
-          <ToolTipContainer text="Move to parent task">
+          <ToolTipContainer text="Add subtask to another list">
             <Button size="icon_sm" variant="ghost">
               <Plus />
             </Button>
@@ -100,7 +108,7 @@ export const PageHeader = () => {
               </Button>
             </ToolTipContainer>
             <ToolTipContainer text="Close window" side={'left'}>
-              <Button size="icon" variant="ghost">
+              <Button size="icon" variant="ghost" onClick={onClickClose}>
                 <X className="size-5 text-primary" />
               </Button>
             </ToolTipContainer>

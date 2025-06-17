@@ -9,6 +9,7 @@ export const taskNotificationUsers = [
     role: 'Workspace Owner',
     isWatching: true,
     avatar: 'https://api.dicebear.com/7.x/personas/svg?seed=alexjohnson',
+    read: true,
   },
   {
     id: 9,
@@ -17,6 +18,7 @@ export const taskNotificationUsers = [
     role: 'task Creator',
     isWatching: true,
     avatar: 'https://api.dicebear.com/7.x/personas/svg?seed=jawahiir',
+    read: false,
   },
   {
     id: 10,
@@ -25,6 +27,7 @@ export const taskNotificationUsers = [
     role: 'Admin',
     isWatching: true,
     avatar: 'https://api.dicebear.com/7.x/personas/svg?seed=mehedi',
+    read: true,
   },
   {
     id: 5,
@@ -33,6 +36,7 @@ export const taskNotificationUsers = [
     role: 'Member',
     isWatching: true,
     avatar: 'https://api.dicebear.com/7.x/personas/svg?seed=jameswilson',
+    read: false,
   },
   {
     id: 2,
@@ -41,6 +45,7 @@ export const taskNotificationUsers = [
     role: 'Member',
     isWatching: false,
     avatar: 'https://api.dicebear.com/7.x/personas/svg?seed=mariagarcia',
+    read: true,
   },
   {
     id: 3,
@@ -49,6 +54,7 @@ export const taskNotificationUsers = [
     role: 'Member',
     isWatching: true,
     avatar: 'https://api.dicebear.com/7.x/personas/svg?seed=davidpark',
+    read: false,
   },
   {
     id: 4,
@@ -57,8 +63,8 @@ export const taskNotificationUsers = [
     role: 'Member',
     isWatching: false,
     avatar: 'https://api.dicebear.com/7.x/personas/svg?seed=sarahwilliams',
+    read: true,
   },
-
   {
     id: 6,
     userName: 'Emily Chen',
@@ -66,6 +72,7 @@ export const taskNotificationUsers = [
     role: 'Member',
     isWatching: false,
     avatar: 'https://api.dicebear.com/7.x/personas/svg?seed=emilychen',
+    read: false,
   },
   {
     id: 7,
@@ -74,6 +81,7 @@ export const taskNotificationUsers = [
     role: 'Member',
     isWatching: true,
     avatar: 'https://api.dicebear.com/7.x/personas/svg?seed=michaelbrown',
+    read: true,
   },
   {
     id: 8,
@@ -82,8 +90,8 @@ export const taskNotificationUsers = [
     role: 'Member',
     isWatching: false,
     avatar: 'https://api.dicebear.com/7.x/personas/svg?seed=lisataylor',
+    read: false,
   },
-
   {
     id: 11,
     userName: 'Mike Tyson',
@@ -91,6 +99,7 @@ export const taskNotificationUsers = [
     role: 'Member',
     isWatching: false,
     avatar: 'https://api.dicebear.com/7.x/personas/svg?seed=tyson',
+    read: true,
   },
 ];
 
@@ -106,11 +115,16 @@ export const filterOptions = [
 export const sampleTask = {
   id: 1,
   name: 'Budget plan for summer vacation',
+  type: 'task',
   description:
     'Each Summer, Dcastalia celebrates their year mid success and takes the opportunity to recess and take a breather.',
   startDate: '',
   endDate: '',
   estimatedTime: '8',
+  parentTask: {
+    id:2,
+    name: 'Summer Vacation Planning',
+  },
   tags: ['budget', 'planning'],
   assignees: ['Tawakkul', 'Saidur Rahman', 'Polok'],
   priority: 'low',

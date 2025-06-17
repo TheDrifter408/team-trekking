@@ -28,6 +28,7 @@ import {
   MergeIcon,
   AlignVerticalDistributeStart,
   WandSparkles,
+  CircleDotIcon,
 } from 'lucide-react';
 import { MenuSection } from '@/types/interfaces/ContextMenu.ts';
 import { LABEL } from './appStrings';
@@ -456,4 +457,32 @@ export const boardTaskMenuConfig: MenuSection[] = [
       },
     ],
   },
+];
+
+// Task Type Configuration
+export const taskTypeConfig:MenuSection[] = [
+  {
+    items: [
+      {
+        icon:CircleDotIcon,
+        label: LABEL.TASK,
+        action:ACTION.CHANGE_TYPE_TO_TASK
+      },
+      {
+        icon: Disc2,
+        label: LABEL.MILESTONE,
+        action: ACTION.CHANGE_TYPE_TO_MILESTONE
+      },
+      {
+        icon: File,
+        label: LABEL.FORM_RESPONSE,
+        action: ACTION.CHANGE_TYPE_TO_FORM_RESPONSE
+      },
+      {
+        icon: Repeat2,
+        label: LABEL.BUG,
+        action: ACTION.CHANGE_TYPE_TO_BUG
+      }
+    ]
+  }
 ];
