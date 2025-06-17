@@ -64,7 +64,7 @@ const SidebarTrigger = forwardRef<HTMLButtonElement, SidebarTriggerProps>(
 
 SidebarTrigger.displayName = 'SidebarTrigger';
 
-export function TaskSidebar({ ...props }) {
+export const TaskSidebar = ({ ...props }) => {
   const [comment, setComment] = useState('');
   const [watching, setWatching] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
@@ -73,13 +73,13 @@ export function TaskSidebar({ ...props }) {
   const [notifications, setNotifications] = useState(taskNotificationUsers);
   const searchInputRef = useRef<HTMLInputElement>(null);
 
-  const handleSendComment = () => {
+  const onhandleSendComment = () => {
     if (comment.trim()) {
       setComment('');
     }
   };
 
-  const toggleSearch = (e:MouseEvent) => {
+  const onToggleSearch = (e:MouseEvent) => {
     e.stopPropagation();
     setShowSearch((prev) => !prev);
     if (!showSearch) {
@@ -93,7 +93,7 @@ export function TaskSidebar({ ...props }) {
     }
   };
 
-  const toggleFilter = (id:string) => {
+  const onToggleFilter = (id:string) => {
     setFilters(
       filters.map((filter) =>
         filter.id === id ? { ...filter, checked: !filter.checked } : filter
@@ -173,7 +173,7 @@ export function TaskSidebar({ ...props }) {
                 variant="ghost"
                 size="icon"
                 className="w-[30px] ring-none"
-                onClick={toggleSearch}
+                onClick={onToggleSearch}
                 data-search-btn
               >
                 <Search />
@@ -204,7 +204,7 @@ export function TaskSidebar({ ...props }) {
                 </DropdownMenuContent>
               </DropdownMenu>
               <TaskActivityFilters
-                toggleFilter={toggleFilter}
+                toggleFilter={onToggleFilter}
                 filters={filters}
               />
             </div>
@@ -275,7 +275,7 @@ export function TaskSidebar({ ...props }) {
             <Button
               variant="outline"
               className="p-4 bg-theme-main-dark text-white"
-              onClick={handleSendComment}
+              onClick={onhandleSendComment}
               disabled={!comment.trim()}
             >
               <span>Send</span>
