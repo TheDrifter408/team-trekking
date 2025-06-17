@@ -46,7 +46,7 @@ export const DataTable = ({ className = '' }: DataTableProps) => {
 
   return (
     <div
-      className={`rounded-md overflow-hidden flex flex-col ${className}`}
+      className={`rounded-md no-scrollbar w-full overflow-auto flex flex-col ${className}`}
       style={{ height: '100%' }}
     >
       <DataTableHeader table={table} />
