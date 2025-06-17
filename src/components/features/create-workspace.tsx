@@ -322,8 +322,8 @@ const ManageFeatures: React.FC<ManageFeaturesProps> = ({
       <h2 className="text-2xl sm:text-4xl text-content-default font-bold mb-6 sm:mb-4 text-center px-4">
         {LABEL.WHAT_WOULD_YOU_LIKE_TO_MANAGE}
       </h2>
-      <div className="h-full w-full flex items-center ">
-        <div className="h-48 w-full justify-center items-center flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-2">
+      <div className="h-full w-full flex items-center">
+        <div className="w-full flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:justify-center sm:items-center sm:gap-2">
           {manageOptions.map((option) => (
             <Button
               key={option}
@@ -414,7 +414,7 @@ const ManageTools: React.FC<ManageToolsProps> = ({
                 variant="outline"
                 onClick={() => onToggleTool(tool)}
                 className={cn(
-                  'w-full sm:w-auto h-12 sm:min-w-[160px] rounded-xl text-content-onboarding-secondary text-sm sm:text-base font-medium hover:shadow-lg transition-all duration-200',
+                  'w-full sm:w-auto h-12 rounded-xl text-content-onboarding-secondary text-sm sm:text-base font-medium hover:shadow-lg transition-all duration-200',
                   isSelected && ' border-theme-main shadow-theme-main shadow-sm'
                 )}
               >
@@ -452,7 +452,7 @@ const SelectFeatures: React.FC<SelectFeaturesProps> = ({
         {LABEL.WHICH_FEATURES_ARE_YOU_INTERESTED_IN}
       </h2>
       <div className="flex h-full w-full items-center">
-        <div className="w-full justify-center items-center flex flex-col sm:flex-row sm:flex-wrap gap-3 sm:gap-2">
+        <div className="w-full  justify-center items-center flex flex-col sm:flex-row sm:flex-wrap gap-3 sm:gap-2">
           {featureOptions.map((option) => {
             const isSelected = selectedFeatures.includes(option);
             return (
@@ -500,7 +500,7 @@ const NameWorkspace: React.FC<NameWorkspaceProps> = ({
       </h2>
       <div className="flex flex-col items-center justify-center h-full w-full">
         <Input
-          className="h-12 w-full max-w-[270px] !text-lg sm:!text-xl text-center mx-4"
+          className="!h-[62px] !w-[350px] !text-xl sm:!text-xl text-center mx-4"
           value={workspaceName}
           onChange={(e) => setWorkspaceName(e.target.value)}
         />
