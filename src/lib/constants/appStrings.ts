@@ -13,6 +13,9 @@ export const LABEL = {
   NORMAL: 'Normal',
   HIGH: 'High',
   URGENT: 'Urgent',
+  TASKS_SELECTED: 'Tasks selected',
+  ESC: 'ESC',
+  DESELECT_ALL: 'Deselect all',
   WHAT_WILL_YOU_USE_THIS_WORKSPACE_FOR: 'What will you use this workspace for?',
   WHAT_WOULD_YOU_LIKE_TO_MANAGE: 'What would you like to manage?',
   INVITE_PEOPLE_TO_YOUR_WORKSPACE: 'Invite people to your workspace',
@@ -163,5 +166,11 @@ export const LABEL = {
   YOU: 'You',
   UN_WATCH: 'Unwatch',
   SEARCH_WATCHER: 'Search Watchers...',
+  BACK: 'Back',
+  NEXT: 'Next',
+  FINISH: 'Finish',
+  TRY_THE_NAME_OF_YOUR_ORGANIZATION: 'Try the name of your organization',
+  DONT_WORRY_YOU_WILL_HAVE_ACCESS:
+    "Don't worry, you'll have access to all your data",
   DESCRIPTION: 'Description',
 };

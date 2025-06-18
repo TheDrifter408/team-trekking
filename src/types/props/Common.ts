@@ -112,7 +112,12 @@ export interface Checklist {
 export interface Assignee {
   id: number;
   name: string;
+  initials?:string;
+  role?:string;
   avatar?: string;
+  isWatching?:boolean;
+  read?:boolean;
+  lastActivity?:string;
 }
 export type TaskPriority =
   | typeof LABEL.LOW
@@ -184,18 +189,10 @@ export interface TaskActivityFiltersProps {
   filters: Filter[];
   toggleFilter: (filterId: string) => void;
 }
-
-interface TaskNotificationUsers {
-  id: number;
-  isWatching: boolean;
-  avatar: string;
-  userName: string;
-  lastActivity?: string;
-}
 export interface TaskActivityNotificationsProps {
   watching: boolean;
   setWatching: (watching: boolean) => void;
-  taskNotificationUsers: TaskNotificationUsers[];
+  taskNotificationUsers: Assignee[];
   markNotificationAsRead: (notificationId: number) => void;
 }
 

@@ -1,10 +1,11 @@
+import { Assignee } from '@/types/props/Common';
 import { taskStatuses } from './workspaceData';
 
 // Sample notification data
-export const taskNotificationUsers = [
+export const taskNotificationUsers:Assignee[] = [
   {
     id: 1,
-    userName: 'Alex Johnson',
+    name: 'Alex Johnson',
     initials: 'AJ',
     role: 'Workspace Owner',
     isWatching: true,
@@ -13,7 +14,7 @@ export const taskNotificationUsers = [
   },
   {
     id: 9,
-    userName: 'Jawahiir Nabhan ( You )',
+    name: 'Me',
     initials: 'JN',
     role: 'task Creator',
     isWatching: true,
@@ -23,7 +24,7 @@ export const taskNotificationUsers = [
   },
   {
     id: 10,
-    userName: 'Piash Mehedi',
+    name: 'Piash Mehedi',
     initials: 'PM',
     role: 'Admin',
     isWatching: true,
@@ -32,7 +33,7 @@ export const taskNotificationUsers = [
   },
   {
     id: 5,
-    userName: 'James Wilson',
+    name: 'James Wilson',
     initials: 'JW',
     role: 'Member',
     isWatching: true,
@@ -41,7 +42,7 @@ export const taskNotificationUsers = [
   },
   {
     id: 2,
-    userName: 'Maria Garcia',
+    name: 'Maria Garcia',
     initials: 'MG',
     role: 'Member',
     isWatching: false,
@@ -50,7 +51,7 @@ export const taskNotificationUsers = [
   },
   {
     id: 3,
-    userName: 'David Park',
+    name: 'David Park',
     initials: 'DP',
     role: 'Member',
     isWatching: true,
@@ -59,7 +60,7 @@ export const taskNotificationUsers = [
   },
   {
     id: 4,
-    userName: 'Sarah Williams',
+    name: 'Sarah Williams',
     initials: 'SW',
     role: 'Member',
     isWatching: false,
@@ -68,7 +69,7 @@ export const taskNotificationUsers = [
   },
   {
     id: 6,
-    userName: 'Emily Chen',
+    name: 'Emily Chen',
     initials: 'EC',
     role: 'Member',
     isWatching: false,
@@ -77,7 +78,7 @@ export const taskNotificationUsers = [
   },
   {
     id: 7,
-    userName: 'Michael Brown',
+    name: 'Michael Brown',
     initials: 'MB',
     role: 'Member',
     isWatching: true,
@@ -86,7 +87,7 @@ export const taskNotificationUsers = [
   },
   {
     id: 8,
-    userName: 'Lisa Taylor',
+    name: 'Lisa Taylor',
     initials: 'LT',
     role: 'Member',
     isWatching: false,
@@ -95,7 +96,7 @@ export const taskNotificationUsers = [
   },
   {
     id: 11,
-    userName: 'Mike Tyson',
+    name: 'Mike Tyson',
     initials: 'MT',
     role: 'Member',
     isWatching: false,
