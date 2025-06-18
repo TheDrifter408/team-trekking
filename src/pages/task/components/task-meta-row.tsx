@@ -43,17 +43,18 @@ export const TaskMetaRow = ({
           {children}
 
           {/* Cross icon that appears on hover */}
-          {hover && (
-            <Button
+          <Button
               size={'icon_sm'}
               variant={'ghost'}
               onClick={onHandleRemove}
-              className="ml-auto my-0 p-0 rounded-lg hover:bg-gray-200 transition-colors"
+              className={cn(
+                "ml-auto my-0 p-0 rounded-lg hover:bg-gray-200 transition-colors invisible",
+                hover ? 'visible' : 'invisible'
+              )}
               aria-label="Remove"
             >
               <IconX className="text-gray-500 hover:text-red-500" />
             </Button>
-          )}
         </div>
       </div>
     </div>
