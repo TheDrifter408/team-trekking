@@ -375,7 +375,7 @@ export const Task: React.FC = () => {
               <div className="flex -space-x-2 w-full p-0">
                 <Popover>
                   <PopoverTrigger asChild>
-                    <Button className="bg-transparent p-0 h-full text-muted-foreground text-sm flex items-center gap-0 justify-start w-full">
+                    <Button className="bg-transparent p-0 h-full text-muted-foreground text-sm flex items-center gap-0 justify-start w-full *:data-[slot=avatar]:ring-background -space-x-1 *:data-[slot=avatar]:ring-2">
                       {
                         selectedAssignees.length > 0 ?
                           (
@@ -384,7 +384,7 @@ export const Task: React.FC = () => {
                                 key={assignee.id}
                                 assignee={assignee}
                                 displayName={false}
-                                className='bg-muted rounded-full'
+                                className='bg-muted rounded-full '
                                 enterAssignee={enterAssignee}
                                 onRemove={() => onSelectAssignee(assignee)} />
                             ))
@@ -415,6 +415,7 @@ export const Task: React.FC = () => {
                                     key={assignee.id}
                                     assignee={assignee}
                                     displayName={true}
+                                    showAvatarRing={isSelected}
                                     className={cn('w-min text-nowrap')}
                                     enterAssignee={enterAssignee}
                                     onRemove={() => { }}

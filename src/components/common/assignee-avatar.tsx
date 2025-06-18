@@ -15,6 +15,7 @@ interface Props {
   onRemove: () => void;
   className?: string;
   isSelected?: boolean;
+  showAvatarRing?:boolean;
 }
 
 export const AssigneeAvatar = ({
@@ -24,6 +25,7 @@ export const AssigneeAvatar = ({
   displayName,
   className,
   isSelected,
+  showAvatarRing = false
 }: Props) => {
   const getInitials = (name: string) => {
     const names = name.split(' ');
@@ -51,7 +53,7 @@ export const AssigneeAvatar = ({
         <AvatarImage
           src={`https://api.dicebear.com/6.x/avataaars/svg?seed=${getSeed(assignee.name)}`}
           alt={assignee.name}
-          className={cn("ring-2 rounded-full", isSelected ? 'ring-purple-400' : 'ring-white')}
+          className={cn("ring-2 rounded-full", showAvatarRing ? 'ring-purple-400' : 'ring-white')}
         />
         <AvatarFallback className="bg-red-200 text-xs mx-auto p-1">
           {getInitials(assignee.name)}
