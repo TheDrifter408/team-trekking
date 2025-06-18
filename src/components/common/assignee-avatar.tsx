@@ -4,9 +4,11 @@ import {
   AvatarImage,
 } from '@/components/shadcn-ui/avatar.tsx';
 import { Button } from '@/components/shadcn-ui/button.tsx';
+import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/shadcn-ui/tooltip';
 import { IconX } from '@tabler/icons-react';
 import { cn } from '@/lib/utils.ts';
 import { Assignee } from '@/types/props/Common';
+import { RefreshCw } from 'lucide-react';
 
 interface Props {
   assignee: Assignee;
@@ -15,7 +17,7 @@ interface Props {
   onRemove: () => void;
   className?: string;
   isSelected?: boolean;
-  showAvatarRing?:boolean;
+  showAvatarRing?: boolean;
 }
 
 export const AssigneeAvatar = ({
@@ -46,19 +48,20 @@ export const AssigneeAvatar = ({
 
   return (
     <div className={cn(
-      "group relative z-0 hover:z-10 transition-all duration-200 flex gap-2 items-center",
+      "group relative transition-all duration-200 flex items-center gap-2 w-full",
       className ? className : '',
-      )}>
-      <Avatar className="h-6 w-6 border-2 border-white transition-all overflow-visible">
-        <AvatarImage
-          src={`https://api.dicebear.com/6.x/avataaars/svg?seed=${getSeed(assignee.name)}`}
-          alt={assignee.name}
-          className={cn("ring-2 rounded-full", showAvatarRing ? 'ring-purple-400' : 'ring-white')}
-        />
-        <AvatarFallback className="bg-red-200 text-xs mx-auto p-1">
-          {getInitials(assignee.name)}
-        </AvatarFallback>
-        <Button
+    )}>
+      <div className="flex items-center gap-2">
+        <Avatar className="h-6 w-6 border-2 border-white transition-all overflow-visible">
+          <AvatarImage
+            src={`https://api.dicebear.com/6.x/avataaars/svg?seed=${getSeed(assignee.name)}`}
+            alt={assignee.name}
+            className={cn("ring-2 rounded-full", showAvatarRing ? 'ring-purple-400' : 'ring-white')}
+          />
+          <AvatarFallback className="bg-red-200 text-xs mx-auto p-1">
+            {getInitials(assignee.name)}
+          </AvatarFallback>
+          <Button
             size="icon"
             variant="destructive"
             onClick={() => onRemove()}
@@ -72,8 +75,25 @@ export const AssigneeAvatar = ({
           >
             <IconX size={10} className="text-white" />
           </Button>
-      </Avatar>
-      <p className={cn(displayName ? 'block' : 'hidden')}>{assignee.name}</p>
+        </Avatar>
+        <p className={cn(displayName ? 'block' : 'hidden')}>{assignee.name}</p>
+      </div>
+      <div className='flex self-end gap-1'>
+        <Tooltip>
+          <TooltipTrigger>
+            <Button className={cn('bg-white h-min p-1 rounded-sm text-muted-foreground invisible group-hover:visible')}>Profile</Button>
+          </TooltipTrigger>
+          <TooltipContent>Profile</TooltipContent>
+        </Tooltip>
+        <Tooltip>
+          <TooltipTrigger>
+            <Button className={cn('bg-white h-min p-1 rounded-sm text-muted-foreground invisible group-hover:visible')}>
+              <RefreshCw />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>Remove and Reassign</TooltipContent>
+        </Tooltip>
+      </div>
     </div>
   );
 };

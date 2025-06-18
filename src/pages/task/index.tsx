@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { mockChecklist, mockSubtasks, mockUsers, sampleTask } from '@/mock';
 import { cn } from '@/lib/utils';
-import { ChevronDown, ChevronRight, CornerLeftUp, PlayCircle, Plus, RefreshCw } from 'lucide-react';
+import { ChevronDown, ChevronRight, CornerLeftUp, PlayCircle, Plus } from 'lucide-react';
 import {
   IconCalendar,
   IconCheck,
@@ -53,7 +53,6 @@ import { TagOption } from '@/types/interfaces/TagDropDown.ts';
 import TagDropdownWithSelection from '@/components/common/tag-dropdown.tsx';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/shadcn-ui/popover.tsx';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/shadcn-ui/command.tsx';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/shadcn-ui/tooltip.tsx';
 export const Task: React.FC = () => {
   const [enterDates, setEnterDates] = useState<boolean>(false);
   const [enterAssignee, setEnterAssignee] = useState<boolean>(false);
@@ -398,16 +397,16 @@ export const Task: React.FC = () => {
                       <CommandInput placeholder="Search Assignees..." className="p-1 ring-0 ring-offset-0 ring-inset focus:outline-0" />
                       <CommandList className=''>
                         <CommandEmpty>No user found</CommandEmpty>
-                        <CommandGroup 
+                        <CommandGroup
                           heading={<span className="font-medium text-black text-sm">Assignees</span>}
                           className='border-none'
-                          >
+                        >
                           {
                             task.assignees?.map((assignee) => {
                               const isSelected = selectedAssignees.includes(assignee);
                               return (
                                 <CommandItem
-                                  className='group flex items-center justify-between'
+                                  className=''
                                   key={assignee.id}
                                   value={assignee.name}
                                   onSelect={() => onSelectAssignee(assignee)}>
@@ -416,27 +415,11 @@ export const Task: React.FC = () => {
                                     assignee={assignee}
                                     displayName={true}
                                     showAvatarRing={isSelected}
-                                    className={cn('w-min text-nowrap')}
+                                    className={cn('justify-between')}
                                     enterAssignee={enterAssignee}
                                     onRemove={() => { }}
                                     isSelected={isSelected}
                                   />
-                                  <div className="flex gap-1">
-                                    <Tooltip>
-                                      <TooltipTrigger>
-                                        <Button className={cn('bg-white h-min p-1 rounded-sm text-muted-foreground invisible group-hover:visible')}>Profile</Button>
-                                      </TooltipTrigger>
-                                      <TooltipContent>Profile</TooltipContent>
-                                    </Tooltip>
-                                    <Tooltip>
-                                      <TooltipTrigger>
-                                        <Button className={cn('bg-white h-min p-1 rounded-sm text-muted-foreground invisible group-hover:visible')}>
-                                          <RefreshCw />
-                                        </Button>
-                                      </TooltipTrigger>
-                                      <TooltipContent>Remove and Reassign</TooltipContent>
-                                    </Tooltip>
-                                  </div>
                                 </CommandItem>
                               )
                             })
