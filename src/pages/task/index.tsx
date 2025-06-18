@@ -429,14 +429,6 @@ export const Task: React.FC = () => {
                     </Command>
                   </PopoverContent>
                 </Popover>
-                {/* {sampleTask.assignees.map((assignee) => (
-                  <AssigneeAvatar
-                    key={assignee}
-                    assignee={assignee}
-                    enterAssignee={enterAssignee}
-                    onRemove={() => { }}
-                  />
-                ))} */}
               </div>
             </TaskMetaRow>
             {/* PRIORITY */}
