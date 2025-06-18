@@ -21,9 +21,7 @@ export const ListCard = ({ isTableExpanded, onToggleExpand }: Props) => {
           )}
         />
       </Button>
-      <TaskTypeDropdown>
-        <span className={'text-lg font-medium'}>{LABEL.TASKS}</span>
-      </TaskTypeDropdown>
+      <span className={'text-lg font-medium'}>{LABEL.TASKS}</span>
       <span className={'font-medium text-content-tertiary text-base'}>15</span>
       <Button size={'icon_sm'} variant={'ghost'}>
         <Icon name={'menu03'} className={'text-content-tertiary font-medium'} />

@@ -1,7 +1,13 @@
 import React, { useState } from 'react';
 import { mockChecklist, mockSubtasks, mockUsers, sampleTask } from '@/mock';
 import { cn } from '@/lib/utils';
-import { ChevronDown, ChevronRight, CornerLeftUp, PlayCircle, Plus } from 'lucide-react';
+import {
+  ChevronDown,
+  ChevronRight,
+  CornerLeftUp,
+  PlayCircle,
+  Plus,
+} from 'lucide-react';
 import {
   IconCalendar,
   IconCheck,
@@ -93,7 +99,9 @@ export const Task: React.FC = () => {
   const [selectedSubtasks, setSelectedSubtasks] = useState<Set<number>>(
     new Set()
   );
-  const [selectedChecklistItems, setSelectedChecklistItems] = useState<Set<string>>(new Set());
+  const [selectedChecklistItems, setSelectedChecklistItems] = useState<
+    Set<string>
+  >(new Set());
 
   const [task, setTask] = useState<TaskType>({
     id: '1',
@@ -121,7 +129,10 @@ export const Task: React.FC = () => {
         createdAt: '2024-03-15T10:00:00.000Z',
       },
     ],
-    tags: [{ id: 0, name: 'frontend', color: "" }, { id: 1, name: 'feature', color: "" }],
+    tags: [
+      { id: 0, name: 'frontend', color: '' },
+      { id: 1, name: 'feature', color: '' },
+    ],
     subTask: mockSubtasks,
     checklist: mockChecklist,
   });
@@ -233,34 +244,29 @@ export const Task: React.FC = () => {
     <div className={'w-2/3 mx-auto my-10 items-center'}>
       <div className="space-y-4">
         {/* Show the parent task title if this is a subtask */}
-        {
-          sampleTask.parentTask && (
-            <div className="flex items-center gap-1 hover:bg-accent w-fit rounded-xl px-2 py-[2px]">
-              <CornerLeftUp className="text-muted-foreground" size={14} />
-              <Link to="" className="text-muted-foreground">{sampleTask.parentTask.name}</Link>
-            </div>
-
-          )
-        }
+        {sampleTask.parentTask && (
+          <div className="flex items-center gap-1 hover:bg-accent w-fit rounded-xl px-2 py-[2px]">
+            <CornerLeftUp className="text-muted-foreground" size={14} />
+            <Link to="" className="text-muted-foreground">
+              {sampleTask.parentTask.name}
+            </Link>
+          </div>
+        )}
         {/* Component to display Task Type | Task ID */}
         <div className="flex items-center border border-accent rounded-lg w-min text-muted-foreground">
           <div className="flex items-center px-1 border-r border-accent">
             <IconCircleLetterT className="rounded-lg" size={16} />
             <span className="px-2 capitalize">{sampleTask.type}</span>
             <div>
-              <ContextMenu
-                width='w-fit'
-                trigger={
-                  <Button
-                    variant="ghost"
-                    size="icon_sm"
-                    className="h-6 w-6 hover:bg-transparent"
-                  >
-                    <ChevronDown />
-                  </Button>
-                }
-                sections={taskTypeConfig}
-              />
+              <TaskTypeDropdown>
+                <Button
+                  variant="ghost"
+                  size="icon_sm"
+                  className="h-6 w-6 hover:bg-transparent"
+                >
+                  <ChevronDown />
+                </Button>
+              </TaskTypeDropdown>
             </div>
           </div>
           <div>
@@ -278,10 +284,14 @@ export const Task: React.FC = () => {
         </div>
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-2">
           {/* Column one contains Status, Dates, Time Estimates, Track Time, Relationships */}
-          <div className="space-y-1"> {/* Column 1 */}
+          <div className="space-y-1">
+            {' '}
+            {/* Column 1 */}
             {/* STATUSES */}
             <TaskMetaRow
-              icon={<IconCircleDot className="text-base font-semibold" size={15} />}
+              icon={
+                <IconCircleDot className="text-base font-semibold" size={15} />
+              }
               label="Status"
             >
               <TaskStatusDialog>
@@ -313,7 +323,9 @@ export const Task: React.FC = () => {
             </TaskMetaRow>
             {/* START AND END DATES */}
             <TaskMetaRow
-              icon={<IconCalendar className="text-base font-semibold" size={15} />}
+              icon={
+                <IconCalendar className="text-base font-semibold" size={15} />
+              }
               label="Dates"
               hover={enterDates}
               onHoverChange={setEnterDates}
@@ -361,7 +373,9 @@ export const Task: React.FC = () => {
               )}
             </TaskMetaRow>
           </div>
-          <div className="space-y-1"> {/* Column 2 */}
+          <div className="space-y-1">
+            {' '}
+            {/* Column 2 */}
             {/* ASSIGNEES */}
             <TaskMetaRow
               icon={
@@ -429,6 +443,14 @@ export const Task: React.FC = () => {
                     </Command>
                   </PopoverContent>
                 </Popover>
+                {/* {sampleTask.assignees.map((assignee) => (
+                  <AssigneeAvatar
+                    key={assignee}
+                    assignee={assignee}
+                    enterAssignee={enterAssignee}
+                    onRemove={() => { }}
+                  />
+                ))} */}
               </div>
             </TaskMetaRow>
             {/* PRIORITY */}
@@ -459,7 +481,10 @@ export const Task: React.FC = () => {
             {/* TAGS */}
             <TaskMetaRow
               icon={
-                <IconTagsFilled className={'text-base font-semibold'} size={15} />
+                <IconTagsFilled
+                  className={'text-base font-semibold'}
+                  size={15}
+                />
               }
               label={'Tags'}
               hover={enterTags}
@@ -476,7 +501,9 @@ export const Task: React.FC = () => {
       </div>
       <div className="mt-4">
         <div className="space-y-2">
-          <Label htmlFor="description" className='font-medium text-base'>Description</Label>
+          <Label htmlFor="description" className="font-medium text-base">
+            Description
+          </Label>
           <DocEditor
             placeholder={"Start writing or type '/' for commands"}
             value={description}
