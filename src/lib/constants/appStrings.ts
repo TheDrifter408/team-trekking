@@ -172,4 +172,5 @@ export const LABEL = {
   TRY_THE_NAME_OF_YOUR_ORGANIZATION: 'Try the name of your organization',
   DONT_WORRY_YOU_WILL_HAVE_ACCESS:
     "Don't worry, you'll have access to all your data",
+  DESCRIPTION: 'Description',
 };

@@ -58,6 +58,7 @@ import TagDropdownWithSelection from '@/components/common/tag-dropdown.tsx';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/shadcn-ui/popover.tsx';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/shadcn-ui/command.tsx';
 import TaskTypeDropdown from '@/components/common/task-type-dropdown.tsx';
+import { LABEL } from '@/lib/constants';
 export const Task: React.FC = () => {
   const [enterDates, setEnterDates] = useState<boolean>(false);
   const [enterAssignee, setEnterAssignee] = useState<boolean>(false);
@@ -501,7 +502,7 @@ export const Task: React.FC = () => {
       <div className="mt-4">
         <div className="space-y-2">
           <Label htmlFor="description" className="font-medium text-base">
-            Description
+            {LABEL.DESCRIPTION}
           </Label>
           <DocEditor
             placeholder={"Start writing or type '/' for commands"}

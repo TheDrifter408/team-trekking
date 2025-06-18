@@ -34,6 +34,10 @@ import {
   WandSparklesIcon,
 } from 'lucide-react';
 import { LABEL } from '@/lib/constants/appStrings.ts';
+import TaskDialog from '@/components/common/task-dialog.tsx';
+import { sampleProjectsData } from '@/mock';
+import * as React from 'react';
+import { useState } from 'react';
 
 interface MenuItemProps {
   children: React.ReactNode;
@@ -256,98 +260,123 @@ export const TaskDropdown: React.FC<TaskDropdownProps> = ({
   setOpen,
   children,
 }) => {
+  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
+
+  const onHandleOpenDialog = () => {
+    setIsDialogOpen(true);
+  };
+
+  const onHandleCloseDialog = (): void => {
+    setIsDialogOpen(false);
+  };
+
   return (
-    <DropdownMenu open={open} onOpenChange={setOpen}>
-      <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
-      <DropdownMenuContent
-        side="right"
-        align="start"
-        className="!w-[276px] px-[8px]"
-      >
-        {/* Top Action Buttons */}
-        <TopActionButtons onAction={() => {}} />
-
-        {/* Add Column */}
-        <CustomMenuItem
-          className={MENU_STYLES.menuItemWithMargin}
-          onClick={() => {}}
+    <div>
+      <DropdownMenu open={open} onOpenChange={setOpen}>
+        <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
+        <DropdownMenuContent
+          side="right"
+          align="start"
+          className="!w-[276px] px-[8px]"
         >
-          <Columns3 className={MENU_STYLES.icon} />
-          {LABEL.ADD_COLUMN}
-        </CustomMenuItem>
+          {/* Top Action Buttons */}
+          <TopActionButtons onAction={() => {}} />
 
-        <DropdownMenuSeparator className={MENU_STYLES.separator} />
+          {/* Add Column */}
+          <CustomMenuItem
+            className={MENU_STYLES.menuItemWithMargin}
+            onClick={() => {}}
+          >
+            <Columns3 className={MENU_STYLES.icon} />
+            {LABEL.ADD_COLUMN}
+          </CustomMenuItem>
 
-        {/* Rename */}
-        <CustomMenuItem className={MENU_STYLES.menuItem} onClick={() => {}}>
-          <Icon name="edit" className={MENU_STYLES.icon} />
-          {LABEL.RENAME}
-        </CustomMenuItem>
+          <DropdownMenuSeparator className={MENU_STYLES.separator} />
 
-        {/* Sub Menus */}
-        <AddToSubMenu onAddTo={() => {}} />
-        <ConvertToSubMenu onConvert={() => {}} />
-        <TaskTypeSubMenu onTaskType={() => {}} />
+          {/* Rename */}
+          <CustomMenuItem className={MENU_STYLES.menuItem} onClick={() => {}}>
+            <Icon name="edit" className={MENU_STYLES.icon} />
+            {LABEL.RENAME}
+          </CustomMenuItem>
 
-        {/* Action Items */}
-        <CustomMenuItem className={MENU_STYLES.menuItem} onClick={() => {}}>
-          <Copy className={MENU_STYLES.icon} />
-          {LABEL.DUPLICATE}
-        </CustomMenuItem>
+          {/* Sub Menus */}
+          <AddToSubMenu onAddTo={() => {}} />
+          <ConvertToSubMenu onConvert={() => {}} />
+          <TaskTypeSubMenu onTaskType={() => {}} />
 
-        <CustomMenuItem className={MENU_STYLES.menuItem} onClick={() => {}}>
-          <AlarmClockIcon className={MENU_STYLES.icon} />
-          {LABEL.REMIND_ME}
-        </CustomMenuItem>
+          {/* Action Items */}
+          <CustomMenuItem
+            className={MENU_STYLES.menuItem}
+            onClick={() => {
+              onHandleOpenDialog();
+              setOpen(false);
+            }}
+          >
+            <Copy className={MENU_STYLES.icon} />
+            {LABEL.DUPLICATE}
+          </CustomMenuItem>
 
-        <CustomMenuItem className={MENU_STYLES.menuItem} onClick={() => {}}>
-          <Mail className={MENU_STYLES.icon} />
-          {LABEL.SEND_EMAIL_TO_TASK}
-        </CustomMenuItem>
+          <CustomMenuItem className={MENU_STYLES.menuItem} onClick={() => {}}>
+            <AlarmClockIcon className={MENU_STYLES.icon} />
+            {LABEL.REMIND_ME}
+          </CustomMenuItem>
 
-        <CustomMenuItem className={MENU_STYLES.menuItem} onClick={() => {}}>
-          <MergeIcon className={`${MENU_STYLES.icon} rotate-90`} />
-          {LABEL.MERGE}
-        </CustomMenuItem>
+          <CustomMenuItem className={MENU_STYLES.menuItem} onClick={() => {}}>
+            <Mail className={MENU_STYLES.icon} />
+            {LABEL.SEND_EMAIL_TO_TASK}
+          </CustomMenuItem>
 
-        <CustomMenuItem className={MENU_STYLES.menuItem} onClick={() => {}}>
-          <Move className={MENU_STYLES.icon} />
-          {LABEL.MOVE}
-        </CustomMenuItem>
+          <CustomMenuItem className={MENU_STYLES.menuItem} onClick={() => {}}>
+            <MergeIcon className={`${MENU_STYLES.icon} rotate-90`} />
+            {LABEL.MERGE}
+          </CustomMenuItem>
 
-        <DropdownMenuSeparator />
+          <CustomMenuItem className={MENU_STYLES.menuItem} onClick={() => {}}>
+            <Move className={MENU_STYLES.icon} />
+            {LABEL.MOVE}
+          </CustomMenuItem>
 
-        <CustomMenuItem className={MENU_STYLES.menuItem} onClick={() => {}}>
-          <SectionIcon className={MENU_STYLES.icon} />
-          {LABEL.DEPENDENCIES}
-        </CustomMenuItem>
+          <DropdownMenuSeparator />
 
-        <TemplatesSubMenu onTemplate={() => {}} />
+          <CustomMenuItem className={MENU_STYLES.menuItem} onClick={() => {}}>
+            <SectionIcon className={MENU_STYLES.icon} />
+            {LABEL.DEPENDENCIES}
+          </CustomMenuItem>
 
-        <DropdownMenuSeparator />
+          <TemplatesSubMenu onTemplate={() => {}} />
 
-        <CustomMenuItem className={MENU_STYLES.menuItem} onClick={() => {}}>
-          <Archive className={MENU_STYLES.iconSmall} />
-          {LABEL.ARCHIVE}
-        </CustomMenuItem>
+          <DropdownMenuSeparator />
 
-        <CustomMenuItem
-          className={MENU_STYLES.menuItemDestructive}
-          onClick={() => {}}
-        >
-          <Trash2Icon className={MENU_STYLES.iconDestructive} />
-          {LABEL.DELETE}
-        </CustomMenuItem>
+          <CustomMenuItem className={MENU_STYLES.menuItem} onClick={() => {}}>
+            <Archive className={MENU_STYLES.iconSmall} />
+            {LABEL.ARCHIVE}
+          </CustomMenuItem>
 
-        <DropdownMenuSeparator />
+          <CustomMenuItem
+            className={MENU_STYLES.menuItemDestructive}
+            onClick={() => {}}
+          >
+            <Trash2Icon className={MENU_STYLES.iconDestructive} />
+            {LABEL.DELETE}
+          </CustomMenuItem>
 
-        <Button
-          className="w-full my-1.5 bg-theme-main-dark text-base"
-          onClick={() => {}}
-        >
-          {LABEL.SHARING_AND_PERMISSIONS}
-        </Button>
-      </DropdownMenuContent>
-    </DropdownMenu>
+          <DropdownMenuSeparator />
+
+          <Button
+            className="w-full my-1.5 bg-theme-main-dark text-base"
+            onClick={() => {}}
+          >
+            {LABEL.SHARING_AND_PERMISSIONS}
+          </Button>
+        </DropdownMenuContent>
+      </DropdownMenu>
+      <TaskDialog
+        isOpen={isDialogOpen}
+        onClose={onHandleCloseDialog}
+        initialTaskName="02.1 Creating Folder"
+        projects={sampleProjectsData}
+        defaultProject="final-initiative"
+      />
+    </div>
   );
 };
