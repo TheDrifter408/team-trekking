@@ -76,7 +76,7 @@ const TaskTypeDropdown: React.FC<TaskTypeDropdownProps> = ({
         <Card className="bg-white shadow-none border-0 rounded-2xl">
           <CardContent className="px-3">
             {/* Task Types Header */}
-            <div className="flex items-center gap-2 mb-4">
+            <div className="flex items-center gap-2 mb-2">
               <span className="text-gray-400 font-medium text-[12px] leading-none">
                 {LABEL.TASK_TYPES}
               </span>
