@@ -34,7 +34,6 @@ import { Icon } from '@/assets/icon-path.tsx';
 import { LABEL } from '@/lib/constants/appStrings.ts';
 import { ContextMenu } from '@/components/common/context-menu.tsx';
 import { spacesMenuConfig } from '@/lib/constants/staticData.ts';
-import TaskDialog from '@/components/common/task-dialog.tsx';
 import { WorkspaceSwitcher } from '@/components/layout/workspace-switcher.tsx';
 
 export const AppSidebar = ({
@@ -54,16 +53,6 @@ export const AppSidebar = ({
   const [privateAccess, setPrivateAccess] = useState(false);
   // Derived state
   const [initials, setInitials] = useState('');
-
-  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
-
-  const onHandleOpenDialog = (): void => {
-    setIsDialogOpen(true);
-  };
-
-  const onHandleCloseDialog = (): void => {
-    setIsDialogOpen(false);
-  };
 
   // Generate initials based on space name
   useEffect(() => {
@@ -135,11 +124,7 @@ export const AppSidebar = ({
                     }
                     sections={spacesMenuConfig}
                     width="w-64"
-                    onItemClick={() => {
-                      setTimeout(() => {
-                        onHandleOpenDialog();
-                      }, 10);
-                    }}
+                    onItemClick={() => {}}
                   />
                   <Button
                     size={'icon'}
@@ -233,13 +218,6 @@ export const AppSidebar = ({
         setInviteUserOpen={setInviteUserOpen}
         onInvite={onInviteUsers}
         maxInvites={10}
-      />
-      <TaskDialog
-        isOpen={isDialogOpen}
-        onClose={onHandleCloseDialog}
-        initialTaskName="02.1 Creating Folder"
-        projects={sampleProjectsData}
-        defaultProject="final-initiative"
       />
     </Sidebar>
   );

@@ -399,7 +399,7 @@ export const Task: React.FC = () => {
       <div className="mt-4">
         <div className="space-y-2">
           <Label htmlFor="description" className="font-medium text-base">
-            Description
+            {LABEL.DESCRIPTION}
           </Label>
           <DocEditor
             placeholder={"Start writing or type '/' for commands"}
