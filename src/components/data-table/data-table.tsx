@@ -63,12 +63,7 @@ export const DataTable = ({ className = '' }: DataTableProps) => {
           activeDialogRowId={activeDialogRowId}
         />
         <div className="justify-center py-[10px] items-center flex">
-          {selectedCount > 0 && (
-            <FloatingBar
-              selectedCount={selectedCount}
-              selectRows={Array.from(selectedRows)}
-            />
-          )}
+          {selectedCount > 0 && <FloatingBar selectedCount={selectedCount} />}
         </div>
       </div>
     </>

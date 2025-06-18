@@ -1,3 +1,4 @@
+import React, { forwardRef } from 'react';
 import { useDataTableStore } from '@/stores/zustand/data-table-store';
 import { Icon } from '@/assets/icon-path';
 import { Button } from '@/components/shadcn-ui/button';
@@ -7,15 +8,15 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/shadcn-ui/tooltip';
+import TaskStatusDialog from '@/components/common/task-status-dialog.tsx';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect } from 'react';
 
 interface Props {
-  selectRows: string[];
   selectedCount: number;
 }
 
-export const FloatingBar = ({ selectRows, selectedCount }: Props) => {
+export const FloatingBar = ({ selectedCount }: Props) => {
   const removeAllRows = useDataTableStore((state) => state.removeAllRows);
 
   useEffect(() => {
@@ -74,8 +75,10 @@ export const FloatingBar = ({ selectRows, selectedCount }: Props) => {
               </Tooltip>
             </TooltipProvider>
             <div className="flex ">
-              <ActionButton text={'Status'} icon={'status3'} />
-              <ActionButton text={'Assignee'} icon={'useradd'} />
+              <TaskStatusDialog>
+                <ActionButton text={'Status'} icon={'status3'} />
+              </TaskStatusDialog>
+              <ActionButton text={'Assignees'} icon={'useradd'} />
               <ActionButton text={'Dates'} icon={'calendar'} />
               <ActionButton text={'Move/Add'} icon={'move'} />
               <ActionButton text={''} icon={'duplicate'} />
@@ -89,15 +92,24 @@ export const FloatingBar = ({ selectRows, selectedCount }: Props) => {
   );
 };
 
-const ActionButton = ({ text, icon }: { text: string; icon: any }) => {
-  return (
-    <Button
-      className={
-        'text-lg flex text-gray-300 items-center bg-white bg-opacity-0 hover:bg-opacity-[0.134] '
-      }
-    >
-      <Icon name={icon} className={'size-5'} />
-      {text}
-    </Button>
-  );
-};
+interface ActionButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  text: string;
+  icon?: React.ReactNode;
+}
+
+const ActionButton = forwardRef<HTMLButtonElement, ActionButtonProps>(
+  ({ text, icon, ...props }, ref) => {
+    return (
+      <Button
+        ref={ref}
+        type="button"
+        {...props}
+        className="text-lg text-gray-300 rounded hover:bg-white bg:opacity-0 hover:bg-opacity-[0.135] flex items-center"
+      >
+        <Icon name={icon} className={'size-5'} />
+        {text}
+      </Button>
+    );
+  }
+);
