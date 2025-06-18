@@ -10,6 +10,7 @@ import { Columns } from '@/components/data-table/columns';
 import { mockTasks } from '@/mock';
 import { DataTableHeader } from './data-table-header';
 import { DataTableBody } from './data-table-body.tsx';
+import { FloatingBar } from './floating-bar.tsx';
 import { DataTableProps } from '@/types/props/DataTableProps.ts';
 
 export const DataTable = ({ className = '' }: DataTableProps) => {
@@ -38,24 +39,33 @@ export const DataTable = ({ className = '' }: DataTableProps) => {
     },
   });
 
-  setTable(table);
+  useEffect(() => {
+    setTable(table);
+  }, [table, setTable]);
 
   // TODO: Hover states using zustand + context, hence not necessary to be in the parent. Manage from child
   const setHoveredRowId = useDataTableStore((s) => s.setHoveredRowId);
   const activeDialogRowId = useDataTableStore((s) => s.activeDialogRowId);
 
+  const selectedRows = useDataTableStore((s) => s.selectedRowIds);
+  const selectedCount = selectedRows.size;
   return (
-    <div
-      className={`rounded-md no-scrollbar w-full overflow-auto flex flex-col ${className}`}
-      style={{ height: '100%' }}
-    >
-      <DataTableHeader table={table} />
-      <DataTableBody
-        table={table}
-        parentRef={parentRef}
-        onRowHover={setHoveredRowId}
-        activeDialogRowId={activeDialogRowId}
-      />
-    </div>
+    <>
+      <div
+        className={`rounded-md no-scrollbar w-full overflow-auto  flex flex-col ${className}`}
+        style={{ height: '100%' }}
+      >
+        <DataTableHeader table={table} />
+        <DataTableBody
+          table={table}
+          parentRef={parentRef}
+          onRowHover={setHoveredRowId}
+          activeDialogRowId={activeDialogRowId}
+        />
+        <div className="justify-center py-[10px] items-center flex">
+          {selectedCount > 0 && <FloatingBar selectedCount={selectedCount} />}
+        </div>
+      </div>
+    </>
   );
 };

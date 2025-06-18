@@ -134,4 +134,4 @@ export const generateTasks = (count: number, maxDepth = 3): Task[] => {
   return Array.from({ length: count }).map(() => generateTask(1, maxDepth));
 };
 
-export const mockTasks: Task[] = generateTasks(100, 3);
+export const mockTasks: Task[] = generateTasks(10, 3);

@@ -16,6 +16,7 @@ interface IDataTableStore {
   toggleAllRows: () => void;
   table?: Table<unknown>;
   setTable: (table: Table<any>) => void;
+  removeAllRows: () => void;
 }
 
 const getDefaultState = (): IDataTableStore => ({
@@ -28,6 +29,7 @@ const getDefaultState = (): IDataTableStore => ({
   toggleAllRows: () => {},
   table: undefined,
   setTable: (table: Table<any>) => {},
+  removeAllRows: () => {},
 });
 
 export const createDataTableStore = (
@@ -55,6 +57,12 @@ export const createDataTableStore = (
       toggleAllRows: () => {
         set((state) => ({
           isAllRowSelected: !state.isAllRowSelected,
+          selectedRowIds: new Set(),
+        }));
+      },
+      removeAllRows: () => {
+        set((state) => ({
+          isAllRowSelected: false,
           selectedRowIds: new Set(),
         }));
       },
