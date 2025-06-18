@@ -1,10 +1,4 @@
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/shadcn-ui/tooltip.tsx';
-import {
   Avatar,
   AvatarFallback,
   AvatarImage,
@@ -12,17 +6,24 @@ import {
 import { Button } from '@/components/shadcn-ui/button.tsx';
 import { IconX } from '@tabler/icons-react';
 import { cn } from '@/lib/utils.ts';
+import { Assignee } from '@/types/props/Common';
 
 interface Props {
-  assignee: string;
+  assignee: Assignee;
   enterAssignee?: boolean;
-  onRemove: (id: number) => void;
+  displayName: boolean;
+  onRemove: () => void;
+  className?: string;
+  isSelected?: boolean;
 }
 
 export const AssigneeAvatar = ({
   assignee,
   enterAssignee,
   onRemove,
+  displayName,
+  className,
+  isSelected,
 }: Props) => {
   const getInitials = (name: string) => {
     const names = name.split(' ');
@@ -42,43 +43,35 @@ export const AssigneeAvatar = ({
   };
 
   return (
-    <TooltipProvider>
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <div className="group relative z-0 hover:z-10 transition-all duration-200">
-            <Avatar className="h-6 w-6 border-2 border-white group-hover:ring-2 group-hover:ring-purple-300 transition-all">
-              <AvatarImage
-                src={`https://api.dicebear.com/6.x/avataaars/svg?seed=${getSeed(assignee)}`}
-                alt={assignee}
-              />
-              <AvatarFallback className="bg-accent text-xs">
-                {getInitials(assignee)}
-              </AvatarFallback>
-            </Avatar>
-            {enterAssignee && (
-              <Button
-                size="icon"
-                variant="destructive"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onRemove(Number(assignee));
-                }}
-                className={cn(
-                  'absolute -top-2 -right-2 h-4 w-4 p-0 rounded-full',
-                  'opacity-0 group-hover:opacity-100 transition-opacity',
-                  'flex items-center justify-center shadow-md',
-                  'focus:outline-none focus:ring-2 focus:ring-offset-1'
-                )}
-              >
-                <IconX size={10} className="text-white" />
-              </Button>
+    <div className={cn(
+      "group relative z-0 hover:z-10 transition-all duration-200 flex gap-2 items-center",
+      className ? className : '',
+      )}>
+      <Avatar className="h-6 w-6 border-2 border-white transition-all overflow-visible">
+        <AvatarImage
+          src={`https://api.dicebear.com/6.x/avataaars/svg?seed=${getSeed(assignee.name)}`}
+          alt={assignee.name}
+          className={cn("ring-2 rounded-full", isSelected ? 'ring-purple-400' : 'ring-white')}
+        />
+        <AvatarFallback className="bg-red-200 text-xs mx-auto p-1">
+          {getInitials(assignee.name)}
+        </AvatarFallback>
+        <Button
+            size="icon"
+            variant="destructive"
+            onClick={() => onRemove()}
+            className={cn(
+              'absolute -top-2 -right-2 h-4 w-4 p-0 rounded-full',
+              enterAssignee && isSelected ? 'visible' : 'invisible',
+              'opacity-0 group-hover:opacity-100 transition-opacity',
+              'flex items-center justify-center shadow-md',
+              'focus:outline-none focus:ring-2 focus:ring-offset-1'
             )}
-          </div>
-        </TooltipTrigger>
-        <TooltipContent>
-          <p>{assignee}</p>
-        </TooltipContent>
-      </Tooltip>
-    </TooltipProvider>
+          >
+            <IconX size={10} className="text-white" />
+          </Button>
+      </Avatar>
+      <p className={cn(displayName ? 'block' : 'hidden')}>{assignee.name}</p>
+    </div>
   );
 };

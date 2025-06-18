@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { mockChecklist, mockSubtasks, mockUsers, sampleTask } from '@/mock';
 import { cn } from '@/lib/utils';
-import { ChevronDown, ChevronRight, CornerLeftUp, PlayCircle, Plus } from 'lucide-react';
+import { ChevronDown, ChevronRight, CornerLeftUp, PlayCircle, Plus, RefreshCw } from 'lucide-react';
 import {
   IconCalendar,
   IconCheck,
@@ -48,9 +48,12 @@ import TimeEstimateDropDown from '@/components/common/estimate-time-dropdown.tsx
 import { Link } from 'react-router-dom';
 import { ContextMenu } from '@/components/common/context-menu.tsx';
 import { taskTypeConfig } from '@/lib/constants/staticData.ts';
-import { Task as TaskType } from '@/types/props/Common.ts';
+import { Assignee, Task as TaskType } from '@/types/props/Common.ts';
 import { TagOption } from '@/types/interfaces/TagDropDown.ts';
 import TagDropdownWithSelection from '@/components/common/tag-dropdown.tsx';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/shadcn-ui/popover.tsx';
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/shadcn-ui/command.tsx';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/shadcn-ui/tooltip.tsx';
 export const Task: React.FC = () => {
   const [enterDates, setEnterDates] = useState<boolean>(false);
   const [enterAssignee, setEnterAssignee] = useState<boolean>(false);
@@ -124,8 +127,20 @@ export const Task: React.FC = () => {
     checklist: mockChecklist,
   });
 
+  const [selectedAssignees, setSelectedAssignees] = useState<Assignee[]>([]);
   //const [isAddTask, setIsAddTask] = useState<boolean>(false);
   //const [isAddChecklist, setIsAddChecklist] = useState<boolean>(false);
+
+  const onSelectAssignee = (assignee: Assignee) => {
+    const isSelected = selectedAssignees.filter((a) => a.id === assignee.id);
+    if (isSelected.length > 0) {
+      const newAssignees = selectedAssignees.filter((a) => a.id !== assignee.id);
+      setSelectedAssignees(newAssignees);
+    } else {
+      setSelectedAssignees([...selectedAssignees, assignee]);
+    }
+
+  }
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -357,15 +372,87 @@ export const Task: React.FC = () => {
               hover={enterAssignee}
               onHoverChange={setEnterAssignee}
             >
-              <div className="flex -space-x-2">
-                {sampleTask.assignees.map((assignee) => (
+              <div className="flex -space-x-2 w-full p-0">
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button className="bg-transparent p-0 h-full text-muted-foreground text-sm flex items-center gap-0 justify-start w-full">
+                      {
+                        selectedAssignees.length > 0 ?
+                          (
+                            selectedAssignees.map((assignee) => (
+                              <AssigneeAvatar
+                                key={assignee.id}
+                                assignee={assignee}
+                                displayName={false}
+                                className='bg-muted rounded-full'
+                                enterAssignee={enterAssignee}
+                                onRemove={() => onSelectAssignee(assignee)} />
+                            ))
+                          ) :
+                          <span className="block px-1 h-full text-base">No Assignees</span>
+                      }
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className='mt-2 p-1'>
+                    <Command className='py-1'>
+                      <CommandInput placeholder="Search Assignees..." className="p-1 ring-0 ring-offset-0 ring-inset focus:outline-0" />
+                      <CommandList className=''>
+                        <CommandEmpty>No user found</CommandEmpty>
+                        <CommandGroup 
+                          heading={<span className="font-medium text-black text-sm">Assignees</span>}
+                          className='border-none'
+                          >
+                          {
+                            task.assignees?.map((assignee) => {
+                              const isSelected = selectedAssignees.includes(assignee);
+                              return (
+                                <CommandItem
+                                  className='group flex items-center justify-between'
+                                  key={assignee.id}
+                                  value={assignee.name}
+                                  onSelect={() => onSelectAssignee(assignee)}>
+                                  <AssigneeAvatar
+                                    key={assignee.id}
+                                    assignee={assignee}
+                                    displayName={true}
+                                    className={cn('w-min text-nowrap')}
+                                    enterAssignee={enterAssignee}
+                                    onRemove={() => { }}
+                                    isSelected={isSelected}
+                                  />
+                                  <div className="flex gap-1">
+                                    <Tooltip>
+                                      <TooltipTrigger>
+                                        <Button className={cn('bg-white h-min p-1 rounded-sm text-muted-foreground invisible group-hover:visible')}>Profile</Button>
+                                      </TooltipTrigger>
+                                      <TooltipContent>Profile</TooltipContent>
+                                    </Tooltip>
+                                    <Tooltip>
+                                      <TooltipTrigger>
+                                        <Button className={cn('bg-white h-min p-1 rounded-sm text-muted-foreground invisible group-hover:visible')}>
+                                          <RefreshCw />
+                                        </Button>
+                                      </TooltipTrigger>
+                                      <TooltipContent>Remove and Reassign</TooltipContent>
+                                    </Tooltip>
+                                  </div>
+                                </CommandItem>
+                              )
+                            })
+                          }
+                        </CommandGroup>
+                      </CommandList>
+                    </Command>
+                  </PopoverContent>
+                </Popover>
+                {/* {sampleTask.assignees.map((assignee) => (
                   <AssigneeAvatar
                     key={assignee}
                     assignee={assignee}
                     enterAssignee={enterAssignee}
                     onRemove={() => { }}
                   />
-                ))}
+                ))} */}
               </div>
             </TaskMetaRow>
             {/* PRIORITY */}
