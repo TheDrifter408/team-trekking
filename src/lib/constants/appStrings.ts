@@ -163,4 +163,5 @@ export const LABEL = {
   YOU: 'You',
   UN_WATCH: 'Unwatch',
   SEARCH_WATCHER: 'Search Watchers...',
+  DESCRIPTION: 'Description',
 };
