@@ -81,8 +81,14 @@ import CalendarIcon from '@/assets/icons/calender-icon.svg?react';
 import CalendarAddIcon from '@/assets/icons/calendar-add.svg?react';
 
 import TimeEstimationIcon from '@/assets/icons/estimation-icon.svg?react';
+import MoveIcon from '@/assets/icons/move-task.svg?react';
+import DuplicateIcon from '@/assets/icons/duplicate-icon.svg?react';
+import TrashIcon from '@/assets/icons/trash-icon.svg?react';
 
 const iconPaths = {
+  trash: TrashIcon,
+  move: MoveIcon,
+  duplicate: DuplicateIcon,
   timeestimation: TimeEstimationIcon,
   calendar: CalendarIcon,
   calendaradd: CalendarAddIcon,
