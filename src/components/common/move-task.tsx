@@ -1,4 +1,4 @@
-import React, { FC, ReactNode, useState } from 'react';
+import React, { FC, ReactNode, useState, useMemo } from 'react';
 import { Search, Plus, Check, ChevronDown, ChevronRight } from 'lucide-react';
 import { Input } from '@/components/shadcn-ui/input';
 import { Button } from '@/components/shadcn-ui/button';
@@ -65,6 +65,48 @@ const MoveTask: FC<NavigationDropdownProps> = ({
 
   const [searchQuery, setSearchQuery] = useState<string>('');
 
+  // Filter data based on search query
+  const filteredData = useMemo(() => {
+    if (!searchQuery.trim()) {
+      return data;
+    }
+
+    const query = searchQuery.toLowerCase();
+
+    // Filter recents
+    const filteredRecents = data.recents.filter((item) =>
+      item.label.toLowerCase().includes(query)
+    );
+
+    // Filter spaces and their children
+    const filteredSpaces = data.spaces.reduce<SpaceItem[]>((acc, space) => {
+      const spaceMatches = space.label.toLowerCase().includes(query);
+      const filteredChildren =
+        space.children?.filter((child) =>
+          child.label.toLowerCase().includes(query)
+        ) || [];
+
+      if (spaceMatches || filteredChildren.length > 0) {
+        acc.push({
+          ...space,
+          children: filteredChildren,
+          // Auto-expand spaces when searching and they have matching children
+          isExpanded: filteredChildren.length > 0 ? true : space.isExpanded,
+        });
+      }
+
+      return acc;
+    }, []);
+
+    return {
+      personalList: data.personalList.label.toLowerCase().includes(query)
+        ? data.personalList
+        : null,
+      recents: filteredRecents,
+      spaces: filteredSpaces,
+    };
+  }, [data, searchQuery]);
+
   const onToggleSpace = (spaceId: string, event: React.MouseEvent): void => {
     event.preventDefault();
     event.stopPropagation();
@@ -109,7 +151,9 @@ const MoveTask: FC<NavigationDropdownProps> = ({
 
   const renderSpaceItem = (space: SpaceItem): JSX.Element => {
     const IconComponent = space.icon;
-    const isExpanded = expandedSpaces[space.id] || false;
+    const isExpanded = searchQuery
+      ? space.isExpanded
+      : expandedSpaces[space.id] || space.isExpanded || false;
     const hasChildren = space.children && space.children.length > 0;
 
     return (
@@ -160,7 +204,6 @@ const MoveTask: FC<NavigationDropdownProps> = ({
 
   return (
     <div className="max-w-4xl mx-auto">
-      {/* Demo Header */}
       {/* Navigation Dropdown */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>{child}</DropdownMenuTrigger>
@@ -183,44 +226,68 @@ const MoveTask: FC<NavigationDropdownProps> = ({
           <div className="max-h-96 overflow-y-auto">
             <div className="p-2 space-y-1">
               {/* Personal List */}
-              <DropdownMenuItem
-                className="flex items-center gap-3 p-3 cursor-pointer"
-                onClick={data.personalList.onClick}
-              >
-                <data.personalList.icon className="h-4 w-4" />
-                <span className="font-medium">{data.personalList.label}</span>
-              </DropdownMenuItem>
+              {filteredData.personalList && (
+                <>
+                  <DropdownMenuItem
+                    className="flex items-center gap-3 p-3 cursor-pointer"
+                    onClick={filteredData.personalList.onClick}
+                  >
+                    <filteredData.personalList.icon className="h-4 w-4" />
+                    <span className="font-medium">
+                      {filteredData.personalList.label}
+                    </span>
+                  </DropdownMenuItem>
 
-              <DropdownMenuSeparator />
+                  <DropdownMenuSeparator />
+                </>
+              )}
 
               {/* Recents Section */}
-              <DropdownMenuLabel className="text-xs font-medium text-gray-500 uppercase tracking-wide px-3 py-2">
-                Recents
-              </DropdownMenuLabel>
+              {filteredData.recents.length > 0 && (
+                <>
+                  <DropdownMenuLabel className="text-xs font-medium text-gray-500 uppercase tracking-wide px-3 py-2">
+                    Recents
+                  </DropdownMenuLabel>
 
-              {data.recents.map((item) => renderMenuItem(item))}
+                  {filteredData.recents.map((item) => renderMenuItem(item))}
 
-              <DropdownMenuSeparator />
+                  <DropdownMenuSeparator />
+                </>
+              )}
 
               {/* Spaces Section */}
-              <div className="px-3 py-2">
-                <div className="flex items-center justify-between">
-                  <DropdownMenuLabel className="text-xs font-medium text-gray-500 uppercase tracking-wide p-0">
-                    Spaces
-                  </DropdownMenuLabel>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-5 w-5 p-0 bg-gray-100 hover:bg-gray-100"
-                    onClick={onHandleAddSpace}
-                  >
-                    <Plus className="h-3 w-3" />
-                  </Button>
-                </div>
-              </div>
+              {filteredData.spaces.length > 0 && (
+                <>
+                  <div className="px-3 py-2">
+                    <div className="flex items-center justify-between">
+                      <DropdownMenuLabel className="text-xs font-medium text-gray-500 uppercase tracking-wide p-0">
+                        Spaces
+                      </DropdownMenuLabel>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-5 w-5 p-0 bg-gray-100 hover:bg-gray-100"
+                        onClick={onHandleAddSpace}
+                      >
+                        <Plus className="h-3 w-3" />
+                      </Button>
+                    </div>
+                  </div>
 
-              {/* Render all spaces */}
-              {data.spaces.map((space) => renderSpaceItem(space))}
+                  {/* Render all spaces */}
+                  {filteredData.spaces.map((space) => renderSpaceItem(space))}
+                </>
+              )}
+
+              {/* No results message */}
+              {searchQuery &&
+                !filteredData.personalList &&
+                filteredData.recents.length === 0 &&
+                filteredData.spaces.length === 0 && (
+                  <div className="p-4 text-center text-gray-500 text-sm">
+                    No results found for "{searchQuery}"
+                  </div>
+                )}
             </div>
           </div>
         </DropdownMenuContent>
