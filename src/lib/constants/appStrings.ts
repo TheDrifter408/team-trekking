@@ -173,4 +173,5 @@ export const LABEL = {
   DONT_WORRY_YOU_WILL_HAVE_ACCESS:
     "Don't worry, you'll have access to all your data",
   DESCRIPTION: 'Description',
+  WATCH: 'Watch',
 };
