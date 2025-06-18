@@ -27,15 +27,14 @@ export const TaskMetaRow = ({
     }
   };
   return (
-    <div className="flex w-full items-center gap-2">
-      <div className="w-1/5 flex items-center gap-2">
-        {icon}
-        <span className="text-base">{label}</span>
+    <div className="flex md:w-full lg:w-4/5 items-center gap-2">
+      <div className="flex items-center gap-2">
+        <span className="text-base flex items-center gap-2 flex-nowrap text-nowrap">{icon}{label}</span>
       </div>
       <div className="relative flex w-4/5">
         <div
           className={cn(
-            'flex w-full h-8 items-center gap-1 px-1 py-[2px] rounded-lg transition-colors',
+            'flex min-w-full h-8 items-center flex-nowrap gap-1 px-1 py-[2px] rounded-lg transition-colors',
             hover ? 'bg-gray-100' : ''
           )}
           onMouseEnter={() => onHoverChange?.(true)}

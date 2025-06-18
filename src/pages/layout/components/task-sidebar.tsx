@@ -23,7 +23,6 @@ import {
 import { Textarea } from '@/components/shadcn-ui/textarea.tsx';
 import { Button } from '@/components/shadcn-ui/button.tsx';
 import { cn } from '@/lib/utils.ts';
-import { Separator } from '@/components/shadcn-ui/separator.tsx';
 import { SearchBox } from '@/pages/task/components/search-activity.tsx';
 import { TaskActivityNotifications } from '@/pages/task/components/task-activity-notifications.tsx';
 import {
@@ -65,7 +64,7 @@ const SidebarTrigger = forwardRef<HTMLButtonElement, SidebarTriggerProps>(
 
 SidebarTrigger.displayName = 'SidebarTrigger';
 
-export function TaskSidebar({ ...props }) {
+export const TaskSidebar = ({ ...props }) => {
   const [comment, setComment] = useState('');
   const [watching, setWatching] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
@@ -74,14 +73,13 @@ export function TaskSidebar({ ...props }) {
   const [notifications, setNotifications] = useState(taskNotificationUsers);
   const searchInputRef = useRef<HTMLInputElement>(null);
 
-  const handleSendComment = () => {
+  const onhandleSendComment = () => {
     if (comment.trim()) {
-      console.log('Sending comment:', comment);
       setComment('');
     }
   };
 
-  const toggleSearch = (e:MouseEvent) => {
+  const onToggleSearch = (e:MouseEvent) => {
     e.stopPropagation();
     setShowSearch((prev) => !prev);
     if (!showSearch) {
@@ -95,7 +93,7 @@ export function TaskSidebar({ ...props }) {
     }
   };
 
-  const toggleFilter = (id:string) => {
+  const onToggleFilter = (id:string) => {
     setFilters(
       filters.map((filter) =>
         filter.id === id ? { ...filter, checked: !filter.checked } : filter
@@ -130,7 +128,7 @@ export function TaskSidebar({ ...props }) {
     <Sidebar
       collapsible="icon"
       side={'right'}
-      className="top-[85px] !h-[calc(100svh-80px)] border-l overflow-hidden [&>[data-sidebar=sidebar]]:flex-row-reverse"
+      className="top-[99px] !h-[calc(100svh-110px)] border-l overflow-hidden [&>[data-sidebar=sidebar]]:flex-row-reverse"
       {...props}
     >
       {/* Mini sidebar with icons */}
@@ -167,7 +165,7 @@ export function TaskSidebar({ ...props }) {
       <Sidebar collapsible="none" className="hidden flex-1 md:flex">
         <SidebarHeader className="gap-3.5 border-b p-3">
           <div className="flex w-full items-center justify-between">
-            <div className="text-base font-medium text-foreground">
+            <div className="text-2xl font-medium text-foreground">
               Activity
             </div>
             <div className="flex justify-end">
@@ -175,7 +173,7 @@ export function TaskSidebar({ ...props }) {
                 variant="ghost"
                 size="icon"
                 className="w-[30px] ring-none"
-                onClick={toggleSearch}
+                onClick={onToggleSearch}
                 data-search-btn
               >
                 <Search />
@@ -206,7 +204,7 @@ export function TaskSidebar({ ...props }) {
                 </DropdownMenuContent>
               </DropdownMenu>
               <TaskActivityFilters
-                toggleFilter={toggleFilter}
+                toggleFilter={onToggleFilter}
                 filters={filters}
               />
             </div>
@@ -266,19 +264,18 @@ export function TaskSidebar({ ...props }) {
         </SidebarContent>
 
         {/* Row-based Comment input section at the bottom */}
-        <SidebarFooter className="border-t p-4">
-          <div className="flex flex-row border rounded-md overflow-hidden">
+        <SidebarFooter className="border-t p-4 bg-white">
+          <div className="flex items-center border rounded-xl overflow-hidden px-2 ">
             <Textarea
               placeholder="Add a comment..."
-              className="min-h-12 bg-background text-sm border-none resize-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-1 py-3 px-4"
+              className="min-h-10 text-base border-none resize-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-1 py-2 px-4"
               value={comment}
               onChange={(e) => setComment(e.target.value)}
             />
-            <Separator orientation="vertical" className="h-auto" />
             <Button
-              variant="ghost"
-              className="px-4 h-auto rounded-none bg-secondary"
-              onClick={handleSendComment}
+              variant="outline"
+              className="p-4 bg-theme-main-dark text-white"
+              onClick={onhandleSendComment}
               disabled={!comment.trim()}
             >
               <span>Send</span>
