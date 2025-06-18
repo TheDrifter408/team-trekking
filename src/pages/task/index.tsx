@@ -52,13 +52,12 @@ import { Subtask } from '@/pages/task/components/Subtask.tsx';
 import TaskStatusDialog from '@/components/common/task-status-dialog.tsx';
 import TimeEstimateDropDown from '@/components/common/estimate-time-dropdown.tsx';
 import { Link } from 'react-router-dom';
-import { ContextMenu } from '@/components/common/context-menu.tsx';
-import { taskTypeConfig } from '@/lib/constants/staticData.ts';
 import { Assignee, Task as TaskType } from '@/types/props/Common.ts';
 import { TagOption } from '@/types/interfaces/TagDropDown.ts';
 import TagDropdownWithSelection from '@/components/common/tag-dropdown.tsx';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/shadcn-ui/popover.tsx';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/shadcn-ui/command.tsx';
+import TaskTypeDropdown from '@/components/common/task-type-dropdown.tsx';
 export const Task: React.FC = () => {
   const [enterDates, setEnterDates] = useState<boolean>(false);
   const [enterAssignee, setEnterAssignee] = useState<boolean>(false);
