@@ -6,9 +6,13 @@ import {
   ChevronDown,
   ChevronRight,
   CornerLeftUp,
+  Delete,
+  Edit,
+  Ellipsis,
   Flower,
   Maximize2,
   PlayCircle,
+  Plus,
   PlusIcon,
 } from 'lucide-react';
 import {
@@ -49,6 +53,7 @@ import { DataTable } from '@/components/data-table/data-table.tsx';
 import { createDataTableStore, DataTableProvider } from '@/stores/zustand/data-table-store.ts';
 import { LABEL } from '@/lib/constants/appStrings.ts';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/shadcn-ui/tooltip.tsx';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/shadcn-ui/dropdown-menu.tsx';
 export const Task: React.FC = () => {
   const [enterDates, setEnterDates] = useState<boolean>(false);
   const [enterAssignee, setEnterAssignee] = useState<boolean>(false);
@@ -343,14 +348,6 @@ export const Task: React.FC = () => {
                     </Command>
                   </PopoverContent>
                 </Popover>
-                {/* {sampleTask.assignees.map((assignee) => (
-                  <AssigneeAvatar
-                    key={assignee}
-                    assignee={assignee}
-                    enterAssignee={enterAssignee}
-                    onRemove={() => { }}
-                  />
-                ))} */}
               </div>
             </TaskMetaRow>
             {/* PRIORITY */}
@@ -477,8 +474,8 @@ export const Task: React.FC = () => {
         </DataTableProvider>
       </div>
       {/* Checklist table container */}
-      <div className="mt-4">
-        <div className="group flex justify-between py-2 px-2">
+      <div className="group mt-4">
+        <div className="flex justify-between py-2 px-2">
           <h3 className="text-xl font-bold text-gray-900">Checklists</h3>
           <div className="invisible group-hover:visible flex items-center gap-1">
             {/* Maximize Button */}
@@ -513,8 +510,38 @@ export const Task: React.FC = () => {
         </div>
         {/* Checklist Table */}
         <div>
-          <div>
-            <h3>Checklist</h3>
+          <div className="flex items-center justify-between rounded-lg bg-slate-100 p-2">
+            <div className="flex items-center gap-2 p-2">
+              <h3 className="font-bold">Checklist</h3>
+              <span className="text-muted-foreground text-sm">{`( 0/5 )`}</span>
+            </div>
+            <DropdownMenu>
+              <DropdownMenuTrigger>
+                <Button variant="ghost" className="border invisible group-hover:visible">
+                  <Ellipsis />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuItem>
+                  <Button variant="ghost" className="h-min w-full flex items-center justify-start gap-2">
+                    <Plus />
+                    Add Item
+                  </Button>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Button variant="ghost" className="h-min w-full flex items-center justify-start gap-2">
+                    <Edit />
+                    Edit Checklist
+                  </Button>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Button variant="ghost" className="h-min w-full flex items-center justify-start gap-2">
+                    <Delete />
+                    Delete checklist
+                  </Button>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </div>
       </div>
