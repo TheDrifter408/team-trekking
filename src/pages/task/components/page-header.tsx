@@ -34,7 +34,7 @@ export const PageHeader = () => {
 
   const onClickClose = () => {
     navigate('/list');
-  }
+  };
 
   return (
     <div className="py-2 bg-sidebar/80 border w-full flex items-center justify-between px-4">
@@ -48,7 +48,7 @@ export const PageHeader = () => {
             <ChevronDown />
           </Button>
           <Breadcrumb className="pl-2">
-            <BreadcrumbList className='flex-nowrap overflow-hidden text-nowrap'>
+            <BreadcrumbList className="flex-nowrap overflow-hidden text-nowrap">
               <BreadcrumbItem className="space-x-1">
                 <div className="h-[16px] w-[16px] bg-blue-700 text-primary-foreground font-medium flex items-center justify-center rounded">
                   S
