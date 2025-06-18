@@ -8,6 +8,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/shadcn-ui/tooltip';
+import { LABEL } from '@/lib/constants/appStrings';
 import TaskStatusDialog from '@/components/common/task-status-dialog.tsx';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect } from 'react';
@@ -55,7 +56,7 @@ export const FloatingBar = ({ selectedCount }: Props) => {
                     }
                     onClick={onDeselectAll}
                   >
-                    {selectedCount} Tasks selected
+                    {selectedCount} {LABEL.TASKS_SELECTED}
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent sideOffset={12}>
@@ -64,11 +65,11 @@ export const FloatingBar = ({ selectedCount }: Props) => {
                       'text-base font-medium py-1 flex gap-x-2 items-center'
                     }
                   >
-                    Deselect All
+                    {LABEL.DESELECT_ALL}
                     <span
                       className={'bg-white bg-opacity-[.134] p-[3px] rounded'}
                     >
-                      ESC
+                      {LABEL.ESC}
                     </span>
                   </p>
                 </TooltipContent>
