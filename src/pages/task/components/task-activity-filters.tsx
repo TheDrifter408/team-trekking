@@ -14,6 +14,7 @@ import { TaskActivityFiltersProps } from '@/types/props/Common';
 export const TaskActivityFilters = ({
   filters,
   toggleFilter,
+  onUnSelectAll,
 }: TaskActivityFiltersProps) => {
   return (
     <DropdownMenu>
@@ -22,18 +23,28 @@ export const TaskActivityFilters = ({
           <ListFilter />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-56">
+      <DropdownMenuContent align="end" className="mt-4 w-56">
         <DropdownMenuLabel className="px-2 py-1.5">
-          Filter Activity
+          <div className="flex items-center justify-between">
+            <span className="text-muted-foreground">Activities</span>
+            <Button variant={'ghost'} className="p-0 text-muted-foreground hover:bg-transparent hover:text-muted-foreground" onClick={onUnSelectAll}>
+              Unselect All
+            </Button>
+          </div>
         </DropdownMenuLabel>
-        <DropdownMenuSeparator />
         {filters.map((filter) => (
           <DropdownMenuItem
             key={filter.id}
             className="px-2 py-1.5 cursor-pointer flex items-center justify-between"
-            onClick={() => toggleFilter(filter.id)}
+            onClick={(e) => {
+              e.preventDefault();
+              toggleFilter(filter.id);
+            }}
           >
-            <span>{filter.label}</span>
+            <div className="flex items-center gap-1">
+              <filter.icon />
+              <span>{filter.label}</span>
+            </div>
             <div
               className={cn(
                 'h-4 w-4 border rounded flex items-center justify-center',

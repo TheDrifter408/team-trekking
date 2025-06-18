@@ -79,6 +79,14 @@ export const TaskSidebar = ({ ...props }) => {
     }
   };
 
+  const onUnselectAll = () => {
+    const allUnselected = filters.map((fil) => {
+      fil.checked = false;
+      return fil;
+    });
+    setFilters([...allUnselected]);
+  }
+
   const onToggleSearch = (e:MouseEvent) => {
     e.stopPropagation();
     setShowSearch((prev) => !prev);
@@ -206,6 +214,7 @@ export const TaskSidebar = ({ ...props }) => {
               <TaskActivityFilters
                 toggleFilter={onToggleFilter}
                 filters={filters}
+                onUnSelectAll={onUnselectAll}
               />
             </div>
           </div>

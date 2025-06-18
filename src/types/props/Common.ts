@@ -183,11 +183,13 @@ export interface SortableTaskRowProps {
 interface Filter {
   id: string;
   label: string;
+  icon: LucideIcon;
   checked: boolean;
 }
 export interface TaskActivityFiltersProps {
   filters: Filter[];
   toggleFilter: (filterId: string) => void;
+  onUnSelectAll: () => void;
 }
 export interface TaskActivityNotificationsProps {
   watching: boolean;
