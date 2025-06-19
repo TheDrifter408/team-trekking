@@ -8,6 +8,7 @@ import {
 } from '@/types/interfaces/activitySearch';
 import { activitySearchData } from '@/mock/activitySearchData.ts';
 import { LABEL } from '@/lib/constants';
+import { Comment } from '@/pages/task/components/Comment';
 
 const StatusBadge: React.FC<StatusBadgeProps> = ({ status }) => {
   const getStatusColor = (status: string): string => {
@@ -32,6 +33,11 @@ const StatusBadge: React.FC<StatusBadgeProps> = ({ status }) => {
 };
 
 const ActivityItem: React.FC<ActivityItemProps> = ({ activity }) => {
+  if (activity.isComment && activity.comment) {
+    return (
+      <Comment {...activity.comment} />
+    )
+  }
   return (
     <div className="flex items-start gap-3 py-2 px-1 hover:bg-gray-50 rounded-lg transition-colors">
       <div className="flex-shrink-0 w-1 h-1 bg-gray-400 rounded-full mt-2"></div>

@@ -5,18 +5,12 @@ import { Ellipsis, FileUser, Flower, Pencil, Reply, SmilePlus, ThumbsUp } from "
 import { FC, useState } from "react";
 import { DocEditor } from "@/pages/task/components/doc-editor";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/shadcn-ui/tooltip";
+import { Comment as CommetType } from "@/types/interfaces/Comment";
 
 interface CommentProps {
     assignee: Assignee,
     date: Date,
-    comment: {
-        id: number,
-        content: string,
-        reply?: {
-            count: number,
-            author: Assignee
-        }
-    }
+    comment: CommetType
 }
 export const Comment: FC<CommentProps> = ({ assignee, date, comment }) => {
 
@@ -72,11 +66,11 @@ export const Comment: FC<CommentProps> = ({ assignee, date, comment }) => {
             </div>
             {/* Comment Content */}
             <div className="text-xl text-black rounded-xl px-5">
-                <DocEditor 
-                    editable={isEditing} 
-                    showBorder={false} 
-                    name="comment" 
-                    value={comment.content} 
+                <DocEditor
+                    editable={isEditing}
+                    showBorder={false}
+                    name="comment"
+                    value={comment.content}
                     onChange={() => { }}
                     showToolbar={true}
                     setIsEditing={onClickEdit} />

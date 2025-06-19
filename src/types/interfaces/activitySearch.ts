@@ -1,4 +1,5 @@
 import { LucideIcon } from 'lucide-react';
+import { Comment } from '@/types/interfaces/Comment';
 
 export interface Activity {
   id: number;
@@ -12,6 +13,8 @@ export interface Activity {
   hasMultipleAttachments?: boolean;
   fromStatus?: string;
   toStatus?: string;
+  isComment:boolean;
+  comment?: Comment
 }
 
 export interface StatusBadgeProps {
