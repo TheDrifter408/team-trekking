@@ -174,4 +174,8 @@ export const LABEL = {
     "Don't worry, you'll have access to all your data",
   DESCRIPTION: 'Description',
   WATCH: 'Watch',
+  SUGGEST_SUBTASKS: 'Suggest subtasks',
+  ACTIVITIES: 'Activities',
+  UNSELECT_ALL: 'Unselect All',
+  APPLY_FILTERS: 'Apply Filters',
 };
