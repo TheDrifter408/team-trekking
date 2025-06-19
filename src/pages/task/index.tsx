@@ -437,7 +437,7 @@ export const Task: React.FC = () => {
               onClick={onPressAddChecklist}
             >
               <ArrowDownUp size={18} />
-              Sort
+              {LABEL.SORT}
             </Button>
             <Tooltip>
               <TooltipTrigger>
@@ -449,7 +449,7 @@ export const Task: React.FC = () => {
                 </Button>
               </TooltipTrigger>
               <TooltipContent>
-                Full screen
+                {LABEL.FULL_SCREEN}
               </TooltipContent>
             </Tooltip>
             <Tooltip>
@@ -489,7 +489,7 @@ export const Task: React.FC = () => {
                 </Button>
               </TooltipTrigger>
               <TooltipContent>
-                Full screen
+                {LABEL.FULL_SCREEN}
               </TooltipContent>
             </Tooltip>
             {/* Plus button for Checklists */}
@@ -503,7 +503,7 @@ export const Task: React.FC = () => {
                 </Button>
               </TooltipTrigger>
               <TooltipContent>
-                Checklists
+                {LABEL.CHECKLISTS}
               </TooltipContent>
             </Tooltip>
           </div>
@@ -525,19 +525,19 @@ export const Task: React.FC = () => {
                 <DropdownMenuItem>
                   <Button variant="ghost" className="h-min w-full flex items-center justify-start gap-2">
                     <Plus />
-                    Add Item
+                    {LABEL.ADD}
                   </Button>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
                   <Button variant="ghost" className="h-min w-full flex items-center justify-start gap-2">
                     <Edit />
-                    Edit Checklist
+                    {LABEL.EDIT_CHECKLIST}
                   </Button>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
                   <Button variant="ghost" className="h-min w-full flex items-center justify-start gap-2">
                     <Delete />
-                    Delete checklist
+                    {LABEL.DELETE_CHECKLIST}
                   </Button>
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -548,7 +548,7 @@ export const Task: React.FC = () => {
       {/* Attachments Container */}
       <div className="mt-4">
         <div className="group flex justify-between py-2 px-2">
-          <h3 className="text-xl font-bold text-gray-900">Attachments</h3>
+          <h3 className="text-xl font-bold text-gray-900">{LABEL.ATTACHMENTS}</h3>
           <div className="invisible group-hover:visible flex items-center gap-1">
             <Tooltip>
               <TooltipTrigger>
@@ -560,7 +560,7 @@ export const Task: React.FC = () => {
                 </Button>
               </TooltipTrigger>
               <TooltipContent>
-                Attachments
+                {LABEL.ATTACHMENTS}
               </TooltipContent>
             </Tooltip>
           </div>

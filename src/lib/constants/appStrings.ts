@@ -178,4 +178,10 @@ export const LABEL = {
   ACTIVITIES: 'Activities',
   UNSELECT_ALL: 'Unselect All',
   APPLY_FILTERS: 'Apply Filters',
+  SORT: 'Sort',
+  FULL_SCREEN: 'Full Screen',
+  CHECKLISTS: 'Checklists',
+  ATTACHMENTS: 'Attachments',
+  EDIT_CHECKLIST: 'Edit Checklist',
+  DELETE_CHECKLIST: 'Delete Checklist'
 };
