@@ -179,7 +179,9 @@ export function WorkspaceSwitcher({
               <DropdownMenuSeparator />
               <DropdownMenuLabel className="text-xs text-muted-foreground">
                 <div className="flex items-center justify-between">
-                  {!showSearch && <div>{LABEL.SWITCH_WORKSPACE}</div>}
+                  {!showSearch && (
+                    <div className={'text-base'}>{LABEL.SWITCH_WORKSPACE}</div>
+                  )}
                   {showSearch && (
                     <div className="flex items-center border border-gray-900 rounded-md px-2 py-1 w-full shadow-sm gap-1">
                       <Icon name={'search'}></Icon>
