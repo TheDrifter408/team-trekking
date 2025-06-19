@@ -2,11 +2,18 @@ import React, { useState } from 'react';
 import { mockChecklist, mockSubtasks, mockUsers, sampleTask } from '@/mock';
 import { cn } from '@/lib/utils';
 import {
+  ArrowDownUp,
   ChevronDown,
   ChevronRight,
   CornerLeftUp,
+  Delete,
+  Edit,
+  Ellipsis,
+  Flower,
+  Maximize2,
   PlayCircle,
   Plus,
+  PlusIcon,
 } from 'lucide-react';
 import {
   IconCalendar,
@@ -21,34 +28,18 @@ import {
   IconCircleLetterT,
 } from '@tabler/icons-react';
 import { DatePickerWithRange } from '@/components/common/date-picker.tsx';
-import {
-  closestCenter,
-  DndContext,
-  DragEndEvent,
-  KeyboardSensor,
-  PointerSensor,
-  useSensor,
-  useSensors,
-} from '@dnd-kit/core';
-import {
-  arrayMove,
-  SortableContext,
-  sortableKeyboardCoordinates,
-  verticalListSortingStrategy,
-} from '@dnd-kit/sortable';
+
 import {
   Avatar,
   AvatarFallback,
   AvatarImage,
 } from '@/components/shadcn-ui/avatar';
-import { SortableChecklistRow } from '@/pages/task/components/sortable-checklist-row.tsx';
 import { Label } from '@/components/shadcn-ui/label';
 import { Button } from '@/components/shadcn-ui/button';
 import { TaskMetaRow } from './components/task-meta-row';
 import { Input } from '@/components/shadcn-ui/input.tsx';
 import { AssigneeAvatar } from '@/components/common/assignee-avatar.tsx';
 import { DocEditor } from './components/doc-editor.tsx';
-import { Subtask } from '@/pages/task/components/Subtask.tsx';
 import TaskStatusDialog from '@/components/common/task-status-dialog.tsx';
 import TimeEstimateDropDown from '@/components/common/estimate-time-dropdown.tsx';
 import { Link } from 'react-router-dom';
@@ -58,7 +49,11 @@ import TagDropdownWithSelection from '@/components/common/tag-dropdown.tsx';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/shadcn-ui/popover.tsx';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/shadcn-ui/command.tsx';
 import TaskTypeDropdown from '@/components/common/task-type-dropdown.tsx';
-import { LABEL } from '@/lib/constants';
+import { DataTable } from '@/components/data-table/data-table.tsx';
+import { createDataTableStore, DataTableProvider } from '@/stores/zustand/data-table-store.ts';
+import { LABEL } from '@/lib/constants/appStrings.ts';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/shadcn-ui/tooltip.tsx';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/shadcn-ui/dropdown-menu.tsx';
 export const Task: React.FC = () => {
   const [enterDates, setEnterDates] = useState<boolean>(false);
   const [enterAssignee, setEnterAssignee] = useState<boolean>(false);
@@ -95,13 +90,6 @@ export const Task: React.FC = () => {
     const minutes = minuteMatch ? `${minuteMatch[1]}m` : '';
     return [hours, minutes].filter(Boolean).join(' ');
   };
-
-  const [selectedSubtasks, setSelectedSubtasks] = useState<Set<number>>(
-    new Set()
-  );
-  const [selectedChecklistItems, setSelectedChecklistItems] = useState<
-    Set<string>
-  >(new Set());
 
   const [task, setTask] = useState<TaskType>({
     id: '1',
@@ -149,92 +137,9 @@ export const Task: React.FC = () => {
     } else {
       setSelectedAssignees([...selectedAssignees, assignee]);
     }
-
   }
 
-  const sensors = useSensors(
-    useSensor(PointerSensor),
-    useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
-    })
-  );
-
-  const onPressAddSubtask = () => {
-    //setIsAddTask(true);
-  };
-
-  const handleChecklistToggle = (itemId: string) => {
-    setTask({
-      ...task,
-      checklist: task.checklist?.map((item) =>
-        item.id === itemId ? { ...item, completed: !item.isCompleted } : item
-      ),
-    });
-  };
-
-  const handleSubtaskDragEnd = (event: DragEndEvent) => {
-    const { active, over } = event;
-    if (over && active.id !== over.id) {
-      setTask((task) => {
-        const oldIndex = task.subTask.findIndex((t) => t.id === active.id);
-        const newIndex = task.subTask.findIndex((t) => t.id === over.id);
-        return {
-          ...task,
-          subtasks: arrayMove(task.subTask!, oldIndex, newIndex),
-        };
-      });
-    }
-  };
-
-  const handleChecklistDragEnd = (event: DragEndEvent) => {
-    const { active, over } = event;
-    if (over && active.id !== over.id) {
-      setTask((task) => {
-        const oldIndex = task.checklist.findIndex((t) => t.id === active.id);
-        const newIndex = task.checklist.findIndex((t) => t.id === over.id);
-        return {
-          ...task,
-          checklist: arrayMove(task.checklist, oldIndex, newIndex),
-        };
-      });
-    }
-  };
-
-  const handleSelectAllSubtasks = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.checked) {
-      setSelectedSubtasks(new Set(task.subTask.map((st) => Number(st.id))));
-    } else {
-      setSelectedSubtasks(new Set());
-    }
-  };
-
-  const handleSelectAllChecklist = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.checked) {
-      setSelectedChecklistItems(new Set(task.checklist.map((item) => item.id)));
-    } else {
-      setSelectedChecklistItems(new Set());
-    }
-  };
-
-  const handleSubtaskSelect = (id: number) => {
-    const newSelected = new Set(selectedSubtasks);
-    if (newSelected.has(id)) {
-      newSelected.delete(id);
-    } else {
-      newSelected.add(id);
-    }
-    setSelectedSubtasks(newSelected);
-  };
-
-  const handleChecklistSelect = (id: string) => {
-    const newSelected = new Set(selectedChecklistItems);
-    if (newSelected.has(id)) {
-      newSelected.delete(id);
-    } else {
-      newSelected.add(id);
-    }
-    setSelectedChecklistItems(newSelected);
-  };
+  const store = createDataTableStore({});
 
   const onPressAddChecklist = () => {
     // setIsAddChecklist(true);
@@ -443,14 +348,6 @@ export const Task: React.FC = () => {
                     </Command>
                   </PopoverContent>
                 </Popover>
-                {/* {sampleTask.assignees.map((assignee) => (
-                  <AssigneeAvatar
-                    key={assignee}
-                    assignee={assignee}
-                    enterAssignee={enterAssignee}
-                    onRemove={() => { }}
-                  />
-                ))} */}
               </div>
             </TaskMetaRow>
             {/* PRIORITY */}
@@ -529,76 +426,147 @@ export const Task: React.FC = () => {
           <span className="text-sm text-gray-700">3 For me</span>
         </div>
       </div>
+      {/* Subtask table container */}
       <div className="mt-4">
-        <Subtask
-          task={task}
-          onHandleSelectAllSubtasks={handleSelectAllSubtasks}
-          selectedSubtasks={selectedSubtasks}
-          onHandleSubtaskDragEnd={handleSubtaskDragEnd}
-          onPressAddSubtask={onPressAddSubtask}
-          sensors={sensors}
-          onHandleSubtaskSelect={handleSubtaskSelect}
-        />
-      </div>
-      <div className="mt-4">
-        <div className="flex justify-between py-2 px-2">
-          <h3 className="text-lg font-medium text-gray-900">Checklist</h3>
-          <Button
-            size={'icon'}
-            className={'bg-indigo-600 h-6 w-6 rounded-1 mr-1'}
-            onClick={onPressAddChecklist}
-          >
-            <Plus color={'white'} size={18} />
-          </Button>
-        </div>
-
-        <div className="mt-2  rounded-lg shadow overflow-hidden">
-          <DndContext
-            sensors={sensors}
-            collisionDetection={closestCenter}
-            onDragEnd={handleChecklistDragEnd}
-          >
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-6 py-3 text-left">
-                    <input
-                      type="checkbox"
-                      onChange={handleSelectAllChecklist}
-                      checked={
-                        selectedChecklistItems.size === task.checklist.length
-                      }
-                      className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                    />
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Item
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Status
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                <SortableContext
-                  items={task.checklist.map((item) => item.id)}
-                  strategy={verticalListSortingStrategy}
+        <div className="group flex justify-between py-2 px-2">
+          <h3 className="text-xl font-bold text-gray-900">Subtasks</h3>
+          <div className="invisible group-hover:visible flex items-center gap-1">
+            <Button
+              variant={'ghost'}
+              className='bg-transparent text-lg text-muted-foreground'
+              onClick={onPressAddChecklist}
+            >
+              <ArrowDownUp size={18} />
+              {LABEL.SORT}
+            </Button>
+            <Tooltip>
+              <TooltipTrigger>
+                <Button
+                  variant="ghost"
+                  className="bg-transparent text-lg text-muted-foreground "
                 >
-                  {task.checklist.map((item) => (
-                    <SortableChecklistRow
-                      key={item.id}
-                      id={item.id}
-                      selected={selectedChecklistItems.has(item.id)}
-                      onSelect={() => handleChecklistSelect(item.id)}
-                      item={item}
-                      onToggle={() => handleChecklistToggle(item.id)}
-                    />
-                  ))}
-                </SortableContext>
-              </tbody>
-            </table>
-          </DndContext>
+                  <Maximize2 size={18} />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                {LABEL.FULL_SCREEN}
+              </TooltipContent>
+            </Tooltip>
+            <Tooltip>
+              <TooltipTrigger>
+                <Button
+                  variant="ghost"
+                  className={'bg-transparent text-lg text-muted-foreground'}
+                >
+                  <Flower size={18} />
+                  {LABEL.SUGGEST_SUBTASKS}
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                Generate subtasks based on the comments, title and checklists of this task
+              </TooltipContent>
+            </Tooltip>
+          </div>
         </div>
+        {/* Subtask data grid table */}
+        <DataTableProvider value={store}>
+          <DataTable />
+        </DataTableProvider>
+      </div>
+      {/* Checklist table container */}
+      <div className="group mt-4">
+        <div className="flex justify-between py-2 px-2">
+          <h3 className="text-xl font-bold text-gray-900">Checklists</h3>
+          <div className="invisible group-hover:visible flex items-center gap-1">
+            {/* Maximize Button */}
+            <Tooltip>
+              <TooltipTrigger>
+                <Button
+                  variant="ghost"
+                  className="bg-transparent text-lg text-muted-foreground"
+                >
+                  <Maximize2 size={18} />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                {LABEL.FULL_SCREEN}
+              </TooltipContent>
+            </Tooltip>
+            {/* Plus button for Checklists */}
+            <Tooltip>
+              <TooltipTrigger>
+                <Button
+                  variant="ghost"
+                  className="bg-transparent text-lg text-muted-foreground"
+                >
+                  <PlusIcon size={18} />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                {LABEL.CHECKLISTS}
+              </TooltipContent>
+            </Tooltip>
+          </div>
+        </div>
+        {/* Checklist Table */}
+        <div>
+          <div className="flex items-center justify-between rounded-lg bg-slate-100 p-2">
+            <div className="flex items-center gap-2 p-2">
+              <h3 className="font-bold">Checklist</h3>
+              <span className="text-muted-foreground text-sm">{`( 0/5 )`}</span>
+            </div>
+            <DropdownMenu>
+              <DropdownMenuTrigger>
+                <Button variant="ghost" className="border invisible group-hover:visible">
+                  <Ellipsis />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuItem>
+                  <Button variant="ghost" className="h-min w-full flex items-center justify-start gap-2">
+                    <Plus />
+                    {LABEL.ADD}
+                  </Button>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Button variant="ghost" className="h-min w-full flex items-center justify-start gap-2">
+                    <Edit />
+                    {LABEL.EDIT_CHECKLIST}
+                  </Button>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Button variant="ghost" className="h-min w-full flex items-center justify-start gap-2">
+                    <Delete />
+                    {LABEL.DELETE_CHECKLIST}
+                  </Button>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        </div>
+      </div>
+      {/* Attachments Container */}
+      <div className="mt-4">
+        <div className="group flex justify-between py-2 px-2">
+          <h3 className="text-xl font-bold text-gray-900">{LABEL.ATTACHMENTS}</h3>
+          <div className="invisible group-hover:visible flex items-center gap-1">
+            <Tooltip>
+              <TooltipTrigger>
+                <Button
+                  variant="ghost"
+                  className="bg-transparent text-lg text-muted-foreground"
+                >
+                  <PlusIcon size={18} />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                {LABEL.ATTACHMENTS}
+              </TooltipContent>
+            </Tooltip>
+          </div>
+        </div>
+        {/* Attachments grid */}
+
       </div>
     </div>
   );
