@@ -17,8 +17,8 @@ import {
   IconCheck,
   IconCirclePlus,
 } from '@tabler/icons-react';
-import { LABEL } from '@/lib/constants/appStrings.ts';
 import { Card, CardContent } from '@/components/shadcn-ui/card';
+import { LABEL } from '@/lib/constants/appStrings.ts';
 
 interface CardItem {
   id: string;
@@ -113,7 +113,7 @@ const DefaultHeader: FC<{
   >
     <div className="flex text-base items-center gap-4 py-[13px]">
       <IconHome size={16} />
-      <span>Home</span>
+      <span>{LABEL.HOME}</span>
     </div>
     <Sheet>
       <SheetTrigger asChild>
@@ -121,7 +121,7 @@ const DefaultHeader: FC<{
           variant="default"
           className="bg-theme-main-dark text-base text-white hover:bg-theme-main-dark/90"
         >
-          Manage cards
+          {LABEL.MANAGE_CARDS}
         </Button>
       </SheetTrigger>
       <SheetContent
@@ -132,7 +132,7 @@ const DefaultHeader: FC<{
         <SheetHeader className="sticky top-0 z-10 bg-background border-b h-[48px] px-4">
           <div className="relative flex items-center justify-between h-full">
             <SheetTitle className="text-2xl font-semibold">
-              Add Cards
+              {LABEL.ADD_CARDS}
             </SheetTitle>
             <SheetClose asChild>
               <Button
@@ -171,7 +171,7 @@ const FullViewHeader: FC<{
       'border-l border-r'
     )}
   >
-    <div className="pl-3 border-b pr-4 flex text-base items-center justify-between gap-4">
+    <div className="pl-3 border-b pr-4 flex text-base items-center justify-between gap-4 h-[50px]">
       <div className="flex items-center">
         <Button onClick={onPrevCard} variant="ghost" size="icon_sm">
           <IconChevronLeft />
@@ -179,7 +179,14 @@ const FullViewHeader: FC<{
         <Button onClick={onNextCard} variant="ghost" size="icon_sm">
           <IconChevronRight />
         </Button>
-        <span className={'ml-2'}>Home&nbsp;&nbsp;/&nbsp;&nbsp;</span>
+        <Button
+          variant={'ghost'}
+          className={'font-normal text-base'}
+          onClick={onCancel}
+        >
+          {LABEL.HOME}
+        </Button>
+        /&nbsp;&nbsp;
         <span className="text-muted-foreground">{title}</span>
       </div>
       <Button onClick={onCancel} variant="ghost" size="icon">

@@ -176,4 +176,7 @@ export const LABEL = {
   TODO: 'To Do',
   DONE: 'Done',
   NO_TASKS: 'No tasks',
+  HOME: 'Home',
+  MANAGE_CARDS: 'Manage cards',
+  ADD_CARDS: 'Add Cards',
 };
