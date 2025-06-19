@@ -50,7 +50,7 @@ export const TimeEstimateDropdown: React.FC<TimeEstimateComponentProps> = ({
 }) => {
   const [inputValue, setInputValue] = useState<string>(time ?? '');
   const [savedTimeEstimate, setSavedTimeEstimate] = useState<string>(
-    time ?? ''
+    time ?? '3h'
   );
   const [suggestion, setSuggestion] = useState<string>('');
   const [showSuggestion, setShowSuggestion] = useState<boolean>(false);
@@ -155,7 +155,9 @@ export const TimeEstimateDropdown: React.FC<TimeEstimateComponentProps> = ({
               <p className="text-xs  text-content-tertiary font-semibold">
                 {LABEL.TOTAL_WITH_SUBTASKS}
               </p>
-              <p className="font-medium text-base text-muted-foreground">3h</p>
+              <p className="font-medium text-base text-muted-foreground">
+                {savedTimeEstimate}
+              </p>
             </div>
             <p className="text-[8px] text-content-tertiary">
               {LABEL.CHANGES_ARE_AUTOMATICALLY_SAVED}
