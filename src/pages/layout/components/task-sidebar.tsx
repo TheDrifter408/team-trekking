@@ -23,7 +23,6 @@ import {
 import { Textarea } from '@/components/shadcn-ui/textarea.tsx';
 import { Button } from '@/components/shadcn-ui/button.tsx';
 import { cn } from '@/lib/utils.ts';
-import { SearchBox } from '@/pages/task/components/search-activity.tsx';
 import { TaskActivityNotifications } from '@/pages/task/components/task-activity-notifications.tsx';
 import {
   DropdownMenu,
@@ -33,6 +32,7 @@ import {
 import { filterOptions, taskNotificationUsers } from '@/mock';
 import { TaskActivityFilters } from '@/pages/task/components/task-activity-filters.tsx';
 import { ButtonProps } from '@headlessui/react';
+import TaskActivitySearch from '@/pages/task/components/task-activity-search.tsx';
 
 // This is sample activity data
 const activityData: any[] = [];
@@ -85,9 +85,9 @@ export const TaskSidebar = ({ ...props }) => {
       return fil;
     });
     setFilters([...allUnselected]);
-  }
+  };
 
-  const onToggleSearch = (e:MouseEvent) => {
+  const onToggleSearch = (e: MouseEvent) => {
     e.stopPropagation();
     setShowSearch((prev) => !prev);
     if (!showSearch) {
@@ -101,7 +101,7 @@ export const TaskSidebar = ({ ...props }) => {
     }
   };
 
-  const onToggleFilter = (id:string) => {
+  const onToggleFilter = (id: string) => {
     setFilters(
       filters.map((filter) =>
         filter.id === id ? { ...filter, checked: !filter.checked } : filter
@@ -109,7 +109,7 @@ export const TaskSidebar = ({ ...props }) => {
     );
   };
 
-  const markNotificationAsRead = (id:number) => {
+  const markNotificationAsRead = (id: number) => {
     setNotifications(
       notifications.map((notification) =>
         notification.id === id ? { ...notification, read: true } : notification
@@ -173,9 +173,7 @@ export const TaskSidebar = ({ ...props }) => {
       <Sidebar collapsible="none" className="hidden flex-1 md:flex">
         <SidebarHeader className="gap-3.5 border-b p-3">
           <div className="flex w-full items-center justify-between">
-            <div className="text-2xl font-medium text-foreground">
-              Activity
-            </div>
+            <div className="text-2xl font-medium text-foreground">Activity</div>
             <div className="flex justify-end">
               <Button
                 variant="ghost"
@@ -224,50 +222,7 @@ export const TaskSidebar = ({ ...props }) => {
           {/* Activity feed section */}
           <SidebarGroup className="px-0 flex-1 overflow-y-auto">
             <SidebarGroupContent>
-              {showSearch && (
-                <SearchBox
-                  placeHolder="search comments..."
-                  searchQuery={searchQuery}
-                  setSearchQuery={setSearchQuery}
-                  showSearch={showSearch}
-                  setShowSearch={setShowSearch}
-                />
-              )}
-
-              {showSearch && searchQuery && filteredActivity.length === 0 ? (
-                <div className="flex items-center justify-center h-32 text-sm text-muted-foreground">
-                  No results found for "{searchQuery}"
-                </div>
-              ) : filteredActivity.length > 0 ? (
-                filteredActivity.map((item, index) => (
-                  <div
-                    key={index}
-                    className="flex flex-col gap-2 border-b p-4 text-sm leading-tight last:border-b-0"
-                  >
-                    <div className="flex items-center gap-2">
-                      <img
-                        src={item.avatar}
-                        alt={item.user}
-                        className="rounded-full h-6 w-6"
-                      />
-                      <span className="font-medium">{item.user}</span>
-                      <span className="ml-auto text-xs text-muted-foreground">
-                        {item.time}
-                      </span>
-                    </div>
-                    <div className="text-sm text-muted-foreground">
-                      {item.action}{' '}
-                      {item.content && (
-                        <span className="text-foreground">{item.content}</span>
-                      )}
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <div className="flex items-center justify-center h-32 text-sm text-muted-foreground">
-                  No activity yet
-                </div>
-              )}
+              <TaskActivitySearch showSearch={showSearch} />
             </SidebarGroupContent>
           </SidebarGroup>
         </SidebarContent>
@@ -294,4 +249,4 @@ export const TaskSidebar = ({ ...props }) => {
       </Sidebar>
     </Sidebar>
   );
-}
+};
