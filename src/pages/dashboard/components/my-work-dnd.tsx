@@ -91,7 +91,7 @@ const SortableTaskItem: FC<SortableTaskItemProps> = ({
       <div
         ref={setNodeRef}
         style={style}
-        className="flex items-center h-[52px] text-sm hover:bg-secondary/20 rounded relative min-w-0"
+        className="flex items-center cursor-default h-[52px] text-sm hover:bg-secondary/20 rounded relative min-w-0"
         onMouseEnter={() => setHoveredTaskId(task.id)}
         onMouseLeave={() => setHoveredTaskId(null)}
       >
@@ -112,12 +112,13 @@ const SortableTaskItem: FC<SortableTaskItemProps> = ({
             className="size-4 rounded-full mr-2 shrink-0"
             style={{ backgroundColor: task.color }}
           />
-          <div className="min-w-0 flex-1 text-base text-content-default truncate">
+          <div className="min-w-0 flex flex-1 text-base text-content-default truncate">
             {task.name}
+            <div className="ml-2 min-w-0 flex-1 text-base text-muted-foreground truncate">
+              {task.description?.substring(0, 30)}
+            </div>
           </div>
-          <div className="ml-2 min-w-0 flex-1 text-base text-muted-foreground truncate">
-            {task.description?.substring(0, 30)}
-          </div>
+
           <div className="ml-auto shrink-0">
             {isHovered ? (
               <div
