@@ -60,7 +60,6 @@ export const PageHeader: FC<PageHeaderProps> = ({
     />
   );
 
-// Simplified internal components with inline props
 const CardToggleButton: FC<{ card: CardItem; onClick: () => void }> = ({
   card,
   onClick,
@@ -109,7 +108,7 @@ const DefaultHeader: FC<{
   <div
     className={cn(
       'sticky flex items-center justify-between top-0 bg-background z-10 w-full',
-      'border-l border-r border-b px-3 rounded-sm'
+      'border-l border-r border-b px-3 rounded-sm h-[50px]'
     )}
   >
     <div className="flex text-base items-center gap-4 py-[13px]">
@@ -128,7 +127,7 @@ const DefaultHeader: FC<{
       <SheetContent
         overlay={false}
         side="right"
-        className="w-[300px] top-[40px] overflow-y-scroll h-[calc(100%-40px)] sm:w-[400px]"
+        className="w-[300px] top-[46px] overflow-y-scroll h-[calc(100%-46px)] sm:w-[400px]"
       >
         <SheetHeader className="sticky top-0 z-10 bg-background border-b h-[48px] px-4">
           <div className="relative flex items-center justify-between h-full">
@@ -172,7 +171,7 @@ const FullViewHeader: FC<{
       'border-l border-r'
     )}
   >
-    <div className="pl-3 border-b pr-4 flex text-base items-center justify-between gap-4 h-[47px]">
+    <div className="pl-3 border-b pr-4 flex text-base items-center justify-between gap-4">
       <div className="flex items-center">
         <Button onClick={onPrevCard} variant="ghost" size="icon_sm">
           <IconChevronLeft />
