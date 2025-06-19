@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { SidebarTrigger } from '@/components/shadcn-ui/sidebar';
 import { Button } from '@/components/shadcn-ui/button';
 import {
   Breadcrumb,
@@ -22,10 +21,12 @@ import {
   Plus,
   X,
   Ellipsis,
+  SidebarIcon,
 } from 'lucide-react';
 import { ShareTask } from '@/components/features/share-task.tsx';
 import MoveTask from '@/components/common/move-task.tsx';
 import { useNavigate } from 'react-router-dom';
+import { LeftSidebarTrigger } from '@/pages/layout/components/task-leftsidebar';
 
 export const PageHeader = () => {
   const [openShareTask, setOpenShareTask] = useState<boolean>(false);
@@ -39,8 +40,10 @@ export const PageHeader = () => {
   return (
     <div className="py-2 bg-sidebar/80 border w-full flex items-center justify-between px-4">
       <TooltipProvider>
-        <div className="flex items-center justify-between">
-          <SidebarTrigger />
+        <div className="relative flex items-center justify-between">
+          <LeftSidebarTrigger>
+            <SidebarIcon />
+          </LeftSidebarTrigger>
           <Button size="icon_sm" variant="ghost">
             <ChevronUp size={12} />
           </Button>
