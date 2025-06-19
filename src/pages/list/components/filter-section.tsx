@@ -48,17 +48,22 @@ export const FilterSection = () => {
     ));
 
   return (
-    <div className="mt-2 mx-7 flex items-center justify-between gap-4">
-      <div className="flex items-center flex-wrap gap-2">
+    <div className="mt-2 mx-7 flex items-center justify-between flex-wrap gap-4">
+      {/* Left group */}
+      <div className="flex items-center gap-2">
         {renderFilterButtons(filtersGroup1)}
-        {renderFilterButtons(filtersGroup2)}
       </div>
-      <Input
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-        className="w-[200px] h-[30px]"
-        placeholder="Search..."
-      />
+
+      {/* Right group */}
+      <div className="flex items-center gap-2">
+        {renderFilterButtons(filtersGroup2)}
+        <Input
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="w-[200px] h-[30px]"
+          placeholder="Search..."
+        />
+      </div>
     </div>
   );
 };
