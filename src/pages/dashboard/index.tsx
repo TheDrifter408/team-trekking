@@ -75,7 +75,7 @@ const Dashboard = () => {
             <span className="text-3xl font-semibold ml-3">
               {getWelcomeMessage()}
             </span>
-            <div className="grid grid-cols-1 gap-4 my-2 md:grid-cols-2">
+            <div className="grid grid-cols-1 gap-4 my-2 xl:grid-cols-2">
               {isCardAdded(HOME_CARD_TITLE.RECENTS) && (
                 <RecentContent
                   isExpanded={false}
