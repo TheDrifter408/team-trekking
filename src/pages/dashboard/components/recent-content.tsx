@@ -43,19 +43,21 @@ const Content: FC<ContentProps> = ({ className }) => (
       return (
         <div
           key={index}
-          className="flex items-center space-x-3 hover:bg-accent py-1 rounded"
+          className="flex items-center cursor-default space-x-3 hover:bg-accent py-1 rounded"
         >
-          <div className="w-[20px]">
-            <Icon size={15} className={'text-muted-foreground'} />
+          <div className="flex items-center space-x-3 hover:bg-accent py-1 rounded">
+            <div className="w-[20px] shrink-0">
+              <Icon size={15} className="text-muted-foreground" />
+            </div>
+            <div className="flex min-w-0 items-center space-x-4">
+              <span className="truncate text-base font-normal ">
+                {item.name}
+              </span>
+              <span className="truncate text-muted-foreground text-base ">
+                {item.location}
+              </span>
+            </div>
           </div>
-          <div className="relative w-[45%] shrink-0">
-            <span className="block text-base font-normal whitespace-nowrap overflow-hidden text-ellipsis">
-              {item.name}
-            </span>
-          </div>
-          <span className="text-muted-foreground w-[45%] text-base truncate">
-            {item.location}
-          </span>
         </div>
       );
     })}
