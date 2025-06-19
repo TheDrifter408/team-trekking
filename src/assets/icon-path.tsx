@@ -84,8 +84,10 @@ import TimeEstimationIcon from '@/assets/icons/estimation-icon.svg?react';
 import MoveIcon from '@/assets/icons/move-task.svg?react';
 import DuplicateIcon from '@/assets/icons/duplicate-icon.svg?react';
 import TrashIcon from '@/assets/icons/trash-icon.svg?react';
+import UserIcon from '@/assets/icons/user.svg?react';
 
 const iconPaths = {
+  user: UserIcon,
   trash: TrashIcon,
   move: MoveIcon,
   duplicate: DuplicateIcon,
