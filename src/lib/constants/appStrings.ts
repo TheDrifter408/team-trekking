@@ -183,5 +183,8 @@ export const LABEL = {
   CHECKLISTS: 'Checklists',
   ATTACHMENTS: 'Attachments',
   EDIT_CHECKLIST: 'Edit Checklist',
-  DELETE_CHECKLIST: 'Delete Checklist'
+  DELETE_CHECKLIST: 'Delete Checklist',
+  TRY_ADJUSTING_YOUR_SEARCH_TERMS: 'Try adjusting your search terms',
+  NO_ACTIVITIES_FOUND: 'No activities found',
+  SEARCH: 'Search...',
 };
