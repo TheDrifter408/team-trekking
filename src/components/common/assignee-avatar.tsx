@@ -50,10 +50,11 @@ export const AssigneeAvatar = ({
 
   return (
     <div className={cn(
-      "group relative transition-all duration-200 flex items-center gap-2 w-full",
+      "group relative transition-all duration-200 flex items-center gap-2",
       className ? className : '',
+      showButtons ? 'w-full' : 'w-min',
     )}>
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 w-min">
         <Avatar className="h-6 w-6 border-2 border-white transition-all overflow-visible">
           <AvatarImage
             src={`https://api.dicebear.com/6.x/avataaars/svg?seed=${getSeed(assignee.name)}`}
@@ -68,7 +69,7 @@ export const AssigneeAvatar = ({
             variant="destructive"
             onClick={() => onRemove()}
             className={cn(
-              'absolute -top-2 -right-2 h-4 w-4 p-0 rounded-full',
+              'absolute -top-2 z-50 -right-2 h-4 w-4 p-0 rounded-full',
               enterAssignee && isSelected ? 'visible' : 'invisible',
               'opacity-0 group-hover:opacity-100 transition-opacity',
               'flex items-center justify-center shadow-md',
@@ -80,7 +81,7 @@ export const AssigneeAvatar = ({
         </Avatar>
         <p className={cn('text-nowrap text-black', displayName ? 'block' : 'hidden')}>{assignee.name}</p>
       </div>
-      <div className={cn('flex self-end gap-1', showButtons ? 'block' : 'hidden')}>
+      <div className={cn('items-center self-end gap-1', showButtons ? 'flex' : 'hidden')}>
         <Tooltip>
           <TooltipTrigger>
             <Button className={cn('bg-white h-min p-1 rounded-sm text-muted-foreground invisible group-hover:visible')}>Profile</Button>
