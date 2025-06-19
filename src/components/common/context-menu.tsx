@@ -129,7 +129,7 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({
       <DropdownMenuTrigger asChild>{trigger}</DropdownMenuTrigger>
 
       <DropdownMenuContent
-        className={`${width} p-0 bg-white border border-gray-200 rounded-xl shadow-lg`}
+        className={`${width} py-3 bg-white border border-gray-200 rounded-xl shadow-lg`}
         align={align}
       >
         {sections.map((section: MenuSection, sectionIndex: number) => (
