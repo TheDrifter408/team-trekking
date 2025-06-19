@@ -57,6 +57,132 @@ interface ConvertOption {
   rotate?: boolean;
 }
 
+export const TaskDropdown: React.FC<TaskDropdownProps> = ({
+  open,
+  setOpen,
+  children,
+}) => {
+  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
+
+  const onHandleOpenDialog = () => {
+    setIsDialogOpen(true);
+  };
+
+  const onHandleCloseDialog = (): void => {
+    setIsDialogOpen(false);
+  };
+
+  return (
+    <div>
+      <DropdownMenu open={open} onOpenChange={setOpen}>
+        <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
+        <DropdownMenuContent
+          side="right"
+          align="start"
+          className="!w-[276px] px-[8px]"
+        >
+          {/* Top Action Buttons */}
+          <TopActionButtons onAction={() => {}} />
+
+          {/* Add Column */}
+          <CustomMenuItem
+            className={MENU_STYLES.menuItemWithMargin}
+            onClick={() => {}}
+          >
+            <Columns3 className={MENU_STYLES.icon} />
+            {LABEL.ADD_COLUMN}
+          </CustomMenuItem>
+
+          <DropdownMenuSeparator className={MENU_STYLES.separator} />
+
+          {/* Rename */}
+          <CustomMenuItem className={MENU_STYLES.menuItem} onClick={() => {}}>
+            <Icon name="edit" className={MENU_STYLES.icon} />
+            {LABEL.RENAME}
+          </CustomMenuItem>
+
+          {/* Sub Menus */}
+          <AddToSubMenu onAddTo={() => {}} />
+          <ConvertToSubMenu onConvert={() => {}} />
+          <TaskTypeSubMenu onTaskType={() => {}} />
+
+          {/* Action Items */}
+          <CustomMenuItem
+            className={MENU_STYLES.menuItem}
+            onClick={() => {
+              onHandleOpenDialog();
+              setOpen(false);
+            }}
+          >
+            <Copy className={MENU_STYLES.icon} />
+            {LABEL.DUPLICATE}
+          </CustomMenuItem>
+
+          <CustomMenuItem className={MENU_STYLES.menuItem} onClick={() => {}}>
+            <AlarmClockIcon className={MENU_STYLES.icon} />
+            {LABEL.REMIND_ME}
+          </CustomMenuItem>
+
+          <CustomMenuItem className={MENU_STYLES.menuItem} onClick={() => {}}>
+            <Mail className={MENU_STYLES.icon} />
+            {LABEL.SEND_EMAIL_TO_TASK}
+          </CustomMenuItem>
+
+          <CustomMenuItem className={MENU_STYLES.menuItem} onClick={() => {}}>
+            <MergeIcon className={`${MENU_STYLES.icon} rotate-90`} />
+            {LABEL.MERGE}
+          </CustomMenuItem>
+
+          <CustomMenuItem className={MENU_STYLES.menuItem} onClick={() => {}}>
+            <Move className={MENU_STYLES.icon} />
+            {LABEL.MOVE}
+          </CustomMenuItem>
+
+          <DropdownMenuSeparator />
+
+          <CustomMenuItem className={MENU_STYLES.menuItem} onClick={() => {}}>
+            <SectionIcon className={MENU_STYLES.icon} />
+            {LABEL.DEPENDENCIES}
+          </CustomMenuItem>
+
+          <TemplatesSubMenu onTemplate={() => {}} />
+
+          <DropdownMenuSeparator />
+
+          <CustomMenuItem className={MENU_STYLES.menuItem} onClick={() => {}}>
+            <Archive className={MENU_STYLES.iconSmall} />
+            {LABEL.ARCHIVE}
+          </CustomMenuItem>
+
+          <CustomMenuItem
+            className={MENU_STYLES.menuItemDestructive}
+            onClick={() => {}}
+          >
+            <Trash2Icon className={MENU_STYLES.iconDestructive} />
+            {LABEL.DELETE}
+          </CustomMenuItem>
+
+          <DropdownMenuSeparator />
+
+          <Button
+            className="w-full my-1.5 bg-theme-main-dark text-base"
+            onClick={() => {}}
+          >
+            {LABEL.SHARING_AND_PERMISSIONS}
+          </Button>
+        </DropdownMenuContent>
+      </DropdownMenu>
+      <TaskDialog
+        isOpen={isDialogOpen}
+        onClose={onHandleCloseDialog}
+        initialTaskName="02.1 Creating Folder"
+        projects={sampleProjectsData}
+        defaultProject="final-initiative"
+      />
+    </div>
+  );
+};
+
 // Constants for styling
 const MENU_STYLES = {
   menuItem: '!text-base text-content-default',
@@ -255,128 +381,3 @@ const TemplatesSubMenu: React.FC<{ onTemplate: (action: string) => void }> = ({
     </DropdownMenuSubContent>
   </DropdownMenuSub>
 );
-export const TaskDropdown: React.FC<TaskDropdownProps> = ({
-  open,
-  setOpen,
-  children,
-}) => {
-  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
-
-  const onHandleOpenDialog = () => {
-    setIsDialogOpen(true);
-  };
-
-  const onHandleCloseDialog = (): void => {
-    setIsDialogOpen(false);
-  };
-
-  return (
-    <div>
-      <DropdownMenu open={open} onOpenChange={setOpen}>
-        <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
-        <DropdownMenuContent
-          side="right"
-          align="start"
-          className="!w-[276px] px-[8px]"
-        >
-          {/* Top Action Buttons */}
-          <TopActionButtons onAction={() => {}} />
-
-          {/* Add Column */}
-          <CustomMenuItem
-            className={MENU_STYLES.menuItemWithMargin}
-            onClick={() => {}}
-          >
-            <Columns3 className={MENU_STYLES.icon} />
-            {LABEL.ADD_COLUMN}
-          </CustomMenuItem>
-
-          <DropdownMenuSeparator className={MENU_STYLES.separator} />
-
-          {/* Rename */}
-          <CustomMenuItem className={MENU_STYLES.menuItem} onClick={() => {}}>
-            <Icon name="edit" className={MENU_STYLES.icon} />
-            {LABEL.RENAME}
-          </CustomMenuItem>
-
-          {/* Sub Menus */}
-          <AddToSubMenu onAddTo={() => {}} />
-          <ConvertToSubMenu onConvert={() => {}} />
-          <TaskTypeSubMenu onTaskType={() => {}} />
-
-          {/* Action Items */}
-          <CustomMenuItem
-            className={MENU_STYLES.menuItem}
-            onClick={() => {
-              onHandleOpenDialog();
-              setOpen(false);
-            }}
-          >
-            <Copy className={MENU_STYLES.icon} />
-            {LABEL.DUPLICATE}
-          </CustomMenuItem>
-
-          <CustomMenuItem className={MENU_STYLES.menuItem} onClick={() => {}}>
-            <AlarmClockIcon className={MENU_STYLES.icon} />
-            {LABEL.REMIND_ME}
-          </CustomMenuItem>
-
-          <CustomMenuItem className={MENU_STYLES.menuItem} onClick={() => {}}>
-            <Mail className={MENU_STYLES.icon} />
-            {LABEL.SEND_EMAIL_TO_TASK}
-          </CustomMenuItem>
-
-          <CustomMenuItem className={MENU_STYLES.menuItem} onClick={() => {}}>
-            <MergeIcon className={`${MENU_STYLES.icon} rotate-90`} />
-            {LABEL.MERGE}
-          </CustomMenuItem>
-
-          <CustomMenuItem className={MENU_STYLES.menuItem} onClick={() => {}}>
-            <Move className={MENU_STYLES.icon} />
-            {LABEL.MOVE}
-          </CustomMenuItem>
-
-          <DropdownMenuSeparator />
-
-          <CustomMenuItem className={MENU_STYLES.menuItem} onClick={() => {}}>
-            <SectionIcon className={MENU_STYLES.icon} />
-            {LABEL.DEPENDENCIES}
-          </CustomMenuItem>
-
-          <TemplatesSubMenu onTemplate={() => {}} />
-
-          <DropdownMenuSeparator />
-
-          <CustomMenuItem className={MENU_STYLES.menuItem} onClick={() => {}}>
-            <Archive className={MENU_STYLES.iconSmall} />
-            {LABEL.ARCHIVE}
-          </CustomMenuItem>
-
-          <CustomMenuItem
-            className={MENU_STYLES.menuItemDestructive}
-            onClick={() => {}}
-          >
-            <Trash2Icon className={MENU_STYLES.iconDestructive} />
-            {LABEL.DELETE}
-          </CustomMenuItem>
-
-          <DropdownMenuSeparator />
-
-          <Button
-            className="w-full my-1.5 bg-theme-main-dark text-base"
-            onClick={() => {}}
-          >
-            {LABEL.SHARING_AND_PERMISSIONS}
-          </Button>
-        </DropdownMenuContent>
-      </DropdownMenu>
-      <TaskDialog
-        isOpen={isDialogOpen}
-        onClose={onHandleCloseDialog}
-        initialTaskName="02.1 Creating Folder"
-        projects={sampleProjectsData}
-        defaultProject="final-initiative"
-      />
-    </div>
-  );
-};

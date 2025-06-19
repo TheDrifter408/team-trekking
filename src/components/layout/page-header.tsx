@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import {
   IconHomeFilled,
   IconFolderFilled,
@@ -15,11 +15,13 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from '@/components/shadcn-ui/breadcrumb';
+import { Icon } from '@/assets/icon-path';
 import { HeaderType } from '@/types/props/Common.ts';
 import { Button } from '@/components/shadcn-ui/button.tsx';
 import { ViewType } from '@/lib/context/page-header-context.tsx';
 import { Calendar, Grid, LayoutDashboard, List } from 'lucide-react';
 import { LucideIcon } from 'lucide-react';
+import { BreadcrumbMenuDropdown } from '@/components/common/breadcrumb-menu-dropdown.tsx';
 
 interface BreadcrumbItem {
   meta: HeaderType;
@@ -49,13 +51,112 @@ type ViewConfigType = {
   [key in ViewType]: ViewConfigItem;
 };
 
+export const PageHeader = ({
+  currentPage,
+  parents,
+  availableViews = defaultViews,
+}: Props) => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const breadcrumbs = buildBreadcrumbHierarchy(currentPage, parents);
+
+  // Determine current view based on current path
+  const getCurrentView = (): ViewType => {
+    const path = location.pathname;
+    const foundView = Object.entries(viewConfig).find(
+      ([_, config]) => config.path === path
+    );
+    return (foundView?.[0] as ViewType) || 'overview';
+  };
+
+  const [currentView, setCurrentView] = useState<ViewType>(getCurrentView());
+
+  // Update the current view when the path changes
+  useEffect(() => {
+    setCurrentView(getCurrentView());
+  }, [location.pathname]);
+
+  return (
+    <div className={cn('sticky top-0 z-20 w-full')}>
+      <div className="px-8 h-[50px] flex items-center border-b">
+        <Breadcrumb>
+          <BreadcrumbList>
+            {breadcrumbs.map((item, index) => {
+              const isLast = index === breadcrumbs.length - 1;
+              const isCurrentPage = item.link === '#';
+
+              return (
+                <BreadcrumbItem key={`${item.meta}-${index}`}>
+                  {isLast || isCurrentPage ? (
+                    <BreadcrumbPage className={'font-medium'}>
+                      <BreadcrumbTypeContent
+                        type={item.meta}
+                        label={item.label}
+                      />
+                    </BreadcrumbPage>
+                  ) : (
+                    <BreadcrumbLink className={'font-medium'} asChild>
+                      <ReactRouterBreadcrumbLink to={item.link}>
+                        <BreadcrumbTypeContent
+                          type={item.meta}
+                          label={item.label}
+                        />
+                      </ReactRouterBreadcrumbLink>
+                    </BreadcrumbLink>
+                  )}
+                  {!isLast && <BreadcrumbSeparator />}
+                </BreadcrumbItem>
+              );
+            })}
+          </BreadcrumbList>
+        </Breadcrumb>
+        <BreadcrumbMenuDropdown onAction={() => {}}>
+          <Button variant={'ghost'} className={'ml-1'}>
+            <Icon name={'menu03'} className={'size-5'} />
+          </Button>
+        </BreadcrumbMenuDropdown>
+      </div>
+
+      {/* View Tabs */}
+      <div className="flex pl-4 border-r border-b pt-[10px]">
+        <div className="flex">
+          {availableViews.map((view) => {
+            const ViewIcon = viewConfig[view].icon;
+            const viewLabel = viewConfig[view].label;
+            const isActive = view === currentView;
+
+            return (
+              <Button
+                key={view}
+                variant="ghost"
+                onClick={() => onViewChange(view)}
+                className={`relative rounded-none h-10 px-4 ${
+                  isActive ? 'text-primary' : 'text-muted-foreground'
+                }`}
+              >
+                <div className="flex items-center gap-2">
+                  {ViewIcon && <ViewIcon className="h-4 w-4" />}
+                  <span>{viewLabel}</span>
+                </div>
+                {isActive && (
+                  <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary" />
+                )}
+              </Button>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+};
+
 // Map header types to their respective UI components
 const BreadcrumbTypeIcons: Record<HeaderType, React.ReactNode> = {
-  HOME: <IconHomeFilled size={14} className="text-gray-600" />,
+  HOME: <IconHomeFilled size={14} className="text-content-tertiary" />,
   SPACE: null, // space uses initials instead of an icon
-  FOLDER: <IconFolderFilled size={16} className="text-gray-600" />,
-  LIST: <IconList size={16} className="text-gray-600" />,
-  TASK: <IconCheckbox size={16} className="text-gray-600" />,
+  FOLDER: <IconFolderFilled size={16} className="text-content-tertiary" />,
+  LIST: <IconList size={16} className="text-content-tertiary" />,
+  TASK: <IconCheckbox size={16} className="text-content-tertiary" />,
 };
 
 // Component to render the appropriate breadcrumb item based on type
@@ -69,8 +170,8 @@ const BreadcrumbTypeContent = ({
   if (type === 'SPACE') {
     return (
       <div className="flex items-center gap-2">
-        <div className="px-[5px] py-[2px] flex justify-center rounded bg-yellow-500">
-          <span className="text-xs text-white font-medium">
+        <div className="p-[4px] flex justify-center rounded bg-yellow-500">
+          <span className="text-xs text-content-default font-semibold">
             {getInitials(label)}
           </span>
         </div>
@@ -84,6 +185,29 @@ const BreadcrumbTypeContent = ({
       {BreadcrumbTypeIcons[type]}
       <span>{label}</span>
     </div>
+  );
+};
+
+// Custom BreadcrumbLink component that uses React Router Link
+const ReactRouterBreadcrumbLink = ({
+  to,
+  children,
+  className,
+}: {
+  to: string;
+  children: React.ReactNode;
+  className?: string;
+}) => {
+  return (
+    <Link
+      to={to}
+      className={cn(
+        'transition-colors hover:text-foreground text-muted-foreground',
+        className
+      )}
+    >
+      {children}
+    </Link>
   );
 };
 
@@ -185,102 +309,3 @@ const viewConfig: ViewConfigType = {
 
 // Default available views
 const defaultViews: ViewType[] = ['overview', 'board', 'list', 'calendar'];
-
-export const PageHeader = ({
-  currentPage,
-  parents,
-  availableViews = defaultViews,
-}: Props) => {
-  const navigate = useNavigate();
-  const location = useLocation();
-  const breadcrumbs = buildBreadcrumbHierarchy(currentPage, parents);
-
-  // Determine current view based on current path
-  const getCurrentView = (): ViewType => {
-    const path = location.pathname;
-    const foundView = Object.entries(viewConfig).find(
-      ([_, config]) => config.path === path
-    );
-    return (foundView?.[0] as ViewType) || 'overview';
-  };
-
-  const [currentView, setCurrentView] = useState<ViewType>(getCurrentView());
-
-  // Update the current view when the path changes
-  useEffect(() => {
-    setCurrentView(getCurrentView());
-  }, [location.pathname]);
-
-  // Handle view button click
-  const handleViewChange = (view: ViewType) => {
-    const viewPath = viewConfig[view].path;
-    navigate(viewPath);
-    setCurrentView(view);
-  };
-
-  return (
-    <div className={cn('sticky top-0 z-20 w-full', 'border')}>
-      <div className="px-8 py-[14.7px] border-b">
-        <Breadcrumb>
-          <BreadcrumbList>
-            {breadcrumbs.map((item, index) => {
-              const isLast = index === breadcrumbs.length - 1;
-
-              return (
-                <BreadcrumbItem key={`${item.meta}-${index}`}>
-                  {isLast ? (
-                    <BreadcrumbPage className={'font-medium'}>
-                      <BreadcrumbTypeContent
-                        type={item.meta}
-                        label={item.label}
-                      />
-                    </BreadcrumbPage>
-                  ) : (
-                    <BreadcrumbLink className={'font-medium'} href={item.link}>
-                      <BreadcrumbTypeContent
-                        type={item.meta}
-                        label={item.label}
-                      />
-                    </BreadcrumbLink>
-                  )}
-
-                  {!isLast && <BreadcrumbSeparator />}
-                </BreadcrumbItem>
-              );
-            })}
-          </BreadcrumbList>
-        </Breadcrumb>
-      </div>
-
-      {/* View Tabs */}
-      <div className="flex pl-4 border-b border-border">
-        <div className="flex">
-          {availableViews.map((view) => {
-            const ViewIcon = viewConfig[view].icon;
-            const viewLabel = viewConfig[view].label;
-            const isActive = view === currentView;
-
-            return (
-              <Button
-                key={view}
-                variant="ghost"
-                onClick={() => handleViewChange(view)}
-                className={`relative rounded-none h-10 px-4 ${
-                  isActive ? 'text-primary' : 'text-muted-foreground'
-                }`}
-              >
-                <div className="flex items-center gap-2">
-                  {ViewIcon && <ViewIcon className="h-4 w-4" />}
-                  <span>{viewLabel}</span>
-                </div>
-                {isActive && (
-                  <div className="absolute bottom-0 center w-full h-0.5 bg-primary" />
-                )}
-              </Button>
-            );
-          })}
-        </div>
-      </div>
-    </div>
-  );
-};
