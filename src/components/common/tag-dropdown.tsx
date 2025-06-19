@@ -47,11 +47,11 @@ const TagChip: React.FC<{
   return (
     <span
       className={`
-        inline-flex items-center gap-1 rounded-[4px] border font-medium !text-black
+        inline-flex items-center gap-1 rounded-[4px] border font-medium !text-black flex-shrink-0
         ${getTagColor(tag.label)} ${sizeClasses}
       `}
     >
-      {tag.label}
+      <span className="truncate max-w-[100px]">{tag.label}</span>
       {removable && onRemove && (
         <button
           type="button"
@@ -59,7 +59,7 @@ const TagChip: React.FC<{
             e.stopPropagation();
             onRemove();
           }}
-          className="ml-0.5 hover:bg-black hover:bg-opacity-10 rounded-full"
+          className="ml-0.5 hover:bg-black hover:bg-opacity-10 rounded-full flex-shrink-0"
         >
           <X className="h-3 w-3" />
         </button>
@@ -173,30 +173,47 @@ const TagDropdownTrigger: React.FC<TagDropdownTriggerProps> = ({
   return (
     <div
       onClick={() => setIsOpen(!isOpen)}
-      className={`flex items-center ${className}`}
+      className={`flex items-center min-w-0 w-full ${className}`}
     >
-      <div className="flex flex-wrap items-center gap-2 w-full">
-        {/* Selected Tags - show first 3 */}
-        {selectedTagObjects.slice(0, 5).map((tag) => (
-          <TagChip
-            key={tag.id}
-            tag={tag}
-            onRemove={() => onHandleRemoveTag(tag.id)}
-            size="sm"
-          />
-        ))}
+      <div className="flex items-center gap-2 min-w-0 flex-1 overflow-hidden">
+        {/* Selected Tags Container with fixed width constraints */}
+        <div className="flex items-center gap-1 min-w-0 flex-1">
+          {/* Show only tags that fit, with intelligent truncation */}
+          {selectedTags.length === 0 ? (
+            <span className="text-gray-500 text-sm truncate">
+              {placeholder}
+            </span>
+          ) : (
+            <>
+              {/* Show first tag(s) that fit */}
+              <div className="flex items-center gap-1 min-w-0 flex-1">
+                {selectedTagObjects
+                  .slice(0, Math.min(3, selectedTagObjects.length))
+                  .map((tag, index) => {
+                    // Show fewer tags if we need to show the +X indicator
+                    const showCount = selectedTags.length > 3 ? 2 : 3;
+                    if (index >= showCount) return null;
 
-        {/* Show +X indicator if more than 3 tags selected */}
-        {selectedTags.length > 5 && (
-          <span className="inline-flex items-center px-2 py-0.5 text-xs font-medium text-gray-600 bg-gray-200 rounded-[4px]">
-            +{selectedTags.length - 5}
-          </span>
-        )}
+                    return (
+                      <TagChip
+                        key={tag.id}
+                        tag={tag}
+                        onRemove={() => onHandleRemoveTag(tag.id)}
+                        size="sm"
+                      />
+                    );
+                  })}
 
-        {/* Placeholder */}
-        {selectedTags.length === 0 && (
-          <span className="text-gray-500 text-sm">{placeholder}</span>
-        )}
+                {/* Show +X indicator ONLY if more than 3 tags */}
+                {selectedTags.length > 3 && (
+                  <span className="inline-flex items-center px-2 py-0.5 text-xs font-medium text-gray-600 bg-gray-200 rounded-[4px] flex-shrink-0">
+                    +{selectedTags.length - 2}
+                  </span>
+                )}
+              </div>
+            </>
+          )}
+        </div>
       </div>
     </div>
   );
