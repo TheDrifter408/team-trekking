@@ -1,6 +1,7 @@
 import { Activity } from '@/types/interfaces/activitySearch.ts';
 import { CheckCircle, Clock, Eye, FileText, Play } from 'lucide-react';
 
+
 export const activitySearchData: Activity[] = [
   {
     id: 1,
@@ -10,6 +11,7 @@ export const activitySearchData: Activity[] = [
     target: 'You',
     timestamp: 'Jun 16 at 10:32 am',
     icon: Eye,
+    isComment: false,
   },
   {
     id: 2,
@@ -19,6 +21,12 @@ export const activitySearchData: Activity[] = [
     target: '2 hours',
     timestamp: 'Jun 16 at 10:34 am',
     icon: Clock,
+    isComment: true,
+    comment: {
+      date: 'Jun 16 at 10:34 am',
+      assignee:{id: 93, name: 'You' },
+      content: 'Estimated time for this task is 2 hours.',
+    },
   },
   {
     id: 3,
@@ -28,6 +36,7 @@ export const activitySearchData: Activity[] = [
     target: '2 days ago',
     timestamp: 'Jun 16 at 10:36 am',
     icon: Clock,
+    isComment: false,
   },
   {
     id: 4,
@@ -38,6 +47,16 @@ export const activitySearchData: Activity[] = [
     timestamp: 'Jun 16 at 10:52 am',
     icon: FileText,
     hasAttachment: true,
+    isComment: true,
+    comment: {
+      assignee: { id:32, name:'Jawahir Nabhan' },
+      date: 'Jun 16 at 10:52 am',
+      content: 'Please review the attached image.',
+      reply: {
+        count:1,
+        author: { id: 43, name: 'Mehedi Hassan' }
+      }
+    },
   },
   {
     id: 5,
@@ -48,6 +67,7 @@ export const activitySearchData: Activity[] = [
     toStatus: 'In Progress',
     timestamp: 'Jun 17 at 12:35 pm',
     icon: Play,
+    isComment: false,
   },
   {
     id: 6,
@@ -58,6 +78,12 @@ export const activitySearchData: Activity[] = [
     toStatus: 'Completed',
     timestamp: 'Jun 17 at 6:24 pm',
     icon: CheckCircle,
+    isComment: true,
+    comment: {
+      assignee: { id: 93, name: 'Samrat Biswas' },
+      date: 'Jun 17 at 6:24 pm',
+      content: 'Task has been completed successfully.',
+    },
   },
   {
     id: 7,
@@ -68,6 +94,7 @@ export const activitySearchData: Activity[] = [
     timestamp: 'Yesterday at 1:00 pm',
     icon: FileText,
     hasMultipleAttachments: true,
+    isComment: false,
   },
   {
     id: 5,
@@ -78,6 +105,7 @@ export const activitySearchData: Activity[] = [
     toStatus: 'In Progress',
     timestamp: 'Jun 17 at 12:35 pm',
     icon: Play,
+    isComment: false,
   },
   {
     id: 6,
@@ -88,6 +116,7 @@ export const activitySearchData: Activity[] = [
     toStatus: 'Completed',
     timestamp: 'Jun 17 at 6:24 pm',
     icon: CheckCircle,
+    isComment: false,
   },
   {
     id: 7,
@@ -98,6 +127,12 @@ export const activitySearchData: Activity[] = [
     timestamp: 'Yesterday at 1:00 pm',
     icon: FileText,
     hasMultipleAttachments: true,
+    isComment: true,
+    comment: {
+      assignee: { id:12, name: 'Noor Ullah Al Noor'},
+      date: 'Yesterday at 1:00 pm',
+      content: 'Uploaded two important documents for your review.',
+    },
   },
   {
     id: 5,
@@ -108,6 +143,7 @@ export const activitySearchData: Activity[] = [
     toStatus: 'In Progress',
     timestamp: 'Jun 17 at 12:35 pm',
     icon: Play,
+    isComment: false,
   },
   {
     id: 6,
@@ -118,6 +154,7 @@ export const activitySearchData: Activity[] = [
     toStatus: 'Completed',
     timestamp: 'Jun 17 at 6:24 pm',
     icon: CheckCircle,
+    isComment: false,
   },
   {
     id: 7,
@@ -128,6 +165,7 @@ export const activitySearchData: Activity[] = [
     timestamp: 'Yesterday at 1:00 pm',
     icon: FileText,
     hasMultipleAttachments: true,
+    isComment: false,
   },
   {
     id: 5,
@@ -138,6 +176,7 @@ export const activitySearchData: Activity[] = [
     toStatus: 'In Progress',
     timestamp: 'Jun 17 at 12:35 pm',
     icon: Play,
+    isComment: false,
   },
   {
     id: 6,
@@ -148,6 +187,7 @@ export const activitySearchData: Activity[] = [
     toStatus: 'Completed',
     timestamp: 'Jun 17 at 6:24 pm',
     icon: CheckCircle,
+    isComment: false,
   },
   {
     id: 7,
@@ -158,5 +198,6 @@ export const activitySearchData: Activity[] = [
     timestamp: 'Yesterday at 1:00 pm',
     icon: FileText,
     hasMultipleAttachments: true,
+    isComment: false,
   },
 ];

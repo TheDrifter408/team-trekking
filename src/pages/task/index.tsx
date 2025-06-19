@@ -299,7 +299,8 @@ export const Task: FC = () => {
               <div className="flex -space-x-2 w-full p-0">
                 <Popover>
                   <PopoverTrigger asChild>
-                    <Button className="bg-transparent p-0 h-full text-muted-foreground text-sm flex items-center gap-0 justify-start w-full *:data-[slot=avatar]:ring-background -space-x-1 *:data-[slot=avatar]:ring-2">
+                    <Button
+                      className="bg-transparent p-0 h-full text-muted-foreground text-sm flex items-center gap-0 justify-start w-full *:data-[slot=avatar]:ring-background -space-x-1 *:data-[slot=avatar]:ring-2">
                       {
                         selectedAssignees.length > 0 ?
                           (
@@ -308,8 +309,9 @@ export const Task: FC = () => {
                                 key={assignee.id}
                                 assignee={assignee}
                                 displayName={false}
-                                className='bg-muted rounded-full '
+                                className='bg-muted rounded-full'
                                 enterAssignee={enterAssignee}
+                                isSelected={true}
                                 onRemove={() => onSelectAssignee(assignee)} />
                             ))
                           ) :
@@ -344,6 +346,7 @@ export const Task: FC = () => {
                                     enterAssignee={enterAssignee}
                                     onRemove={() => { }}
                                     isSelected={isSelected}
+                                    showButtons={true}
                                   />
                                 </CommandItem>
                               )
@@ -409,7 +412,7 @@ export const Task: FC = () => {
             value={description}
             name={'task Description'}
             onChange={onChangeDescription}
-            setIsEditing={() => {}}
+            setIsEditing={() => { }}
           />
         </div>
       </div>

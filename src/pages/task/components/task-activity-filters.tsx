@@ -3,7 +3,6 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/shadcn-ui/dropdown-menu.tsx';
 import { Button } from '@/components/shadcn-ui/button.tsx';
@@ -48,22 +47,14 @@ export const TaskActivityFilters = ({
             </div>
             <div
               className={cn(
-                'h-4 w-4 border rounded flex items-center justify-center',
-                filter.checked ? 'bg-primary border-primary' : 'border-input'
+                'h-4 w-4 rounded flex items-center justify-center',
+                filter.checked ? 'visible' : 'invisible'
               )}
             >
-              {filter.checked && (
-                <Check className="h-3 w-3 text-primary-foreground" />
-              )}
+              <Check />
             </div>
           </DropdownMenuItem>
         ))}
-        <DropdownMenuSeparator />
-        <DropdownMenuItem className="px-2 py-1.5 justify-center">
-          <Button variant="outline" size="sm" className="w-full text-xs">
-            {LABEL.APPLY_FILTERS}
-          </Button>
-        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );

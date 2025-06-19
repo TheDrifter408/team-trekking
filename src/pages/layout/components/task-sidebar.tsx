@@ -3,7 +3,6 @@ import {
   forwardRef,
   MouseEvent,
   PropsWithChildren,
-  useMemo,
   useRef,
   useState,
 } from 'react';
@@ -33,10 +32,6 @@ import { filterOptions, taskNotificationUsers } from '@/mock';
 import { TaskActivityFilters } from '@/pages/task/components/task-activity-filters.tsx';
 import { ButtonProps } from '@headlessui/react';
 import TaskActivitySearch from '@/pages/task/components/task-activity-search.tsx';
-import { Comment } from '@/pages/task/components/Comment';
-
-// This is sample activity data
-const activityData: any[] = [];
 
 type SidebarTriggerProps = PropsWithChildren<ButtonProps>;
 
@@ -69,7 +64,6 @@ export const TaskSidebar = ({ ...props }) => {
   const [comment, setComment] = useState('');
   const [watching, setWatching] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
   const [filters, setFilters] = useState(filterOptions);
   const [notifications, setNotifications] = useState(taskNotificationUsers);
   const searchInputRef = useRef<HTMLInputElement>(null);
@@ -96,9 +90,6 @@ export const TaskSidebar = ({ ...props }) => {
       setTimeout(() => {
         searchInputRef.current?.focus();
       }, 0);
-    } else {
-      // Clear search when closing
-      setSearchQuery('');
     }
   };
 
@@ -117,18 +108,6 @@ export const TaskSidebar = ({ ...props }) => {
       )
     );
   };
-
-  // Filter activity data based on search query
-  const filteredActivity = useMemo(() => {
-    if (!searchQuery.trim()) return activityData;
-
-    return activityData.filter(
-      (item) =>
-        item.user?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        item.content?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        item.action?.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-  }, [searchQuery]);
 
   // Count unread notifications
   const unreadCount = notifications.filter((n) => !n.read).length;
