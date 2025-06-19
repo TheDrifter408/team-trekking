@@ -1,5 +1,4 @@
 import { FC, useState } from 'react';
-import { arrayMove } from '@dnd-kit/sortable';
 import { myWorkData } from '@/mock';
 import { CardContent } from '@/components/shadcn-ui/card';
 import { HoverableCard } from './hoverable-card';
@@ -9,10 +8,27 @@ import {
   TabsList,
   TabsTrigger,
 } from '@/components/shadcn-ui/tabs';
-import { DragAndDropProvider } from '@/pages/dashboard/components/my-work-dnd.tsx';
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from '@/components/shadcn-ui/collapsible';
+import {
+  IconCalendar,
+  IconCaretDownFilled,
+  IconCaretRightFilled,
+  IconCircleCheck,
+  IconFlag,
+  IconTrash,
+  IconUser,
+} from '@tabler/icons-react';
+import { Button } from '@/components/shadcn-ui/button';
 import { cn } from '@/lib/utils';
-import { LABEL } from '@/lib/constants/appStrings.ts';
-import { MyWorkTask, WorkData } from '@/types/props/Common.ts';
+import {
+  MyWorkTask,
+  WorkData,
+  ScheduleSection as ScheduleType,
+} from '@/types/props/Common.ts';
 
 interface Props {
   expanded: boolean;
@@ -31,9 +47,7 @@ interface MyWorkProps {
 }
 
 const MyWork: FC<MyWorkProps> = ({ isExpanded, onExpand, cardTitle }) => {
-  const [workData, setWorkData] = useState(() => myWorkData);
-
-  const todoWorkData: WorkData | undefined = workData.find(
+  const todoWorkData: WorkData | undefined = myWorkData.find(
     (data) => data.workType === 'ToDo'
   );
 
@@ -41,84 +55,6 @@ const MyWork: FC<MyWorkProps> = ({ isExpanded, onExpand, cardTitle }) => {
     todoWorkData?.scheduleData.flatMap((section) =>
       section.tasks.filter((task) => task.completed)
     ) || [];
-
-  const onTaskReorder = (
-    sectionId: string,
-    oldIndex: number,
-    newIndex: number
-  ) => {
-    setWorkData((prevData) =>
-      prevData.map((workItem) => {
-        if (workItem.workType === 'ToDo') {
-          return {
-            ...workItem,
-            scheduleData: workItem.scheduleData.map((section) => {
-              if (section.id === sectionId) {
-                const newTasks = arrayMove(section.tasks, oldIndex, newIndex);
-                return { ...section, tasks: newTasks };
-              }
-              return section;
-            }),
-          };
-        }
-        return workItem;
-      })
-    );
-  };
-
-  const onTaskMove = (
-    taskId: string,
-    sourceSectionId: string,
-    targetSectionId: string,
-    targetIndex?: number
-  ) => {
-    if (sourceSectionId === targetSectionId) return;
-
-    setWorkData((prevData) =>
-      prevData.map((workItem) => {
-        if (workItem.workType === 'ToDo') {
-          let taskToMove: MyWorkTask | null = null;
-
-          // Find and remove the task from source section
-          const updatedScheduleData = workItem.scheduleData.map((section) => {
-            if (section.id === sourceSectionId) {
-              const taskIndex = section.tasks.findIndex(
-                (task) => task.id === taskId
-              );
-              if (taskIndex !== -1) {
-                taskToMove = section.tasks[taskIndex];
-                return {
-                  ...section,
-                  tasks: section.tasks.filter((task) => task.id !== taskId),
-                };
-              }
-            }
-            return section;
-          });
-
-          // Add the task to target section at specified index or at the end
-          const finalScheduleData = updatedScheduleData.map((section) => {
-            if (section.id === targetSectionId && taskToMove) {
-              const newTasks = [...section.tasks];
-              if (typeof targetIndex === 'number' && targetIndex >= 0) {
-                newTasks.splice(targetIndex, 0, taskToMove);
-              } else {
-                newTasks.push(taskToMove);
-              }
-              return {
-                ...section,
-                tasks: newTasks,
-              };
-            }
-            return section;
-          });
-
-          return { ...workItem, scheduleData: finalScheduleData };
-        }
-        return workItem;
-      })
-    );
-  };
 
   return (
     <HoverableCard
@@ -128,7 +64,7 @@ const MyWork: FC<MyWorkProps> = ({ isExpanded, onExpand, cardTitle }) => {
     >
       <CardContent
         className={cn(
-          'overflow-y-auto space-y-1 !px-0',
+          'overflow-y-auto space-y-1 !px-[10px]',
           isExpanded && 'flex-grow pb-[90px]'
         )}
       >
@@ -136,8 +72,6 @@ const MyWork: FC<MyWorkProps> = ({ isExpanded, onExpand, cardTitle }) => {
           todoWorkData={todoWorkData}
           completedTasks={completedTasks}
           className={isExpanded ? 'flex-grow' : ''}
-          onTaskReorder={onTaskReorder}
-          onTaskMove={onTaskMove}
         />
       </CardContent>
     </HoverableCard>
@@ -148,47 +82,34 @@ interface ContentProps {
   todoWorkData: WorkData | undefined;
   completedTasks: MyWorkTask[];
   className?: string;
-  onTaskReorder: (
-    sectionId: string,
-    oldIndex: number,
-    newIndex: number
-  ) => void;
-  onTaskMove: (
-    taskId: string,
-    sourceSectionId: string,
-    targetSectionId: string,
-    targetIndex?: number
-  ) => void;
 }
 
 const Content: FC<ContentProps> = ({
   todoWorkData,
   completedTasks,
   className,
-  onTaskReorder,
-  onTaskMove,
 }) => (
   <div className={cn('w-full', className)}>
     <Tabs defaultValue="todo" className="w-full">
-      <TabsList variant="underline" className="w-full px-[10px]">
+      <TabsList variant="underline" className="w-full">
         <TabsTrigger value="todo" variant="underline">
           <span className="text-muted-foreground font-medium text-base">
-            {LABEL.TODO}
+            To Do
           </span>
         </TabsTrigger>
         <TabsTrigger value="done" variant="underline">
           <span className="text-muted-foreground font-medium text-base">
-            {LABEL.DONE}
+            Done
           </span>
         </TabsTrigger>
       </TabsList>
-      <TabsContent value="todo" className="space-y-2 mt-2  ">
-        <DragAndDropProvider
-          sections={todoWorkData?.scheduleData || []}
-          onTaskReorder={onTaskReorder}
-          onTaskMove={onTaskMove}
-        />
+
+      <TabsContent value="todo" className="space-y-2 mt-2">
+        {todoWorkData?.scheduleData.map((section: ScheduleType) => (
+          <ScheduleSection key={section.id} section={section} />
+        ))}
       </TabsContent>
+
       <TabsContent value="done" className="space-y-2 mt-2">
         {completedTasks.length > 0 ? (
           completedTasks.map((task) => (
@@ -197,11 +118,102 @@ const Content: FC<ContentProps> = ({
             </div>
           ))
         ) : (
-          <div className="text-base text-content-tertiary py-2 px-4">
-            {LABEL.NO_COMPLTED_TASKS}
+          <div className="text-sm text-gray-500 py-2 px-4">
+            No completed tasks
           </div>
         )}
       </TabsContent>
     </Tabs>
   </div>
 );
+
+interface ScheduleSectionProps {
+  section: ScheduleType;
+}
+
+const ScheduleSection: FC<ScheduleSectionProps> = ({ section }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [hoveredTaskId, setHoveredTaskId] = useState<string | null>(null);
+
+  return (
+    <Collapsible open={isOpen} onOpenChange={setIsOpen} className="w-full">
+      <CollapsibleTrigger className="flex items-center justify-between w-full py-2 px-4 hover:bg-gray-100 rounded-md">
+        <div className="flex items-center space-x-2">
+          {isOpen ? (
+            <IconCaretDownFilled size={16} />
+          ) : (
+            <IconCaretRightFilled size={16} />
+          )}
+          <span className="font-medium text-primary text-base">
+            {section.id}
+          </span>
+          <span className="text-sm text-gray-500">{section.tasks.length}</span>
+        </div>
+      </CollapsibleTrigger>
+      <CollapsibleContent className="py-1 space-y-1">
+        {section.tasks.map((task) => (
+          <div
+            key={task.id}
+            className="flex items-center text-sm hover:bg-accent py-[10px] px-2 rounded"
+            onMouseEnter={() => setHoveredTaskId(task.id)}
+            onMouseLeave={() => setHoveredTaskId(null)}
+          >
+            <div
+              className="w-3 h-3 rounded-full mr-2 shrink-0"
+              style={{ backgroundColor: task.color }}
+            />
+            <div className="max-w-[40%] text-base truncate">{task.name}</div>
+            <div className="ml-[7px] max-w-[50%] text-base text-muted-foreground truncate">
+              {task.description?.substring(0, 30)}
+            </div>
+            <div className="ml-auto shrink-0">
+              {hoveredTaskId === task.id ? (
+                <div className="flex ">
+                  <Button
+                    size={'icon_sm'}
+                    className="hover:bg-gray-300"
+                    variant={'ghost'}
+                  >
+                    <IconTrash size={16} />
+                  </Button>
+                  <Button
+                    size={'icon_sm'}
+                    className="hover:bg-gray-300"
+                    variant={'ghost'}
+                  >
+                    <IconUser size={16} />
+                  </Button>
+                  <Button
+                    size={'icon_sm'}
+                    className="hover:bg-gray-300"
+                    variant={'ghost'}
+                  >
+                    <IconCalendar size={16} />
+                  </Button>
+                  <Button
+                    size={'icon_sm'}
+                    className="hover:bg-gray-300"
+                    variant={'ghost'}
+                  >
+                    <IconFlag size={16} />
+                  </Button>
+                  <Button
+                    size={'icon_sm'}
+                    className="hover:bg-gray-300"
+                    variant={'ghost'}
+                  >
+                    <IconCircleCheck size={16} />
+                  </Button>
+                </div>
+              ) : (
+                <span className="text-base">
+                  {task.dueDate ? 'Due' : 'Today'}
+                </span>
+              )}
+            </div>
+          </div>
+        ))}
+      </CollapsibleContent>
+    </Collapsible>
+  );
+};

@@ -17,8 +17,8 @@ import {
   IconCheck,
   IconCirclePlus,
 } from '@tabler/icons-react';
-import { Card, CardContent } from '@/components/shadcn-ui/card';
 import { LABEL } from '@/lib/constants/appStrings.ts';
+import { Card, CardContent } from '@/components/shadcn-ui/card';
 
 interface CardItem {
   id: string;
@@ -60,6 +60,7 @@ export const PageHeader: FC<PageHeaderProps> = ({
     />
   );
 
+// Simplified internal components with inline props
 const CardToggleButton: FC<{ card: CardItem; onClick: () => void }> = ({
   card,
   onClick,
@@ -108,12 +109,12 @@ const DefaultHeader: FC<{
   <div
     className={cn(
       'sticky flex items-center justify-between top-0 bg-background z-10 w-full',
-      'border-l border-r border-b px-3 rounded-sm h-[50px]'
+      'border-l border-r border-b px-3 rounded-sm'
     )}
   >
     <div className="flex text-base items-center gap-4 py-[13px]">
       <IconHome size={16} />
-      <span>{LABEL.HOME}</span>
+      <span>Home</span>
     </div>
     <Sheet>
       <SheetTrigger asChild>
@@ -121,18 +122,18 @@ const DefaultHeader: FC<{
           variant="default"
           className="bg-theme-main-dark text-base text-white hover:bg-theme-main-dark/90"
         >
-          {LABEL.MANAGE_CARDS}
+          Manage cards
         </Button>
       </SheetTrigger>
       <SheetContent
         overlay={false}
         side="right"
-        className="w-[300px] top-[46px] overflow-y-scroll h-[calc(100%-46px)] sm:w-[400px]"
+        className="w-[300px] top-[40px] overflow-y-scroll h-[calc(100%-40px)] sm:w-[400px]"
       >
         <SheetHeader className="sticky top-0 z-10 bg-background border-b h-[48px] px-4">
           <div className="relative flex items-center justify-between h-full">
             <SheetTitle className="text-2xl font-semibold">
-              {LABEL.ADD_CARDS}
+              Add Cards
             </SheetTitle>
             <SheetClose asChild>
               <Button
@@ -171,7 +172,7 @@ const FullViewHeader: FC<{
       'border-l border-r'
     )}
   >
-    <div className="pl-3 border-b pr-4 flex text-base items-center justify-between gap-4 h-[50px]">
+    <div className="pl-3 border-b pr-4 flex text-base items-center justify-between gap-4 h-[47px]">
       <div className="flex items-center">
         <Button onClick={onPrevCard} variant="ghost" size="icon_sm">
           <IconChevronLeft />
@@ -179,14 +180,7 @@ const FullViewHeader: FC<{
         <Button onClick={onNextCard} variant="ghost" size="icon_sm">
           <IconChevronRight />
         </Button>
-        <Button
-          variant={'ghost'}
-          className={'font-normal text-base'}
-          onClick={onCancel}
-        >
-          {LABEL.HOME}
-        </Button>
-        /&nbsp;&nbsp;
+        <span className={'ml-2'}>Home&nbsp;&nbsp;/&nbsp;&nbsp;</span>
         <span className="text-muted-foreground">{title}</span>
       </div>
       <Button onClick={onCancel} variant="ghost" size="icon">

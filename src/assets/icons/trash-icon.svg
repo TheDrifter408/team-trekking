@@ -7,7 +7,7 @@
 >
   <path
     d="M8 5C8 4.45 8.45 4 9 4H15C15.55 4 16 4.45 16 5V6H19C19.55 6 20 6.45 20 7C20 7.55 19.55 8 19 8H5C4.45 8 4 7.55 4 7C4 6.45 4.45 6 5 6H8V5Z"
-    stroke="currentColor"
+    stroke="#E53935"
     stroke-width="2"
     stroke-linecap="round"
     stroke-linejoin="round"
@@ -15,7 +15,7 @@
 
   <path
     d="M6.5 8H17.5L16.5 20C16.47 20.28 16.26 21 15.5 21H8.5C7.74 21 7.53 20.28 7.5 20L6.5 8Z"
-    stroke="currentColor"
+    stroke="#E53935"
     stroke-width="2"
     stroke-linecap="round"
     stroke-linejoin="round"
@@ -23,19 +23,19 @@
 
   <path
     d="M9.5 11V17"
-    stroke="currentColor"
+    stroke="#E53935"
     stroke-width="2"
     stroke-linecap="round"
   />
   <path
     d="M12 11V17"
-    stroke="currentColor"
+    stroke="#E53935"
     stroke-width="2"
     stroke-linecap="round"
   />
   <path
     d="M14.5 11V17"
-    stroke="currentColor"
+    stroke="#E53935"
     stroke-width="2"
     stroke-linecap="round"
   />
