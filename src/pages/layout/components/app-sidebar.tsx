@@ -103,11 +103,7 @@ export const AppSidebar = ({
         {isOpen ? (
           <Collapsible className="group/collapsible">
             <SidebarGroup className="gap-1">
-              <div
-                className="justify-between flex items-center"
-                /* onMouseEnter={() => setEnterSpaceGroup(true)}
-                 onMouseLeave={() => setEnterSpaceGroup(false)}*/
-              >
+              <div className="justify-between flex items-center">
                 <SidebarGroupLabel className="text-xs font-medium tracking-wider">
                   {LABEL.SPACES}
                 </SidebarGroupLabel>
