@@ -18,6 +18,7 @@ interface Props {
   className?: string;
   isSelected?: boolean;
   showAvatarRing?: boolean;
+  showButtons?:boolean,
 }
 
 export const AssigneeAvatar = ({
@@ -27,7 +28,8 @@ export const AssigneeAvatar = ({
   displayName,
   className,
   isSelected,
-  showAvatarRing = false
+  showAvatarRing = false,
+  showButtons = false,
 }: Props) => {
   const getInitials = (name: string) => {
     const names = name.split(' ');
@@ -76,9 +78,9 @@ export const AssigneeAvatar = ({
             <IconX size={10} className="text-white" />
           </Button>
         </Avatar>
-        <p className={cn(displayName ? 'block' : 'hidden')}>{assignee.name}</p>
+        <p className={cn('text-nowrap text-black', displayName ? 'block' : 'hidden')}>{assignee.name}</p>
       </div>
-      <div className='flex self-end gap-1'>
+      <div className={cn('flex self-end gap-1', showButtons ? 'block' : 'hidden')}>
         <Tooltip>
           <TooltipTrigger>
             <Button className={cn('bg-white h-min p-1 rounded-sm text-muted-foreground invisible group-hover:visible')}>Profile</Button>

@@ -33,6 +33,7 @@ import {
 import { filterOptions, taskNotificationUsers } from '@/mock';
 import { TaskActivityFilters } from '@/pages/task/components/task-activity-filters.tsx';
 import { ButtonProps } from '@headlessui/react';
+import { Comment } from '@/pages/task/components/Comment';
 
 // This is sample activity data
 const activityData: any[] = [];
@@ -87,7 +88,7 @@ export const TaskSidebar = ({ ...props }) => {
     setFilters([...allUnselected]);
   }
 
-  const onToggleSearch = (e:MouseEvent) => {
+  const onToggleSearch = (e: MouseEvent) => {
     e.stopPropagation();
     setShowSearch((prev) => !prev);
     if (!showSearch) {
@@ -101,7 +102,7 @@ export const TaskSidebar = ({ ...props }) => {
     }
   };
 
-  const onToggleFilter = (id:string) => {
+  const onToggleFilter = (id: string) => {
     setFilters(
       filters.map((filter) =>
         filter.id === id ? { ...filter, checked: !filter.checked } : filter
@@ -109,7 +110,7 @@ export const TaskSidebar = ({ ...props }) => {
     );
   };
 
-  const markNotificationAsRead = (id:number) => {
+  const markNotificationAsRead = (id: number) => {
     setNotifications(
       notifications.map((notification) =>
         notification.id === id ? { ...notification, read: true } : notification
@@ -264,8 +265,25 @@ export const TaskSidebar = ({ ...props }) => {
                   </div>
                 ))
               ) : (
-                <div className="flex items-center justify-center h-32 text-sm text-muted-foreground">
-                  No activity yet
+                <div className="px-2 py-1 h-32 text-sm">
+                  <Comment
+                    assignee={{
+                      id: 2,
+                      name: "Noor Ullah Al Noor",
+                    }}
+                    date={new Date('2025-05-16T00:12:32')}
+                    comment={{
+                      id: 1,
+                      content: 'This is a comment',
+                      reply: {
+                        count: 1,
+                        author: {
+                          id: 2,
+                          name: 'Jawahiir Nabhan'
+                        }
+                      }
+                    }}
+                  />
                 </div>
               )}
             </SidebarGroupContent>
