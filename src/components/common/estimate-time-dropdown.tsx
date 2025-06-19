@@ -1,4 +1,4 @@
-import React, { ReactNode, useRef, useState, useEffect } from 'react';
+import React, { ReactNode, useRef, useState } from 'react';
 import { Input } from '@/components/shadcn-ui/input';
 import {
   DropdownMenu,
@@ -19,15 +19,6 @@ interface TimeEstimateComponentProps {
   time?: string;
 }
 
-const formatDuration = (ms: number): string => {
-  const totalMinutes = Math.floor(ms / 60000);
-  const hours = Math.floor(totalMinutes / 60);
-  const minutes = totalMinutes % 60;
-  const parts = [];
-  if (hours) parts.push(`${hours}h`);
-  if (minutes) parts.push(`${minutes}m`);
-  return parts.join(' ');
-};
 const parseTimeString = (input: string): string => {
   const parts = input.trim().toLowerCase().split(/[\s]+/);
   let hours = 0;
@@ -41,7 +32,16 @@ const parseTimeString = (input: string): string => {
   });
   const ms = (hours * 60 + minutes) * 60 * 1000;
   if (ms === 0) return '';
-  return formatDuration(ms);
+
+  // Format as "Xh Ym" instead of using humanizeDuration
+  const totalMinutes = Math.floor(ms / (60 * 1000));
+  const h = Math.floor(totalMinutes / 60);
+  const m = totalMinutes % 60;
+
+  if (h > 0 && m > 0) return `${h}h ${m}m`;
+  if (h > 0) return `${h}h`;
+  if (m > 0) return `${m}m`;
+  return '';
 };
 
 export const TimeEstimateDropdown: React.FC<TimeEstimateComponentProps> = ({
@@ -71,28 +71,43 @@ export const TimeEstimateDropdown: React.FC<TimeEstimateComponentProps> = ({
     setShowSuggestion(false);
   };
 
-  const onApplySuggestion = () => {
+  const onApplySuggestion = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
     setInputValue(suggestion);
     setSavedTimeEstimate(suggestion);
     setShowSuggestion(false);
+    ref.current?.focus();
   };
 
   const onBlur = () => {
-    const parsed = parseTimeString(inputValue);
-    if (parsed && parsed !== inputValue) {
-      setInputValue(parsed); // update visible input
-      setSavedTimeEstimate(parsed); // update saved
-    } else {
-      setSavedTimeEstimate(inputValue); // fallback to raw value
-    }
-    setShowSuggestion(false);
+    // Small delay to allow popover click to register
+    setTimeout(() => {
+      const parsed = parseTimeString(inputValue);
+      if (parsed && parsed !== inputValue) {
+        setInputValue(parsed); // update visible input
+        setSavedTimeEstimate(parsed); // update saved
+      } else {
+        setSavedTimeEstimate(inputValue); // fallback to raw value
+      }
+      setShowSuggestion(false);
+    }, 150);
   };
 
   return (
     <div className="w-full max-w-md mx-auto py-2">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
-        <DropdownMenuContent className="w-[340px] p-0" align="start">
+        <DropdownMenuContent
+          className="w-[340px] p-0 shadow-lg"
+          align="start"
+          onOpenAutoFocus={(e) => {
+            e.preventDefault();
+            setTimeout(() => {
+              ref.current?.focus();
+            }, 0);
+          }}
+        >
           <div className="mx-[10px] mt-[10px] flex items-center justify-between h-[45px]">
             <div className="flex items-center gap-x-2">
               <span className="text-lg font-medium text-gray-900">
@@ -111,18 +126,8 @@ export const TimeEstimateDropdown: React.FC<TimeEstimateComponentProps> = ({
                       value={inputValue}
                       onChange={onChange}
                       onBlur={onBlur}
-                      placeholder="e.g. 3h 20"
+                      placeholder="e.g. 3h 20m"
                       onFocus={() => setShowSuggestion(!!suggestion)}
-                      onKeyDown={(e) => {
-                        if (
-                          e.key === 'Enter' &&
-                          suggestion &&
-                          suggestion !== inputValue
-                        ) {
-                          e.preventDefault(); // Prevent form submission if inside a form
-                          onApplySuggestion();
-                        }
-                      }}
                       ref={ref}
                     />
                     {inputValue && (
@@ -134,9 +139,9 @@ export const TimeEstimateDropdown: React.FC<TimeEstimateComponentProps> = ({
                   </div>
                 </PopoverTrigger>
                 <PopoverContent
-                  onClick={onApplySuggestion}
-                  className="w-[185px] flex items-center justify-between gap-2 text-base text-gray-700 p-2 shadow-md z-50"
+                  className="w-[185px] flex items-center justify-between gap-2 text-base text-gray-700 p-2 shadow-md z-50 cursor-pointer hover:bg-gray-50"
                   sideOffset={4}
+                  onMouseDown={onApplySuggestion}
                 >
                   <span>{suggestion}</span>
                 </PopoverContent>
