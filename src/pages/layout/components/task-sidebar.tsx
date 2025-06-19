@@ -33,6 +33,7 @@ import { filterOptions, taskNotificationUsers } from '@/mock';
 import { TaskActivityFilters } from '@/pages/task/components/task-activity-filters.tsx';
 import { ButtonProps } from '@headlessui/react';
 import TaskActivitySearch from '@/pages/task/components/task-activity-search.tsx';
+import { Comment } from '@/pages/task/components/Comment';
 
 // This is sample activity data
 const activityData: any[] = [];

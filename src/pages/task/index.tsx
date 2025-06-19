@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { FC, useState } from 'react';
 import { mockChecklist, mockSubtasks, mockUsers, sampleTask } from '@/mock';
 import { cn } from '@/lib/utils';
 import {
@@ -34,7 +34,6 @@ import {
   AvatarFallback,
   AvatarImage,
 } from '@/components/shadcn-ui/avatar';
-import { Label } from '@/components/shadcn-ui/label';
 import { Button } from '@/components/shadcn-ui/button';
 import { TaskMetaRow } from './components/task-meta-row';
 import { Input } from '@/components/shadcn-ui/input.tsx';
@@ -54,7 +53,8 @@ import { createDataTableStore, DataTableProvider } from '@/stores/zustand/data-t
 import { LABEL } from '@/lib/constants/appStrings.ts';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/shadcn-ui/tooltip.tsx';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/shadcn-ui/dropdown-menu.tsx';
-export const Task: React.FC = () => {
+import { $getRoot, EditorState } from 'lexical';
+export const Task: FC = () => {
   const [enterDates, setEnterDates] = useState<boolean>(false);
   const [enterAssignee, setEnterAssignee] = useState<boolean>(false);
   const [enterPriority, setEnterPriority] = useState<boolean>(false);
@@ -126,8 +126,6 @@ export const Task: React.FC = () => {
   });
 
   const [selectedAssignees, setSelectedAssignees] = useState<Assignee[]>([]);
-  //const [isAddTask, setIsAddTask] = useState<boolean>(false);
-  //const [isAddChecklist, setIsAddChecklist] = useState<boolean>(false);
 
   const onSelectAssignee = (assignee: Assignee) => {
     const isSelected = selectedAssignees.filter((a) => a.id === assignee.id);
@@ -144,6 +142,14 @@ export const Task: React.FC = () => {
   const onPressAddChecklist = () => {
     // setIsAddChecklist(true);
   };
+
+  const onChangeDescription = (editorState: EditorState) => {
+    editorState.read(() => {
+      const root = $getRoot();
+      const text = root.getTextContent();
+      console.log('Plain text: ', text);
+    });
+  }
 
   return (
     <div className={'w-2/3 mx-auto my-10 items-center'}>
@@ -398,14 +404,12 @@ export const Task: React.FC = () => {
       </div>
       <div className="mt-4">
         <div className="space-y-2">
-          <Label htmlFor="description" className="font-medium text-base">
-            {LABEL.DESCRIPTION}
-          </Label>
           <DocEditor
             placeholder={"Start writing or type '/' for commands"}
             value={description}
             name={'task Description'}
-            onChange={(e) => setDescription(e)}
+            onChange={onChangeDescription}
+            setIsEditing={() => {}}
           />
         </div>
       </div>
