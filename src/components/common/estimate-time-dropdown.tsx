@@ -62,7 +62,8 @@ export const TimeEstimateDropdown: React.FC<TimeEstimateComponentProps> = ({
 
     const parsed = parseTimeString(val);
     setSuggestion(parsed);
-    setShowSuggestion(!!parsed && parsed !== val);
+    // Only show suggestion if there's a meaningful difference and input is not empty
+    setShowSuggestion(!!parsed && parsed !== val && val.trim() !== '');
   };
 
   const onClear = () => {
@@ -92,6 +93,13 @@ export const TimeEstimateDropdown: React.FC<TimeEstimateComponentProps> = ({
       }
       setShowSuggestion(false);
     }, 150);
+  };
+
+  const onFocus = () => {
+    // Only show suggestion if we already have one and input has meaningful content
+    if (suggestion && inputValue.trim() !== '' && suggestion !== inputValue) {
+      setShowSuggestion(true);
+    }
   };
 
   return (
@@ -127,7 +135,7 @@ export const TimeEstimateDropdown: React.FC<TimeEstimateComponentProps> = ({
                       onChange={onChange}
                       onBlur={onBlur}
                       placeholder="e.g. 3h 20m"
-                      onFocus={() => setShowSuggestion(!!suggestion)}
+                      onFocus={onFocus}
                       ref={ref}
                     />
                     {inputValue && (
