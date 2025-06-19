@@ -99,7 +99,7 @@ export const TimeEstimateDropdown: React.FC<TimeEstimateComponentProps> = ({
       <DropdownMenu>
         <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
         <DropdownMenuContent
-          className="w-[340px] p-0 shadow-lg"
+          className="w-[340px] p-1 shadow-lg"
           align="start"
           onOpenAutoFocus={(e) => {
             e.preventDefault();
@@ -110,7 +110,7 @@ export const TimeEstimateDropdown: React.FC<TimeEstimateComponentProps> = ({
         >
           <div className="mx-[10px] mt-[10px] flex items-center justify-between h-[45px]">
             <div className="flex items-center gap-x-2">
-              <span className="text-lg font-medium text-gray-900">
+              <span className="text-sm font-medium text-gray-900">
                 {LABEL.TIME_ESTIMATE}
               </span>
               <div className="bg-gray-300 font-bold text-white text-base rounded-full w-[20px] h-[20px] flex items-center justify-center">
@@ -152,14 +152,12 @@ export const TimeEstimateDropdown: React.FC<TimeEstimateComponentProps> = ({
           <DropdownMenuSeparator />
           <div className="flex mx-[10px] my-[10px] justify-between items-center">
             <div className="flex flex-col">
-              <p className="text-sm text-content-tertiary font-semibold">
+              <p className="text-xs  text-content-tertiary font-semibold">
                 {LABEL.TOTAL_WITH_SUBTASKS}
               </p>
-              <p className="font-medium text-base text-muted-foreground">
-                {savedTimeEstimate}
-              </p>
+              <p className="font-medium text-base text-muted-foreground">3h</p>
             </div>
-            <p className="text-xs text-content-tertiary">
+            <p className="text-[8px] text-content-tertiary">
               {LABEL.CHANGES_ARE_AUTOMATICALLY_SAVED}
             </p>
           </div>
