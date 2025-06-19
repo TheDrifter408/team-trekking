@@ -33,11 +33,6 @@ const StatusBadge: React.FC<StatusBadgeProps> = ({ status }) => {
 };
 
 const ActivityItem: React.FC<ActivityItemProps> = ({ activity }) => {
-  if (activity.isComment && activity.comment) {
-    return (
-      <Comment {...activity.comment} />
-    )
-  }
   return (
     <div className="flex items-start gap-3 py-2 px-1 hover:bg-gray-50 rounded-lg transition-colors">
       <div className="flex-shrink-0 w-1 h-1 bg-gray-400 rounded-full mt-2"></div>
@@ -152,9 +147,13 @@ const TaskActivitySearch: React.FC<ActivitySearchProps> = ({ showSearch }) => {
       <div className="px-4 pb-2">
         <div className="space-y-1">
           {filteredActivities.length > 0 ? (
-            filteredActivities.map((activity) => (
-              <ActivityItem key={activity.id} activity={activity} />
-            ))
+            filteredActivities.map((activity) => {
+              return activity.isComment && activity.comment ? (
+                <Comment comment={activity.comment} />
+              ) : (
+                <ActivityItem key={activity.id} activity={activity} />
+              )
+            })
           ) : (
             <div className="text-center py-12">
               <Search className="w-12 h-12 text-gray-300 mx-auto mb-4" />

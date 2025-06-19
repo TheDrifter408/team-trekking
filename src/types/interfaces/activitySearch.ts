@@ -1,5 +1,5 @@
 import { LucideIcon } from 'lucide-react';
-import { Comment } from '@/types/interfaces/Comment';
+import { Assignee } from '../props/Common';
 
 export interface Activity {
   id: number;
@@ -13,10 +13,21 @@ export interface Activity {
   hasMultipleAttachments?: boolean;
   fromStatus?: string;
   toStatus?: string;
-  isComment:boolean;
+  isComment: boolean;
   comment?: Comment
 }
-
+export interface Comment {
+  assignee: Assignee,
+  date:string,
+  content: string,
+  reply?: {
+    count: number,
+    author: Assignee
+  }
+}
+export interface CommentProps {
+  comment: Comment
+}
 export interface StatusBadgeProps {
   status: string;
 }
