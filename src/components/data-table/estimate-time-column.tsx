@@ -16,8 +16,8 @@ const formatter = humanizeDuration.humanizer({
   delimiter: ' ',
   languages: {
     shortEn: {
-      h: () => 'H',
-      m: () => 'M',
+      h: () => 'h',
+      m: () => 'm',
     },
   },
 });

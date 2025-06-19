@@ -12,6 +12,7 @@ import { LABEL } from '@/lib/constants/appStrings';
 import TaskStatusDialog from '@/components/common/task-status-dialog.tsx';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect } from 'react';
+import { Separator } from '@/components/shadcn-ui/separator';
 
 interface Props {
   selectedCount: number;
@@ -75,13 +76,16 @@ export const FloatingBar = ({ selectedCount }: Props) => {
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
-            <div className="flex ">
+            <div className="flex items-center">
               <TaskStatusDialog>
                 <ActionButton text={'Status'} icon={'status3'} />
               </TaskStatusDialog>
               <ActionButton text={'Assignees'} icon={'useradd'} />
               <ActionButton text={'Dates'} icon={'calendar'} />
+              <ActionButton text={'Tags'} icon={'tag'} />
+              <div className={'border-l border-gray-400 h-[20px] '} />
               <ActionButton text={'Move/Add'} icon={'move'} />
+              <ActionButton text={'Copy'} icon={'doc'} />
               <ActionButton text={''} icon={'duplicate'} />
               <ActionButton text={''} icon={'trash'} />
               <ActionButton text={'More'} icon={'menu02'} />

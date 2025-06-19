@@ -194,4 +194,8 @@ export const LABEL = {
   TRY_ADJUSTING_YOUR_SEARCH_TERMS: 'Try adjusting your search terms',
   NO_ACTIVITIES_FOUND: 'No activities found',
   SEARCH: 'Search...',
+  FOLDER: 'Folder',
+  COLOR_ICON: 'Color & Icon',
+  SPACE_SETTINGS: 'Space settings',
+  HIDE_SPACE: 'Hide Space',
 };

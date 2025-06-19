@@ -30,7 +30,7 @@ export const List = () => {
   const closeDrawer = useComponentStore((s) => s.closeDrawer);
   const isDrawerOpen = useComponentStore((s) => s.isDrawerOpen('list-drawer'));
 
-  const [isTableExpanded, setIsTableExpanded] = useState(true);
+  const [isTableExpanded, setIsTableExpanded] = useState(false);
 
   const onToggleExpand = useCallback(() => {
     setIsTableExpanded(!isTableExpanded);
@@ -47,7 +47,7 @@ export const List = () => {
             isTableExpanded={isTableExpanded}
             onToggleExpand={onToggleExpand}
           />
-          <DataTable />
+          {!isTableExpanded && <DataTable />}
         </div>
       </div>
       <ColumnDrawer
