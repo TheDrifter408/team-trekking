@@ -85,6 +85,7 @@ import MoveIcon from '@/assets/icons/move-task.svg?react';
 import DuplicateIcon from '@/assets/icons/duplicate-icon.svg?react';
 import TrashIcon from '@/assets/icons/trash-icon.svg?react';
 import UserIcon from '@/assets/icons/user.svg?react';
+import DocIcon from '@/assets/icons/doc-icon.svg?react';
 
 const iconPaths = {
   user: UserIcon,
@@ -133,6 +134,7 @@ const iconPaths = {
   thunder: Thunder,
   fieldscreate: FieldsCreate,
   texticon: TextIcon,
+  doc: DocIcon,
 } as const;
 
 type IconName = keyof typeof iconPaths;

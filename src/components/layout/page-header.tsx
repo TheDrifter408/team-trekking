@@ -76,6 +76,11 @@ export const PageHeader = ({
     setCurrentView(getCurrentView());
   }, [location.pathname]);
 
+  const onViewChange = (view: ViewType) => {
+    const viewPath = viewConfig[view].path;
+    navigate(viewPath);
+    setCurrentView(view);
+  };
   return (
     <div className={cn('sticky top-0 z-20 w-full')}>
       <div className="px-8 h-[50px] flex items-center border-b">

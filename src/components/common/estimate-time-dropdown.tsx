@@ -1,4 +1,4 @@
-import React, { ReactNode, useRef, useState } from 'react';
+import React, { ReactNode, useRef, useState, useEffect } from 'react';
 import { Input } from '@/components/shadcn-ui/input';
 import {
   DropdownMenu,
@@ -13,13 +13,21 @@ import {
 } from '@/components/shadcn-ui/popover';
 import { X } from 'lucide-react';
 import { LABEL } from '@/lib/constants';
-import humanizeDuration from 'humanize-duration';
 
 interface TimeEstimateComponentProps {
   children: ReactNode;
   time?: string;
 }
 
+const formatDuration = (ms: number): string => {
+  const totalMinutes = Math.floor(ms / 60000);
+  const hours = Math.floor(totalMinutes / 60);
+  const minutes = totalMinutes % 60;
+  const parts = [];
+  if (hours) parts.push(`${hours}h`);
+  if (minutes) parts.push(`${minutes}m`);
+  return parts.join(' ');
+};
 const parseTimeString = (input: string): string => {
   const parts = input.trim().toLowerCase().split(/[\s]+/);
   let hours = 0;
@@ -33,7 +41,7 @@ const parseTimeString = (input: string): string => {
   });
   const ms = (hours * 60 + minutes) * 60 * 1000;
   if (ms === 0) return '';
-  return humanizeDuration(ms, { units: ['h', 'm'], round: true, spacer: ' ' });
+  return formatDuration(ms);
 };
 
 export const TimeEstimateDropdown: React.FC<TimeEstimateComponentProps> = ({
@@ -49,11 +57,12 @@ export const TimeEstimateDropdown: React.FC<TimeEstimateComponentProps> = ({
   const ref = useRef<HTMLInputElement>(null);
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setInputValue(value);
-    const parsed = parseTimeString(value);
+    const val = e.target.value;
+    setInputValue(val);
+
+    const parsed = parseTimeString(val);
     setSuggestion(parsed);
-    setShowSuggestion(!!parsed && parsed !== value);
+    setShowSuggestion(!!parsed && parsed !== val);
   };
 
   const onClear = () => {
@@ -70,7 +79,12 @@ export const TimeEstimateDropdown: React.FC<TimeEstimateComponentProps> = ({
 
   const onBlur = () => {
     const parsed = parseTimeString(inputValue);
-    if (parsed) setSavedTimeEstimate(parsed);
+    if (parsed && parsed !== inputValue) {
+      setInputValue(parsed); // update visible input
+      setSavedTimeEstimate(parsed); // update saved
+    } else {
+      setSavedTimeEstimate(inputValue); // fallback to raw value
+    }
     setShowSuggestion(false);
   };
 
@@ -98,7 +112,17 @@ export const TimeEstimateDropdown: React.FC<TimeEstimateComponentProps> = ({
                       onChange={onChange}
                       onBlur={onBlur}
                       placeholder="e.g. 3h 20"
-                      onFocus={() => suggestion && setShowSuggestion(true)}
+                      onFocus={() => setShowSuggestion(!!suggestion)}
+                      onKeyDown={(e) => {
+                        if (
+                          e.key === 'Enter' &&
+                          suggestion &&
+                          suggestion !== inputValue
+                        ) {
+                          e.preventDefault(); // Prevent form submission if inside a form
+                          onApplySuggestion();
+                        }
+                      }}
                       ref={ref}
                     />
                     {inputValue && (
@@ -121,9 +145,9 @@ export const TimeEstimateDropdown: React.FC<TimeEstimateComponentProps> = ({
           </div>
 
           <DropdownMenuSeparator />
-          <div className="flex mx-[10px] mt-[10px] justify-between items-center">
+          <div className="flex mx-[10px] my-[10px] justify-between items-center">
             <div className="flex flex-col">
-              <p className="text-sm text-content-tertiary font-medium">
+              <p className="text-sm text-content-tertiary font-semibold">
                 {LABEL.TOTAL_WITH_SUBTASKS}
               </p>
               <p className="font-medium text-base text-muted-foreground">
