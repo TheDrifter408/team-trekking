@@ -7,11 +7,10 @@ import { ColumnDrawer } from '@/pages/list/components/column-drawer.tsx';
 import {
   createDataTableStore,
   DataTableProvider,
-  useDataTableStore,
 } from '@/stores/zustand/data-table-store.ts';
 import { FilterSection } from './components/filter-section.tsx';
 import { useComponentStore } from '@/stores/zustand/component-state-store.ts';
-import { FloatingBar } from '@/components/data-table/floating-bar.tsx';
+import { TabActionBar } from '@/components/common/table-floating-actoin-bar.tsx';
 
 export const List = () => {
   const currentPage = useMemo(
@@ -43,7 +42,7 @@ export const List = () => {
 
   return (
     <DataTableProvider value={store}>
-      <div className="flex flex-col h-screen overflow-hidden">
+      <div className="flex flex-col h-screen overflow-hidden relative">
         <PageHeader currentPage={currentPage} parents={parents} />
         <FilterSection />
         <div className="flex-1 min-h-0 flex flex-col px-[20px] mt-[40px] flex-shrink-0 w-full overflow-hidden">
@@ -54,24 +53,12 @@ export const List = () => {
           {!isTableExpanded && <DataTable />}
         </div>
       </div>
-      <div className="w-full flex items-center">
-        <TabActionBar />
-      </div>
+      <TabActionBar />
       <ColumnDrawer
         open={isDrawerOpen}
         onClose={() => closeDrawer('list-drawer')}
       />
     </DataTableProvider>
-  );
-};
-
-const TabActionBar = () => {
-  const selectedRows = useDataTableStore((s) => s.selectedRowIds);
-  const selectedCount = selectedRows.size;
-  return (
-    <div className=" justify-center w-full flex">
-      {selectedCount > 0 && <FloatingBar selectedCount={selectedCount} />}
-    </div>
   );
 };
 

@@ -44,7 +44,7 @@ export const FloatingBar = ({ selectedCount }: Props) => {
           initial={{ opacity: 0, y: 100 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 100 }}
-          className="w-[90%] p-[10px] rounded-lg absolute translate-y-1/2 bottom-[50px] bg-primary"
+          className="w-full p-[10px] rounded-lg  bg-primary"
         >
           <div className="h-[32px] flex items-center justify-between text-primary-foreground">
             <TooltipProvider>
