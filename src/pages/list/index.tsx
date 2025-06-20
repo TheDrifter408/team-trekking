@@ -7,9 +7,11 @@ import { ColumnDrawer } from '@/pages/list/components/column-drawer.tsx';
 import {
   createDataTableStore,
   DataTableProvider,
+  useDataTableStore,
 } from '@/stores/zustand/data-table-store.ts';
 import { FilterSection } from './components/filter-section.tsx';
 import { useComponentStore } from '@/stores/zustand/component-state-store.ts';
+import { FloatingBar } from '@/components/data-table/floating-bar.tsx';
 
 export const List = () => {
   const currentPage = useMemo(
@@ -52,11 +54,24 @@ export const List = () => {
           {!isTableExpanded && <DataTable />}
         </div>
       </div>
+      <div className="w-full flex items-center">
+        <TabActionBar />
+      </div>
       <ColumnDrawer
         open={isDrawerOpen}
         onClose={() => closeDrawer('list-drawer')}
       />
     </DataTableProvider>
+  );
+};
+
+const TabActionBar = () => {
+  const selectedRows = useDataTableStore((s) => s.selectedRowIds);
+  const selectedCount = selectedRows.size;
+  return (
+    <div className=" justify-center w-full flex">
+      {selectedCount > 0 && <FloatingBar selectedCount={selectedCount} />}
+    </div>
   );
 };
 
