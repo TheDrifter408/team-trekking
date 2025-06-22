@@ -1,6 +1,7 @@
 import { AxiosError, AxiosRequestConfig } from 'axios';
 import { BaseQueryFn } from '@reduxjs/toolkit/query/react';
 import axiosInstance from '@/service/axiosInstance.ts';
+import { API_URLS } from '@/lib/constants';
 
 type AxiosQueryParams = {
   url: string;
@@ -13,7 +14,14 @@ type AxiosQueryParams = {
 const axiosBaseQuery =
   () // { baseUrl }: AxiosBaseQueryArgs = { baseUrl: AppConstants.AUTH_BASE_URL }
   : BaseQueryFn<AxiosQueryParams, unknown, unknown> =>
-  async ({ baseUrl = '', url, method = 'GET', data, params, headers }) => {
+  async ({
+    baseUrl = API_URLS.AUTH_BASE_URL,
+    url,
+    method = 'GET',
+    data,
+    params,
+    headers,
+  }) => {
     try {
       const result = await axiosInstance({
         url: baseUrl + url,

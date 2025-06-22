@@ -20,7 +20,6 @@ enum Direction {
 const Dashboard = () => {
   const [expandedCardId, setExpandedCardId] = useState<string | null>(null);
   const [cardsList, setCardsList] = useState(HARD_CARD_LIST);
-
   const isCardExpanded = expandedCardId !== null;
 
   const onCancelFullView = () => {

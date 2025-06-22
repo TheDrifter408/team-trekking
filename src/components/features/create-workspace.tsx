@@ -28,15 +28,11 @@ import {
   ProgressBarProps,
   ManageToolsProps,
 } from '@/types/props/Layout.ts';
-import {
-  workspacePurposeOptions,
-  manageOptions,
-  featureOptions,
-  toolOptions,
-} from '@/mock';
+import { manageOptions, featureOptions, toolOptions } from '@/mock';
 import { LABEL } from '@/lib/constants';
 import { emailInputSchema } from '@/lib/validation/validationSchema';
 import { useIsMobile } from '@/lib/hooks/use-mobile';
+import { useWorkspaceGlobalApiQuery } from '@/service/rtkQueries/glabalQuery.ts';
 
 interface Props {
   isOpen: boolean;
@@ -66,6 +62,7 @@ export const CreateWorkspace: React.FC<Props> = ({
 
   const inputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const { data: workSpaceGlobal } = useWorkspaceGlobalApiQuery();
 
   const totalSteps = 6;
 
@@ -174,7 +171,7 @@ export const CreateWorkspace: React.FC<Props> = ({
       case 1:
         return (
           <ManagePurpose
-            workspacePurposeOptions={workspacePurposeOptions}
+            workspacePurposeOptions={workSpaceGlobal?.WorkType ?? []}
             onSelectPurpose={onSelectPurpose}
             selectedPurpose={selectedPurpose}
           />
@@ -295,19 +292,19 @@ const ManagePurpose: React.FC<ManagePurposeProps> = ({
         {LABEL.WHAT_WILL_YOU_USE_THIS_WORKSPACE_FOR}
       </h2>
       <div className="h-full w-full justify-center items-center flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-2">
-        {workspacePurposeOptions.map((option) => (
+        {workspacePurposeOptions?.map((option) => (
           <Button
-            key={option}
+            key={option.id}
             variant="outline"
-            onClick={() => onSelectPurpose(option)}
+            onClick={() => onSelectPurpose(option.name)}
             className={cn(
               'w-full sm:w-auto sm:min-w-[180px] py-3 sm:py-[12px] px-4 sm:px-[20px] hover:bg-theme-main hover:text-primary-foreground h-12 text-lg sm:text-xl font-medium text-content-onboarding-secondary ',
-              selectedPurpose === option
+              selectedPurpose === option.name
                 ? 'bg-theme-main-dark shadow-theme-main shadow-lg border-theme-main text-primary-foreground'
                 : ''
             )}
           >
-            {option}
+            {option.name}
           </Button>
         ))}
       </div>
