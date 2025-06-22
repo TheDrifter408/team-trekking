@@ -22,11 +22,15 @@ import {
   X,
   Ellipsis,
   SidebarIcon,
+  Star,
+  ArrowUp,
+  ArrowDown,
 } from 'lucide-react';
 import { ShareTask } from '@/components/features/share-task.tsx';
 import MoveTask from '@/components/common/move-task.tsx';
 import { useNavigate } from 'react-router-dom';
 import { DropdownMenu, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger, DropdownMenuContent } from '@/components/shadcn-ui/dropdown-menu';
+import { LeftSidebarTrigger } from '@/pages/layout/components/task-leftsidebar';
 
 export const PageHeader = () => {
   const [openShareTask, setOpenShareTask] = useState<boolean>(false);
