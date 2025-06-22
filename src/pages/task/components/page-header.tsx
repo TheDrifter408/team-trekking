@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { SidebarTrigger } from '@/components/shadcn-ui/sidebar';
 import { Button } from '@/components/shadcn-ui/button';
 import {
   Breadcrumb,
@@ -22,10 +21,16 @@ import {
   Plus,
   X,
   Ellipsis,
+  SidebarIcon,
+  Star,
+  ArrowUp,
+  ArrowDown,
 } from 'lucide-react';
 import { ShareTask } from '@/components/features/share-task.tsx';
 import MoveTask from '@/components/common/move-task.tsx';
 import { useNavigate } from 'react-router-dom';
+import { DropdownMenu, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger, DropdownMenuContent } from '@/components/shadcn-ui/dropdown-menu';
+import { LeftSidebarTrigger } from '@/pages/layout/components/task-leftsidebar';
 
 export const PageHeader = () => {
   const [openShareTask, setOpenShareTask] = useState<boolean>(false);
@@ -39,8 +44,10 @@ export const PageHeader = () => {
   return (
     <div className="py-2 bg-sidebar/80 border w-full flex items-center justify-between px-4">
       <TooltipProvider>
-        <div className="flex items-center justify-between">
-          <SidebarTrigger />
+        <div className="relative flex items-center justify-between">
+          <LeftSidebarTrigger>
+            <SidebarIcon />
+          </LeftSidebarTrigger>
           <Button size="icon_sm" variant="ghost">
             <ChevronUp size={12} />
           </Button>
@@ -105,6 +112,40 @@ export const PageHeader = () => {
             <ToolTipContainer text="Task settings">
               <Button size="icon" variant="ghost">
                 <Ellipsis className="size-5 text-primary" />
+              </Button>
+            </ToolTipContainer>
+            <ToolTipContainer text="Add to favorites">
+              <Button variant="ghost">
+                <Star className="size-5 text-primary  hover:bg-slate-200" />
+                <DropdownMenu>
+                  <DropdownMenuTrigger>
+                    <Button variant="ghost" size="icon">
+                      <ChevronDown className="size-5 border-l text-primary hover:bg-slate-200" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent side='bottom' className='-translate-x-10'>
+                    <DropdownMenuItem>
+                      Favorites
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem>
+                      <ArrowUp /> Top
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                      <ArrowDown /> Down
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem>
+                      Another List
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                      Personal Priorities
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                      Personal List
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </Button>
             </ToolTipContainer>
             <ToolTipContainer text="Close window" side={'left'}>

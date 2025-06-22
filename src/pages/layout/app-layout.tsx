@@ -10,7 +10,7 @@ const AppLayout = () => {
     <div className="flex flex-col h-screen">
       <SidebarProvider className="flex flex-col h-full">
         <AppHeader user={user} />
-        <div className="flex flex-1  overflow-hidden">
+        <div className="flex flex-1 overflow-hidden">
           <AppSidebar />
           <SidebarInset className="flex-1 overflow-auto">
             <Outlet />
