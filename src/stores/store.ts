@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { authApi } from '@/service/rtkQueries/authQuery.ts';
-import { globalApi } from '@/service/rtkQueries/glabalQuery.ts';
+import { globalApi } from '@/service/rtkQueries/globalQuery.ts';
 import { setupListeners } from '@reduxjs/toolkit/query';
 import { apiErrorMiddleware } from '@/stores/apiErrorMiddleware.ts';
 

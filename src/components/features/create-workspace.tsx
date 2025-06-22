@@ -32,7 +32,7 @@ import { featureOptions, toolOptions } from '@/mock';
 import { LABEL } from '@/lib/constants';
 import { emailInputSchema } from '@/lib/validation/validationSchema';
 import { useIsMobile } from '@/lib/hooks/use-mobile';
-import { useWorkspaceGlobalApiQuery } from '@/service/rtkQueries/glabalQuery.ts';
+import { useWorkspaceGlobalApiQuery } from '@/service/rtkQueries/globalQuery.ts';
 
 interface Props {
   isOpen: boolean;
