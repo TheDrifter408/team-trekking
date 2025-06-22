@@ -7,13 +7,14 @@ import {
 } from '@tanstack/react-table';
 import { useDataTableStore } from '@/stores/zustand/data-table-store';
 import { Columns } from '@/components/data-table/columns';
-import { mockTasks } from '@/mock';
+import { mockTasks } from '@/mock/task.ts';
 import { DataTableHeader } from './data-table-header';
 import { DataTableBody } from './data-table-body.tsx';
 import { DataTableProps } from '@/types/props/DataTableProps.ts';
 
 export const DataTable = ({ className = '' }: DataTableProps) => {
   const parentRef = useRef<HTMLDivElement>(null);
+  const headerRef = useRef<HTMLDivElement>(null);
   const [colSizing, setColSizing] = useState<ColumnSizingState>({});
 
   const setTable = useDataTableStore((state) => state.setTable);
@@ -42,6 +43,34 @@ export const DataTable = ({ className = '' }: DataTableProps) => {
     setTable(table);
   }, [table, setTable]);
 
+  // Synchronize scroll between header and body
+  useEffect(() => {
+    const headerEl = headerRef.current;
+    const bodyEl = parentRef.current;
+
+    if (!headerEl || !bodyEl) return;
+
+    const syncHeaderScroll = () => {
+      if (bodyEl) bodyEl.scrollLeft = headerEl.scrollLeft;
+    };
+
+    const syncBodyScroll = () => {
+      if (headerEl) headerEl.scrollLeft = bodyEl.scrollLeft;
+    };
+
+    headerEl.addEventListener('scroll', syncHeaderScroll);
+    bodyEl.addEventListener('scroll', syncBodyScroll);
+
+    return () => {
+      headerEl.removeEventListener('scroll', syncHeaderScroll);
+      bodyEl.removeEventListener('scroll', syncBodyScroll);
+    };
+  }, []);
+
+  useEffect(() => {
+    setTable(table);
+  }, [table, setTable]);
+
   // TODO: Hover states using zustand + context, hence not necessary to be in the parent. Manage from child
   const setHoveredRowId = useDataTableStore((s) => s.setHoveredRowId);
   const activeDialogRowId = useDataTableStore((s) => s.activeDialogRowId);
@@ -52,7 +81,7 @@ export const DataTable = ({ className = '' }: DataTableProps) => {
         className={`rounded-md no-scrollbar w-full overflow-auto  flex flex-col ${className}`}
         style={{ height: '100%' }}
       >
-        <DataTableHeader table={table} />
+        <DataTableHeader table={table} ref={headerRef} />
         <DataTableBody
           table={table}
           parentRef={parentRef}
