@@ -16,7 +16,7 @@ import {
   usePostForgotPasswordMutation,
   usePostSendOtpMutation,
   usePostVerifyOtpMutation,
-} from '@/service/rtkQuery.ts';
+} from '@/service/rtkQueries/authQuery.ts';
 import {
   InputOTP,
   InputOTPGroup,
