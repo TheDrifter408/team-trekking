@@ -54,7 +54,7 @@ export const DataTableHeader = forwardRef<
   return (
     <div className="border-b mt-4 bg-background sticky top-0 z-10">
       <div
-        className="flex" // Add overflow-hidden to prevent scrollbar
+        className="flex items-center ml-[28px]" // Add overflow-hidden to prevent scrollbar
         ref={ref}
         style={{ width: table.getTotalSize() }} // Match the body width
       >
