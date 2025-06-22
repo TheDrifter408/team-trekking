@@ -10,6 +10,7 @@ import {
 } from '@/stores/zustand/data-table-store.ts';
 import { FilterSection } from './components/filter-section.tsx';
 import { useComponentStore } from '@/stores/zustand/component-state-store.ts';
+import { TabActionBar } from '@/components/common/table-floating-actoin-bar.tsx';
 
 export const List = () => {
   const currentPage = useMemo(
@@ -41,7 +42,7 @@ export const List = () => {
 
   return (
     <DataTableProvider value={store}>
-      <div className="flex flex-col h-screen overflow-hidden">
+      <div className="flex flex-col h-screen overflow-hidden relative">
         <PageHeader currentPage={currentPage} parents={parents} />
         <FilterSection />
         <div className="flex-1 min-h-0 flex flex-col px-[20px] mt-[40px] flex-shrink-0 w-full overflow-hidden">
@@ -52,6 +53,7 @@ export const List = () => {
           {!isTableExpanded && <DataTable />}
         </div>
       </div>
+      <TabActionBar />
       <ColumnDrawer
         open={isDrawerOpen}
         onClose={() => closeDrawer('list-drawer')}

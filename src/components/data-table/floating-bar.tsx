@@ -11,8 +11,8 @@ import {
 import { LABEL } from '@/lib/constants/appStrings';
 import TaskStatusDialog from '@/components/common/task-status-dialog.tsx';
 import { AnimatePresence, motion } from 'framer-motion';
+import { XIcon } from 'lucide-react';
 import { useEffect } from 'react';
-import { Separator } from '@/components/shadcn-ui/separator';
 
 interface Props {
   selectedCount: number;
@@ -44,7 +44,7 @@ export const FloatingBar = ({ selectedCount }: Props) => {
           initial={{ opacity: 0, y: 100 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 100 }}
-          className="w-[90%] p-[14px] rounded-lg absolute translate-y-1/2 bottom-[50px] bg-primary"
+          className="w-full p-[10px] rounded-lg  bg-primary"
         >
           <div className="h-[32px] flex items-center justify-between text-primary-foreground">
             <TooltipProvider>
@@ -58,6 +58,7 @@ export const FloatingBar = ({ selectedCount }: Props) => {
                     onClick={onDeselectAll}
                   >
                     {selectedCount} {LABEL.TASKS_SELECTED}
+                    <XIcon className={'size-4'} onClick={onDeselectAll} />
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent sideOffset={12}>
@@ -82,10 +83,8 @@ export const FloatingBar = ({ selectedCount }: Props) => {
               </TaskStatusDialog>
               <ActionButton text={'Assignees'} icon={'useradd'} />
               <ActionButton text={'Dates'} icon={'calendar'} />
-              <ActionButton text={'Tags'} icon={'tag'} />
               <div className={'border-l border-gray-400 h-[20px] '} />
               <ActionButton text={'Move/Add'} icon={'move'} />
-              <ActionButton text={'Copy'} icon={'doc'} />
               <ActionButton text={''} icon={'duplicate'} />
               <ActionButton text={''} icon={'trash'} />
               <ActionButton text={'More'} icon={'menu02'} />
@@ -110,9 +109,9 @@ const ActionButton = forwardRef<HTMLButtonElement, ActionButtonProps>(
         ref={ref}
         type="button"
         {...props}
-        className="text-lg text-gray-300 rounded hover:bg-white bg:opacity-0 hover:bg-opacity-[0.135] flex items-center"
+        className="text-base text-gray-300 rounded hover:bg-white bg:opacity-0 hover:bg-opacity-[0.135] flex items-center"
       >
-        <Icon name={icon} className={'size-5'} />
+        <Icon name={icon as never} className={'size-5'} />
         {text}
       </Button>
     );

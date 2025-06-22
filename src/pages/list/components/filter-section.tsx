@@ -42,7 +42,7 @@ export const FilterSection = () => {
         variant="outline"
         className="gap-x-1 rounded-full px-2 h-[30px] text-base text-gray-600 font-medium border-border/500 hover:bg-secondary/50"
       >
-        <Icon name={icon} className="text-gray-600" />
+        <Icon name={icon as never} className="text-gray-600" />
         <span className="hidden md:inline">{label}</span>
       </Button>
     ));
