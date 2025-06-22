@@ -13,7 +13,6 @@ import {
 } from '@/components/shadcn-ui/popover';
 import { X } from 'lucide-react';
 import { LABEL } from '@/lib/constants';
-import humanizeDuration from 'humanize-duration';
 
 interface TimeEstimateComponentProps {
   children: ReactNode;
@@ -33,7 +32,16 @@ const parseTimeString = (input: string): string => {
   });
   const ms = (hours * 60 + minutes) * 60 * 1000;
   if (ms === 0) return '';
-  return humanizeDuration(ms, { units: ['h', 'm'], round: true, spacer: ' ' });
+
+  // Format as "Xh Ym" instead of using humanizeDuration
+  const totalMinutes = Math.floor(ms / (60 * 1000));
+  const h = Math.floor(totalMinutes / 60);
+  const m = totalMinutes % 60;
+
+  if (h > 0 && m > 0) return `${h}h ${m}m`;
+  if (h > 0) return `${h}h`;
+  if (m > 0) return `${m}m`;
+  return '';
 };
 
 export const TimeEstimateDropdown: React.FC<TimeEstimateComponentProps> = ({
@@ -42,18 +50,20 @@ export const TimeEstimateDropdown: React.FC<TimeEstimateComponentProps> = ({
 }) => {
   const [inputValue, setInputValue] = useState<string>(time ?? '');
   const [savedTimeEstimate, setSavedTimeEstimate] = useState<string>(
-    time ?? ''
+    time ?? '3h'
   );
   const [suggestion, setSuggestion] = useState<string>('');
   const [showSuggestion, setShowSuggestion] = useState<boolean>(false);
   const ref = useRef<HTMLInputElement>(null);
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setInputValue(value);
-    const parsed = parseTimeString(value);
+    const val = e.target.value;
+    setInputValue(val);
+
+    const parsed = parseTimeString(val);
     setSuggestion(parsed);
-    setShowSuggestion(!!parsed && parsed !== value);
+    // Only show suggestion if there's a meaningful difference and input is not empty
+    setShowSuggestion(!!parsed && parsed !== val && val.trim() !== '');
   };
 
   const onClear = () => {
@@ -62,26 +72,53 @@ export const TimeEstimateDropdown: React.FC<TimeEstimateComponentProps> = ({
     setShowSuggestion(false);
   };
 
-  const onApplySuggestion = () => {
+  const onApplySuggestion = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
     setInputValue(suggestion);
     setSavedTimeEstimate(suggestion);
     setShowSuggestion(false);
+    ref.current?.focus();
   };
 
   const onBlur = () => {
-    const parsed = parseTimeString(inputValue);
-    if (parsed) setSavedTimeEstimate(parsed);
-    setShowSuggestion(false);
+    // Small delay to allow popover click to register
+    setTimeout(() => {
+      const parsed = parseTimeString(inputValue);
+      if (parsed && parsed !== inputValue) {
+        setInputValue(parsed); // update visible input
+        setSavedTimeEstimate(parsed); // update saved
+      } else {
+        setSavedTimeEstimate(inputValue); // fallback to raw value
+      }
+      setShowSuggestion(false);
+    }, 150);
+  };
+
+  const onFocus = () => {
+    // Only show suggestion if we already have one and input has meaningful content
+    if (suggestion && inputValue.trim() !== '' && suggestion !== inputValue) {
+      setShowSuggestion(true);
+    }
   };
 
   return (
     <div className="w-full max-w-md mx-auto py-2">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
-        <DropdownMenuContent className="w-[340px] p-0" align="start">
+        <DropdownMenuContent
+          className="w-[340px] p-1 shadow-lg"
+          align="start"
+          onOpenAutoFocus={(e) => {
+            e.preventDefault();
+            setTimeout(() => {
+              ref.current?.focus();
+            }, 0);
+          }}
+        >
           <div className="mx-[10px] mt-[10px] flex items-center justify-between h-[45px]">
             <div className="flex items-center gap-x-2">
-              <span className="text-lg font-medium text-gray-900">
+              <span className="text-sm font-medium text-gray-900">
                 {LABEL.TIME_ESTIMATE}
               </span>
               <div className="bg-gray-300 font-bold text-white text-base rounded-full w-[20px] h-[20px] flex items-center justify-center">
@@ -97,8 +134,8 @@ export const TimeEstimateDropdown: React.FC<TimeEstimateComponentProps> = ({
                       value={inputValue}
                       onChange={onChange}
                       onBlur={onBlur}
-                      placeholder="e.g. 3h 20"
-                      onFocus={() => suggestion && setShowSuggestion(true)}
+                      placeholder="e.g. 3h 20m"
+                      onFocus={onFocus}
                       ref={ref}
                     />
                     {inputValue && (
@@ -110,9 +147,9 @@ export const TimeEstimateDropdown: React.FC<TimeEstimateComponentProps> = ({
                   </div>
                 </PopoverTrigger>
                 <PopoverContent
-                  onClick={onApplySuggestion}
-                  className="w-[185px] flex items-center justify-between gap-2 text-base text-gray-700 p-2 shadow-md z-50"
+                  className="w-[185px] flex items-center justify-between gap-2 text-base text-gray-700 p-2 shadow-md z-50 cursor-pointer hover:bg-gray-50"
                   sideOffset={4}
+                  onMouseDown={onApplySuggestion}
                 >
                   <span>{suggestion}</span>
                 </PopoverContent>
@@ -121,16 +158,16 @@ export const TimeEstimateDropdown: React.FC<TimeEstimateComponentProps> = ({
           </div>
 
           <DropdownMenuSeparator />
-          <div className="flex mx-[10px] mt-[10px] justify-between items-center">
+          <div className="flex mx-[10px] my-[10px] justify-between items-center">
             <div className="flex flex-col">
-              <p className="text-sm text-content-tertiary font-medium">
+              <p className="text-xs  text-content-tertiary font-semibold">
                 {LABEL.TOTAL_WITH_SUBTASKS}
               </p>
               <p className="font-medium text-base text-muted-foreground">
                 {savedTimeEstimate}
               </p>
             </div>
-            <p className="text-xs text-content-tertiary">
+            <p className="text-[8px] text-content-tertiary">
               {LABEL.CHANGES_ARE_AUTOMATICALLY_SAVED}
             </p>
           </div>

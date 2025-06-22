@@ -8,6 +8,7 @@ import {
   createDataTableStore,
   DataTableProvider,
 } from '@/stores/zustand/data-table-store.ts';
+import { FilterSection } from './components/filter-section.tsx';
 import { useComponentStore } from '@/stores/zustand/component-state-store.ts';
 
 export const List = () => {
@@ -30,7 +31,7 @@ export const List = () => {
   const closeDrawer = useComponentStore((s) => s.closeDrawer);
   const isDrawerOpen = useComponentStore((s) => s.isDrawerOpen('list-drawer'));
 
-  const [isTableExpanded, setIsTableExpanded] = useState(true);
+  const [isTableExpanded, setIsTableExpanded] = useState(false);
 
   const onToggleExpand = useCallback(() => {
     setIsTableExpanded(!isTableExpanded);
@@ -42,12 +43,13 @@ export const List = () => {
     <DataTableProvider value={store}>
       <div className="flex flex-col h-screen overflow-hidden">
         <PageHeader currentPage={currentPage} parents={parents} />
+        <FilterSection />
         <div className="flex-1 min-h-0 flex flex-col px-[20px] mt-[40px] flex-shrink-0 w-full overflow-hidden">
           <ListCard
             isTableExpanded={isTableExpanded}
             onToggleExpand={onToggleExpand}
           />
-          <DataTable />
+          {!isTableExpanded && <DataTable />}
         </div>
       </div>
       <ColumnDrawer

@@ -7,6 +7,7 @@ import {
   isYesterday,
   isThisYear,
   differenceInDays,
+  isSameWeek,
 } from 'date-fns';
 import { CalendarIcon } from 'lucide-react';
 
@@ -35,39 +36,24 @@ export function SingleDatePicker({
   onDateChange,
   className,
 }: SingleDatePickerProps) {
-  // Function to smartly format dates based on proximity and context
   const formatSmartDate = (date: Date): string => {
     const now = new Date();
-    const daysDiff = differenceInDays(now, date);
 
-    if (isToday(date)) {
-      return 'Today';
-    } else if (isTomorrow(date)) {
-      return 'Tomorrow';
-    } else if (isYesterday(date)) {
-      return 'Yesterday';
-    } else if (daysDiff > 0) {
-      // Past dates - show "X days ago"
-      return `${daysDiff} day${daysDiff === 1 ? '' : 's'} ago`;
-    } else if (daysDiff < 0) {
-      // Future dates - show "in X days" or just the date
-      const futureDays = Math.abs(daysDiff);
-      if (futureDays <= 7) {
-        return `in ${futureDays} day${futureDays === 1 ? '' : 's'}`;
-      }
+    if (isSameWeek(now, date, { weekStartsOn: 1 })) {
+      if (isToday(date)) return 'Today';
+      if (isTomorrow(date)) return 'Tomorrow';
+      if (isYesterday(date)) return 'Yesterday';
     }
 
-    // For other dates, show month and day
     if (isThisYear(date)) {
-      return format(date, 'MMM d'); // Apr 27, May 26, etc.
+      return format(date, 'MMM d');
     } else {
       return format(date, 'MMM d, yyyy');
     }
   };
 
-  // Function to format full date for tooltip
   const formatFullDate = (date: Date): string => {
-    return format(date, 'EEEE, MMMM d, yyyy'); // Monday, April 14, 2025
+    return format(date, 'EEEE, MMMM d, yyyy');
   };
 
   return (
@@ -76,7 +62,7 @@ export function SingleDatePicker({
         <PopoverTrigger asChild>
           <div
             className={cn(
-              'w-full justify-start text-left  flex cursor-pointer h-8 items-center px-2 hover:bg-accent/50 rounded-md transition-colors',
+              'w-full justify-start text-left flex cursor-pointer h-8 items-center px-2 hover:bg-accent/50 rounded-md transition-colors',
               !date && 'text-content-foreground'
             )}
           >
@@ -89,8 +75,8 @@ export function SingleDatePicker({
                         className={cn(
                           'text-base text-content-default leading-4',
                           differenceInDays(new Date(), date) > 0
-                            ? 'text-red-600' // Past dates in red
-                            : 'text-content-default' // Future/current dates in normal color
+                            ? 'text-red-600'
+                            : 'text-content-default'
                         )}
                       >
                         {formatSmartDate(date)}
@@ -98,7 +84,7 @@ export function SingleDatePicker({
                     </div>
                   </TooltipTrigger>
                   <TooltipContent>
-                    <p className={'font-medium'}>{formatFullDate(date)}</p>
+                    <p className="font-medium">{formatFullDate(date)}</p>
                   </TooltipContent>
                 </Tooltip>
               </TooltipProvider>
@@ -113,6 +99,7 @@ export function SingleDatePicker({
             selected={date}
             onSelect={onDateChange}
             initialFocus
+            defaultMonth={date ?? new Date()} // ensures selected date is shown on open
           />
         </PopoverContent>
       </Popover>

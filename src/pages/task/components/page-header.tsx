@@ -26,7 +26,7 @@ import {
 import { ShareTask } from '@/components/features/share-task.tsx';
 import MoveTask from '@/components/common/move-task.tsx';
 import { useNavigate } from 'react-router-dom';
-import { LeftSidebarTrigger } from '@/pages/layout/components/task-leftsidebar';
+import { DropdownMenu, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger, DropdownMenuContent } from '@/components/shadcn-ui/dropdown-menu';
 
 export const PageHeader = () => {
   const [openShareTask, setOpenShareTask] = useState<boolean>(false);
@@ -108,6 +108,40 @@ export const PageHeader = () => {
             <ToolTipContainer text="Task settings">
               <Button size="icon" variant="ghost">
                 <Ellipsis className="size-5 text-primary" />
+              </Button>
+            </ToolTipContainer>
+            <ToolTipContainer text="Add to favorites">
+              <Button variant="ghost">
+                <Star className="size-5 text-primary  hover:bg-slate-200" />
+                <DropdownMenu>
+                  <DropdownMenuTrigger>
+                    <Button variant="ghost" size="icon">
+                      <ChevronDown className="size-5 border-l text-primary hover:bg-slate-200" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent side='bottom' className='-translate-x-10'>
+                    <DropdownMenuItem>
+                      Favorites
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem>
+                      <ArrowUp /> Top
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                      <ArrowDown /> Down
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem>
+                      Another List
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                      Personal Priorities
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                      Personal List
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </Button>
             </ToolTipContainer>
             <ToolTipContainer text="Close window" side={'left'}>
