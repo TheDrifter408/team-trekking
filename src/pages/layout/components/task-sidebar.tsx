@@ -35,7 +35,7 @@ import TaskActivitySearch from '@/pages/task/components/task-activity-search.tsx
 
 type SidebarTriggerProps = PropsWithChildren<ButtonProps>;
 
-const SidebarTrigger = forwardRef<HTMLButtonElement, SidebarTriggerProps>(
+export const ActivitySidebarTrigger = forwardRef<HTMLButtonElement, SidebarTriggerProps>(
   ({ children, className, onClick, ...props }, ref) => {
     const { toggleSidebar } = useSidebar();
 
@@ -47,6 +47,7 @@ const SidebarTrigger = forwardRef<HTMLButtonElement, SidebarTriggerProps>(
         size="icon"
         className={cn(className, 'items-center justify-center h-auto')}
         onClick={(event) => {
+          event.stopPropagation();
           onClick?.(event);
           toggleSidebar();
         }}
@@ -58,7 +59,7 @@ const SidebarTrigger = forwardRef<HTMLButtonElement, SidebarTriggerProps>(
   }
 );
 
-SidebarTrigger.displayName = 'SidebarTrigger';
+ActivitySidebarTrigger.displayName = 'ActivitySidebarTrigger';
 
 export const TaskSidebar = ({ ...props }) => {
   const [comment, setComment] = useState('');
@@ -138,9 +139,9 @@ export const TaskSidebar = ({ ...props }) => {
                     }}
                     className="px-2.5 md:px-2 flex flex-col items-center"
                   >
-                    <SidebarTrigger className={'flex flex-col'}>
+                    <ActivitySidebarTrigger className={'flex flex-col'}>
                       <MessageSquare className="mb-1" />
-                    </SidebarTrigger>
+                    </ActivitySidebarTrigger>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               </SidebarMenu>
