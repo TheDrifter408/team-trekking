@@ -67,10 +67,6 @@ export const DataTable = ({ className = '' }: DataTableProps) => {
     };
   }, []);
 
-  useEffect(() => {
-    setTable(table);
-  }, [table, setTable]);
-
   // TODO: Hover states using zustand + context, hence not necessary to be in the parent. Manage from child
   const setHoveredRowId = useDataTableStore((s) => s.setHoveredRowId);
   const activeDialogRowId = useDataTableStore((s) => s.activeDialogRowId);

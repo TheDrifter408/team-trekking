@@ -32,7 +32,7 @@ export const NameColumn = ({ task, row }: Props) => {
   const isExpanded = row?.getIsExpanded();
 
   const indentationLevel = Math.min(depth, 3); // Cap at 3 levels as per your requirement
-  const leftPadding = indentationLevel * 20;
+  const leftPadding = indentationLevel * 25;
 
   const onRenameSubmit = () => {
     if (editedName.trim()) {
@@ -49,7 +49,7 @@ export const NameColumn = ({ task, row }: Props) => {
   return (
     <div
       className="flex items-center min-w-[280px] gap-[12px] overflow-hidden"
-      style={{ paddingLeft: `${leftPadding}px` }}
+      style={{ marginLeft: `${leftPadding}px` }}
     >
       <div className="max-w-[40px] flex-shrink-0 flex justify-between items-center">
         <IconButton

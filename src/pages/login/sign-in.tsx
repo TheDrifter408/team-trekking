@@ -43,7 +43,6 @@ export const Login = () => {
       navigate('/home');
     }
   };
-
   const onForgotPasswordClick = () => {
     navigate('/forgot');
   };
