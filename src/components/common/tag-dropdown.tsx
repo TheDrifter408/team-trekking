@@ -163,8 +163,8 @@ const TagDropdownTrigger: React.FC<TagDropdownTriggerProps> = ({
   if (asChild && children) {
     return (
       <div onClick={() => setIsOpen(!isOpen)}>
-        {React.cloneElement(children as React.ReactElement, {
-          onClick: () => setIsOpen(!isOpen),
+        {React.cloneElement(children as React.ReactElement<HTMLButtonElement>, {
+          onclick: () => setIsOpen(!isOpen),
         })}
       </div>
     );

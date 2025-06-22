@@ -109,7 +109,7 @@ export const TimeEstimateDropdown: React.FC<TimeEstimateComponentProps> = ({
         <DropdownMenuContent
           className="w-[340px] p-1 shadow-lg"
           align="start"
-          onOpenAutoFocus={(e) => {
+          onOpeAutoFocus={(e) => {
             e.preventDefault();
             setTimeout(() => {
               ref.current?.focus();
