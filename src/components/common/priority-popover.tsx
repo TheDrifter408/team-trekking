@@ -48,7 +48,7 @@ export const PriorityPopover = ({
   );
 };
 
-const PriorityButton = ({
+export const PriorityButton = ({
   title,
   className = '',
 }: {

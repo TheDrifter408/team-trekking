@@ -1,57 +1,72 @@
-import type { Meta, StoryObj } from '@storybook/react-vite';
-
+import { Meta, StoryObj } from '@storybook/react';
 import { AssigneeAvatar } from '@/components/common/assignee-avatar';
+import { Assignee } from '@/types/props/Common';
 
-// More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
-const meta = {
-  title: 'AssigneeAvatar',
+import '@/index.css';
+
+const getSeed = (name: string) => {
+  let hash = 0;
+  for (let i = 0; i < name.length; i++) {
+    hash = name.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  return Math.abs(hash).toString();
+};
+
+const mockAssignee: Assignee = {
+  id: 123,
+  name: 'Jane Doe',
+  role: 'admin',
+  avatar: `https://api.diMetacebear.com/6.x/avataaars/svg?seed=${getSeed('Jane Doe')}`,
+  isWatching: false,
+};
+
+const meta: Meta<typeof AssigneeAvatar> = {
+  title: 'Components/AssigneeAvatar',
   component: AssigneeAvatar,
-  parameters: {
-    // Optional parameter to center the component in the Canvas. More info: https://storybook.js.org/docs/configure/story-layout
-    layout: 'centered',
-  },
-  // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/writing-docs/autodocs
   tags: ['autodocs'],
-  // More on argTypes: https://storybook.js.org/docs/api/argtypes
   argTypes: {
-    onRemove: { action: 'Remove Clicked' },
+    onRemove: { action: 'remove clicked' },
   },
-} satisfies Meta<typeof AssigneeAvatar>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
 
-// More on writing stories with args: https://storybook.js.org/docs/writing-stories/args
-export const Primary: Story = {
+type Story = StoryObj<typeof AssigneeAvatar>;
+
+export const Default: Story = {
   args: {
-    primary: true,
-    label: 'Button',
+    assignee: mockAssignee,
+    displayName: false,
+    onRemove: () => { },
   },
 };
 
-export const Secondary: Story = {
+export const WithRing: Story = {
   args: {
-    label: 'Button',
+    assignee: mockAssignee,
+    displayName: true,
+    showAvatarRing: true,
+    onRemove: () => { },
   },
 };
 
-export const Large: Story = {
+export const WithButtons: Story = {
   args: {
-    size: 'large',
-    label: 'Button',
+    assignee: mockAssignee,
+    displayName: true,
+    showAvatarRing: true,
+    showButtons: true,
+    onRemove: () => { },
   },
 };
 
-export const Small: Story = {
+export const SelectedAndRemovable: Story = {
   args: {
-    size: 'small',
-    label: 'Button',
-  },
-};
-
-export const Story2: Story = {
-  args: {
-    primary: false,
-    label: 'Button',
+    assignee: mockAssignee,
+    displayName: true,
+    enterAssignee: true,
+    isSelected: true,
+    showAvatarRing: true,
+    onRemove: () => { },
   },
 };
