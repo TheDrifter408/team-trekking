@@ -1,7 +1,10 @@
 import React from 'react';
 import { LinkProps } from '@tanstack/react-router';
 import { ChangeEvent, KeyboardEvent, MouseEvent } from 'react';
-import { WorkType } from '@/types/request-response/workspace/ApiRessponse.ts';
+import {
+  ManageType,
+  WorkType,
+} from '@/types/request-response/workspace/ApiRessponse.ts';
 
 interface User {
   name: string;
@@ -55,7 +58,7 @@ export interface ManagePurposeProps {
 
 export interface ManageFeaturesProps {
   onSelectOption: (option: string) => void;
-  manageOptions: string[];
+  manageOptions: ManageType[];
   selectedOption: string | '';
 }
 

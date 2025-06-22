@@ -28,7 +28,7 @@ import {
   ProgressBarProps,
   ManageToolsProps,
 } from '@/types/props/Layout.ts';
-import { manageOptions, featureOptions, toolOptions } from '@/mock';
+import { featureOptions, toolOptions } from '@/mock';
 import { LABEL } from '@/lib/constants';
 import { emailInputSchema } from '@/lib/validation/validationSchema';
 import { useIsMobile } from '@/lib/hooks/use-mobile';
@@ -179,7 +179,7 @@ export const CreateWorkspace: React.FC<Props> = ({
       case 2:
         return (
           <ManageFeatures
-            manageOptions={manageOptions}
+            manageOptions={workSpaceGlobal?.manageType ?? []}
             selectedOption={selectedOption}
             onSelectOption={onSelectOption}
           />
@@ -326,17 +326,17 @@ const ManageFeatures: React.FC<ManageFeaturesProps> = ({
         <div className="w-full flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:justify-center sm:items-center sm:gap-2">
           {manageOptions.map((option) => (
             <Button
-              key={option}
-              onClick={() => onSelectOption(option)}
+              key={option.id}
+              onClick={() => onSelectOption(option.name)}
               variant="outline"
               className={cn(
                 'w-full sm:w-auto h-12 text-base sm:text-lg text-content-onboarding-secondary hover:bg-theme-main-dark hover:text-white hover:shadow-lg',
-                selectedOption === option
+                selectedOption === option.name
                   ? 'bg-theme-main-dark shadow-md shadow-theme-main text-white border-none'
                   : ''
               )}
             >
-              {option}
+              {option.name}
             </Button>
           ))}
         </div>
