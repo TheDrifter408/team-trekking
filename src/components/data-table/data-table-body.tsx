@@ -19,14 +19,14 @@ export const DataTableBody = ({
   const rowVirtualizer = useVirtualizer({
     count: rows.length,
     getScrollElement: () => parentRef.current,
-    estimateSize: () => 48,
+    estimateSize: () => 40,
   });
 
   const virtualRows = rowVirtualizer.getVirtualItems();
   const totalHeight = rowVirtualizer.getTotalSize();
 
   return (
-    <div className="flex-1 overflow-auto" ref={parentRef}>
+    <div className="flex-1 " ref={parentRef}>
       <div
         style={{
           height: `${totalHeight}px`,
