@@ -30,13 +30,13 @@ const HeaderLayout: FC = () => {
         <AppHeader user={null} />
         <LeftSidebarProvider >
           <PageHeader />
-        <div className="relative flex flex-1 overflow-hidden">
-          <LeftSidebar />
-          <SidebarInset className="flex-1 overflow-auto">
-            <Outlet />
-          </SidebarInset>
-          <TaskSidebar />
-        </div>
+          <div className="relative flex flex-1 overflow-hidden">
+            <LeftSidebar />
+            <SidebarInset className="flex-1 overflow-auto">
+              <Outlet />
+            </SidebarInset>
+            <TaskSidebar />
+          </div>
         </LeftSidebarProvider>
       </SidebarProvider>
     </div>

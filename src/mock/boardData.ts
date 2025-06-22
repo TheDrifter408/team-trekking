@@ -51,7 +51,7 @@ const createRandomTasks = (status: TaskStatus, count: number): Task[] => {
   return Array.from({ length: count }, () => {
     const subtaskCount = faker.number.int({ min: 0, max: 3 });
     return {
-      id: faker.number.int(),
+      id: faker.number.int().toString(),
       name: faker.company.catchPhrase(),
       description: faker.lorem.paragraph(),
       progress: faker.number.int(),
@@ -61,15 +61,17 @@ const createRandomTasks = (status: TaskStatus, count: number): Task[] => {
         color: status,
         category: status,
       },
+      checklist: [],
       dueDate: faker.date.future().toISOString(),
       startDate: faker.date.past().toISOString(),
       assignees: createRandomAssignees(faker.number.int({ min: 1, max: 3 })),
       priority: faker.helpers.enumValue(Priority),
       subTask: Array.from({ length: subtaskCount }, () => ({
-        id: faker.number.int(),
+        id: faker.number.int().toString(),
         name: faker.hacker.phrase(),
         description: faker.lorem.sentence(),
         progress: faker.number.int(),
+        checklist: [],
         status: {
           id: faker.number.int(),
           name: status,
