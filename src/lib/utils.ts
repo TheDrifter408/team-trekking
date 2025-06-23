@@ -11,6 +11,9 @@ export const formatTime = (hours: number): string => {
 };
 
 export const getInitials = (name: string) => {
+  if (name.length === 0) {
+    return '';
+  }
   const words = name.trim().split(/\s+/);
   if (words.length === 1) return words[0][0].toUpperCase();
   return (words[0][0] + words[words.length - 1][0]).toUpperCase();

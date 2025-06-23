@@ -5,7 +5,9 @@ import {
   Assignee,
   Checklist,
   Task,
+  ColorOption,
 } from '@/types/props/Common.ts';
+import { colorOptions } from './sidebarData';
 
 export const spaceData = [
   {
@@ -135,23 +137,6 @@ export const taskStatuses = [
   { id: '10', name: 'Backlog', color: 'bg-gray-400', category: 'Active' },
   { id: '11', name: 'Closed', color: 'bg-green-800', category: 'Closed' },
   { id: '12', name: 'Cancelled', color: 'bg-gray-900', category: 'Closed' },
-];
-
-export const colorOptions = [
-  '#5b43d7',
-  '#3451b1',
-  '#0780e9',
-  '#067a6f',
-  '#00b499',
-  '#289764',
-  '#ffc53d',
-  '#ee5f01',
-  '#ee5f01',
-  '#cb1d64',
-  '#9c2bae',
-  '#9c2bae',
-  '#9c2bae',
-  '#8d8d8d',
 ];
 
 export const taskTemplates = {
@@ -462,7 +447,7 @@ export const recentData: RecentActions[] = [
   },
 ];
 
-const getRandomColor = (): string => {
+const getRandomColor = ():ColorOption => {
   const randomIndex = Math.floor(Math.random() * colorOptions.length);
   return colorOptions[randomIndex];
 };
@@ -477,7 +462,7 @@ export const myWorkData: WorkData[] = [
           {
             id: '1',
             name: 'Complete project proposal',
-            color: getRandomColor(),
+            color: getRandomColor().color,
             description: 'Finalize the Q3 project proposal document',
             priority: 'high',
             completed: false,
@@ -486,7 +471,7 @@ export const myWorkData: WorkData[] = [
           {
             id: '2',
             name: 'Team standup meeting',
-            color: getRandomColor(),
+            color: getRandomColor().color,
             description: 'Daily standup at 10:00 AM',
             priority: 'medium',
             completed: false,
@@ -496,7 +481,7 @@ export const myWorkData: WorkData[] = [
           {
             id: '3',
             name: 'Review pull requests',
-            color: getRandomColor(),
+            color: getRandomColor().color,
             description: 'Review and merge pending PRs',
             priority: 'medium',
             completed: false,
@@ -510,7 +495,7 @@ export const myWorkData: WorkData[] = [
           {
             id: '4',
             name: 'Submit expense report',
-            color: getRandomColor(),
+            color: getRandomColor().color,
             description: 'Expense report for April travel',
             dueDate: '2025-05-15',
             priority: 'high',
@@ -519,7 +504,7 @@ export const myWorkData: WorkData[] = [
           {
             id: '5',
             name: 'Client follow-up email',
-            color: getRandomColor(),
+            color: getRandomColor().color,
             description: 'Send follow-up email to client about project status',
             dueDate: '2025-05-17',
             priority: 'high',
@@ -533,7 +518,7 @@ export const myWorkData: WorkData[] = [
           {
             id: '6',
             name: 'Prepare for quarterly review',
-            color: getRandomColor(),
+            color: getRandomColor().color,
             description: 'Gather metrics and prepare presentation',
             dueDate: '2025-05-22',
             priority: 'medium',
@@ -542,7 +527,7 @@ export const myWorkData: WorkData[] = [
           {
             id: '7',
             name: 'Update documentation',
-            color: getRandomColor(),
+            color: getRandomColor().color,
             description: 'Update API documentation with new endpoints',
             dueDate: '2025-05-23',
             priority: 'low',
@@ -551,7 +536,7 @@ export const myWorkData: WorkData[] = [
           {
             id: '8',
             name: 'Code review session',
-            color: getRandomColor(),
+            color: getRandomColor().color,
             description: 'Schedule code review session with junior developers',
             dueDate: '2025-05-24',
             priority: 'medium',
@@ -565,7 +550,7 @@ export const myWorkData: WorkData[] = [
           {
             id: '9',
             name: 'Research new technologies',
-            color: getRandomColor(),
+            color: getRandomColor().color,
             description:
               'Research potential new frameworks for upcoming project',
             priority: 'low',
@@ -574,7 +559,7 @@ export const myWorkData: WorkData[] = [
           {
             id: '10',
             name: 'Refactor authentication module',
-            color: getRandomColor(),
+            color: getRandomColor().color,
             description:
               'Refactor the authentication module for better performance',
             priority: 'medium',
@@ -593,7 +578,7 @@ export const myWorkData: WorkData[] = [
           {
             id: '11',
             name: 'Weekly status meeting',
-            color: getRandomColor(),
+            color: getRandomColor().color,
             description: 'Weekly team status update at 2:00 PM',
             priority: 'high',
             completed: false,
@@ -601,7 +586,7 @@ export const myWorkData: WorkData[] = [
           {
             id: '12',
             name: 'One-on-one with manager',
-            color: getRandomColor(),
+            color: getRandomColor().color,
             description: 'Monthly check-in with manager at 4:00 PM',
             priority: 'medium',
             completed: false,
@@ -614,7 +599,7 @@ export const myWorkData: WorkData[] = [
           {
             id: '13',
             name: 'Product planning session',
-            color: getRandomColor(),
+            color: getRandomColor().color,
             description: 'Q3 product planning meeting',
             dueDate: '2025-05-21',
             priority: 'high',
@@ -623,7 +608,7 @@ export const myWorkData: WorkData[] = [
           {
             id: '14',
             name: 'Client presentation',
-            color: getRandomColor(),
+            color: getRandomColor().color,
             description: 'Present project status to client',
             dueDate: '2025-05-23',
             priority: 'high',
@@ -637,7 +622,7 @@ export const myWorkData: WorkData[] = [
           {
             id: '15',
             name: 'Team building activity',
-            color: getRandomColor(),
+            color: getRandomColor().color,
             description: 'Plan team building activity for next month',
             priority: 'low',
             completed: false,
@@ -655,7 +640,7 @@ export const myWorkData: WorkData[] = [
           {
             id: '16',
             name: 'Website redesign',
-            color: getRandomColor(),
+            color: getRandomColor().color,
             description: 'Complete responsive design updates',
             dueDate: '2025-06-15',
             priority: 'high',
@@ -664,7 +649,7 @@ export const myWorkData: WorkData[] = [
           {
             id: '17',
             name: 'Mobile app development',
-            color: getRandomColor(),
+            color: getRandomColor().color,
             description: 'Develop iOS and Android versions',
             dueDate: '2025-07-30',
             priority: 'high',
@@ -678,7 +663,7 @@ export const myWorkData: WorkData[] = [
           {
             id: '18',
             name: 'API integration',
-            color: getRandomColor(),
+            color: getRandomColor().color,
             description: 'Integrate with third-party payment API',
             dueDate: '2025-08-10',
             priority: 'medium',
@@ -687,7 +672,7 @@ export const myWorkData: WorkData[] = [
           {
             id: '19',
             name: 'Analytics dashboard',
-            color: getRandomColor(),
+            color: getRandomColor().color,
             description: 'Create customer analytics dashboard',
             dueDate: '2025-09-01',
             priority: 'medium',
@@ -701,7 +686,7 @@ export const myWorkData: WorkData[] = [
           {
             id: '20',
             name: 'User testing',
-            color: getRandomColor(),
+            color: getRandomColor().color,
             description: 'Conduct user testing for new features',
             dueDate: '2025-05-01',
             priority: 'high',
@@ -710,7 +695,7 @@ export const myWorkData: WorkData[] = [
           {
             id: '21',
             name: 'Database migration',
-            color: getRandomColor(),
+            color: getRandomColor().color,
             description: 'Migrate to new database structure',
             dueDate: '2025-04-15',
             priority: 'high',
