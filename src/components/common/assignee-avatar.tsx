@@ -10,7 +10,7 @@ import { cn } from '@/lib/utils.ts';
 import { Assignee } from '@/types/props/Common';
 import { RefreshCw } from 'lucide-react';
 
-interface Props {
+export interface AssigneeProps {
   assignee: Assignee;
   enterAssignee?: boolean;
   displayName: boolean;
@@ -30,7 +30,7 @@ export const AssigneeAvatar = ({
   isSelected,
   showAvatarRing = false,
   showButtons = false,
-}: Props) => {
+}: AssigneeProps) => {
   const getInitials = (name: string) => {
     const names = name.split(' ');
     if (names.length === 1) return names[0].charAt(0).toUpperCase();
@@ -55,7 +55,7 @@ export const AssigneeAvatar = ({
       showButtons ? 'w-full' : 'w-min',
     )}>
       <div className="flex items-center gap-2 w-min">
-        <Avatar className="h-6 w-6 border-2 border-white transition-all overflow-visible">
+        <Avatar className="h-5 w-5 border-2 border-white transition-all overflow-visible">
           <AvatarImage
             src={`https://api.dicebear.com/6.x/avataaars/svg?seed=${getSeed(assignee.name)}`}
             alt={assignee.name}
@@ -79,7 +79,7 @@ export const AssigneeAvatar = ({
             <IconX size={10} className="text-white" />
           </Button>
         </Avatar>
-        <p className={cn('text-nowrap text-black', displayName ? 'block' : 'hidden')}>{assignee.name}</p>
+        <p className={cn('text-nowrap text-black pr-3 bg-inherit', displayName ? 'block' : 'hidden')}>{assignee.name}</p>
       </div>
       <div className={cn('items-center self-end gap-1', showButtons ? 'flex' : 'hidden')}>
         <Tooltip>
