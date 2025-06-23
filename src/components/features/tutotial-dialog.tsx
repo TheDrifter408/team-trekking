@@ -3,10 +3,11 @@
 import { useEffect, useState } from 'react';
 import { Dialog, DialogContentPlain } from '@/components/shadcn-ui/dialog.tsx';
 import { TUTORIAL_TIMER } from '@/lib/constants/appConstant.ts';
+import { useWorkspaceGlobalApiQuery } from '@/service/rtkQueries/globalQuery.ts';
 
 export const TutorialDialog = () => {
   const [open, setOpen] = useState(false);
-
+  const { data: workSpaceGlobal } = useWorkspaceGlobalApiQuery();
   useEffect(() => {
     const lastShown = localStorage.getItem('tutorial_last_shown');
     const now = Date.now();
@@ -29,8 +30,8 @@ export const TutorialDialog = () => {
             <iframe
               width="100%"
               height="100%"
-              src="https://www.youtube.com/embed/5l8fNih8SUM?si=Cu0gGo39Rr0xxx-4"
-              title="YouTube video player"
+              src={workSpaceGlobal?.tutorial[0].tutorialUrl}
+              title={workSpaceGlobal?.tutorial[0].title}
               frameBorder="0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
               referrerPolicy="strict-origin-when-cross-origin"
