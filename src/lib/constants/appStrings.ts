@@ -211,4 +211,6 @@ export const LABEL = {
   DELETE_WORKSPACE: 'Delete Workspace',
   SAVED: 'Saved',
   SAVE: 'Save',
+  WORKSPACE_COLOR: 'Workspace color',
+  ADD_CUSTOM_COLOR: 'Add custom avatar',
 };

@@ -6,6 +6,11 @@ import { Switch } from '@/components/shadcn-ui/switch.tsx';
 import { Input } from '@/components/shadcn-ui/input.tsx';
 import { Label } from '@/components/shadcn-ui/label.tsx';
 import { Icon } from '@/assets/icon-path';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/shadcn-ui/popover.tsx';
 
 const SettingsPage = () => {
   const [workspaceName, setWorkspaceName] = useState(
@@ -14,6 +19,30 @@ const SettingsPage = () => {
   const [whiteLabel, setWhiteLabel] = useState(false);
   const [personalLayout, setPersonalLayout] = useState(true);
   const [isSaved, setIsSaved] = useState(true);
+  const [selectedColor, setSelectedColor] = useState('bg-emerald-500');
+  const [isColorPickerOpen, setIsColorPickerOpen] = useState(false);
+
+  // Available workspace colors
+  const workspaceColors = [
+    { name: 'Purple', class: 'bg-purple-500', hex: '#8B5CF6' },
+    { name: 'Blue', class: 'bg-blue-500', hex: '#3B82F6' },
+    { name: 'Sky', class: 'bg-sky-500', hex: '#0EA5E9' },
+    { name: 'Emerald', class: 'bg-emerald-500', hex: '#10B981' },
+    { name: 'Teal', class: 'bg-teal-500', hex: '#14B8A6' },
+    { name: 'Yellow', class: 'bg-yellow-500', hex: '#EAB308' },
+    { name: 'Orange', class: 'bg-orange-500', hex: '#F97316' },
+    { name: 'Red', class: 'bg-red-500', hex: '#EF4444' },
+    { name: 'Pink', class: 'bg-pink-500', hex: '#EC4899' },
+    { name: 'Violet', class: 'bg-violet-500', hex: '#8B5CF6' },
+    { name: 'Stone', class: 'bg-stone-500', hex: '#78716C' },
+    { name: 'Black', class: 'bg-black', hex: '#000000' },
+  ];
+
+  const onColorSelect = (colorClass: string) => {
+    setSelectedColor(colorClass);
+    setIsSaved(false);
+    setIsColorPickerOpen(false);
+  };
 
   const onSave = () => {
     // on save logic here
@@ -49,9 +78,49 @@ const SettingsPage = () => {
         {/* Workspace Name Section */}
         <div className="mb-8">
           <div className="flex items-center space-x-4 mb-4">
-            <div className="size-12 bg-emerald-500 text-white rounded-xl font-medium flex items-center justify-center">
-              <span style={{ fontSize: '20px' }}>{workspaceName[0]}</span>
-            </div>
+            <Popover
+              open={isColorPickerOpen}
+              onOpenChange={setIsColorPickerOpen}
+            >
+              <PopoverTrigger asChild>
+                <button
+                  className={`size-12 ${selectedColor} text-white rounded-xl font-medium flex items-center justify-center hover:opacity-90 transition-opacity cursor-pointer`}
+                >
+                  <span style={{ fontSize: '20px' }}>{workspaceName[0]}</span>
+                </button>
+              </PopoverTrigger>
+              <PopoverContent className="w-80 p-4" align="start">
+                <div className="space-y-4">
+                  <h4 className="text-sm font-medium text-gray-700">
+                    {LABEL.WORKSPACE_COLOR}
+                  </h4>
+
+                  <div className="flex flex-wrap gap-3">
+                    {workspaceColors.map((color) => (
+                      <button
+                        key={color.name}
+                        onClick={() => onColorSelect(color.class)}
+                        className={`size-4 ${color.class} rounded-full hover:scale-110 transition-transform ${
+                          selectedColor === color.class
+                            ? 'ring-2 ring-gray-400 ring-offset-2'
+                            : ''
+                        }`}
+                        title={color.name}
+                      />
+                    ))}
+                  </div>
+
+                  {/* Add Custom Avatar Button */}
+                  <button
+                    className="w-full mt-4 p-1 border-2 border-pink-300 rounded-lg text-pink-500 hover:bg-pink-50 transition-colors"
+                    onClick={() => {}}
+                  >
+                    {LABEL.ADD_CUSTOM_COLOR}
+                  </button>
+                </div>
+              </PopoverContent>
+            </Popover>
+
             <div className="flex-1">
               <Label className="text-sm font-medium text-content-default mb-2 block">
                 {LABEL.WORKSPACE_NAME}
