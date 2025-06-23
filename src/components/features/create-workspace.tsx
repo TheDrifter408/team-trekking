@@ -69,6 +69,26 @@ export const CreateWorkspace: React.FC<Props> = ({
     inputRef.current?.focus();
   };
 
+  // Validation function to check if current step can proceed
+  const canProceedToNextStep = (): boolean => {
+    switch (step) {
+      case 1:
+        return selectedPurpose !== '';
+      case 2:
+        return selectedOption !== '';
+      case 3:
+        return selectedEmails.length > 0;
+      case 4:
+        return selectedTools.length > 0;
+      case 5:
+        return selectedFeatures.length > 0;
+      case 6:
+        return workspaceName.trim() !== '';
+      default:
+        return true;
+    }
+  };
+
   // Form navigation
   const prevStep = (e: MouseEvent<HTMLButtonElement>): void => {
     e.preventDefault();
@@ -76,7 +96,7 @@ export const CreateWorkspace: React.FC<Props> = ({
   };
 
   const stepCalculation = () => {
-    if (step < totalSteps) {
+    if (step < totalSteps && canProceedToNextStep()) {
       setStep(step + 1);
     }
   };
@@ -272,6 +292,7 @@ export const CreateWorkspace: React.FC<Props> = ({
                 nextStep={nextStep}
                 totalSteps={totalSteps}
                 onSubmit={onSubmit}
+                canProceed={canProceedToNextStep()}
               />
             </DialogFooter>
           </div>
@@ -556,12 +577,17 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ step, totalSteps }) => {
   );
 };
 
-const Footer: React.FC<FooterProps> = ({
+interface FooterPropsExtended extends FooterProps {
+  canProceed: boolean;
+}
+
+const Footer: React.FC<FooterPropsExtended> = ({
   step,
   prevStep,
   nextStep,
   totalSteps,
   onSubmit,
+  canProceed,
 }) => (
   <div className="flex justify-between w-full gap-2 sm:gap-0">
     {step > 1 && (
@@ -584,8 +610,12 @@ const Footer: React.FC<FooterProps> = ({
     {step < totalSteps ? (
       <Button
         onClick={nextStep}
+        disabled={!canProceed}
         className={cn(
-          'ml-auto w-24 sm:!w-[113px] bg-theme-main-dark !h-12 sm:!h-[58px] text-base sm:text-xl flex items-center rounded-lg'
+          'ml-auto w-24 sm:!w-[113px] !h-12 sm:!h-[58px] text-base sm:text-xl flex items-center rounded-lg',
+          canProceed
+            ? 'bg-theme-main-dark hover:bg-theme-main-dark/90'
+            : 'bg-gray-300 cursor-not-allowed hover:bg-gray-300'
         )}
       >
         <span className="hidden sm:inline">{LABEL.NEXT}</span>
@@ -599,8 +629,12 @@ const Footer: React.FC<FooterProps> = ({
       <Button
         onClick={onSubmit}
         type="button"
+        disabled={!canProceed}
         className={cn(
-          'ml-auto w-24 sm:!w-[113px] bg-theme-main-dark !h-12 sm:!h-[58px] text-base sm:text-xl flex items-center rounded-lg'
+          'ml-auto w-24 sm:!w-[113px] !h-12 sm:!h-[58px] text-base sm:text-xl flex items-center rounded-lg',
+          canProceed
+            ? 'bg-theme-main-dark hover:bg-theme-main-dark/90'
+            : 'bg-gray-300 cursor-not-allowed hover:bg-gray-300'
         )}
       >
         {LABEL.FINISH}
