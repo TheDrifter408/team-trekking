@@ -9,7 +9,7 @@ import {
   Settings2,
   Inbox,
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/utils/utils.ts';
 import { Button } from '@/components/shadcn-ui/button';
 import { InboxTabType } from '@/types/props/Common.ts';
 

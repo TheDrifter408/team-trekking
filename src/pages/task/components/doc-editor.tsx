@@ -2,7 +2,11 @@ import { useMemo, FC, useEffect, SetStateAction, Dispatch } from 'react';
 import { LexicalComposer } from '@lexical/react/LexicalComposer';
 import { $createHeadingNode, HeadingNode, QuoteNode } from '@lexical/rich-text';
 import { CodeHighlightNode, CodeNode } from '@lexical/code';
-import { INSERT_UNORDERED_LIST_COMMAND, ListItemNode, ListNode } from '@lexical/list';
+import {
+  INSERT_UNORDERED_LIST_COMMAND,
+  ListItemNode,
+  ListNode,
+} from '@lexical/list';
 import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
 import { AutoFocusPlugin } from '@lexical/react/LexicalAutoFocusPlugin';
 import { ContentEditable } from '@lexical/react/LexicalContentEditable';
@@ -13,21 +17,35 @@ import { OnChangePlugin } from '@lexical/react/LexicalOnChangePlugin';
 import { MarkdownShortcutPlugin } from '@lexical/react/LexicalMarkdownShortcutPlugin';
 import { TRANSFORMERS } from '@lexical/markdown';
 import { LinkNode } from '@lexical/link';
-import { $createParagraphNode, $createTextNode, $getRoot, $getSelection, $isRangeSelection, EditorState, EditorThemeClasses, FORMAT_TEXT_COMMAND, LexicalEditor } from 'lexical';
+import {
+  $createParagraphNode,
+  $createTextNode,
+  $getRoot,
+  $getSelection,
+  $isRangeSelection,
+  EditorState,
+  EditorThemeClasses,
+  FORMAT_TEXT_COMMAND,
+  LexicalEditor,
+} from 'lexical';
 import { SlashCommandPlugin } from './editor-popover-plugin.tsx';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
-import { cn } from '@/lib/utils.ts';
+import { cn } from '@/lib/utils/utils.ts';
 import { Button } from '@/components/shadcn-ui/button.tsx';
 import { $setBlocksType } from '@lexical/selection';
 import { AtSign, Ellipsis, FileUser, SmilePlus } from 'lucide-react';
 interface Props {
   value: string;
-  onChange: (editorState: EditorState, editor: LexicalEditor, tags: Set<string>) => void;
+  onChange: (
+    editorState: EditorState,
+    editor: LexicalEditor,
+    tags: Set<string>
+  ) => void;
   placeholder?: string;
   name: string;
-  showBorder?: boolean,
-  editable?: boolean,
-  showToolbar?: boolean,
+  showBorder?: boolean;
+  editable?: boolean;
+  showToolbar?: boolean;
   setIsEditing: Dispatch<SetStateAction<boolean>>;
 }
 
@@ -63,7 +81,7 @@ const LoadEditorContent = ({ value }: { value: string }) => {
       const editorState = editor.parseEditorState(value);
       editor.setEditorState(editorState);
     } catch (e) {
-      console.warn("Doc loading failed, falling to plain text: ", e);
+      console.warn('Doc loading failed, falling to plain text: ', e);
       editor.update(() => {
         const root = $getRoot();
         root.clear();
@@ -72,11 +90,10 @@ const LoadEditorContent = ({ value }: { value: string }) => {
         root.append(paragraph);
       });
     }
-
   }, [editor, value]);
 
   return null;
-}
+};
 
 export const DocEditor: FC<Props> = ({
   value,
@@ -116,7 +133,11 @@ export const DocEditor: FC<Props> = ({
             contentEditable={
               <ContentEditable
                 contentEditable={editable}
-                className={cn("px-4 py-2 text-base leading-relaxed overflow-auto outline-none rounded-lg", showBorder ? "border" : "")} />
+                className={cn(
+                  'px-4 py-2 text-base leading-relaxed overflow-auto outline-none rounded-lg',
+                  showBorder ? 'border' : ''
+                )}
+              />
             }
             placeholder={
               <div className="absolute top-2 left-3 text-base leading-relaxed text-muted-foreground">
@@ -131,7 +152,7 @@ export const DocEditor: FC<Props> = ({
           <HistoryPlugin />
           <SlashCommandPlugin />
           <OnChangePlugin onChange={onChange} />
-          <div className={cn("px-2", showToolbar ? 'block' : 'hidden')}>
+          <div className={cn('px-2', showToolbar ? 'block' : 'hidden')}>
             {editable && <Toolbar onClickCancel={() => setIsEditing(false)} />}
           </div>
         </LexicalComposer>
@@ -142,13 +163,12 @@ export const DocEditor: FC<Props> = ({
 
 interface ToolbarProps {
   onClickCancel: Dispatch<SetStateAction<boolean>>;
-
 }
 
 const Toolbar: FC<ToolbarProps> = ({ onClickCancel }) => {
   const [editor] = useLexicalComposerContext();
   return (
-    <div className={cn("flex justify-between gap-1 py-2")}>
+    <div className={cn('flex justify-between gap-1 py-2')}>
       <div className="flex items-center justify-between">
         <Button
           variant="ghost"
@@ -193,13 +213,15 @@ const Toolbar: FC<ToolbarProps> = ({ onClickCancel }) => {
         </Button>
       </div>
       <div className="flex items-center gap-1">
-        <Button onClick={() => onClickCancel(true)} variant={'ghost'} className="border bg-slate-50 hover:bg-slate-200">
-            Cancel
+        <Button
+          onClick={() => onClickCancel(true)}
+          variant={'ghost'}
+          className="border bg-slate-50 hover:bg-slate-200"
+        >
+          Cancel
         </Button>
-        <Button>
-            Save
-        </Button>
+        <Button>Save</Button>
       </div>
     </div>
-  )
-}
+  );
+};

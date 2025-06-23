@@ -21,7 +21,7 @@ import {
 } from '@/components/shadcn-ui/avatar.tsx';
 import { X, Lock, Globe, Link, ChevronDown } from 'lucide-react';
 import { IconCaretRightFilled, IconCaretDownFilled } from '@tabler/icons-react';
-import { cn } from '@/lib/utils.ts';
+import { cn } from '@/lib/utils/utils.ts';
 import { taskNotificationUsers } from '@/mock';
 
 interface ShareTaskProps {

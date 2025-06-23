@@ -3,6 +3,7 @@ import axiosBaseQuery from '@/service/baseQuery.ts';
 import { ApiResponse } from '@/types/request-response/ApiResponse.ts';
 import { WorkSpaceGlobal } from '@/types/request-response/workspace/ApiRessponse.ts';
 import { API_URLS } from '@/lib/constants';
+import { withPersistentCache } from '@/lib/utils/utils.ts';
 
 export const globalApi = createApi({
   reducerPath: 'globalApi',
@@ -15,6 +16,7 @@ export const globalApi = createApi({
       transformResponse: (response: ApiResponse<WorkSpaceGlobal>) =>
         response.data,
       keepUnusedDataFor: 60 * 60 * 24,
+      ...withPersistentCache(15),
     }),
   }),
 });

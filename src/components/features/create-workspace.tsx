@@ -7,7 +7,7 @@ import React, {
   ChangeEvent,
 } from 'react';
 import { Check } from 'lucide-react';
-import { cn } from '@/lib/utils.ts';
+import { cn } from '@/lib/utils/utils.ts';
 import { Icon } from '@/assets/icon-path.tsx';
 import {
   Dialog,

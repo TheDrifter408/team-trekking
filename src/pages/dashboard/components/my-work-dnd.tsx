@@ -30,7 +30,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from '@/components/shadcn-ui/collapsible.tsx';
-import { cn } from '@/lib/utils.ts';
+import { cn } from '@/lib/utils/utils.ts';
 import { IconCaretDownFilled, IconCaretRightFilled } from '@tabler/icons-react';
 import { LABEL } from '@/lib/constants';
 

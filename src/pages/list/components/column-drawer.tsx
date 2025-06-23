@@ -10,7 +10,7 @@ import { Button } from '@/components/shadcn-ui/button.tsx';
 import { AvailableColumnsDrawer } from './available-columns-drawer';
 import { CreateField } from './create-fields-drawer';
 import { ArrowLeftIcon } from 'lucide-react';
-import { cn } from '@/lib/utils.ts';
+import { cn } from '@/lib/utils/utils.ts';
 
 interface Props {
   open: boolean;

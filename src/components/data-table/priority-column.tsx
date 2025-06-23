@@ -4,7 +4,7 @@ import { Icon } from '@/assets/icon-path';
 import { LABEL } from '@/lib/constants/appStrings.ts';
 import { Button } from '@/components/shadcn-ui/button';
 import { PriorityPopover } from '@/components/common/priority-popover.tsx';
-import { cn } from '@/lib/utils.ts';
+import { cn } from '@/lib/utils/utils.ts';
 import { useState } from 'react';
 
 interface Props {

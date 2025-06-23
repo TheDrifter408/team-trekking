@@ -4,23 +4,34 @@ import { globalApi } from '@/service/rtkQueries/globalQuery.ts';
 import { setupListeners } from '@reduxjs/toolkit/query';
 import { apiErrorMiddleware } from '@/stores/apiErrorMiddleware.ts';
 
+import { persistStore, persistReducer } from 'redux-persist';
+import storage from 'redux-persist/lib/storage'; // defaults to localStorage
+
+const persistConfig = {
+  key: 'api-persistor',
+  storage,
+  whitelist: [globalApi.reducerPath],
+};
+
+const rootReducer = {
+  [authApi.reducerPath]: persistReducer(persistConfig, authApi.reducer),
+  [globalApi.reducerPath]: persistReducer(persistConfig, globalApi.reducer),
+};
+
 const configureAppStore = () => {
   const store = configureStore({
-    reducer: {
-      [authApi.reducerPath]: authApi.reducer,
-      [globalApi.reducerPath]: globalApi.reducer,
-    },
+    reducer: rootReducer,
     middleware: (getDefaultMiddleware) =>
-      getDefaultMiddleware().concat([
-        authApi.middleware,
-        globalApi.middleware,
-        apiErrorMiddleware,
-      ]),
+      getDefaultMiddleware({
+        serializableCheck: false, // required for redux-persist
+      }).concat([authApi.middleware, globalApi.middleware, apiErrorMiddleware]),
     devTools: process.env.NODE_ENV === 'development',
   });
 
   setupListeners(store.dispatch);
-  return store;
+
+  const persistor = persistStore(store);
+  return { store, persistor };
 };
 
 export default configureAppStore;

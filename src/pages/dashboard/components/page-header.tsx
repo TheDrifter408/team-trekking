@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { cn } from '@/lib/utils.ts';
+import { cn } from '@/lib/utils/utils.ts';
 import { Button } from '@/components/shadcn-ui/button';
 import {
   Sheet,

@@ -10,7 +10,7 @@ import { useDataTableStore } from '@/stores/zustand/data-table-store';
 import { TagDialog } from '@/components/common/tag-dialog.tsx';
 import { Task } from '@/types/props/Common.ts';
 import { Icon } from '@/assets/icon-path.tsx';
-import { cn } from '@/lib/utils.ts';
+import { cn } from '@/lib/utils/utils.ts';
 import { Row } from '@tanstack/react-table';
 import { useNavigate } from 'react-router-dom';
 

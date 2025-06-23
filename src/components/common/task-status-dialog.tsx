@@ -10,7 +10,7 @@ import {
 } from '@/components/shadcn-ui/dropdown-menu';
 import { Input } from '@/components/shadcn-ui/input';
 import { LABEL } from '@/lib/constants';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/utils/utils.ts';
 
 interface ProgressIconProps {
   progress?: number;

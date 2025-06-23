@@ -12,7 +12,7 @@ import {
 import { CalendarIcon, MoveRight } from 'lucide-react';
 import { type DateRange } from 'react-day-picker';
 
-import { cn } from '@/lib/utils.ts';
+import { cn } from '@/lib/utils/utils.ts';
 import { Calendar } from '@/components/shadcn-ui/calendar.tsx';
 import {
   Popover,

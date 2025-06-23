@@ -4,7 +4,11 @@ import {
   CollapsibleContent,
 } from '@/components/shadcn-ui/collapsible.tsx';
 import { Button } from '@/components/shadcn-ui/button.tsx';
-import { IconCaretRightFilled, IconFolder, IconFolderOpen } from '@tabler/icons-react';
+import {
+  IconCaretRightFilled,
+  IconFolder,
+  IconFolderOpen,
+} from '@tabler/icons-react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -17,7 +21,7 @@ import { UpdateSpace } from '@/components/features/update-space.tsx';
 import { ContextMenu } from '@/components/common/context-menu.tsx';
 import { Icon } from '@/assets/icon-path.tsx';
 import { spacesMenuConfig } from '@/lib/constants/staticData.ts';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/utils/utils.ts';
 
 interface Props {
   name: string;
@@ -32,7 +36,7 @@ export const SidebarSpaceItems = ({ name, children }: Props) => {
 
   const onToggleCollapse = () => {
     setIsOpen(!isOpen);
-  }
+  };
 
   return (
     <Collapsible open={isOpen}>
@@ -48,18 +52,20 @@ export const SidebarSpaceItems = ({ name, children }: Props) => {
             size="icon"
             className="h-6 w-6 text-slate-600 hover:text-slate-800 hover:bg-slate-200 transition-all"
           >
-            {
-              !isHovered ? isOpen ? (
+            {!isHovered ? (
+              isOpen ? (
                 <IconFolderOpen />
               ) : (
                 <IconFolder />
-              ) : (
-                <IconCaretRightFilled className={cn(
-                  "h-4 w-4 transition-transform",
-                  isOpen ? 'rotate-90' : 'rotate-0'
-                )} />
               )
-            }
+            ) : (
+              <IconCaretRightFilled
+                className={cn(
+                  'h-4 w-4 transition-transform',
+                  isOpen ? 'rotate-90' : 'rotate-0'
+                )}
+              />
+            )}
           </Button>
           <div className="flex flex-1 items-center">
             <TooltipProvider>
@@ -91,7 +97,7 @@ export const SidebarSpaceItems = ({ name, children }: Props) => {
           }
           sections={spacesMenuConfig}
           width="w-64"
-          onItemClick={() => { }}
+          onItemClick={() => {}}
         />
       </div>
 

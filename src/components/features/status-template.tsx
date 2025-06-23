@@ -30,7 +30,7 @@ import { taskTemplates } from '@/mock';
 import { Input } from '@/components/shadcn-ui/input.tsx';
 import { Info, GripVertical, Ellipsis } from 'lucide-react';
 import { Button } from '@/components/shadcn-ui/button.tsx';
-import { cn } from '@/lib/utils.ts';
+import { cn } from '@/lib/utils/utils.ts';
 import {
   DndContext,
   DragEndEvent,

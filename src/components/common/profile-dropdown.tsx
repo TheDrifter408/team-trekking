@@ -17,7 +17,7 @@ import {
 } from '@/components/shadcn-ui/dropdown-menu.tsx';
 import { ChevronDown } from 'lucide-react';
 import { UserResponse } from '@/types/request-response/ApiResponse.ts';
-import { getInitials } from '@/lib/utils.ts';
+import { getInitials } from '@/lib/utils/utils.ts';
 import { useTMTStore } from '@/stores/zustand';
 
 interface Props {
