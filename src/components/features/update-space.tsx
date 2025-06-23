@@ -1,10 +1,5 @@
 import { ReactNode, useState } from 'react';
-import {
-  ChevronRight,
-  ChevronsUpDown,
-  CircleDot,
-  Layers,
-} from 'lucide-react';
+import { ChevronRight, ChevronsUpDown, CircleDot, Layers } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
@@ -17,7 +12,7 @@ import { Input } from '@/components/shadcn-ui/input.tsx';
 import { Separator } from '@/components/shadcn-ui/separator.tsx';
 import { Textarea } from '@/components/shadcn-ui/textarea.tsx';
 import { Switch } from '@/components/shadcn-ui/switch.tsx';
-import { cn, getInitials } from '@/lib/utils.ts';
+import { cn, getInitials } from '@/lib/utils/utils.ts';
 import { DefaultViews } from '@/components/common/space-default-views.tsx';
 import { DropDownContent } from '@/components/common/space-icon-name-dropdown.tsx';
 import { StatusTemplate } from '@/components/features/status-template.tsx';
@@ -66,11 +61,11 @@ export const UpdateSpace = ({ isActive, onClose }: UpdateSpaceProps) => {
 
   const onSelectedUser = (assignees: Assignee[]) => {
     setSelectedUser(assignees[0] ? assignees[0] : null);
-  }
+  };
 
   const onToggleInvitedUsers = (assignees: Assignee[]) => {
     setInvitedUsers(assignees);
-  }
+  };
 
   return (
     <Dialog open={isActive} onOpenChange={onClose} modal={false}>
@@ -121,10 +116,12 @@ export const UpdateSpace = ({ isActive, onClose }: UpdateSpaceProps) => {
                 value={selectedUser ? [selectedUser] : []}
                 displayName={true}
                 multipleSelect={false}
-                onRemove={() => { }}
-                placeholder='Please select an Owner'
-                userListTitle='Users' users={taskNotificationUsers}
-                onChange={(selected) => onSelectedUser(selected)} />
+                onRemove={() => {}}
+                placeholder="Please select an Owner"
+                userListTitle="Users"
+                users={taskNotificationUsers}
+                onChange={(selected) => onSelectedUser(selected)}
+              />
             </div>
           </div>
         </div>
@@ -159,17 +156,19 @@ export const UpdateSpace = ({ isActive, onClose }: UpdateSpaceProps) => {
           </div>
         </div>
         {/* Share with options */}
-        {isPrivateMode && 
-        <SelectUsers
-          multipleSelect={true}
-          displayName={false}
-          onRemove={() => {}}
-          displayOnly={true} 
-          value={invitedUsers} 
-          users={taskNotificationUsers} 
-          onChange={(assignees) => onToggleInvitedUsers(assignees)}
-          placeholder='No invited Users'
-          userListTitle='Select Users' />}
+        {isPrivateMode && (
+          <SelectUsers
+            multipleSelect={true}
+            displayName={false}
+            onRemove={() => {}}
+            displayOnly={true}
+            value={invitedUsers}
+            users={taskNotificationUsers}
+            onChange={(assignees) => onToggleInvitedUsers(assignees)}
+            placeholder="No invited Users"
+            userListTitle="Select Users"
+          />
+        )}
         <Separator decorative={false} className={'!h-[.5px]'} />
 
         <SettingsCard
@@ -276,4 +275,4 @@ export const SettingsCard = ({
       </div>
     </div>
   );
-}
+};

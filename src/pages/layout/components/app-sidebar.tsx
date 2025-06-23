@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { CompassIcon, Plus, Rocket, Share2 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/utils/utils.ts';
 import {
   Sidebar,
   SidebarContent,

@@ -3,7 +3,7 @@ import { recentData } from '@/mock';
 import { Circle, List } from 'lucide-react';
 import { CardContent } from '@/components/shadcn-ui/card';
 import { HoverableCard } from './hoverable-card';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/utils/utils.ts';
 
 interface Props {
   isExpanded: boolean;

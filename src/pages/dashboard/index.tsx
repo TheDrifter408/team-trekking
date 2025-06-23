@@ -10,7 +10,7 @@ import {
   HARD_CARD_LIST,
   HOME_CARD_TITLE,
 } from '@/lib/constants/appConstant.ts';
-import { getWelcomeMessage } from '@/lib/utils.ts';
+import { getWelcomeMessage } from '@/lib/utils/utils.ts';
 import { ShareSpaceDialog } from '@/components/common/share-space-dialog';
 
 enum Direction {

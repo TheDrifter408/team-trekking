@@ -1,9 +1,5 @@
 'use client';
-import {
-  forwardRef,
-  PropsWithChildren,
-  useState,
-} from 'react';
+import { forwardRef, PropsWithChildren, useState } from 'react';
 import {
   Sidebar,
   SidebarContent,
@@ -11,7 +7,7 @@ import {
   useSidebar,
 } from '@/components/shadcn-ui/sidebar.tsx';
 import { Button } from '@/components/shadcn-ui/button.tsx';
-import { cn } from '@/lib/utils.ts';
+import { cn } from '@/lib/utils/utils.ts';
 import { ButtonProps } from '@headlessui/react';
 import { Task } from '@/types/props/Common';
 import { mockColumns } from '@/mock';
@@ -22,37 +18,38 @@ import { useNavigate } from 'react-router-dom';
 
 type SidebarTriggerProps = PropsWithChildren<ButtonProps>;
 
-export const LeftSidebarTrigger = forwardRef<HTMLButtonElement, SidebarTriggerProps>(
-  ({ children, className, onClick, ...props }, ref) => {
-    const { toggleSidebar } = useSidebar();
+export const LeftSidebarTrigger = forwardRef<
+  HTMLButtonElement,
+  SidebarTriggerProps
+>(({ children, className, onClick, ...props }, ref) => {
+  const { toggleSidebar } = useSidebar();
 
-    return (
-      <Button
-        ref={ref}
-        data-sidebar="trigger"
-        variant="ghost"
-        size="icon"
-        className={cn(className, 'items-center justify-center h-auto')}
-        onClick={(event) => {
-          onClick?.(event);
-          toggleSidebar();
-        }}
-        {...props}
-      >
-        {children}
-      </Button>
-    );
-  }
-);
+  return (
+    <Button
+      ref={ref}
+      data-sidebar="trigger"
+      variant="ghost"
+      size="icon"
+      className={cn(className, 'items-center justify-center h-auto')}
+      onClick={(event) => {
+        onClick?.(event);
+        toggleSidebar();
+      }}
+      {...props}
+    >
+      {children}
+    </Button>
+  );
+});
 
 LeftSidebarTrigger.displayName = 'LeftSidebarTrigger';
 
 interface LeftSidebarProps {
-  className?: string
+  className?: string;
 }
 
 interface TaskListProps {
-  task: Task,
+  task: Task;
 }
 
 interface ExpandableSubtasks {
@@ -60,12 +57,11 @@ interface ExpandableSubtasks {
 }
 
 const TaskList = ({ task }: TaskListProps) => {
-
   return (
     <>
-      <div className="px-2 flex items-center justify-between bg-slate-200 group/right_buttons" >
+      <div className="px-2 flex items-center justify-between bg-slate-200 group/right_buttons">
         <div className="flex gap-2 py-2">
-          <Icon name="progress2" className='text-green-500' />
+          <Icon name="progress2" className="text-green-500" />
           <span className="text-content-default text-base">{task.name}</span>
         </div>
         <div className="flex invisible group-hover/right_buttons:visible">
@@ -77,19 +73,16 @@ const TaskList = ({ task }: TaskListProps) => {
           </Button>
         </div>
       </div>
-      {
-        task.subTask.length > 0 ? task.subTask.map((task) => (
-          <ExpandableSubTasks subtask={task} />
-        )) : <></>
-      }
+      {task.subTask.length > 0 ? (
+        task.subTask.map((task) => <ExpandableSubTasks subtask={task} />)
+      ) : (
+        <></>
+      )}
     </>
-
-  )
-
-}
+  );
+};
 
 const ExpandableSubTasks = ({ subtask }: ExpandableSubtasks) => {
-
   const navigate = useNavigate();
   const [isExpanded, setIsExpanded] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -97,27 +90,31 @@ const ExpandableSubTasks = ({ subtask }: ExpandableSubtasks) => {
 
   const onRenameSubmit = () => {
     setIsEditing(false);
-  }
+  };
 
   const onToggleExpand = () => {
-    setIsExpanded((prev) => !prev)
-  }
+    setIsExpanded((prev) => !prev);
+  };
 
   return (
-    <div
-      className="flex items-center gap-1 hover:bg-slate-200 py-1"
-    >
+    <div className="flex items-center gap-1 hover:bg-slate-200 py-1">
       <div className="max-w-[40px] flex-shrink-0 flex justify-start items-center">
         {/* Expand Icon */}
         <Button
           variant={'ghost'}
           onClick={onToggleExpand}
-          size={'icon_sm'} className={cn("hover:bg-slate-200 p-1 m-0 ml-1 w-min h-min", subtask.subTask.length > 0 ? 'visible' : 'invisible', isExpanded ? 'rotate-45' : 'rotate-0')}>
+          size={'icon_sm'}
+          className={cn(
+            'hover:bg-slate-200 p-1 m-0 ml-1 w-min h-min',
+            subtask.subTask.length > 0 ? 'visible' : 'invisible',
+            isExpanded ? 'rotate-45' : 'rotate-0'
+          )}
+        >
           <ChevronRight />
         </Button>
       </div>
       <div>
-        <Icon name="progress2" className='text-green-500' />
+        <Icon name="progress2" className="text-green-500" />
       </div>
       <div className="flex flex-col overflow-hidden">
         {/* Task Name */}
@@ -160,17 +157,24 @@ const ExpandableSubTasks = ({ subtask }: ExpandableSubtasks) => {
           </div>
         </div>
         {/* Subtasks */}
-        <div className={cn(`grid transform`, isExpanded && subtask.subTask.length > 0 ? `grid-rows-${subtask.subTask.length}` : 'grid-rows-0')}>
-          {
-            subtask.subTask.length > 0 ? subtask.subTask.map((subtask: Task) => (
-              <div>{subtask.name}</div>
-            )) : <></>
-          }
+        <div
+          className={cn(
+            `grid transform`,
+            isExpanded && subtask.subTask.length > 0
+              ? `grid-rows-${subtask.subTask.length}`
+              : 'grid-rows-0'
+          )}
+        >
+          {subtask.subTask.length > 0 ? (
+            subtask.subTask.map((subtask: Task) => <div>{subtask.name}</div>)
+          ) : (
+            <></>
+          )}
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
 export const LeftSidebar = ({ className, ...props }: LeftSidebarProps) => {
   const [task, setTask] = useState<Task>(mockColumns[0].tasks[0]);
@@ -180,8 +184,8 @@ export const LeftSidebar = ({ className, ...props }: LeftSidebarProps) => {
       collapsible="offcanvas"
       side={'left'}
       className={cn(
-        "absolute !h-[calc(100svh-110px)] border-r overflow-hidden [&>[data-sidebar=sidebar]]:flex-row-reverse",
-        className,
+        'absolute !h-[calc(100svh-110px)] border-r overflow-hidden [&>[data-sidebar=sidebar]]:flex-row-reverse',
+        className
       )}
       {...props}
     >

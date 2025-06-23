@@ -5,6 +5,7 @@ import { Fallback } from '../pages/fallback/fallback-route.tsx';
 
 const AppLayout = lazy(() => import('@/pages/layout/app-layout.tsx'));
 const HeaderLayout = lazy(() => import('@/pages/layout/header-layout.tsx'));
+const SettingsLayout = lazy(() => import('@/pages/layout/settings-layout.tsx'));
 const Login = lazy(() => import('@/pages/login/sign-in.tsx'));
 const SignUp = lazy(() => import('@/pages/login/sign-up'));
 const ForgotPassword = lazy(() => import('@/pages/login/forgot-password.tsx'));
@@ -16,6 +17,7 @@ const List = lazy(() => import('@/pages/list'));
 const Task = lazy(() => import('@/pages/task'));
 const Calendar = lazy(() => import('@/pages/calendar'));
 const Inbox = lazy(() => import('@/pages/inbox'));
+const Settings = lazy(() => import('@/pages/settings'));
 
 const AppRoutes = () => {
   return (
@@ -37,6 +39,9 @@ const AppRoutes = () => {
           </Route>
           <Route element={<HeaderLayout />}>
             <Route path="task" element={<Task />} />
+          </Route>
+          <Route element={<SettingsLayout />}>
+            <Route path={'settings'} element={<Settings />} />
           </Route>
         </Route>
 

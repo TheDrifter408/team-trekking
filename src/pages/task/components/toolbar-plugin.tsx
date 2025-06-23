@@ -22,7 +22,7 @@ import { $setBlocksType } from '@lexical/selection';
 import { $createParagraphNode } from 'lexical';
 import { Button } from '@/components/shadcn-ui/button.tsx';
 import { Label } from '@/components/shadcn-ui/label.tsx';
-import { cn } from '@/lib/utils.ts';
+import { cn } from '@/lib/utils/utils.ts';
 import {
   HEADINGS,
   LOW_PRIORITY,

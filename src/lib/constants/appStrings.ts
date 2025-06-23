@@ -198,5 +198,20 @@ export const LABEL = {
   COLOR_ICON: 'Color & Icon',
   SPACE_SETTINGS: 'Space settings',
   HIDE_SPACE: 'Hide Space',
+  BACK_TO_WORKSPACE: 'Back to workspace',
+  WORKSPACE: 'Workspace',
+  WORKSPACE_SETTINGS: 'Workspace Settings',
+  WORKSPACE_NAME: 'Workspace name',
+  WHITE_LABEL: 'White Label',
+  SKIN_TEAM_TREKKING:
+    'Skin TeamTrekking with your brand colors, logo, and a custom URL.',
+  PERSONAL_WORKSPACE_LAYOUT: 'Personal Workspace Layout',
+  TIME_TO_COLLABORATE:
+    'Time to collaborate? Turn this off to show all features designed for team productivity.',
+  DELETE_WORKSPACE: 'Delete Workspace',
+  SAVED: 'Saved',
+  SAVE: 'Save',
+  WORKSPACE_COLOR: 'Workspace color',
+  ADD_CUSTOM_COLOR: 'Add custom avatar',
   WATCH_THESE_VIDEOS: 'Watch these quick videos to know how Team Trekking can transform your productivity.'
 };

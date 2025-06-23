@@ -88,9 +88,15 @@ const getRandomPriority = (): TaskPriority =>
 
 let taskIdCounter = 1;
 
-const generateTask = (level = 1, maxDepth = 3): Task => {
+const generateTask = (
+  level = 1,
+  maxDepth = 3,
+  parentId: string | null = null
+): Task => {
+  const id = (taskIdCounter++).toString();
+
   const task: Task = {
-    id: (taskIdCounter++).toString(),
+    id,
     name: faker.lorem.sentence(3),
     progress: faker.number.int({ min: 0, max: 100 }),
     status: getRandomStatus(),
@@ -102,14 +108,13 @@ const generateTask = (level = 1, maxDepth = 3): Task => {
     spendTime: `${faker.number.int({ min: 1, max: 40 })}h`,
     estimatedTime: `${faker.number.int({ min: 1, max: 360000000 })}`,
     priority: getRandomPriority(),
+    parentId, // ✅ <-- added this
     subTask: [],
     subTaskCount: 0,
     checkListCount: 0,
   };
 
-  // Only generate subtasks if we haven't reached max depth and randomly decide to create them
   if (level < maxDepth && faker.datatype.boolean({ probability: 0.5 })) {
-    // Reduce probability as depth increases to create more realistic hierarchies
     const probability = level === 1 ? 0.6 : level === 2 ? 0.7 : 0.4;
 
     if (faker.datatype.boolean({ probability })) {
@@ -117,11 +122,12 @@ const generateTask = (level = 1, maxDepth = 3): Task => {
         min: 1,
         max: level === 1 ? 5 : 3,
       });
+
       task.subTaskCount = subtaskCount;
       task.checkListCount = task?.checklist?.length || 0;
 
-      task.subTask = Array.from({ length: subtaskCount }).map(() =>
-        generateTask(level + 1, maxDepth)
+      task.subTask = Array.from({ length: subtaskCount }).map(
+        () => generateTask(level + 1, maxDepth, id) // ✅ Pass the current task's ID as parentId
       );
     }
   }
@@ -135,3 +141,85 @@ export const generateTasks = (count: number, maxDepth = 3): Task[] => {
 };
 
 export const mockTasks: Task[] = generateTasks(5, 3);
+
+export const flattenTasks = (tasks: Task[]): Task[] => {
+  const result: Task[] = [];
+
+  const flatten = (taskList: Task[]) => {
+    for (const task of taskList) {
+      result.push(task);
+      if (task.subTask?.length) {
+        flatten(task.subTask);
+      }
+    }
+  };
+
+  flatten(tasks);
+  return result;
+};
+export const removeTaskById = (tasks: Task[], taskId: string): Task[] => {
+  return tasks
+    .map((task) => {
+      if (task.id === taskId) return null;
+      if (task.subTask?.length) {
+        task.subTask = removeTaskById(task.subTask, taskId);
+      }
+      return task;
+    })
+    .filter(Boolean) as Task[];
+};
+export const insertTaskAt = (
+  tasks: Task[],
+  parentId: string | null,
+  newTask: Task,
+  siblingId?: string,
+  position: 'above' | 'below' = 'below'
+): Task[] => {
+  const deepCopy = structuredClone(tasks);
+
+  const insert = (taskList: Task[]): boolean => {
+    for (let i = 0; i < taskList.length; i++) {
+      const task = taskList[i];
+
+      // Found the parent where the new task should go
+      if (task.id === parentId) {
+        if (!task.subTask) task.subTask = [];
+
+        const idx = siblingId
+          ? task.subTask.findIndex((t) => t.id === siblingId)
+          : -1;
+
+        if (idx !== -1) {
+          task.subTask.splice(position === 'below' ? idx + 1 : idx, 0, newTask);
+        } else {
+          task.subTask.push(newTask);
+        }
+
+        return true;
+      }
+
+      if (task.subTask?.length) {
+        const inserted = insert(task.subTask);
+        if (inserted) return true;
+      }
+    }
+
+    return false;
+  };
+
+  if (parentId === null) {
+    // Insert at root level
+    const idx = siblingId ? deepCopy.findIndex((t) => t.id === siblingId) : -1;
+
+    if (idx !== -1) {
+      deepCopy.splice(position === 'below' ? idx + 1 : idx, 0, newTask);
+    } else {
+      deepCopy.push(newTask);
+    }
+
+    return deepCopy;
+  }
+
+  insert(deepCopy);
+  return deepCopy;
+};

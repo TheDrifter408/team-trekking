@@ -16,7 +16,7 @@ import { TaskDescriptionIcon } from '@/assets/icons.tsx';
 import { Card, CardContent } from '@/components/shadcn-ui/card';
 import { format } from 'date-fns';
 import { Button } from '@/components/shadcn-ui/button';
-import { cn } from '@/lib/utils.ts';
+import { cn } from '@/lib/utils/utils.ts';
 import { ContextMenu } from '@/components/common/context-menu';
 import { boardTaskMenuConfig } from '@/lib/constants/staticData';
 import { TaskCardProps } from '@/types/props/Common';
@@ -92,14 +92,14 @@ const TaskCard = ({
   const style =
     transform && !isDragOverlay
       ? {
-        transform: CSS.Translate.toString(transform),
-        opacity: isDragging ? 0.5 : 1,
-        zIndex: isDragging ? 50 : 'auto',
-      }
+          transform: CSS.Translate.toString(transform),
+          opacity: isDragging ? 0.5 : 1,
+          zIndex: isDragging ? 50 : 'auto',
+        }
       : undefined;
 
-  const toggleSubtasks = (e:MouseEvent) => {
-    setShowSubtasks((prev) =>!prev);
+  const toggleSubtasks = (e: MouseEvent) => {
+    setShowSubtasks((prev) => !prev);
     e.stopPropagation();
   };
 
@@ -169,7 +169,7 @@ const TaskCard = ({
           'bg-background cursor-pointer transition-all duration-150 relative py-2',
           isSubtask && 'border-l-4 border-l-primary/30 ',
           isDragOverlay &&
-          'w-[244px] shadow-2xl ring-2 ring-primary z-50 scale-[1.03] border-primary/80 rotate-1 bg-background'
+            'w-[244px] shadow-2xl ring-2 ring-primary z-50 scale-[1.03] border-primary/80 rotate-1 bg-background'
         )}
         {...(isSubtask || isDragOverlay ? {} : { ...attributes, ...listeners })}
         onMouseEnter={() => setOnEnterTask(true)}
@@ -199,7 +199,6 @@ const TaskCard = ({
                   ? 'opacity-100 visible'
                   : 'opacity-0 invisible',
                 theme === 'dark' ? 'bg-black' : 'bg-white'
-
               )}
             >
               <Button
@@ -267,8 +266,8 @@ const TaskCard = ({
               <span className="text-sm text-content-tertiary font-semibold">
                 {task.startDate && task.dueDate
                   ? `${formatDate(task.startDate)}` +
-                  '-' +
-                  `${formatDate(task.dueDate)}`
+                    '-' +
+                    `${formatDate(task.dueDate)}`
                   : ''}
               </span>
             </div>

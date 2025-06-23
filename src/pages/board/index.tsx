@@ -25,7 +25,7 @@ import { LABEL } from '@/lib/constants/appStrings.ts';
 import { Card } from '@/components/shadcn-ui/card.tsx';
 import { Button } from '@/components/shadcn-ui/button.tsx';
 import { ChevronUp } from 'lucide-react';
-import { cn, columnsEqual } from '@/lib/utils.ts';
+import { cn, columnsEqual } from '@/lib/utils/utils.ts';
 import { Column, Task } from '@/types/props/Common.ts';
 import { StrictPointerSensor } from '@/lib/classes/StrictPointerSensor.ts';
 import { useDragScroll } from '@/lib/hooks/use-dragScroll.tsx';

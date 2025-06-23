@@ -2,7 +2,7 @@ import { FC } from 'react';
 import { assignedCommentData } from '@/mock';
 import { CardContent } from '@/components/shadcn-ui/card';
 import { HoverableCard } from './hoverable-card';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/utils/utils.ts';
 import { AssignedComment } from '@/types/props/Common.ts';
 
 interface Props {
