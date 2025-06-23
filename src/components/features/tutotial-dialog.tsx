@@ -6,23 +6,31 @@ import { TUTORIAL_TIMER } from '@/lib/constants/appConstant.ts';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/shadcn-ui/button';
 import { Eye, FolderCog, Inbox, SquareCheckBig } from 'lucide-react';
-interface Tutorial {
-  id: number;
-  videoSrc: string;
-  title: string;
-  description: string
-}
 import { useWorkspaceGlobalApiQuery } from '@/service/rtkQueries/globalQuery.ts';
+import { Tutorial } from '@/types/request-response/workspace/ApiRessponse';
 
 export const TutorialDialog = () => {
   const [open, setOpen] = useState(false);
 
+  const { data: workSpaceGlobal } = useWorkspaceGlobalApiQuery();
+
   const [selectedTutorial, setSelectedTutorial] = useState<Tutorial>({
     id: 0,
-    videoSrc: "https://www.youtube.com/embed/5l8fNih8SUM?si=Cu0gGo39Rr0xxx-4",
+    tutorialUrl: "https://www.youtube.com/embed/5l8fNih8SUM?si=Cu0gGo39Rr0xxx-4",
     title: "Welcome to Team Trekking!",
-    description: "Watch this quick video to know how Team Trekking can transform your productivity."
+    isActive: true,
   });
+
+  const onClose = () => {
+    localStorage.setItem('tutorial_last_shown', Date.now().toString());
+    setOpen(false);
+  };
+
+  const onSelectVideo = (index: number) => {
+    if (workSpaceGlobal) {
+      setSelectedTutorial(workSpaceGlobal.tutorial[index])
+    }
+  }
 
   useEffect(() => {
     const lastShown = localStorage.getItem('tutorial_last_shown');
@@ -33,18 +41,13 @@ export const TutorialDialog = () => {
     }
   }, []);
 
-  const onClose = () => {
-    localStorage.setItem('tutorial_last_shown', Date.now().toString());
-    setOpen(false);
-  };
-
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContentPlain onClose={onClose} className='m-2 overflow-visible'>
-        <div className='relative bg-transparent'>
+      <DialogContentPlain onClose={onClose} className='overflow-visible'>
+        <div className='relative'>
           <VideoPlayer
             title="Youtube Video Player"
-            src={selectedTutorial.videoSrc}
+            src={workSpaceGlobal?.tutorial[0].tutorialUrl}
             accelerometer
             autoPlay
             clipboardWrite
@@ -52,21 +55,24 @@ export const TutorialDialog = () => {
             gyroscope
             pictureInPicture
             webShare
+            width={100}
+            height={100}
           >
-            <div className="px-6 py-6 m-6 text-center">
+            <div className="p-6 text-center">
               <h2 className="text-lg font-semibold mb-2">
                 {selectedTutorial.title}
               </h2>
               <p className="text-gray-600 mb-4">
-                {selectedTutorial.description}
+                Watch these quick videos to know how Team Trekking can transform your productivity.
               </p>
             </div>
           </VideoPlayer>
-          <div className="absolute top-[101%] left-60 flex items-center gap-1 justify-center">
+          <div className="absolute top-[101%] left-56 flex items-center gap-1 justify-center">
             <div className='p-[2px] rounded-full bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500'>
               <Button
                 size='lg'
                 variant="ghost"
+                onClick={() => onSelectVideo(0)}
                 className='block rounded-full bg-purple-500 hover:bg-purple-500/40 px-4 w-14 h-14'>
                 <div className="bg-white rounded-sm w-full py-0.5">
                   <FolderCog className='text-purple-500 mx-auto' />
@@ -74,21 +80,32 @@ export const TutorialDialog = () => {
               </Button>
             </div>
             <div className='p-[2px] rounded-full bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500'>
-              <Button size='lg' variant="ghost" className='block rounded-full bg-emerald-600 hover:bg-emerald-700 px-4 w-14 h-14'>
+              <Button
+                size='lg'
+                variant="ghost" onClick={() => onSelectVideo(1)}
+                className='block rounded-full bg-emerald-600 hover:bg-emerald-700 px-4 w-14 h-14'>
                 <div className='bg-white rounded-sm w-full py-0.5'>
                   <SquareCheckBig className='text-emerald-600 mx-auto' />
                 </div>
               </Button>
             </div>
             <div className='p-[2px] rounded-full bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500'>
-              <Button size='lg' variant="ghost" className='block rounded-full bg-pink-600 hover:bg-pink-700 px-4 w-14 h-14'>
+              <Button
+                size='lg'
+                variant="ghost"
+                onClick={() => onSelectVideo(2)}
+                className='block rounded-full bg-pink-600 hover:bg-pink-700 px-4 w-14 h-14'>
                 <div className='bg-white rounded-sm w-full py-0.5'>
                   <Eye className='text-pink-600 mx-auto' />
                 </div>
               </Button>
             </div>
             <div className='p-[2px] rounded-full bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500'>
-              <Button size='lg' variant="ghost" className='block rounded-full bg-indigo-500 hover:bg-indigo-600 px-4 w-14 h-14'>
+              <Button
+                size='lg'
+                variant="ghost"
+                onClick={() => onSelectVideo(3)}
+                className='block rounded-full bg-indigo-500 hover:bg-indigo-600 px-4 w-14 h-14'>
                 <div className='bg-white rounded-sm w-full py-0.5'>
                   <Inbox className='text-indigo-500 mx-auto' />
                 </div>
@@ -105,7 +122,7 @@ export const TutorialDialog = () => {
 interface VideoPlayerProps {
   width?: number;
   height?: number;
-  src: string;
+  src?: string;
   title: string;
   className?: string;
   children: ReactNode;
@@ -134,11 +151,11 @@ const VideoPlayer = ({
   webShare }: VideoPlayerProps) => {
   return (
     <div className="w-full">
-      <div className={cn("w-full aspect-video", className)}>
+      <div className={cn("w-full aspect-video p-0 mx-auto", className)}>
         <iframe
           width={`${width}%`}
           height={`${height}%`}
-          src={`${src}`}
+          src={`${src ? src : 'https://www.youtube.com/embed/5l8fNih8SUM?si=Cu0gGo39Rr0xxx-4'}`}
           title={`${title}`}
           allow={`${accelerometer ? 'accelerometer;' : ''} ${autoPlay ? 'autoplay;' : ''} ${clipboardWrite ? 'clipboard-write;' : ''} ${encryptedMedia ? 'encrypted-media;' : ''} ${gyroscope ? 'gyroscope;' : ''} 
           ${pictureInPicture ? 'picture-in-picture;' : ''} ${webShare ? 'web-share' : ''}`}
