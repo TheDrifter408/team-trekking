@@ -140,9 +140,6 @@ export const AppSidebar = ({
                   >
                     <Plus size={14} />
                   </Button>
-                  <Button size={'icon_sm'} onClick={() => setIsActive(!active)}>
-                    <Rocket size={14} />
-                  </Button>
                 </div>
               </div>
               <Button
