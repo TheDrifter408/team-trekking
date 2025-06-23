@@ -79,7 +79,6 @@ export const DataTableRow = ({
         position="center"
       />
 
-      {/* Right pinned cells */}
       <DataTableCellSection
         cells={row.getRightVisibleCells()}
         position="right"

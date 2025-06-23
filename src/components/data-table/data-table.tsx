@@ -11,16 +11,18 @@ import { mockTasks } from '@/mock/task.ts';
 import { DataTableHeader } from './data-table-header';
 import { DataTableBody } from './data-table-body.tsx';
 import { DataTableProps } from '@/types/props/DataTableProps.ts';
+import { Task } from '@/types/props/Common.ts';
 
 export const DataTable = ({ className = '' }: DataTableProps) => {
   const parentRef = useRef<HTMLDivElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
   const [colSizing, setColSizing] = useState<ColumnSizingState>({});
+  const [tasks, setTasks] = useState<Task[]>(mockTasks);
 
   const setTable = useDataTableStore((state) => state.setTable);
 
   const table = useReactTable({
-    data: mockTasks,
+    data: tasks,
     columns: Columns,
     getCoreRowModel: getCoreRowModel(),
     getExpandedRowModel: getExpandedRowModel(),
@@ -79,6 +81,8 @@ export const DataTable = ({ className = '' }: DataTableProps) => {
       >
         <DataTableHeader table={table} ref={headerRef} />
         <DataTableBody
+          tasks={tasks}
+          setTasks={setTasks}
           table={table}
           parentRef={parentRef}
           onRowHover={setHoveredRowId}

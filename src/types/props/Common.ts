@@ -153,7 +153,7 @@ export interface Task {
   subTask: Task[];
   subTaskCount?: number;
   checkListCount?: number;
-  parentId?: string;
+  parentId: string | null;
   comments?: Comment[];
   tags?: Tag[];
 }

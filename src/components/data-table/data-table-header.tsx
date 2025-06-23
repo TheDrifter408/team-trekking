@@ -16,6 +16,7 @@ const DataTableHeaderSection = <TData,>({
   centerTotalSize,
 }: TableHeaderSectionProps<TData>) => {
   const baseClass = 'relative text-left px-4 flex items-center text-sm';
+  //  TODO: positionClass style not getting invoked.
   const positionClass =
     position === 'left'
       ? 'sticky left-0 z-20'
