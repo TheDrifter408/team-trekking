@@ -28,7 +28,6 @@ import {
   ProgressBarProps,
   ManageToolsProps,
 } from '@/types/props/Layout.ts';
-import { featureOptions, toolOptions } from '@/mock';
 import { LABEL } from '@/lib/constants';
 import { emailInputSchema } from '@/lib/validation/validationSchema';
 import { useIsMobile } from '@/lib/hooks/use-mobile';
@@ -70,6 +69,26 @@ export const CreateWorkspace: React.FC<Props> = ({
     inputRef.current?.focus();
   };
 
+  // Validation function to check if current step can proceed
+  const canProceedToNextStep = (): boolean => {
+    switch (step) {
+      case 1:
+        return selectedPurpose !== '';
+      case 2:
+        return selectedOption !== '';
+      case 3:
+        return selectedEmails.length > 0;
+      case 4:
+        return selectedTools.length > 0;
+      case 5:
+        return selectedFeatures.length > 0;
+      case 6:
+        return workspaceName.trim() !== '';
+      default:
+        return true;
+    }
+  };
+
   // Form navigation
   const prevStep = (e: MouseEvent<HTMLButtonElement>): void => {
     e.preventDefault();
@@ -77,7 +96,7 @@ export const CreateWorkspace: React.FC<Props> = ({
   };
 
   const stepCalculation = () => {
-    if (step < totalSteps) {
+    if (step < totalSteps && canProceedToNextStep()) {
       setStep(step + 1);
     }
   };
@@ -200,6 +219,7 @@ export const CreateWorkspace: React.FC<Props> = ({
       case 4:
         return (
           <ManageTools
+            connectedTools={workSpaceGlobal?.connectedTools ?? []}
             selectedTools={selectedTools}
             onToggleTool={onToggleTool}
           />
@@ -207,6 +227,7 @@ export const CreateWorkspace: React.FC<Props> = ({
       case 5:
         return (
           <SelectFeatures
+            interestedFeature={workSpaceGlobal?.interestedFeature ?? []}
             selectedFeatures={selectedFeatures}
             onToggleFeature={onToggleFeature}
           />
@@ -271,6 +292,7 @@ export const CreateWorkspace: React.FC<Props> = ({
                 nextStep={nextStep}
                 totalSteps={totalSteps}
                 onSubmit={onSubmit}
+                canProceed={canProceedToNextStep()}
               />
             </DialogFooter>
           </div>
@@ -423,6 +445,7 @@ const InvitePeople: React.FC<InvitePeopleProps> = ({
 };
 
 const ManageTools: React.FC<ManageToolsProps> = ({
+  connectedTools,
   selectedTools,
   onToggleTool,
 }) => {
@@ -433,19 +456,19 @@ const ManageTools: React.FC<ManageToolsProps> = ({
       </h2>
       <div className="h-full w-full flex items-center">
         <div className="w-full  justify-center items-center flex flex-col sm:flex-row sm:flex-wrap gap-3">
-          {toolOptions.map((tool) => {
-            const isSelected = selectedTools.includes(tool);
+          {connectedTools.map((tool) => {
+            const isSelected = selectedTools.includes(tool.name);
             return (
               <Button
-                key={tool}
+                key={tool.id}
                 variant="outline"
-                onClick={() => onToggleTool(tool)}
+                onClick={() => onToggleTool(tool.name)}
                 className={cn(
                   'w-full sm:w-auto h-12 rounded-xl text-content-onboarding-secondary text-sm sm:text-base font-medium hover:shadow-lg transition-all duration-200',
                   isSelected && ' border-theme-main shadow-theme-main shadow-sm'
                 )}
               >
-                <span className="flex-1 text-center">{tool}</span>
+                <span className="flex-1 text-center">{tool.name}</span>
                 <div
                   className={cn(
                     'h-4 w-4 ml-2 rounded border flex items-center justify-center transition-colors',
@@ -470,6 +493,7 @@ const ManageTools: React.FC<ManageToolsProps> = ({
 };
 
 const SelectFeatures: React.FC<SelectFeaturesProps> = ({
+  interestedFeature,
   selectedFeatures,
   onToggleFeature,
 }) => {
@@ -480,20 +504,20 @@ const SelectFeatures: React.FC<SelectFeaturesProps> = ({
       </h2>
       <div className="flex h-full w-full items-center">
         <div className="w-full  justify-center items-center flex flex-col sm:flex-row sm:flex-wrap gap-3 sm:gap-2">
-          {featureOptions.map((option) => {
-            const isSelected = selectedFeatures.includes(option);
+          {interestedFeature.map((option) => {
+            const isSelected = selectedFeatures.includes(option.name);
             return (
               <Button
-                key={option}
+                key={option.id}
                 variant="outline"
-                onClick={() => onToggleFeature(option)}
+                onClick={() => onToggleFeature(option.name)}
                 className={cn(
                   'w-full sm:w-auto h-12 rounded-xl text-content-onboarding-secondary text-sm sm:text-base font-medium',
                   isSelected &&
                     'border-[1px] border-theme-main shadow-theme-main shadow-sm'
                 )}
               >
-                <span className="flex-1 text-left">{option}</span>
+                <span className="flex-1 text-left">{option.name}</span>
                 <div
                   className={cn(
                     'h-4 w-4 rounded border flex items-center justify-center transition-colors',
@@ -553,12 +577,17 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ step, totalSteps }) => {
   );
 };
 
-const Footer: React.FC<FooterProps> = ({
+interface FooterPropsExtended extends FooterProps {
+  canProceed: boolean;
+}
+
+const Footer: React.FC<FooterPropsExtended> = ({
   step,
   prevStep,
   nextStep,
   totalSteps,
   onSubmit,
+  canProceed,
 }) => (
   <div className="flex justify-between w-full gap-2 sm:gap-0">
     {step > 1 && (
@@ -581,8 +610,12 @@ const Footer: React.FC<FooterProps> = ({
     {step < totalSteps ? (
       <Button
         onClick={nextStep}
+        disabled={!canProceed}
         className={cn(
-          'ml-auto w-24 sm:!w-[113px] bg-theme-main-dark !h-12 sm:!h-[58px] text-base sm:text-xl flex items-center rounded-lg'
+          'ml-auto w-24 sm:!w-[113px] !h-12 sm:!h-[58px] text-base sm:text-xl flex items-center rounded-lg',
+          canProceed
+            ? 'bg-theme-main-dark hover:bg-theme-main-dark/90'
+            : 'bg-gray-300 cursor-not-allowed hover:bg-gray-300'
         )}
       >
         <span className="hidden sm:inline">{LABEL.NEXT}</span>
@@ -596,8 +629,12 @@ const Footer: React.FC<FooterProps> = ({
       <Button
         onClick={onSubmit}
         type="button"
+        disabled={!canProceed}
         className={cn(
-          'ml-auto w-24 sm:!w-[113px] bg-theme-main-dark !h-12 sm:!h-[58px] text-base sm:text-xl flex items-center rounded-lg'
+          'ml-auto w-24 sm:!w-[113px] !h-12 sm:!h-[58px] text-base sm:text-xl flex items-center rounded-lg',
+          canProceed
+            ? 'bg-theme-main-dark hover:bg-theme-main-dark/90'
+            : 'bg-gray-300 cursor-not-allowed hover:bg-gray-300'
         )}
       >
         {LABEL.FINISH}
