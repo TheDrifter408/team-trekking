@@ -28,7 +28,6 @@ import {
   ProgressBarProps,
   ManageToolsProps,
 } from '@/types/props/Layout.ts';
-import { featureOptions, toolOptions } from '@/mock';
 import { LABEL } from '@/lib/constants';
 import { emailInputSchema } from '@/lib/validation/validationSchema';
 import { useIsMobile } from '@/lib/hooks/use-mobile';
@@ -200,6 +199,7 @@ export const CreateWorkspace: React.FC<Props> = ({
       case 4:
         return (
           <ManageTools
+            connectedTools={workSpaceGlobal?.connectedTools ?? []}
             selectedTools={selectedTools}
             onToggleTool={onToggleTool}
           />
@@ -207,6 +207,7 @@ export const CreateWorkspace: React.FC<Props> = ({
       case 5:
         return (
           <SelectFeatures
+            interestedFeature={workSpaceGlobal?.interestedFeature ?? []}
             selectedFeatures={selectedFeatures}
             onToggleFeature={onToggleFeature}
           />
@@ -423,6 +424,7 @@ const InvitePeople: React.FC<InvitePeopleProps> = ({
 };
 
 const ManageTools: React.FC<ManageToolsProps> = ({
+  connectedTools,
   selectedTools,
   onToggleTool,
 }) => {
@@ -433,19 +435,19 @@ const ManageTools: React.FC<ManageToolsProps> = ({
       </h2>
       <div className="h-full w-full flex items-center">
         <div className="w-full  justify-center items-center flex flex-col sm:flex-row sm:flex-wrap gap-3">
-          {toolOptions.map((tool) => {
-            const isSelected = selectedTools.includes(tool);
+          {connectedTools.map((tool) => {
+            const isSelected = selectedTools.includes(tool.name);
             return (
               <Button
-                key={tool}
+                key={tool.id}
                 variant="outline"
-                onClick={() => onToggleTool(tool)}
+                onClick={() => onToggleTool(tool.name)}
                 className={cn(
                   'w-full sm:w-auto h-12 rounded-xl text-content-onboarding-secondary text-sm sm:text-base font-medium hover:shadow-lg transition-all duration-200',
                   isSelected && ' border-theme-main shadow-theme-main shadow-sm'
                 )}
               >
-                <span className="flex-1 text-center">{tool}</span>
+                <span className="flex-1 text-center">{tool.name}</span>
                 <div
                   className={cn(
                     'h-4 w-4 ml-2 rounded border flex items-center justify-center transition-colors',
@@ -470,6 +472,7 @@ const ManageTools: React.FC<ManageToolsProps> = ({
 };
 
 const SelectFeatures: React.FC<SelectFeaturesProps> = ({
+  interestedFeature,
   selectedFeatures,
   onToggleFeature,
 }) => {
@@ -480,20 +483,20 @@ const SelectFeatures: React.FC<SelectFeaturesProps> = ({
       </h2>
       <div className="flex h-full w-full items-center">
         <div className="w-full  justify-center items-center flex flex-col sm:flex-row sm:flex-wrap gap-3 sm:gap-2">
-          {featureOptions.map((option) => {
-            const isSelected = selectedFeatures.includes(option);
+          {interestedFeature.map((option) => {
+            const isSelected = selectedFeatures.includes(option.name);
             return (
               <Button
-                key={option}
+                key={option.id}
                 variant="outline"
-                onClick={() => onToggleFeature(option)}
+                onClick={() => onToggleFeature(option.name)}
                 className={cn(
                   'w-full sm:w-auto h-12 rounded-xl text-content-onboarding-secondary text-sm sm:text-base font-medium',
                   isSelected &&
                     'border-[1px] border-theme-main shadow-theme-main shadow-sm'
                 )}
               >
-                <span className="flex-1 text-left">{option}</span>
+                <span className="flex-1 text-left">{option.name}</span>
                 <div
                   className={cn(
                     'h-4 w-4 rounded border flex items-center justify-center transition-colors',
