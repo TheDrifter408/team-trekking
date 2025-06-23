@@ -1,9 +1,10 @@
 #!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
 
 echo "🔍 Running pre-commit checks..."
 
-# Get staged JS/TS files excluding .husky directory
-RAW_FILES=$(git diff --name-only origin/develop...HEAD | grep -E '\.(js|ts|jsx|tsx)$' || true)
+# Get only staged JS/TS files
+RAW_FILES=$(git diff --cached --name-only | grep -E '\.(js|ts|jsx|tsx)$' || true)
 
 FILES=""
 for file in $RAW_FILES; do
@@ -20,20 +21,20 @@ fi
 echo "🔎 Files being checked:"
 echo "$FILES"
 
-FOUND_LOGS=false
-HAS_PRETTIER_ERRORS=false
+HAS_CONSOLE_LOG=0
 
-# Check for console.log
 for file in $FILES; do
-  if [ -f "$file" ]; then
-    echo "👀 Checking $file"
-    if grep -Eq "console(\s*\.\s*|\s*\[\s*['\"]log['\"]\s*\])" "$file"; then
-      echo "❌ Found console.log in $file"
-      grep -En "console(\s*\.\s*|\s*\[\s*['\"]log['\"]\s*\])" "$file"
-      FOUND_LOGS=true
-    fi
+  echo "👀 Checking $file"
+  if grep -En "console\s*\.\s*log\s*\(" "$file"; then
+    echo "❌ console.log found in $file"
+    HAS_CONSOLE_LOG=1
   fi
 done
+
+if [ "$HAS_CONSOLE_LOG" -eq 1 ]; then
+  echo "🚫 Commit aborted due to console.log statements."
+  exit 1
+fi
 
 echo "✅ All pre-commit checks passed."
 exit 0
