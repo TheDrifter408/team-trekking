@@ -198,4 +198,6 @@ export const LABEL = {
   COLOR_ICON: 'Color & Icon',
   SPACE_SETTINGS: 'Space settings',
   HIDE_SPACE: 'Hide Space',
+  BACK_TO_WORKSPACE: 'Back to workspace',
+  WORKSPACE: 'Workspace',
 };
