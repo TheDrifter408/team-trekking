@@ -8,6 +8,7 @@ import { Button } from '@/components/shadcn-ui/button';
 import { Eye, FolderCog, Inbox, SquareCheckBig } from 'lucide-react';
 import { useWorkspaceGlobalApiQuery } from '@/service/rtkQueries/globalQuery.ts';
 import { Tutorial } from '@/types/request-response/workspace/ApiRessponse';
+import { LABEL } from '@/lib/constants';
 
 export const TutorialDialog = () => {
   const [open, setOpen] = useState(false);
@@ -63,7 +64,7 @@ export const TutorialDialog = () => {
                 {selectedTutorial.title}
               </h2>
               <p className="text-gray-600 mb-4">
-                Watch these quick videos to know how Team Trekking can transform your productivity.
+                {LABEL.WATCH_THESE_VIDEOS}
               </p>
             </div>
           </VideoPlayer>

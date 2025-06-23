@@ -198,4 +198,5 @@ export const LABEL = {
   COLOR_ICON: 'Color & Icon',
   SPACE_SETTINGS: 'Space settings',
   HIDE_SPACE: 'Hide Space',
+  WATCH_THESE_VIDEOS: 'Watch these quick videos to know how Team Trekking can transform your productivity.'
 };
