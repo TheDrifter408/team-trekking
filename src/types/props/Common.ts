@@ -105,19 +105,19 @@ export interface TaskStatus {
   category: string;
 }
 export interface Checklist {
-  id: string;
+  id: number;
   name: string;
   isCompleted: boolean;
 }
 export interface Assignee {
   id: number;
   name: string;
-  initials?:string;
-  role?:string;
+  initials?: string;
+  role?: string;
   avatar?: string;
-  isWatching?:boolean;
-  read?:boolean;
-  lastActivity?:string;
+  isWatching?: boolean;
+  read?: boolean;
+  lastActivity?: string;
 }
 export type TaskPriority =
   | typeof LABEL.LOW
@@ -126,7 +126,7 @@ export type TaskPriority =
   | typeof LABEL.URGENT;
 
 export interface Comment {
-  id:string,
+  id: string;
   user: Assignee;
   content: string;
   createdAt: string;
@@ -134,7 +134,7 @@ export interface Comment {
 
 export interface Tag {
   id: number;
-  name:string;
+  name: string;
   color: string;
 }
 export interface Task {
@@ -153,7 +153,7 @@ export interface Task {
   subTask: Task[];
   subTaskCount?: number;
   checkListCount?: number;
-  parentId?: string;
+  parentId: string | null;
   comments?: Comment[];
   tags?: Tag[];
 }

@@ -16,6 +16,7 @@ const DataTableHeaderSection = <TData,>({
   centerTotalSize,
 }: TableHeaderSectionProps<TData>) => {
   const baseClass = 'relative text-left px-4 flex items-center text-sm';
+  //  TODO: positionClass style not getting invoked.
   const positionClass =
     position === 'left'
       ? 'sticky left-0 z-20'
@@ -54,7 +55,7 @@ export const DataTableHeader = forwardRef<
   return (
     <div className="border-b mt-4 bg-background sticky top-0 z-10">
       <div
-        className="flex" // Add overflow-hidden to prevent scrollbar
+        className="flex items-center ml-[28px]" // Add overflow-hidden to prevent scrollbar
         ref={ref}
         style={{ width: table.getTotalSize() }} // Match the body width
       >
