@@ -110,7 +110,6 @@ export const AssigneeAvatar = ({
                 'bg-white h-min p-1 rounded-sm text-muted-foreground invisible group-hover:visible'
               )}
             >
-              
               <a>Profile
             </a>
             </Button>

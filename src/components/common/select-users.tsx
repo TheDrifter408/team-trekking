@@ -20,12 +20,7 @@ import {
 } from '@/components/common/assignee-avatar';
 import { cn } from '@/lib/utils/utils.ts';
 import { UserRoundPlus } from 'lucide-react';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '../shadcn-ui/tooltip';
+import { UsersArray } from '@/components/common/users-array';
 
 interface SelectUsersProps extends Omit<AssigneeProps, 'assignee'> {
   users: Assignee[];
