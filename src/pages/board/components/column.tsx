@@ -11,7 +11,7 @@ import { faker } from '@faker-js/faker';
 import { ContextMenu } from '@/components/common/context-menu';
 import { columnMenuConfig } from '@/lib/constants/staticData';
 import { BoardColumnProps, Task, Column } from '@/types/props/Common';
-import { hexToRgba } from '@/lib/utils.ts';
+import { hexToRgba } from '@/lib/utils/utils.ts';
 
 export const BoardColumn = ({
   column,
@@ -143,7 +143,7 @@ export const BoardColumn = ({
             }
             sections={columnMenuConfig}
             width={'w-fit'}
-            onItemClick={() => { }}
+            onItemClick={() => {}}
           />
 
           <Button

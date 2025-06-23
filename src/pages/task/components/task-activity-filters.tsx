@@ -7,7 +7,7 @@ import {
 } from '@/components/shadcn-ui/dropdown-menu.tsx';
 import { Button } from '@/components/shadcn-ui/button.tsx';
 import { Check, ListFilter } from 'lucide-react';
-import { cn } from '@/lib/utils.ts';
+import { cn } from '@/lib/utils/utils.ts';
 import { TaskActivityFiltersProps } from '@/types/props/Common';
 import { LABEL } from '@/lib/constants';
 
@@ -27,7 +27,11 @@ export const TaskActivityFilters = ({
         <DropdownMenuLabel className="px-2 py-1.5">
           <div className="flex items-center justify-between">
             <span className="text-muted-foreground">{LABEL.ACTIVITIES}</span>
-            <Button variant={'ghost'} className="p-0 text-muted-foreground hover:bg-transparent hover:text-muted-foreground" onClick={onUnSelectAll}>
+            <Button
+              variant={'ghost'}
+              className="p-0 text-muted-foreground hover:bg-transparent hover:text-muted-foreground"
+              onClick={onUnSelectAll}
+            >
               {LABEL.UNSELECT_ALL}
             </Button>
           </div>

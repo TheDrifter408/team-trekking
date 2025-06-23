@@ -8,7 +8,7 @@ import {
   MailCheck,
   Check,
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/utils/utils.ts';
 import { InboxItem } from '@/types/props/Common.ts';
 import { Button } from '@/components/shadcn-ui/button.tsx';
 

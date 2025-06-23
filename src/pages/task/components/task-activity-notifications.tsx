@@ -1,4 +1,4 @@
-import { cn } from '@/lib/utils.ts';
+import { cn } from '@/lib/utils/utils.ts';
 import { Bell, BellOff, Check } from 'lucide-react';
 import { useState, useMemo } from 'react';
 import { DropdownMenuSeparator } from '@/components/shadcn-ui/dropdown-menu.tsx';

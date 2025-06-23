@@ -11,7 +11,7 @@ import {
 } from 'date-fns';
 import { CalendarIcon } from 'lucide-react';
 
-import { cn } from '@/lib/utils.ts';
+import { cn } from '@/lib/utils/utils.ts';
 import { Calendar } from '@/components/shadcn-ui/calendar.tsx';
 import {
   Popover,

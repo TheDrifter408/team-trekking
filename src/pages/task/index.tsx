@@ -1,6 +1,6 @@
 import { FC, useState } from 'react';
 import { mockChecklist, mockSubtasks, mockUsers, sampleTask } from '@/mock';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/utils/utils.ts';
 import {
   ArrowDownUp,
   ChevronDown,
@@ -306,11 +306,12 @@ export const Task: FC = () => {
                   value={selectedAssignees}
                   displayName={true}
                   onRemove={() => {}}
-                  multipleSelect={true} 
+                  multipleSelect={true}
                   onChange={(assignees) => setSelectedAssignees(assignees)}
-                  users={task.assignees!} 
-                  placeholder='No Assignees' 
-                  userListTitle='Select an Assignee' />
+                  users={task.assignees!}
+                  placeholder="No Assignees"
+                  userListTitle="Select an Assignee"
+                />
               </TaskMetaRow>
               {/* PRIORITY */}
               <TaskMetaRow
@@ -368,7 +369,7 @@ export const Task: FC = () => {
               value={description}
               name={'task Description'}
               onChange={onChangeDescription}
-              setIsEditing={() => { }}
+              setIsEditing={() => {}}
             />
           </div>
         </div>

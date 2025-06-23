@@ -6,7 +6,7 @@ import {
   IconList,
   IconCheckbox,
 } from '@tabler/icons-react';
-import { cn, getInitials } from '@/lib/utils';
+import { cn, getInitials } from '@/lib/utils/utils.ts';
 import {
   Breadcrumb,
   BreadcrumbItem,

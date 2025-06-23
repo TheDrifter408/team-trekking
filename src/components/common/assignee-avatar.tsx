@@ -4,9 +4,13 @@ import {
   AvatarImage,
 } from '@/components/shadcn-ui/avatar.tsx';
 import { Button } from '@/components/shadcn-ui/button.tsx';
-import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/shadcn-ui/tooltip';
+import {
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+} from '@/components/shadcn-ui/tooltip';
 import { IconX } from '@tabler/icons-react';
-import { cn } from '@/lib/utils.ts';
+import { cn } from '@/lib/utils/utils.ts';
 import { Assignee } from '@/types/props/Common';
 import { RefreshCw } from 'lucide-react';
 
@@ -18,7 +22,7 @@ export interface AssigneeProps {
   className?: string;
   isSelected?: boolean;
   showAvatarRing?: boolean;
-  showButtons?:boolean,
+  showButtons?: boolean;
 }
 
 export const AssigneeAvatar = ({
@@ -49,17 +53,22 @@ export const AssigneeAvatar = ({
   };
 
   return (
-    <div className={cn(
-      "group relative transition-all duration-200 flex items-center gap-2",
-      className ? className : '',
-      showButtons ? 'w-full' : 'w-min',
-    )}>
+    <div
+      className={cn(
+        'group relative transition-all duration-200 flex items-center gap-2',
+        className ? className : '',
+        showButtons ? 'w-full' : 'w-min'
+      )}
+    >
       <div className="flex items-center gap-2 w-min">
         <Avatar className="h-5 w-5 border-2 border-white transition-all overflow-visible">
           <AvatarImage
             src={`https://api.dicebear.com/6.x/avataaars/svg?seed=${getSeed(assignee.name)}`}
             alt={assignee.name}
-            className={cn("ring-2 rounded-full", showAvatarRing ? 'ring-purple-400' : 'ring-white')}
+            className={cn(
+              'ring-2 rounded-full',
+              showAvatarRing ? 'ring-purple-400' : 'ring-white'
+            )}
           />
           <AvatarFallback className="bg-red-200 text-xs mx-auto p-1">
             {getInitials(assignee.name)}
@@ -79,18 +88,40 @@ export const AssigneeAvatar = ({
             <IconX size={10} className="text-white" />
           </Button>
         </Avatar>
-        <p className={cn('text-nowrap text-black pr-3 bg-inherit', displayName ? 'block' : 'hidden')}>{assignee.name}</p>
+        <p
+          className={cn(
+            'text-nowrap text-black pr-3 bg-inherit',
+            displayName ? 'block' : 'hidden'
+          )}
+        >
+          {assignee.name}
+        </p>
       </div>
-      <div className={cn('items-center self-end gap-1', showButtons ? 'flex' : 'hidden')}>
+      <div
+        className={cn(
+          'items-center self-end gap-1',
+          showButtons ? 'flex' : 'hidden'
+        )}
+      >
         <Tooltip>
           <TooltipTrigger>
-            <Button className={cn('bg-white h-min p-1 rounded-sm text-muted-foreground invisible group-hover:visible')}>Profile</Button>
+            <Button
+              className={cn(
+                'bg-white h-min p-1 rounded-sm text-muted-foreground invisible group-hover:visible'
+              )}
+            >
+              Profile
+            </Button>
           </TooltipTrigger>
           <TooltipContent>Profile</TooltipContent>
         </Tooltip>
         <Tooltip>
           <TooltipTrigger>
-            <Button className={cn('bg-white h-min p-1 rounded-sm text-muted-foreground invisible group-hover:visible')}>
+            <Button
+              className={cn(
+                'bg-white h-min p-1 rounded-sm text-muted-foreground invisible group-hover:visible'
+              )}
+            >
               <RefreshCw />
             </Button>
           </TooltipTrigger>

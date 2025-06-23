@@ -9,7 +9,7 @@ import {
 } from '@/components/shadcn-ui/tooltip';
 import { Button } from '@/components/shadcn-ui/button';
 import { Icon } from '@/assets/icon-path.tsx';
-import { getInitials } from '@/lib/utils.ts';
+import { getInitials } from '@/lib/utils/utils.ts';
 
 interface Props {
   task: Task;

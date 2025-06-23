@@ -13,7 +13,7 @@ import { Switch } from '@/components/shadcn-ui/switch.tsx';
 import { useState } from 'react';
 import { Assignee, ColorOption, IconOption } from '@/types/props/Common';
 import { colorOptions, iconOptions, taskNotificationUsers } from '@/mock';
-import { getInitials } from '@/lib/utils';
+import { getInitials } from '@/lib/utils/utils.ts';
 import { DropDownContent } from '@/components/common/space-icon-name-dropdown';
 import { SelectUsers } from '@/components/common/select-users';
 
@@ -49,7 +49,7 @@ export const CreateSpace = ({
 
   const onToggleInvitedUsers = (assignees: Assignee[]) => {
     setInvitedUsers(assignees);
-  }
+  };
 
   const onSelectColor = (color: ColorOption) => {
     setSelectedColor(color);
@@ -78,7 +78,7 @@ export const CreateSpace = ({
           <DialogTitle className="text-xl font-bold">
             Create a Space
           </DialogTitle>
-          <DialogDescription className='text-base font-medium antialiased'>
+          <DialogDescription className="text-base font-medium antialiased">
             A space represents teams, departments or groups, each with its own
             Lists, workflows, and settings.
           </DialogDescription>
@@ -87,7 +87,9 @@ export const CreateSpace = ({
         <div className="grid gap-4 py-4">
           {/* space Name with Icon Integration */}
           <div>
-            <span className="text-sm text-muted-foreground">Icon &amp; Name</span>
+            <span className="text-sm text-muted-foreground">
+              Icon &amp; Name
+            </span>
             <div className="flex mt-1 items-center space-x-2">
               <DropDownContent
                 selectedColor={selectedColor}
@@ -141,17 +143,19 @@ export const CreateSpace = ({
             </div>
           </div>
           {/* Share with options */}
-          {isPrivateMode &&
+          {isPrivateMode && (
             <SelectUsers
               multipleSelect={true}
               displayName={false}
-              onRemove={() => { }}
+              onRemove={() => {}}
               displayOnly={true}
               value={invitedUsers}
               users={taskNotificationUsers}
               onChange={(assignees) => onToggleInvitedUsers(assignees)}
-              placeholder='No invited Users'
-              userListTitle='Select Users' />}
+              placeholder="No invited Users"
+              userListTitle="Select Users"
+            />
+          )}
           <DialogFooter>
             <div className="flex gap-2 pt-2">
               <Button

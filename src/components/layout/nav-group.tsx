@@ -31,7 +31,7 @@ import {
   NavLink,
   type NavGroup,
 } from '@/types/props/Layout.ts';
-import { cn } from '@/lib/utils.ts';
+import { cn } from '@/lib/utils/utils.ts';
 
 export function NavGroup({ items }: NavGroup) {
   const { state } = useSidebar();
