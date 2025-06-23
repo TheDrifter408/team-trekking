@@ -72,30 +72,6 @@ export const DataTableBody = ({
     const flat = flattenTasks(taskTree);
     const draggedTask = flat.find((t) => t.id === activeId);
     if (!draggedTask) return;
-
-    console.log('%c DROP RESULT:', 'color: limegreen; font-weight: bold');
-    console.log({
-      draggedId: activeId,
-      dropZoneId: overId,
-      targetRowId,
-      parentId,
-      position, // 'above' or 'below'
-      dropDepth: depth,
-    });
-
-    // Step 1: Remove dragged item
-    const treeWithoutDragged = removeTaskById(taskTree, activeId);
-
-    // Step 2: Insert dragged task into new location
-    const updatedTree = insertTaskAt(
-      treeWithoutDragged,
-      parentId,
-      draggedTask,
-      targetRowId,
-      position
-    );
-
-    setTasks(updatedTree);
   };
 
   const [activeDropZoneId, setActiveDropZoneId] = useState<string | null>(null);
