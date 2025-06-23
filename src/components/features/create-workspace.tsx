@@ -28,15 +28,10 @@ import {
   ProgressBarProps,
   ManageToolsProps,
 } from '@/types/props/Layout.ts';
-import {
-  workspacePurposeOptions,
-  manageOptions,
-  featureOptions,
-  toolOptions,
-} from '@/mock';
 import { LABEL } from '@/lib/constants';
 import { emailInputSchema } from '@/lib/validation/validationSchema';
 import { useIsMobile } from '@/lib/hooks/use-mobile';
+import { useWorkspaceGlobalApiQuery } from '@/service/rtkQueries/globalQuery.ts';
 
 interface Props {
   isOpen: boolean;
@@ -66,11 +61,32 @@ export const CreateWorkspace: React.FC<Props> = ({
 
   const inputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const { data: workSpaceGlobal } = useWorkspaceGlobalApiQuery();
 
   const totalSteps = 6;
 
   const focusInput = (): void => {
     inputRef.current?.focus();
+  };
+
+  // Validation function to check if current step can proceed
+  const canProceedToNextStep = (): boolean => {
+    switch (step) {
+      case 1:
+        return selectedPurpose !== '';
+      case 2:
+        return selectedOption !== '';
+      case 3:
+        return selectedEmails.length > 0;
+      case 4:
+        return selectedTools.length > 0;
+      case 5:
+        return selectedFeatures.length > 0;
+      case 6:
+        return workspaceName.trim() !== '';
+      default:
+        return true;
+    }
   };
 
   // Form navigation
@@ -80,7 +96,7 @@ export const CreateWorkspace: React.FC<Props> = ({
   };
 
   const stepCalculation = () => {
-    if (step < totalSteps) {
+    if (step < totalSteps && canProceedToNextStep()) {
       setStep(step + 1);
     }
   };
@@ -174,7 +190,7 @@ export const CreateWorkspace: React.FC<Props> = ({
       case 1:
         return (
           <ManagePurpose
-            workspacePurposeOptions={workspacePurposeOptions}
+            workspacePurposeOptions={workSpaceGlobal?.WorkType ?? []}
             onSelectPurpose={onSelectPurpose}
             selectedPurpose={selectedPurpose}
           />
@@ -182,7 +198,7 @@ export const CreateWorkspace: React.FC<Props> = ({
       case 2:
         return (
           <ManageFeatures
-            manageOptions={manageOptions}
+            manageOptions={workSpaceGlobal?.manageType ?? []}
             selectedOption={selectedOption}
             onSelectOption={onSelectOption}
           />
@@ -203,6 +219,7 @@ export const CreateWorkspace: React.FC<Props> = ({
       case 4:
         return (
           <ManageTools
+            connectedTools={workSpaceGlobal?.connectedTools ?? []}
             selectedTools={selectedTools}
             onToggleTool={onToggleTool}
           />
@@ -210,6 +227,7 @@ export const CreateWorkspace: React.FC<Props> = ({
       case 5:
         return (
           <SelectFeatures
+            interestedFeature={workSpaceGlobal?.interestedFeature ?? []}
             selectedFeatures={selectedFeatures}
             onToggleFeature={onToggleFeature}
           />
@@ -274,6 +292,7 @@ export const CreateWorkspace: React.FC<Props> = ({
                 nextStep={nextStep}
                 totalSteps={totalSteps}
                 onSubmit={onSubmit}
+                canProceed={canProceedToNextStep()}
               />
             </DialogFooter>
           </div>
@@ -295,19 +314,19 @@ const ManagePurpose: React.FC<ManagePurposeProps> = ({
         {LABEL.WHAT_WILL_YOU_USE_THIS_WORKSPACE_FOR}
       </h2>
       <div className="h-full w-full justify-center items-center flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-2">
-        {workspacePurposeOptions.map((option) => (
+        {workspacePurposeOptions?.map((option) => (
           <Button
-            key={option}
+            key={option.id}
             variant="outline"
-            onClick={() => onSelectPurpose(option)}
+            onClick={() => onSelectPurpose(option.name)}
             className={cn(
               'w-full sm:w-auto sm:min-w-[180px] py-3 sm:py-[12px] px-4 sm:px-[20px] hover:bg-theme-main hover:text-primary-foreground h-12 text-lg sm:text-xl font-medium text-content-onboarding-secondary ',
-              selectedPurpose === option
+              selectedPurpose === option.name
                 ? 'bg-theme-main-dark shadow-theme-main shadow-lg border-theme-main text-primary-foreground'
                 : ''
             )}
           >
-            {option}
+            {option.name}
           </Button>
         ))}
       </div>
@@ -329,17 +348,17 @@ const ManageFeatures: React.FC<ManageFeaturesProps> = ({
         <div className="w-full flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:justify-center sm:items-center sm:gap-2">
           {manageOptions.map((option) => (
             <Button
-              key={option}
-              onClick={() => onSelectOption(option)}
+              key={option.id}
+              onClick={() => onSelectOption(option.name)}
               variant="outline"
               className={cn(
                 'w-full sm:w-auto h-12 text-base sm:text-lg text-content-onboarding-secondary hover:bg-theme-main-dark hover:text-white hover:shadow-lg',
-                selectedOption === option
+                selectedOption === option.name
                   ? 'bg-theme-main-dark shadow-md shadow-theme-main text-white border-none'
                   : ''
               )}
             >
-              {option}
+              {option.name}
             </Button>
           ))}
         </div>
@@ -426,6 +445,7 @@ const InvitePeople: React.FC<InvitePeopleProps> = ({
 };
 
 const ManageTools: React.FC<ManageToolsProps> = ({
+  connectedTools,
   selectedTools,
   onToggleTool,
 }) => {
@@ -436,19 +456,19 @@ const ManageTools: React.FC<ManageToolsProps> = ({
       </h2>
       <div className="h-full w-full flex items-center">
         <div className="w-full  justify-center items-center flex flex-col sm:flex-row sm:flex-wrap gap-3">
-          {toolOptions.map((tool) => {
-            const isSelected = selectedTools.includes(tool);
+          {connectedTools.map((tool) => {
+            const isSelected = selectedTools.includes(tool.name);
             return (
               <Button
-                key={tool}
+                key={tool.id}
                 variant="outline"
-                onClick={() => onToggleTool(tool)}
+                onClick={() => onToggleTool(tool.name)}
                 className={cn(
                   'w-full sm:w-auto h-12 rounded-xl text-content-onboarding-secondary text-sm sm:text-base font-medium hover:shadow-lg transition-all duration-200',
                   isSelected && ' border-theme-main shadow-theme-main shadow-sm'
                 )}
               >
-                <span className="flex-1 text-center">{tool}</span>
+                <span className="flex-1 text-center">{tool.name}</span>
                 <div
                   className={cn(
                     'h-4 w-4 ml-2 rounded border flex items-center justify-center transition-colors',
@@ -473,6 +493,7 @@ const ManageTools: React.FC<ManageToolsProps> = ({
 };
 
 const SelectFeatures: React.FC<SelectFeaturesProps> = ({
+  interestedFeature,
   selectedFeatures,
   onToggleFeature,
 }) => {
@@ -483,20 +504,20 @@ const SelectFeatures: React.FC<SelectFeaturesProps> = ({
       </h2>
       <div className="flex h-full w-full items-center">
         <div className="w-full  justify-center items-center flex flex-col sm:flex-row sm:flex-wrap gap-3 sm:gap-2">
-          {featureOptions.map((option) => {
-            const isSelected = selectedFeatures.includes(option);
+          {interestedFeature.map((option) => {
+            const isSelected = selectedFeatures.includes(option.name);
             return (
               <Button
-                key={option}
+                key={option.id}
                 variant="outline"
-                onClick={() => onToggleFeature(option)}
+                onClick={() => onToggleFeature(option.name)}
                 className={cn(
                   'w-full sm:w-auto h-12 rounded-xl text-content-onboarding-secondary text-sm sm:text-base font-medium',
                   isSelected &&
                     'border-[1px] border-theme-main shadow-theme-main shadow-sm'
                 )}
               >
-                <span className="flex-1 text-left">{option}</span>
+                <span className="flex-1 text-left">{option.name}</span>
                 <div
                   className={cn(
                     'h-4 w-4 rounded border flex items-center justify-center transition-colors',
@@ -556,12 +577,17 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ step, totalSteps }) => {
   );
 };
 
-const Footer: React.FC<FooterProps> = ({
+interface FooterPropsExtended extends FooterProps {
+  canProceed: boolean;
+}
+
+const Footer: React.FC<FooterPropsExtended> = ({
   step,
   prevStep,
   nextStep,
   totalSteps,
   onSubmit,
+  canProceed,
 }) => (
   <div className="flex justify-between w-full gap-2 sm:gap-0">
     {step > 1 && (
@@ -584,8 +610,12 @@ const Footer: React.FC<FooterProps> = ({
     {step < totalSteps ? (
       <Button
         onClick={nextStep}
+        disabled={!canProceed}
         className={cn(
-          'ml-auto w-24 sm:!w-[113px] bg-theme-main-dark !h-12 sm:!h-[58px] text-base sm:text-xl flex items-center rounded-lg'
+          'ml-auto w-24 sm:!w-[113px] !h-12 sm:!h-[58px] text-base sm:text-xl flex items-center rounded-lg',
+          canProceed
+            ? 'bg-theme-main-dark hover:bg-theme-main-dark/90'
+            : 'bg-gray-300 cursor-not-allowed hover:bg-gray-300'
         )}
       >
         <span className="hidden sm:inline">{LABEL.NEXT}</span>
@@ -599,8 +629,12 @@ const Footer: React.FC<FooterProps> = ({
       <Button
         onClick={onSubmit}
         type="button"
+        disabled={!canProceed}
         className={cn(
-          'ml-auto w-24 sm:!w-[113px] bg-theme-main-dark !h-12 sm:!h-[58px] text-base sm:text-xl flex items-center rounded-lg'
+          'ml-auto w-24 sm:!w-[113px] !h-12 sm:!h-[58px] text-base sm:text-xl flex items-center rounded-lg',
+          canProceed
+            ? 'bg-theme-main-dark hover:bg-theme-main-dark/90'
+            : 'bg-gray-300 cursor-not-allowed hover:bg-gray-300'
         )}
       >
         {LABEL.FINISH}

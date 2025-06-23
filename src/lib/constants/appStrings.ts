@@ -213,4 +213,5 @@ export const LABEL = {
   SAVE: 'Save',
   WORKSPACE_COLOR: 'Workspace color',
   ADD_CUSTOM_COLOR: 'Add custom avatar',
+  WATCH_THESE_VIDEOS: 'Watch these quick videos to know how Team Trekking can transform your productivity.'
 };

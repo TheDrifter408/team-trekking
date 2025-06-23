@@ -1,15 +1,21 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { tmtApi } from '@/service/rtkQuery.ts';
+import { authApi } from '@/service/rtkQueries/authQuery.ts';
+import { globalApi } from '@/service/rtkQueries/globalQuery.ts';
 import { setupListeners } from '@reduxjs/toolkit/query';
 import { apiErrorMiddleware } from '@/stores/apiErrorMiddleware.ts';
 
 const configureAppStore = () => {
   const store = configureStore({
     reducer: {
-      [tmtApi.reducerPath]: tmtApi.reducer,
+      [authApi.reducerPath]: authApi.reducer,
+      [globalApi.reducerPath]: globalApi.reducer,
     },
     middleware: (getDefaultMiddleware) =>
-      getDefaultMiddleware().concat([tmtApi.middleware, apiErrorMiddleware]),
+      getDefaultMiddleware().concat([
+        authApi.middleware,
+        globalApi.middleware,
+        apiErrorMiddleware,
+      ]),
     devTools: process.env.NODE_ENV === 'development',
   });
 

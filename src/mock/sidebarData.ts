@@ -5,6 +5,8 @@ import {
   IconMailFilled,
 } from '@tabler/icons-react';
 import { type SidebarData } from '@/types/props/Layout.ts';
+import { ColorOption, IconOption } from '@/types/props/Common';
+import { Bell, Book, Briefcase, Calendar, Camera, Cloud, Coffee, Database, FileText, Gift, Globe, Heart, Home, Layers, Lightbulb, Mail, Map, Music, Palette, Rocket, Settings, Star, Target, Trophy, Users, Zap } from 'lucide-react';
 
 export const sidebarData: SidebarData = {
   user: {
@@ -98,3 +100,97 @@ export const sidebarData: SidebarData = {
     },
   ],
 };
+
+// Available icons with their names
+export const iconOptions: IconOption[] = [
+  { name: 'Briefcase', icon: Briefcase },
+  { name: 'Users', icon: Users },
+  { name: 'Globe', icon: Globe },
+  { name: 'Star', icon: Star },
+  { name: 'Home', icon: Home },
+  { name: 'Book', icon: Book },
+  { name: 'Rocket', icon: Rocket },
+  { name: 'Heart', icon: Heart },
+  { name: 'Calendar', icon: Calendar },
+  { name: 'Settings', icon: Settings },
+  { name: 'Map', icon: Map },
+  { name: 'Mail', icon: Mail },
+  { name: 'Zap', icon: Zap },
+  { name: 'Coffee', icon: Coffee },
+  { name: 'Cloud', icon: Cloud },
+  { name: 'Music', icon: Music },
+  { name: 'Camera', icon: Camera },
+  { name: 'Palette', icon: Palette },
+  { name: 'Gift', icon: Gift },
+  { name: 'Trophy', icon: Trophy },
+  { name: 'Lightbulb', icon: Lightbulb },
+  { name: 'Bell', icon: Bell },
+  { name: 'Layers', icon: Layers },
+  { name: 'FileText', icon: FileText },
+  { name: 'Database', icon: Database },
+  { name: 'Target', icon: Target },
+];
+
+// Available color options with Tailwind classes
+export const colorOptions: ColorOption[] = [
+  {
+    name: 'Gray',
+    bgClass: 'bg-gray-500',
+    textClass: 'text-white',
+    color: 'gray-500',
+  },
+  {
+    name: 'Blue',
+    bgClass: 'bg-blue-500',
+    textClass: 'text-white',
+    color: 'blue-500',
+  },
+  {
+    name: 'Green',
+    bgClass: 'bg-green-500',
+    textClass: 'text-white',
+    color: 'green-500',
+  },
+  {
+    name: 'Yellow',
+    bgClass: 'bg-yellow-500',
+    textClass: 'text-black',
+    color: 'yellow-500',
+  },
+  {
+    name: 'Purple',
+    bgClass: 'bg-purple-500',
+    textClass: 'text-white',
+    color: 'purple-500',
+  },
+  {
+    name: 'Pink',
+    bgClass: 'bg-pink-500',
+    textClass: 'text-white',
+    color: 'pink-500',
+  },
+  {
+    name: 'Indigo',
+    bgClass: 'bg-indigo-500',
+    textClass: 'text-white',
+    color: 'indigo-500',
+  },
+  {
+    name: 'Red',
+    bgClass: 'bg-red-500',
+    textClass: 'text-white',
+    color: 'red-500',
+  },
+  {
+    name: 'Teal',
+    bgClass: 'bg-teal-500',
+    textClass: 'text-white',
+    color: 'teal-500',
+  },
+  {
+    name: 'Orange',
+    bgClass: 'bg-orange-500',
+    textClass: 'text-white',
+    color: 'orange-500',
+  },
+];
