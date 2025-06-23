@@ -12,6 +12,7 @@ interface Tutorial {
   title: string;
   description: string
 }
+import { useWorkspaceGlobalApiQuery } from '@/service/rtkQueries/globalQuery.ts';
 
 export const TutorialDialog = () => {
   const [open, setOpen] = useState(false);
