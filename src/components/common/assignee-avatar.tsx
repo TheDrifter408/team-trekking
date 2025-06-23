@@ -84,7 +84,9 @@ export const AssigneeAvatar = ({
       <div className={cn('items-center self-end gap-1', showButtons ? 'flex' : 'hidden')}>
         <Tooltip>
           <TooltipTrigger>
-            <Button className={cn('bg-white h-min p-1 rounded-sm text-muted-foreground invisible group-hover:visible')}>Profile</Button>
+            <Button asChild className={cn('bg-white h-min p-1 rounded-sm text-muted-foreground invisible group-hover:visible')}>
+              <a>Profile</a>
+            </Button>
           </TooltipTrigger>
           <TooltipContent>Profile</TooltipContent>
         </Tooltip>

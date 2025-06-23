@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,7 +12,7 @@ import {
 import { Button } from '@/components/shadcn-ui/button.tsx';
 import { ChevronRight } from 'lucide-react';
 import {
-  ContextMenuProps,
+  ContextMenuProps as ContextMenuBaseProps,
   MenuItem,
   MenuSection,
   SubmenuItem,
@@ -20,12 +20,26 @@ import {
 import { LABEL } from '@/lib/constants/appStrings.ts';
 
 // Updated ContextMenu Component with reduced vertical gaps
+type WithButton = {
+  hasButton:true;
+  buttonElement: ReactNode;
+}
+
+type WithoutButton = {
+  hasButton?:false;
+  buttonElement?:never;
+}
+
+type ContextMenuProps = ContextMenuBaseProps & (WithButton | WithoutButton);
+
 export const ContextMenu: React.FC<ContextMenuProps> = ({
   trigger,
   sections = [],
   width = 'w-80',
   align = 'start',
   onItemClick = () => {},
+  hasButton,
+  buttonElement,
 }) => {
   const renderMenuItem = (item: MenuItem, index: number): React.ReactNode => {
     const IconComponent = item.icon;
@@ -143,6 +157,7 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({
               )}
           </React.Fragment>
         ))}
+        { hasButton && buttonElement }
       </DropdownMenuContent>
     </DropdownMenu>
   );

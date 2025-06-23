@@ -30,6 +30,8 @@ export const SidebarSpaceItems = ({ name, children }: Props) => {
   const [isRename, setIsRename] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
+  
+
   const onToggleCollapse = () => {
     setIsOpen(!isOpen);
   }
@@ -92,6 +94,12 @@ export const SidebarSpaceItems = ({ name, children }: Props) => {
           sections={spacesMenuConfig}
           width="w-64"
           onItemClick={() => { }}
+          hasButton={true}
+          buttonElement={
+            <Button className='w-full mt-2 rounded-xl'>
+              Sharing &amp; Permissions 
+            </Button>
+          }
         />
       </div>
 
