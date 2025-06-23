@@ -20,12 +20,7 @@ import {
 } from '@/components/common/assignee-avatar';
 import { cn } from '@/lib/utils/utils.ts';
 import { UserRoundPlus } from 'lucide-react';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '../shadcn-ui/tooltip';
+import { UsersArray } from '@/components/common/users-array';
 
 interface SelectUsersProps extends Omit<AssigneeProps, 'assignee'> {
   users: Assignee[];
@@ -75,54 +70,17 @@ export const SelectUsers: FC<SelectUsersProps> = ({
     onChange(newSelection);
   };
 
-  const renderAvatars = (
-    value: Assignee[],
-    onRemove: (user: Assignee) => void,
-    isMouseEnter?: boolean
-  ) => {
-    const visibleUsers = value.slice(0, 3);
-    const extraUsers = value.slice(3);
-    return (
-      <div className="flex">
-        <div className="w-full *:data-[slot=avatar]:ring-background flex -space-x-2 *:data-[slot=avatar]:ring-2">
-          {visibleUsers.map((user, idx) => (
-            <AssigneeAvatar
-              key={idx}
-              assignee={user}
-              displayName={props.displayName}
-              isSelected={true}
-              enterAssignee={isMouseEnter}
-              onRemove={() => onRemove(user)}
-              className="border p-1 bg-white rounded-full"
-            />
-          ))}
-        </div>
-        {extraUsers.length > 0 && (
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <div
-                  className="w-8 h-8 p-1 rounded-full bg-muted text-xs flex items-center justify-center text-muted-foreground ml-[-10px]"
-                  style={{ zIndex: users.length - 3 }}
-                >
-                  +{extraUsers.length}
-                </div>
-              </TooltipTrigger>
-              <TooltipContent>
-                <div className="p-1 space-y-1">
-                  {extraUsers.map((user) => (
-                    <div key={user.id} className="whitespace-nowrap text-sm">
-                      {user.name}
-                    </div>
-                  ))}
-                </div>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-        )}
-      </div>
-    );
-  };
+    const renderAvatars = (
+        value: Assignee[],
+        onRemove: (user: Assignee) => void,
+        isMouseEnter?: boolean
+    ) => {
+        const visibleUsers = value.slice(0, 3);
+        const extraUsers = value.slice(3);
+        return (
+            <UsersArray onRemove={onRemove} isMouseEnter={isMouseEnter} visibleUsers={visibleUsers} extraUsers={extraUsers} />
+        )
+    }
 
   const renderUserDropdown = () => {
     return (

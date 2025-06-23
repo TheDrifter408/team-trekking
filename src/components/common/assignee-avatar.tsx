@@ -106,11 +106,12 @@ export const AssigneeAvatar = ({
         <Tooltip>
           <TooltipTrigger>
             <Button
-              className={cn(
+              asChild className={cn(
                 'bg-white h-min p-1 rounded-sm text-muted-foreground invisible group-hover:visible'
               )}
             >
-              Profile
+              <a>Profile
+            </a>
             </Button>
           </TooltipTrigger>
           <TooltipContent>Profile</TooltipContent>

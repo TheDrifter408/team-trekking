@@ -18,6 +18,20 @@ export default {
       },
     },
     extend: {
+      keyframes: {
+        'slide-down': {
+          from: { height: '0' },
+          to: { height: 'var(--radix-collapsible-content-height)' }
+        },
+        'slide-up': {
+          from: { height: 'var(--radix-collapsible-content-height)'},
+          to: { height: '0' },
+        },
+      },
+      animation: {
+        'slide-down': 'slide-down 0.5s ease-out',
+        'slide-up': 'slide-up 0.5s ease-out',
+      },
       fontSize: {
         xs: '0.625rem', // 10px
         sm: '0.75rem', // 12px

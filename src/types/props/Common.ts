@@ -7,6 +7,7 @@ export interface Space {
   id: number;
   name: string;
   description: string;
+  shareLink?:string;
 }
 
 export type HeaderType = 'HOME' | 'SPACE' | 'FOLDER' | 'LIST' | 'TASK';
