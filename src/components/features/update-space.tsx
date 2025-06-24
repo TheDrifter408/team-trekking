@@ -22,10 +22,10 @@ import { SelectUsers } from '@/components/common/select-users';
 
 interface UpdateSpaceProps {
   isActive: boolean;
-  onClose: () => void;
+  setIsActive: (isActive: boolean) => void;
 }
 
-export const UpdateSpace = ({ isActive, onClose }: UpdateSpaceProps) => {
+export const UpdateSpace = ({ isActive, setIsActive }: UpdateSpaceProps) => {
   const [selectedIcon, setSelectedIcon] = useState<IconOption | null>(null);
   const [selectedColor, setSelectedColor] = useState<ColorOption>(
     colorOptions[0]
@@ -40,6 +40,10 @@ export const UpdateSpace = ({ isActive, onClose }: UpdateSpaceProps) => {
   const [isTaskStatusOpen, setIsTaskStatusOpen] = useState<boolean>(false);
   const initials = getInitials(spaceName)[0] ?? 'P';
 
+  const onClose = () => {
+    setIsActive(false);
+  };
+
   const onSelectIcon = (icon: IconOption) => {
     setSelectedIcon(icon);
   };
@@ -53,10 +57,20 @@ export const UpdateSpace = ({ isActive, onClose }: UpdateSpaceProps) => {
   };
 
   const onClickDefaultView = () => {
+    setIsActive(false);
     setIsDefaultViewOpen(true);
   };
+  const onCloseDefaultView = () => {
+    setIsDefaultViewOpen(false);
+    setIsActive(true);
+  };
   const onClickStatus = () => {
+    setIsActive(false);
     setIsTaskStatusOpen(true);
+  };
+  const onCloseStatus = () => {
+    setIsTaskStatusOpen(false);
+    setIsActive(true);
   };
 
   const onSelectedUser = (assignees: Assignee[]) => {
@@ -68,8 +82,8 @@ export const UpdateSpace = ({ isActive, onClose }: UpdateSpaceProps) => {
   };
 
   return (
-    <Dialog open={isActive} onOpenChange={onClose} modal={false}>
-      <DialogContent className="!max-w-[700px] flex flex-col h-[85%]">
+    <Dialog open={isActive} onOpenChange={onClose} modal={true}>
+      <DialogContent className="!max-w-[700px] flex flex-col">
         {/* Header Text */}
         <DialogHeader>
           <DialogTitle>
@@ -82,7 +96,11 @@ export const UpdateSpace = ({ isActive, onClose }: UpdateSpaceProps) => {
             Lists, workflows, and settings.
           </p>
         </DialogHeader>
-        <div className={'col-span-2 space-x-2 items-center grid grid-cols-2'}>
+        <div
+          className={
+            'col-span-2 space-x-2 max-h-[90vh] overflow-y-auto items-center grid grid-cols-2'
+          }
+        >
           {/* Icon, Name & Color selection */}
           <div className="">
             <p className="text-base font-medium text-muted-foreground">
@@ -200,14 +218,8 @@ export const UpdateSpace = ({ isActive, onClose }: UpdateSpaceProps) => {
           </Button>
         </DialogFooter>
       </DialogContent>
-      <DefaultViews
-        isOpen={isDefaultViewOpen}
-        setIsOpen={setIsDefaultViewOpen}
-      />
-      <StatusTemplate
-        isOpen={isTaskStatusOpen}
-        setIsOpen={setIsTaskStatusOpen}
-      />
+      <DefaultViews isOpen={isDefaultViewOpen} setIsOpen={onCloseDefaultView} />
+      <StatusTemplate isOpen={isTaskStatusOpen} setIsOpen={onCloseStatus} />
     </Dialog>
   );
 };
