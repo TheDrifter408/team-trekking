@@ -44,3 +44,17 @@ export interface Tutorial {
   tutorialUrl: string;
   isActive: boolean;
 }
+
+export interface WorkSpaceRecent {
+  id: number;
+  name: string;
+  location: Location;
+  createdAt: string;
+  type: string;
+}
+
+export interface Location {
+  id: number;
+  name: string;
+  type: string;
+}

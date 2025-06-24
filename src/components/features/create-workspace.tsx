@@ -31,7 +31,7 @@ import {
 import { LABEL } from '@/lib/constants';
 import { emailInputSchema } from '@/lib/validation/validationSchema';
 import { useIsMobile } from '@/lib/hooks/use-mobile';
-import { useWorkspaceGlobalApiQuery } from '@/service/rtkQueries/workspaceQuery.ts';
+import { useWorkspaceGlobalQuery } from '@/service/rtkQueries/workspaceQuery.ts';
 import { useAuthStore } from '@/stores/zustand/auth-store.ts';
 
 interface Props {
@@ -63,7 +63,7 @@ export const CreateWorkspace: React.FC<Props> = ({
 
   const inputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const { data: workSpaceGlobal } = useWorkspaceGlobalApiQuery();
+  const { data: workSpaceGlobal } = useWorkspaceGlobalQuery();
 
   // Calculate total steps based on first-time login status
   const totalSteps = isFirstTimeLogin ? 7 : 6;
