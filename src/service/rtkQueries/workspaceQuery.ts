@@ -5,7 +5,7 @@ import { WorkSpaceGlobal } from '@/types/request-response/workspace/ApiRessponse
 import { API_URLS } from '@/lib/constants';
 import { withPersistentCache } from '@/lib/utils/utils.ts';
 
-export const globalApi = createApi({
+export const workspaceApi = createApi({
   reducerPath: 'globalApi',
   baseQuery: axiosBaseQuery({ baseUrl: API_URLS.WORK_SPACE_BASE_URL }),
   endpoints: (builder) => ({
@@ -21,4 +21,4 @@ export const globalApi = createApi({
   }),
 });
 
-export const { useWorkspaceGlobalApiQuery } = globalApi;
+export const { useWorkspaceGlobalApiQuery } = workspaceApi;
