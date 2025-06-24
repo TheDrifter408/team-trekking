@@ -31,7 +31,8 @@ import {
 import { LABEL } from '@/lib/constants';
 import { emailInputSchema } from '@/lib/validation/validationSchema';
 import { useIsMobile } from '@/lib/hooks/use-mobile';
-import { useWorkspaceGlobalApiQuery } from '@/service/rtkQueries/globalQuery.ts';
+import { useWorkspaceGlobalApiQuery } from '@/service/rtkQueries/workspaceQuery.ts';
+import { useAuthStore } from '@/stores/zustand/auth-store.ts';
 
 interface Props {
   isOpen: boolean;
@@ -44,11 +45,12 @@ export const CreateWorkspace: React.FC<Props> = ({
   onOpenDialog,
   setIsOpen,
 }) => {
+  const { isFirstTimeLogin, setIsFirstTimeLogin } = useAuthStore();
   const [step, setStep] = useState<number>(1);
-
   // State for form data with proper types
   const [selectedPurpose, setSelectedPurpose] = useState<string | ''>('');
-  const [selectedOption, setSelectedOption] = useState<string | ''>('');
+  const [selectedManage, setSelectedManage] = useState<string | ''>('');
+  const [selectedDiscovery, setSelectedDiscovery] = useState<string | ''>('');
   const [email, setEmail] = useState<string>('');
   const [selectedEmails, setSelectedEmails] = useState<string[]>([]);
   const [selectedTools, setSelectedTools] = useState<string[]>([]);
@@ -63,7 +65,8 @@ export const CreateWorkspace: React.FC<Props> = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const { data: workSpaceGlobal } = useWorkspaceGlobalApiQuery();
 
-  const totalSteps = 6;
+  // Calculate total steps based on first-time login status
+  const totalSteps = isFirstTimeLogin ? 7 : 6;
 
   const focusInput = (): void => {
     inputRef.current?.focus();
@@ -75,14 +78,33 @@ export const CreateWorkspace: React.FC<Props> = ({
       case 1:
         return selectedPurpose !== '';
       case 2:
-        return selectedOption !== '';
+        return selectedManage !== '';
       case 3:
-        return selectedEmails.length > 0;
+        // For first-time login, step 3 is discovery source
+        // For returning users, step 3 is invite people
+        return isFirstTimeLogin
+          ? selectedDiscovery !== ''
+          : selectedEmails.length > 0;
       case 4:
-        return selectedTools.length > 0;
+        // For first-time login, step 4 is invite people
+        // For returning users, step 4 is tools
+        return isFirstTimeLogin
+          ? selectedEmails.length > 0
+          : selectedTools.length > 0;
       case 5:
-        return selectedFeatures.length > 0;
+        // For first-time login, step 5 is tools
+        // For returning users, step 5 is features
+        return isFirstTimeLogin
+          ? selectedTools.length > 0
+          : selectedFeatures.length > 0;
       case 6:
+        // For first-time login, step 6 is features
+        // For returning users, step 6 is workspace name
+        return isFirstTimeLogin
+          ? selectedFeatures.length > 0
+          : workspaceName.trim() !== '';
+      case 7:
+        // Only for first-time login, step 7 is workspace name
         return workspaceName.trim() !== '';
       default:
         return true;
@@ -109,12 +131,14 @@ export const CreateWorkspace: React.FC<Props> = ({
   const onSubmit = (): void => {
     setIsOpen(false);
     resetForm();
+    setIsFirstTimeLogin(false);
   };
 
   const resetForm = (): void => {
     setStep(1);
     setSelectedPurpose('');
-    setSelectedOption('');
+    setSelectedManage('');
+    setSelectedDiscovery('');
     setEmail('');
     setSelectedEmails([]);
     setSelectedTools([]);
@@ -128,8 +152,12 @@ export const CreateWorkspace: React.FC<Props> = ({
     stepCalculation();
   };
 
-  const onSelectOption = (option: string): void => {
-    setSelectedOption(option);
+  const onSelectManage = (option: string): void => {
+    setSelectedManage(option);
+    stepCalculation();
+  };
+  const onSelectDiscovery = (option: string): void => {
+    setSelectedDiscovery(option);
     stepCalculation();
   };
 
@@ -186,61 +214,135 @@ export const CreateWorkspace: React.FC<Props> = ({
   };
 
   const renderStep = () => {
-    switch (step) {
-      case 1:
-        return (
-          <ManagePurpose
-            workspacePurposeOptions={workSpaceGlobal?.WorkType ?? []}
-            onSelectPurpose={onSelectPurpose}
-            selectedPurpose={selectedPurpose}
-          />
-        );
-      case 2:
-        return (
-          <ManageFeatures
-            manageOptions={workSpaceGlobal?.manageType ?? []}
-            selectedOption={selectedOption}
-            onSelectOption={onSelectOption}
-          />
-        );
-      case 3:
-        return (
-          <InvitePeople
-            email={email}
-            selectedEmails={selectedEmails}
-            onEmailChange={onEmailChange}
-            onKeyDown={onKeyDown}
-            onRemoveEmail={onRemoveEmail}
-            inputRef={inputRef}
-            containerRef={containerRef}
-            focusInput={focusInput}
-          />
-        );
-      case 4:
-        return (
-          <ManageTools
-            connectedTools={workSpaceGlobal?.connectedTools ?? []}
-            selectedTools={selectedTools}
-            onToggleTool={onToggleTool}
-          />
-        );
-      case 5:
-        return (
-          <SelectFeatures
-            interestedFeature={workSpaceGlobal?.interestedFeature ?? []}
-            selectedFeatures={selectedFeatures}
-            onToggleFeature={onToggleFeature}
-          />
-        );
-      case 6:
-        return (
-          <NameWorkspace
-            workspaceName={workspaceName}
-            setWorkspaceName={setWorkspaceName}
-          />
-        );
-      default:
-        return null;
+    if (isFirstTimeLogin) {
+      // First-time login flow: Purpose -> Manage -> Discovery -> Invite -> Tools -> Features -> Name
+      switch (step) {
+        case 1:
+          return (
+            <ManagePurpose
+              title={LABEL.WHAT_WILL_YOU_USE_THIS_WORKSPACE_FOR}
+              workspacePurposeOptions={workSpaceGlobal?.WorkType ?? []}
+              onSelectPurpose={onSelectPurpose}
+              selectedPurpose={selectedPurpose}
+            />
+          );
+        case 2:
+          return (
+            <ManageFeatures
+              title={LABEL.WHAT_WOULD_YOU_LIKE_TO_MANAGE}
+              manageOptions={workSpaceGlobal?.manageType ?? []}
+              selectedOption={selectedManage}
+              onSelectOption={onSelectManage}
+            />
+          );
+        case 3:
+          return (
+            <ManageFeatures
+              title={LABEL.HOW_DID_YOU_HEAR_ABOUT_THIS}
+              manageOptions={workSpaceGlobal?.discoverySource ?? []}
+              selectedOption={selectedDiscovery}
+              onSelectOption={onSelectDiscovery}
+            />
+          );
+        case 4:
+          return (
+            <InvitePeople
+              email={email}
+              selectedEmails={selectedEmails}
+              onEmailChange={onEmailChange}
+              onKeyDown={onKeyDown}
+              onRemoveEmail={onRemoveEmail}
+              inputRef={inputRef}
+              containerRef={containerRef}
+              focusInput={focusInput}
+            />
+          );
+        case 5:
+          return (
+            <ManageTools
+              connectedTools={workSpaceGlobal?.connectedTools ?? []}
+              selectedTools={selectedTools}
+              onToggleTool={onToggleTool}
+            />
+          );
+        case 6:
+          return (
+            <SelectFeatures
+              interestedFeature={workSpaceGlobal?.interestedFeature ?? []}
+              selectedFeatures={selectedFeatures}
+              onToggleFeature={onToggleFeature}
+            />
+          );
+        case 7:
+          return (
+            <NameWorkspace
+              workspaceName={workspaceName}
+              setWorkspaceName={setWorkspaceName}
+            />
+          );
+        default:
+          return null;
+      }
+    } else {
+      // Returning user flow: Purpose -> Manage -> Invite -> Tools -> Features -> Name
+      switch (step) {
+        case 1:
+          return (
+            <ManagePurpose
+              title={LABEL.WHAT_WILL_YOU_USE_THIS_WORKSPACE_FOR}
+              workspacePurposeOptions={workSpaceGlobal?.WorkType ?? []}
+              onSelectPurpose={onSelectPurpose}
+              selectedPurpose={selectedPurpose}
+            />
+          );
+        case 2:
+          return (
+            <ManageFeatures
+              title={LABEL.WHAT_WOULD_YOU_LIKE_TO_MANAGE}
+              manageOptions={workSpaceGlobal?.manageType ?? []}
+              selectedOption={selectedManage}
+              onSelectOption={onSelectManage}
+            />
+          );
+        case 3:
+          return (
+            <InvitePeople
+              email={email}
+              selectedEmails={selectedEmails}
+              onEmailChange={onEmailChange}
+              onKeyDown={onKeyDown}
+              onRemoveEmail={onRemoveEmail}
+              inputRef={inputRef}
+              containerRef={containerRef}
+              focusInput={focusInput}
+            />
+          );
+        case 4:
+          return (
+            <ManageTools
+              connectedTools={workSpaceGlobal?.connectedTools ?? []}
+              selectedTools={selectedTools}
+              onToggleTool={onToggleTool}
+            />
+          );
+        case 5:
+          return (
+            <SelectFeatures
+              interestedFeature={workSpaceGlobal?.interestedFeature ?? []}
+              selectedFeatures={selectedFeatures}
+              onToggleFeature={onToggleFeature}
+            />
+          );
+        case 6:
+          return (
+            <NameWorkspace
+              workspaceName={workspaceName}
+              setWorkspaceName={setWorkspaceName}
+            />
+          );
+        default:
+          return null;
+      }
     }
   };
 
@@ -304,6 +406,7 @@ export const CreateWorkspace: React.FC<Props> = ({
 
 // Step Components
 const ManagePurpose: React.FC<ManagePurposeProps> = ({
+  title,
   workspacePurposeOptions,
   onSelectPurpose,
   selectedPurpose,
@@ -311,7 +414,7 @@ const ManagePurpose: React.FC<ManagePurposeProps> = ({
   return (
     <div className="flex flex-col items-center pt-4 w-full max-w-4xl">
       <h2 className="text-2xl sm:text-4xl font-bold text-content-default text-center mb-6 sm:mb-8 px-4">
-        {LABEL.WHAT_WILL_YOU_USE_THIS_WORKSPACE_FOR}
+        {title}
       </h2>
       <div className="h-full w-full justify-center items-center flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-2">
         {workspacePurposeOptions?.map((option) => (
@@ -335,6 +438,7 @@ const ManagePurpose: React.FC<ManagePurposeProps> = ({
 };
 
 const ManageFeatures: React.FC<ManageFeaturesProps> = ({
+  title,
   onSelectOption,
   manageOptions,
   selectedOption,
@@ -342,7 +446,7 @@ const ManageFeatures: React.FC<ManageFeaturesProps> = ({
   return (
     <div className="flex flex-col items-center pt-4 w-full max-w-4xl">
       <h2 className="text-2xl sm:text-4xl text-content-default font-bold mb-6 sm:mb-4 text-center px-4">
-        {LABEL.WHAT_WOULD_YOU_LIKE_TO_MANAGE}
+        {title}
       </h2>
       <div className="h-full w-full flex items-center">
         <div className="w-full flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:justify-center sm:items-center sm:gap-2">
