@@ -10,7 +10,7 @@ import { AuthCard } from './components/auth-card';
 import { FormInputField } from './components/form-input.tsx';
 import { loginSchema } from '@/lib/validation/validationSchema.tsx';
 import { usePostSignInMutation } from '@/service/rtkQueries/authQuery.ts';
-import { UserResponse } from '@/types/request-response/ApiResponse.ts';
+import { UserResponse } from '@/types/request-response/auth/ApiResponse.ts';
 import { useTMTStore } from '@/stores/zustand/index.tsx';
 import { z } from 'zod';
 import { UserRole } from '@/lib/constants/enum.ts';
@@ -40,7 +40,7 @@ export const Login = () => {
       setErrorMessage(response.error.data.message);
     } else if (response) {
       saveUser(response as UserResponse);
-      navigate('/home'); 
+      navigate('/home');
     }
   };
   const onForgotPasswordClick = () => {

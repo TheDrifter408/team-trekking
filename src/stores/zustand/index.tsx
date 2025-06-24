@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { UserResponse } from '@/types/request-response/ApiResponse.ts';
+import { UserResponse } from '@/types/request-response/auth/ApiResponse.ts';
 
 interface TeamTrackingState {
   user: UserResponse | null;
