@@ -45,7 +45,7 @@ export const List = () => {
       <div className="flex flex-col h-screen overflow-hidden relative">
         <PageHeader currentPage={currentPage} parents={parents} />
         <FilterSection />
-        <div className="flex-1 min-h-0 flex flex-col px-[20px] mt-[40px] flex-shrink-0 w-full overflow-hidden">
+        <div className="flex-1 min-h-0 flex flex-col px-[20px] mt-[40px] pb-[40px] flex-shrink-0 w-full overflow-hidden">
           <ListCard
             isTableExpanded={isTableExpanded}
             onToggleExpand={onToggleExpand}

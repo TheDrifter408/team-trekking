@@ -23,7 +23,7 @@ const Dashboard = () => {
   const [cardsList, setCardsList] = useState(HARD_CARD_LIST);
   const isCardExpanded = expandedCardId !== null;
   const [sharingSpaceDialogOpen, setSharingSpaceDialogOpen] = useState(true);
-  
+
   const onCancelFullView = () => {
     setExpandedCardId(null);
   };
@@ -58,6 +58,7 @@ const Dashboard = () => {
       )
     );
   };
+
   return (
     <div className="h-screen flex flex-col overflow-hidden">
       <PageHeader
@@ -132,7 +133,10 @@ const Dashboard = () => {
         </div>
       )}
       <TutorialDialog />
-      <ShareSpaceDialog isOpen={sharingSpaceDialogOpen} setIsOpen={(open) => setSharingSpaceDialogOpen(!open)}  />
+      <ShareSpaceDialog
+        isOpen={sharingSpaceDialogOpen}
+        setIsOpen={(open) => setSharingSpaceDialogOpen(!open)}
+      />
     </div>
   );
 };

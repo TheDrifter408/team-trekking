@@ -1,6 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { authApi } from '@/service/rtkQueries/authQuery.ts';
 import { workspaceApi } from '@/service/rtkQueries/workspaceQuery.ts';
+import { spaceApi } from '@/service/rtkQueries/spaceQuery.ts';
 import { setupListeners } from '@reduxjs/toolkit/query';
 import { apiErrorMiddleware } from '@/stores/apiErrorMiddleware.ts';
 
@@ -15,6 +16,7 @@ const persistConfig = {
 
 const rootReducer = {
   [authApi.reducerPath]: persistReducer(persistConfig, authApi.reducer),
+  [spaceApi.reducerPath]: persistReducer(persistConfig, spaceApi.reducer),
   [workspaceApi.reducerPath]: persistReducer(
     persistConfig,
     workspaceApi.reducer
@@ -29,7 +31,8 @@ const configureAppStore = () => {
         serializableCheck: false, // required for redux-persist
       }).concat([
         authApi.middleware,
-        workspaceApi.middleware,
+          workspaceApi.middleware,
+        spaceApi.middleware,
         apiErrorMiddleware,
       ]),
     devTools: process.env.NODE_ENV === 'development',
