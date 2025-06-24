@@ -4,14 +4,14 @@ import { useTMTStore } from '@/stores/zustand';
 import {
   ApiResponse,
   UserResponse,
-} from '@/types/request-response/ApiResponse.ts';
+} from '@/types/request-response/auth/ApiResponse.ts';
 import {
   CreateUserRequest,
   OTPRequest,
   SigninRequest,
   VerifyOtpRequest,
   ForgotPasswordRequest,
-} from '@/types/request-response/ApiRequest.ts';
+} from '@/types/request-response/auth/ApiRequest.ts';
 
 export const authApi = createApi({
   reducerPath: 'authApi',

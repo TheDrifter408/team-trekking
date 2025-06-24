@@ -7,7 +7,7 @@ import { Input } from '@/components/shadcn-ui/input.tsx';
 import { PlusCircle } from 'lucide-react';
 import { ThemeSwitch } from '@/components/common/theme-switch.tsx';
 import { ProfileDropdown } from '@/components/common/profile-dropdown.tsx';
-import { UserResponse } from '@/types/request-response/ApiResponse.ts';
+import { UserResponse } from '@/types/request-response/auth/ApiResponse.ts';
 import { Icon } from '@/assets/icon-path.tsx';
 interface Props {
   user: UserResponse | null;

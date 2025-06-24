@@ -31,7 +31,7 @@ import {
   ChevronRight,
   ExternalLink,
 } from 'lucide-react';
-import { UserResponse } from '@/types/request-response/ApiResponse.ts';
+import { UserResponse } from '@/types/request-response/auth/ApiResponse.ts';
 import { getInitials } from '@/lib/utils/utils.ts';
 import { useTMTStore } from '@/stores/zustand';
 

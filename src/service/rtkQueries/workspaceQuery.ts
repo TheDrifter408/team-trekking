@@ -1,6 +1,6 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import axiosBaseQuery from '@/service/baseQuery.ts';
-import { ApiResponse } from '@/types/request-response/ApiResponse.ts';
+import { ApiResponse } from '@/types/request-response/auth/ApiResponse.ts';
 import { API_URLS } from '@/lib/constants';
 import { withPersistentCache } from '@/lib/utils/utils.ts';
 import {
