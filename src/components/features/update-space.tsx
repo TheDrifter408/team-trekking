@@ -39,11 +39,11 @@ export const UpdateSpace = ({ isActive, setIsActive }: Props) => {
   const [invitedUsers, setInvitedUsers] = useState<Assignee[]>([]);
   const [description, setDescription] = useState<string>('');
   const [isPrivateMode, setIsPrivateMode] = useState<boolean>(false);
-  const [spaceName, setSpaceName] = useState('ProjecX Moon');
+  const [spaceName, setSpaceName] = useState(LABEL.PROJECTX_MOON); // replace with your constant key
   const [searchAvatar, setSearchAvatar] = useState<string>('');
   const [isDefaultViewOpen, setIsDefaultViewOpen] = useState<boolean>(false);
   const [isTaskStatusOpen, setIsTaskStatusOpen] = useState<boolean>(false);
-  const initials = getInitials(spaceName)[0] ?? 'P';
+  const initials = getInitials(spaceName)[0] ?? LABEL.DEFAULT_INITIAL; // e.g. 'P'
 
   const onClose = () => {
     setIsActive(false);
@@ -99,8 +99,7 @@ export const UpdateSpace = ({ isActive, setIsActive }: Props) => {
             </p>
           </DialogTitle>
           <p className="text-base text-muted-foreground mt-1 w-full md:w-[90%]">
-            A Space represents teams, departments, or groups, each with its own
-            Lists, workflows, and settings.
+            {LABEL.SPACE_DESCRIPTION}
           </p>
         </DialogHeader>
         <div
@@ -111,7 +110,7 @@ export const UpdateSpace = ({ isActive, setIsActive }: Props) => {
           {/* Icon, Name & Color selection */}
           <div className="">
             <p className="text-base font-medium text-muted-foreground">
-              Icon & name
+              {LABEL.ICON_AND_NAME}
             </p>
             <div className="flex mt-2 items-center space-x-2">
               <DropDownContent
@@ -135,15 +134,17 @@ export const UpdateSpace = ({ isActive, setIsActive }: Props) => {
           </div>
           {/* Owner of the space */}
           <div className="">
-            <p className="text-base font-medium text-muted-foreground">Owner</p>
+            <p className="text-base font-medium text-muted-foreground">
+              {LABEL.OWNER}
+            </p>
             <div className="flex items-center mt-2 space-x-2 border rounded-lg h-[2.5rem] px-4">
               <SelectUsers
                 value={selectedUser ? [selectedUser] : []}
                 displayName={true}
                 multipleSelect={false}
                 onRemove={() => {}}
-                placeholder="Please select an Owner"
-                userListTitle="Users"
+                placeholder={LABEL.PLEASE_SELECT_OWNER}
+                userListTitle={LABEL.USERS}
                 users={taskNotificationUsers}
                 onChange={(selected) => onSelectedUser(selected)}
               />
@@ -153,8 +154,8 @@ export const UpdateSpace = ({ isActive, setIsActive }: Props) => {
         {/* Description */}
         <div className="py-1">
           <p className="text-base mb-2 font-medium text-muted-foreground">
-            Description
-            <span className={'text-sm font-normal'}>{' (optional)'}</span>
+            {LABEL.DESCRIPTION}{' '}
+            <span className={'text-sm font-normal'}>({LABEL.OPTIONAL})</span>
           </p>
           <Textarea
             placeholder={''}
@@ -166,11 +167,11 @@ export const UpdateSpace = ({ isActive, setIsActive }: Props) => {
         {/*  Privacy */}
         <div className="">
           <p className="text-base font-medium text-muted-foreground">
-            Make Private
+            {LABEL.MAKE_PRIVATE}
           </p>
           <div className="flex justify-between items-center">
             <span className={'text-muted-foreground text-base font-normal'}>
-              Only you and invited members have access
+              {LABEL.ONLY_YOU_AND_INVITED_HAVE_ACCESS}
             </span>
             <Switch
               checked={isPrivateMode}
@@ -190,8 +191,8 @@ export const UpdateSpace = ({ isActive, setIsActive }: Props) => {
             value={invitedUsers}
             users={taskNotificationUsers}
             onChange={(assignees) => onToggleInvitedUsers(assignees)}
-            placeholder="No invited Users"
-            userListTitle="Select Users"
+            placeholder={LABEL.NO_INVITED_USERS}
+            userListTitle={LABEL.SELECT_USERS}
           />
         )}
         <Separator decorative={false} className={'!h-[.5px]'} />
@@ -203,7 +204,7 @@ export const UpdateSpace = ({ isActive, setIsActive }: Props) => {
         />
         <DialogFooter className={''}>
           <Button variant={'default'} className={'bg-theme-main'}>
-            Save Changes
+            {LABEL.SAVE_CHANGES}
           </Button>
         </DialogFooter>
       </DialogContent>

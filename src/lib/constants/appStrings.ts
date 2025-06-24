@@ -224,4 +224,22 @@ export const LABEL = {
   EDIT_SPACE_SETTINGS: 'Edit Space settings',
   REQUIRED_VIEWS_DESCRIPTION:
     'When navigating to Spaces, Folders, and Lists in ClickUp, you can set which view(s) are automatically created and required, without having to create them manually. These views cannot be deleted.',
+  DEFINE_YOUR_WORKFLOW: 'Define your workflow',
+  DEFINE_WORKFLOW_DESCRIPTION:
+    'Choose a pre-configured solution or customize to your liking with advanced ClickApps, required views, and task statuses.',
+  SPACE_DESCRIPTION:
+    'A Space represents teams, departments, or groups, each with its own Lists, workflows, and settings.',
+  ICON_AND_NAME: 'Icon & Name',
+  SPACE_NAME: 'My New Space',
+  OPTIONAL: 'optional',
+  MAKE_PRIVATE: 'Make Private',
+  ONLY_YOU_AND_INVITED_HAVE_ACCESS: 'Only you and invited members have access',
+  NO_INVITED_USERS: 'No invited Users',
+  SELECT_USERS: 'Select Users',
+  OWNER: 'Owner',
+  PLEASE_SELECT_OWNER: 'Please select an Owner',
+  USERS: 'Users',
+  SAVE_CHANGES: 'Save Changes',
+  PROJECTX_MOON: 'ProjecX Moon',
+  DEFAULT_INITIAL: 'P',
 };

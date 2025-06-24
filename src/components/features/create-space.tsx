@@ -17,6 +17,7 @@ import { getInitials } from '@/lib/utils/utils.ts';
 import { DropDownContent } from '@/components/common/space-icon-name-dropdown';
 import { SelectUsers } from '@/components/common/select-users';
 import { CreateSpaceWorkflow } from '@/components/features/create-space-workflow.tsx';
+import { LABEL } from '@/lib/constants/appStrings.ts';
 
 interface Props {
   createSpaceOpen: boolean;
@@ -84,20 +85,18 @@ export const CreateSpace = ({ createSpaceOpen, setCreateSpaceOpen }: Props) => {
           <DialogHeader>
             <DialogTitle>
               <p className="text-xl text-primary font-semibold">
-                Create a Space
+                {LABEL.CREATE_SPACE}
               </p>
             </DialogTitle>
             <p className="text-base text-muted-foreground mt-1 w-full md:w-[90%]">
-              A Space represents teams, departments, or groups, each with its
-              own Lists, workflows, and settings.
+              {LABEL.SPACE_DESCRIPTION}
             </p>
           </DialogHeader>
 
-          <div className="grid gap-4 py-4 ">
-            {/* space Name with Icon Integration */}
+          <div className="grid gap-4 py-4">
             <div>
               <span className="text-sm text-muted-foreground">
-                Icon &amp; Name
+                {LABEL.ICON_AND_NAME}
               </span>
               <div className="flex mt-1 items-center space-x-2">
                 <DropDownContent
@@ -116,42 +115,43 @@ export const CreateSpace = ({ createSpaceOpen, setCreateSpaceOpen }: Props) => {
                   id="spaceName"
                   value={spaceName}
                   onChange={(e) => setSpaceName(e.target.value)}
-                  placeholder="My New Space"
+                  placeholder={LABEL.SPACE_NAME}
                   autoFocus
                   className="w-full h-[40px] text-2xl"
                 />
               </div>
             </div>
-            {/* Description */}
-            <div className="">
+
+            <div>
               <p className="text-base mb-2 font-medium text-muted-foreground">
-                Description
-                <span className={'text-sm font-normal'}>( optional )</span>
+                {LABEL.DESCRIPTION}{' '}
+                <span className="text-sm font-normal">({LABEL.OPTIONAL})</span>
               </p>
               <Textarea
                 placeholder={''}
-                className={'!min-h-[25px]'}
+                className="!min-h-[25px]"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
               />
             </div>
-            <div className="">
+
+            <div>
               <p className="text-base font-medium text-muted-foreground">
-                Make Private
+                {LABEL.MAKE_PRIVATE}
               </p>
               <div className="flex justify-between items-center">
-                <span className={'text-muted-foreground text-base font-normal'}>
-                  Only you and invited members have access
+                <span className="text-muted-foreground text-base font-normal">
+                  {LABEL.ONLY_YOU_AND_INVITED_HAVE_ACCESS}
                 </span>
                 <Switch
                   checked={isPrivateMode}
                   onCheckedChange={setIsPrivateMode}
-                  className={`${isPrivateMode ? '!bg-theme-main' : ''}`}
+                  className={isPrivateMode ? '!bg-theme-main' : ''}
                   id=""
                 />
               </div>
             </div>
-            {/* Share with options */}
+
             {isPrivateMode && (
               <SelectUsers
                 multipleSelect={true}
@@ -161,10 +161,11 @@ export const CreateSpace = ({ createSpaceOpen, setCreateSpaceOpen }: Props) => {
                 value={invitedUsers}
                 users={taskNotificationUsers}
                 onChange={(assignees) => onToggleInvitedUsers(assignees)}
-                placeholder="No invited Users"
-                userListTitle="Select Users"
+                placeholder={LABEL.NO_INVITED_USERS}
+                userListTitle={LABEL.SELECT_USERS}
               />
             )}
+
             <DialogFooter>
               <div className="flex gap-2 pt-2">
                 <Button
@@ -172,7 +173,7 @@ export const CreateSpace = ({ createSpaceOpen, setCreateSpaceOpen }: Props) => {
                   variant="outline"
                   onClick={() => setCreateSpaceOpen(false)}
                 >
-                  Cancel
+                  {LABEL.CANCEL}
                 </Button>
                 <Button
                   variant={'default'}
@@ -180,13 +181,14 @@ export const CreateSpace = ({ createSpaceOpen, setCreateSpaceOpen }: Props) => {
                   onClick={onContinueCreateSpace}
                   disabled={isSubmitDisabled}
                 >
-                  Create Space
+                  {LABEL.CREATE_SPACE}
                 </Button>
               </div>
             </DialogFooter>
           </div>
         </DialogContent>
       </Dialog>
+
       <CreateSpaceWorkflow
         isOpen={isWorkflowOpen}
         setIsOpen={setIsWorkflowOpen}

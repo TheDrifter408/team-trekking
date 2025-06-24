@@ -8,11 +8,13 @@ import {
 import { Button } from '@/components/shadcn-ui/button';
 import { SpaceDefaults } from '@/components/features/space-defaults.tsx';
 import { colorOptions } from '@/mock';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { DefaultViews } from '@/components/common/space-default-views';
 import { StatusTemplate } from '@/components/features/status-template';
 import { cn } from '@/lib/utils/utils.ts';
 import { useAppContext } from '@/lib/context/app-layout-context.tsx';
+import { LABEL } from '@/lib/constants/appStrings.ts';
+import { View } from '@/types/request-response/space/ApiResponse.ts';
 
 interface Props {
   isOpen: boolean;
@@ -26,12 +28,11 @@ export const CreateSpaceWorkflow = ({ isOpen, setIsOpen, onBack }: Props) => {
   const [isTaskStatusOpen, setIsTaskStatusOpen] = useState(false);
 
   const [selectedTemplate, setSelectedTemplate] = useState<number | null>(1);
-  const [defaultViewData, setDefaultViewData] = useState<any[]>([]);
+  const [defaultViewData, setDefaultViewData] = useState<View[]>([]);
 
   const templates = spaceGlobal?.workflow ?? [];
 
   const onSelectTemplate = (templateId: number) => {
-    // Find the selected template using the new templateId parameter
     const selected = templates.find((tpl) => tpl.id === templateId);
     setSelectedTemplate(templateId);
     setDefaultViewData(selected?.defaultView || []);
@@ -43,11 +44,10 @@ export const CreateSpaceWorkflow = ({ isOpen, setIsOpen, onBack }: Props) => {
         <DialogContent className="!max-w-[700px] flex flex-col">
           <DialogHeader>
             <DialogTitle className="text-xl font-semibold text-primary">
-              Define your workflow
+              {LABEL.DEFINE_YOUR_WORKFLOW}
             </DialogTitle>
             <p className="text-base text-muted-foreground mt-1">
-              Choose a pre-configured solution or customize to your liking with
-              advanced ClickApps, required views, and task statuses.
+              {LABEL.DEFINE_WORKFLOW_DESCRIPTION}
             </p>
           </DialogHeader>
 
@@ -79,14 +79,14 @@ export const CreateSpaceWorkflow = ({ isOpen, setIsOpen, onBack }: Props) => {
 
           <DialogFooter className="w-full flex !justify-between">
             <Button variant="outline" onClick={onBack}>
-              Back
+              {LABEL.BACK}
             </Button>
             <Button
               variant="default"
               className="bg-theme-main"
               onClick={() => setIsOpen(false)}
             >
-              Done
+              {LABEL.DONE}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -130,10 +130,10 @@ const Template = ({
       )}
       onClick={onClick}
     >
-      <p className={'font-medium text-base text-content-default'}>
+      <p className="font-medium text-base text-content-default">
         {templateTitle}
       </p>
-      <span className={'text-content-tertiary text-sm font-medium'}>
+      <span className="text-content-tertiary text-sm font-medium">
         {templateDescription}
       </span>
     </div>

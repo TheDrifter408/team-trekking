@@ -44,8 +44,11 @@ export const SpaceDefaults = ({
       />
       <SettingsCard
         icon={<ChevronsUpDown className="h-[18px] text-primary" />}
-        title={clickAppContent ?? 'ClickApps'}
-        content="Time Tracking, Sprint Points, Priority, Tags, Time Estimates, Remap Subtask Due Dates, Multiple Assignees, Email, Work In Progress Limits, Income"
+        title="ClickApps"
+        content={
+          clickAppContent ??
+          'Time Tracking, Sprint Points, Priority, Tags, Time Estimates, Remap Subtask Due Dates, Multiple Assignees, Email, Work In Progress Limits, Income'
+        }
       />
     </>
   );
