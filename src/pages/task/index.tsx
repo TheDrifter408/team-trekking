@@ -1,6 +1,6 @@
 import { FC, useState } from 'react';
 import { mockChecklist, mockSubtasks, mockUsers, sampleTask } from '@/mock';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/utils/utils.ts';
 import {
   ArrowDownUp,
   ChevronDown,
@@ -36,7 +36,6 @@ import {
 import { Button } from '@/components/shadcn-ui/button';
 import { TaskMetaRow } from './components/task-meta-row';
 import { Input } from '@/components/shadcn-ui/input.tsx';
-import { AssigneeAvatar } from '@/components/common/assignee-avatar.tsx';
 import { DocEditor } from './components/doc-editor.tsx';
 import TaskStatusDialog from '@/components/common/task-status-dialog.tsx';
 import TimeEstimateDropDown from '@/components/common/estimate-time-dropdown.tsx';
@@ -44,19 +43,6 @@ import { Link } from 'react-router-dom';
 import { Assignee, Task as TaskType } from '@/types/props/Common.ts';
 import { TagOption } from '@/types/interfaces/TagDropDown.ts';
 import TagDropdownWithSelection from '@/components/common/tag-dropdown.tsx';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/shadcn-ui/popover.tsx';
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from '@/components/shadcn-ui/command.tsx';
 import TaskTypeDropdown from '@/components/common/task-type-dropdown.tsx';
 import { DataTable } from '@/components/data-table/data-table.tsx';
 import {
@@ -77,6 +63,7 @@ import {
 } from '@/components/shadcn-ui/dropdown-menu.tsx';
 import { $getRoot, EditorState } from 'lexical';
 import { TabActionBar } from '@/components/common/table-floating-actoin-bar.tsx';
+import { SelectUsers } from '@/components/common/select-users.tsx';
 
 export const Task: FC = () => {
   const [enterDates, setEnterDates] = useState<boolean>(false);
@@ -150,18 +137,6 @@ export const Task: FC = () => {
   });
 
   const [selectedAssignees, setSelectedAssignees] = useState<Assignee[]>([]);
-
-  const onSelectAssignee = (assignee: Assignee) => {
-    const isSelected = selectedAssignees.filter((a) => a.id === assignee.id);
-    if (isSelected.length > 0) {
-      const newAssignees = selectedAssignees.filter(
-        (a) => a.id !== assignee.id
-      );
-      setSelectedAssignees(newAssignees);
-    } else {
-      setSelectedAssignees([...selectedAssignees, assignee]);
-    }
-  };
 
   const store = createDataTableStore({});
 
@@ -327,75 +302,16 @@ export const Task: FC = () => {
                 hover={enterAssignee}
                 onHoverChange={setEnterAssignee}
               >
-                <div className="flex -space-x-2 w-full p-0">
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <Button className="bg-transparent p-0 h-full text-muted-foreground text-sm flex items-center gap-0 justify-start w-full *:data-[slot=avatar]:ring-background -space-x-1 *:data-[slot=avatar]:ring-2">
-                        {selectedAssignees.length > 0 ? (
-                          selectedAssignees.map((assignee) => (
-                            <AssigneeAvatar
-                              key={assignee.id}
-                              assignee={assignee}
-                              displayName={false}
-                              className="bg-muted rounded-full"
-                              enterAssignee={enterAssignee}
-                              isSelected={true}
-                              onRemove={() => onSelectAssignee(assignee)}
-                            />
-                          ))
-                        ) : (
-                          <span className="block px-1 h-full text-base">
-                            No Assignees
-                          </span>
-                        )}
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="mt-2 p-1">
-                      <Command className="py-1">
-                        <CommandInput
-                          placeholder="Search Assignees..."
-                          className="p-1 ring-0 ring-offset-0 ring-inset focus:outline-0"
-                        />
-                        <CommandList className="">
-                          <CommandEmpty>No user found</CommandEmpty>
-                          <CommandGroup
-                            heading={
-                              <span className="font-medium text-black text-sm">
-                                Assignees
-                              </span>
-                            }
-                            className="border-none"
-                          >
-                            {task.assignees?.map((assignee) => {
-                              const isSelected =
-                                selectedAssignees.includes(assignee);
-                              return (
-                                <CommandItem
-                                  className=""
-                                  key={assignee.id}
-                                  value={assignee.name}
-                                  onSelect={() => onSelectAssignee(assignee)}
-                                >
-                                  <AssigneeAvatar
-                                    key={assignee.id}
-                                    assignee={assignee}
-                                    displayName={true}
-                                    showAvatarRing={isSelected}
-                                    className={cn('justify-between')}
-                                    enterAssignee={enterAssignee}
-                                    onRemove={() => {}}
-                                    isSelected={isSelected}
-                                    showButtons={true}
-                                  />
-                                </CommandItem>
-                              );
-                            })}
-                          </CommandGroup>
-                        </CommandList>
-                      </Command>
-                    </PopoverContent>
-                  </Popover>
-                </div>
+                <SelectUsers
+                  value={selectedAssignees}
+                  displayName={true}
+                  onRemove={() => {}}
+                  multipleSelect={true}
+                  onChange={(assignees) => setSelectedAssignees(assignees)}
+                  users={task.assignees!}
+                  placeholder="No Assignees"
+                  userListTitle="Select an Assignee"
+                />
               </TaskMetaRow>
               {/* PRIORITY */}
               <TaskMetaRow

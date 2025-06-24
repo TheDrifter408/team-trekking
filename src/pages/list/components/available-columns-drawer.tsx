@@ -4,7 +4,7 @@ import { COLUMN_META } from '@/lib/constants';
 import { Icon } from '@/assets/icon-path.tsx';
 import { Input } from '@/components/shadcn-ui/input.tsx';
 import { Switch } from '@/components/shadcn-ui/switch.tsx';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/utils/utils.ts';
 import {
   DndContext,
   closestCenter,

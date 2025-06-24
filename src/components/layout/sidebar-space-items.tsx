@@ -2,10 +2,13 @@ import { ReactNode, useState } from 'react';
 import {
   Collapsible,
   CollapsibleContent,
-  CollapsibleTrigger,
 } from '@/components/shadcn-ui/collapsible.tsx';
 import { Button } from '@/components/shadcn-ui/button.tsx';
-import { IconCaretRightFilled } from '@tabler/icons-react';
+import {
+  IconCaretRightFilled,
+  IconFolder,
+  IconFolderOpen,
+} from '@tabler/icons-react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -15,10 +18,10 @@ import {
   TooltipTrigger,
 } from '@/components/shadcn-ui/tooltip';
 import { UpdateSpace } from '@/components/features/update-space.tsx';
-import { getInitials } from '@/lib/utils.ts';
 import { ContextMenu } from '@/components/common/context-menu.tsx';
 import { Icon } from '@/assets/icon-path.tsx';
 import { spacesMenuConfig } from '@/lib/constants/staticData.ts';
+import { cn } from '@/lib/utils/utils.ts';
 
 interface Props {
   name: string;
@@ -29,31 +32,43 @@ export const SidebarSpaceItems = ({ name, children }: Props) => {
   const navigate = useNavigate();
   const [isHovered, setIsHovered] = useState(false);
   const [isRename, setIsRename] = useState(false);
-  const initials = getInitials(name);
+  const [isOpen, setIsOpen] = useState(false);
+
+  
+
+  const onToggleCollapse = () => {
+    setIsOpen(!isOpen);
+  };
 
   return (
-    <Collapsible>
+    <Collapsible open={isOpen}>
       <div
-        className="flex h-[36px] items-center justify-between rounded-lg hover:bg-muted transition-colors duration-200 group/space"
+        className="flex h-[36px] ml-2 items-center justify-between rounded-lg hover:bg-muted transition-colors duration-200 group/space"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
         <div className="flex items-center flex-1">
-          {!isHovered ? (
-            <div className="h-7 w-7 ml-1 rounded-lg bg-[#525252] text-white flex items-center justify-center text-sm font-medium">
-              {initials[0]}
-            </div>
-          ) : (
-            <CollapsibleTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-6 w-6 text-indigo-600 hover:text-indigo-800 hover:bg-indigo-100 transition-all"
-              >
-                <IconCaretRightFilled className="h-4 w-4 transition-transform data-[state=open]:rotate-90" />
-              </Button>
-            </CollapsibleTrigger>
-          )}
+          <Button
+            onClick={onToggleCollapse}
+            variant="ghost"
+            size="icon"
+            className="h-6 w-6 text-slate-600 hover:text-slate-800 hover:bg-slate-200 transition-all"
+          >
+            {!isHovered ? (
+              isOpen ? (
+                <IconFolderOpen />
+              ) : (
+                <IconFolder />
+              )
+            ) : (
+              <IconCaretRightFilled
+                className={cn(
+                  'h-4 w-4 transition-transform',
+                  isOpen ? 'rotate-90' : 'rotate-0'
+                )}
+              />
+            )}
+          </Button>
           <div className="flex flex-1 items-center">
             <TooltipProvider>
               <Tooltip>
@@ -84,7 +99,13 @@ export const SidebarSpaceItems = ({ name, children }: Props) => {
           }
           sections={spacesMenuConfig}
           width="w-64"
-          onItemClick={() => {}}
+          onItemClick={() => { }}
+          hasButton={true}
+          buttonElement={
+            <Button className='w-full mt-2 rounded-xl'>
+              Sharing &amp; Permissions 
+            </Button>
+          }
         />
       </div>
 

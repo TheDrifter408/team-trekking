@@ -2,8 +2,8 @@
 
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import { CompassIcon, Plus, Share2 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { CompassIcon, Plus, Rocket, Share2 } from 'lucide-react';
+import { cn } from '@/lib/utils/utils.ts';
 import {
   Sidebar,
   SidebarContent,
@@ -14,7 +14,7 @@ import {
   SidebarRail,
   useSidebar,
 } from '@/components/shadcn-ui/sidebar';
-import { sampleProjectsData, sidebarData, spaceData } from '@/mock';
+import { sidebarData, spaceData } from '@/mock';
 import { NavGroup } from '@/components/layout/nav-group.tsx';
 import { Collapsible } from '@/components/shadcn-ui/collapsible.tsx';
 import { Button } from '@/components/shadcn-ui/button.tsx';
@@ -35,6 +35,7 @@ import { LABEL } from '@/lib/constants/appStrings.ts';
 import { ContextMenu } from '@/components/common/context-menu.tsx';
 import { spacesMenuConfig } from '@/lib/constants/staticData.ts';
 import { WorkspaceSwitcher } from '@/components/layout/workspace-switcher.tsx';
+import { UpdateSpace } from '@/components/features/update-space';
 
 export const AppSidebar = ({
   ...props
@@ -53,6 +54,8 @@ export const AppSidebar = ({
   const [privateAccess, setPrivateAccess] = useState(false);
   // Derived state
   const [initials, setInitials] = useState('');
+
+  const [active, setIsActive] = useState(false);
 
   // Generate initials based on space name
   useEffect(() => {
@@ -169,7 +172,7 @@ export const AppSidebar = ({
               ))}
               <Button
                 variant="ghost"
-                className="w-full justify-start px-4 py-2 text-muted-foreground hover:bg-muted rounded-none text-base"
+                className="w-full justify-start px-4 py-2 text-muted-foreground hover:bg-muted rounded-lg text-base"
               >
                 <Plus className="h-4 w-4 mr-2" />
                 {LABEL.CREATE_SPACE}
@@ -209,6 +212,7 @@ export const AppSidebar = ({
         initials={initials}
         onCreateSpace={onCreateSpace}
       />
+      <UpdateSpace isActive={active} onClose={() => setIsActive(false)} />
       <InviteUser
         inviteUserOpen={inviteUserOpen}
         setInviteUserOpen={setInviteUserOpen}

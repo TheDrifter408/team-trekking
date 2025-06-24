@@ -1,6 +1,12 @@
 import React from 'react';
 import { LinkProps } from '@tanstack/react-router';
 import { ChangeEvent, KeyboardEvent, MouseEvent } from 'react';
+import {
+  ConnectedTool,
+  InterestedFeature,
+  ManageType,
+  WorkType,
+} from '@/types/request-response/workspace/ApiRessponse.ts';
 
 interface User {
   name: string;
@@ -47,14 +53,14 @@ interface SidebarData {
 }
 
 export interface ManagePurposeProps {
-  workspacePurposeOptions: string[];
+  workspacePurposeOptions: WorkType[];
   onSelectPurpose: (option: string) => void;
   selectedPurpose: string | '';
 }
 
 export interface ManageFeaturesProps {
   onSelectOption: (option: string) => void;
-  manageOptions: string[];
+  manageOptions: ManageType[];
   selectedOption: string | '';
 }
 
@@ -70,6 +76,7 @@ export interface InvitePeopleProps {
 }
 
 export interface SelectFeaturesProps {
+  interestedFeature: InterestedFeature[];
   selectedFeatures: string[];
   onToggleFeature: (option: string) => void;
 }
@@ -92,6 +99,7 @@ export interface FooterProps {
   onSubmit: () => void;
 }
 export interface ManageToolsProps {
+  connectedTools: ConnectedTool[];
   selectedTools: string[];
   onToggleTool: (tool: string) => void;
 }

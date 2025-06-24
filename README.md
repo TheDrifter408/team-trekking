@@ -33,7 +33,7 @@ team-trekking-front-end/
 │   ├── service/           # Axios instance and RTK base query setup
 │   │   ├── axiosInstance.ts
 │   │   ├── baseQuery.ts
-│   │   └── rtkQuery.ts
+│   │   └── authQuery.ts
 │   ├── stores/            # Zustand stores and middlewares
 │   │   └── zustand/
 │   │       ├── apiErrorMiddleware.ts
@@ -65,7 +65,7 @@ team-trekking-front-end/
 
 ### 🔧 Key Libraries Used
 - 	Zustand: Lightweight state management in src/stores/
-- 	RTK Query: API integration via src/service/rtkQuery.ts
+- 	RTK Query: API integration via src/service/authQuery.ts
 - 	Axios: Custom instance in src/service/axiosInstance.ts
 - 	React Router: Route definitions in src/routes/
 - 	Tailwind CSS: Utility-first styling via index.css

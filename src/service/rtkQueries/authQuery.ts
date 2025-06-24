@@ -13,8 +13,8 @@ import {
   ForgotPasswordRequest,
 } from '@/types/request-response/ApiRequest.ts';
 
-export const tmtApi = createApi({
-  reducerPath: 'teamTrekking',
+export const authApi = createApi({
+  reducerPath: 'authApi',
   baseQuery: axiosBaseQuery(),
   endpoints: (builder) => ({
     postRefreshToken: builder.mutation<any, void>({
@@ -78,4 +78,4 @@ export const {
   usePostCreateUserMutation,
   usePostSignInMutation,
   usePostForgotPasswordMutation,
-} = tmtApi;
+} = authApi;

@@ -21,7 +21,7 @@ import {
 } from '@/components/shadcn-ui/sidebar.tsx';
 import { Textarea } from '@/components/shadcn-ui/textarea.tsx';
 import { Button } from '@/components/shadcn-ui/button.tsx';
-import { cn } from '@/lib/utils.ts';
+import { cn } from '@/lib/utils/utils.ts';
 import { TaskActivityNotifications } from '@/pages/task/components/task-activity-notifications.tsx';
 import {
   DropdownMenu,
@@ -35,29 +35,30 @@ import TaskActivitySearch from '@/pages/task/components/task-activity-search.tsx
 
 type SidebarTriggerProps = PropsWithChildren<ButtonProps>;
 
-export const ActivitySidebarTrigger = forwardRef<HTMLButtonElement, SidebarTriggerProps>(
-  ({ children, className, onClick, ...props }, ref) => {
-    const { toggleSidebar } = useSidebar();
+export const ActivitySidebarTrigger = forwardRef<
+  HTMLButtonElement,
+  SidebarTriggerProps
+>(({ children, className, onClick, ...props }, ref) => {
+  const { toggleSidebar } = useSidebar();
 
-    return (
-      <Button
-        ref={ref}
-        data-sidebar="trigger"
-        variant="ghost"
-        size="icon"
-        className={cn(className, 'items-center justify-center h-auto')}
-        onClick={(event) => {
-          event.stopPropagation();
-          onClick?.(event);
-          toggleSidebar();
-        }}
-        {...props}
-      >
-        {children}
-      </Button>
-    );
-  }
-);
+  return (
+    <Button
+      ref={ref}
+      data-sidebar="trigger"
+      variant="ghost"
+      size="icon"
+      className={cn(className, 'items-center justify-center h-auto')}
+      onClick={(event) => {
+        event.stopPropagation();
+        onClick?.(event);
+        toggleSidebar();
+      }}
+      {...props}
+    >
+      {children}
+    </Button>
+  );
+});
 
 ActivitySidebarTrigger.displayName = 'ActivitySidebarTrigger';
 

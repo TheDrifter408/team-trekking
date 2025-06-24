@@ -13,7 +13,7 @@ import {
   usePostSendOtpMutation,
   usePostVerifyOtpMutation,
   usePostCreateUserMutation,
-} from '@/service/rtkQuery.ts';
+} from '@/service/rtkQueries/authQuery.ts';
 import {
   InputOTP,
   InputOTPGroup,
@@ -77,7 +77,7 @@ export const SignUp = () => {
         email: form.getValues('email'),
         password: form.getValues('password'),
         roleId: Number(UserRole.User),
-        permissionIds: permissionIds,
+        //permissionIds: permissionIds, permission need to implement later
         otp: otp,
       };
 

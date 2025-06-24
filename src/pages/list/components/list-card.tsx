@@ -1,6 +1,6 @@
 import { Button } from '@/components/shadcn-ui/button.tsx';
 import { Icon } from '@/assets/icon-path';
-import { cn } from '@/lib/utils.ts';
+import { cn } from '@/lib/utils/utils.ts';
 import TaskTypeDropdown from '@/components/common/task-type-dropdown.tsx';
 import { LABEL } from '@/lib/constants';
 

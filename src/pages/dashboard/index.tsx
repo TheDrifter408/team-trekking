@@ -10,7 +10,8 @@ import {
   HARD_CARD_LIST,
   HOME_CARD_TITLE,
 } from '@/lib/constants/appConstant.ts';
-import { getWelcomeMessage } from '@/lib/utils.ts';
+import { getWelcomeMessage } from '@/lib/utils/utils.ts';
+import { ShareSpaceDialog } from '@/components/common/share-space-dialog';
 
 enum Direction {
   NEXT = 'next',
@@ -20,9 +21,9 @@ enum Direction {
 const Dashboard = () => {
   const [expandedCardId, setExpandedCardId] = useState<string | null>(null);
   const [cardsList, setCardsList] = useState(HARD_CARD_LIST);
-
   const isCardExpanded = expandedCardId !== null;
-
+  const [sharingSpaceDialogOpen, setSharingSpaceDialogOpen] = useState(true);
+  
   const onCancelFullView = () => {
     setExpandedCardId(null);
   };
@@ -131,6 +132,7 @@ const Dashboard = () => {
         </div>
       )}
       <TutorialDialog />
+      <ShareSpaceDialog isOpen={sharingSpaceDialogOpen} setIsOpen={(open) => setSharingSpaceDialogOpen(!open)}  />
     </div>
   );
 };

@@ -1,7 +1,7 @@
 import { HTMLAttributes } from 'react';
 import { Link } from 'react-router';
 import { IconMenu } from '@tabler/icons-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/utils/utils.ts';
 import { Button } from '@/components/shadcn-ui/button';
 import {
   DropdownMenu,

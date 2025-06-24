@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { IconCheck, IconMoon, IconSun } from '@tabler/icons-react';
-import { cn } from '@/lib/utils.ts';
+import { cn } from '@/lib/utils/utils.ts';
 import { useTheme } from '@/lib/context/theme-context.tsx';
 import { Button } from '@/components/shadcn-ui/button.tsx';
 import {

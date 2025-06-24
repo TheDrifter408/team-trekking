@@ -1,36 +1,5 @@
-import React, { useState } from 'react';
-import {
-  Bell,
-  Book,
-  Briefcase,
-  Calendar,
-  Camera,
-  ChevronRight,
-  ChevronsUpDown,
-  CircleDot,
-  Cloud,
-  Coffee,
-  Database,
-  FileText,
-  Gift,
-  Globe,
-  Heart,
-  Home,
-  Layers,
-  Lightbulb,
-  Mail,
-  Map,
-  Music,
-  Palette,
-  Rocket,
-  Settings,
-  Star,
-  Target,
-  Trophy,
-  UserRoundPlus,
-  Users,
-  Zap,
-} from 'lucide-react';
+import { ReactNode, useState } from 'react';
+import { ChevronRight, ChevronsUpDown, CircleDot, Layers } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
@@ -39,40 +8,30 @@ import {
   DialogTitle,
 } from '@/components/shadcn-ui/dialog.tsx';
 import { Button } from '@/components/shadcn-ui/button.tsx';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/shadcn-ui/tooltip.tsx';
 import { Input } from '@/components/shadcn-ui/input.tsx';
 import { Separator } from '@/components/shadcn-ui/separator.tsx';
 import { Textarea } from '@/components/shadcn-ui/textarea.tsx';
 import { Switch } from '@/components/shadcn-ui/switch.tsx';
-import { cn, getInitials } from '@/lib/utils.ts';
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-} from '@/components/shadcn-ui/select.tsx';
+import { cn, getInitials } from '@/lib/utils/utils.ts';
 import { DefaultViews } from '@/components/common/space-default-views.tsx';
 import { DropDownContent } from '@/components/common/space-icon-name-dropdown.tsx';
 import { StatusTemplate } from '@/components/features/status-template.tsx';
-import { ColorOption, IconOption } from '@/types/props/Common.ts';
-import { taskNotificationUsers } from '@/mock';
+import { Assignee, ColorOption, IconOption } from '@/types/props/Common.ts';
+import { iconOptions, colorOptions, taskNotificationUsers } from '@/mock';
+import { SelectUsers } from '@/components/common/select-users';
 
-interface Props {
+interface UpdateSpaceProps {
   isActive: boolean;
   onClose: () => void;
 }
 
-export const UpdateSpace = ({ isActive, onClose }: Props) => {
+export const UpdateSpace = ({ isActive, onClose }: UpdateSpaceProps) => {
   const [selectedIcon, setSelectedIcon] = useState<IconOption | null>(null);
   const [selectedColor, setSelectedColor] = useState<ColorOption>(
     colorOptions[0]
   );
+  const [selectedUser, setSelectedUser] = useState<Assignee | null>(null);
+  const [invitedUsers, setInvitedUsers] = useState<Assignee[]>([]);
   const [description, setDescription] = useState<string>('');
   const [isPrivateMode, setIsPrivateMode] = useState<boolean>(false);
   const [spaceName, setSpaceName] = useState('ProjecX Moon');
@@ -100,9 +59,17 @@ export const UpdateSpace = ({ isActive, onClose }: Props) => {
     setIsTaskStatusOpen(true);
   };
 
+  const onSelectedUser = (assignees: Assignee[]) => {
+    setSelectedUser(assignees[0] ? assignees[0] : null);
+  };
+
+  const onToggleInvitedUsers = (assignees: Assignee[]) => {
+    setInvitedUsers(assignees);
+  };
+
   return (
-    <Dialog open={isActive} onOpenChange={onClose}>
-      <DialogContent className="!max-w-[690px] flex flex-col h-[80%]">
+    <Dialog open={isActive} onOpenChange={onClose} modal={false}>
+      <DialogContent className="!max-w-[700px] flex flex-col h-[85%]">
         {/* Header Text */}
         <DialogHeader>
           <DialogTitle>
@@ -136,7 +103,7 @@ export const UpdateSpace = ({ isActive, onClose }: Props) => {
               />
               <Input
                 value={spaceName}
-                className={'h-[40px]'}
+                className={'h-[2.5rem]'}
                 onChange={(e) => setSpaceName(e.target.value)}
               />
             </div>
@@ -144,16 +111,25 @@ export const UpdateSpace = ({ isActive, onClose }: Props) => {
           {/* Owner of the space */}
           <div className="">
             <p className="text-base font-medium text-muted-foreground">Owner</p>
-            <div className="flex mt-2 !w-full items-center space-x-2">
-              <SelectOwner users={taskNotificationUsers} />
+            <div className="flex items-center mt-2 space-x-2 border rounded-lg h-[2.5rem] px-4">
+              <SelectUsers
+                value={selectedUser ? [selectedUser] : []}
+                displayName={true}
+                multipleSelect={false}
+                onRemove={() => {}}
+                placeholder="Please select an Owner"
+                userListTitle="Users"
+                users={taskNotificationUsers}
+                onChange={(selected) => onSelectedUser(selected)}
+              />
             </div>
           </div>
         </div>
         {/* Description */}
-        <div className="">
+        <div className="py-1">
           <p className="text-base mb-2 font-medium text-muted-foreground">
             Description
-            <span className={'text-sm font-normal'}>( optional )</span>
+            <span className={'text-sm font-normal'}>{' (optional)'}</span>
           </p>
           <Textarea
             placeholder={''}
@@ -180,7 +156,19 @@ export const UpdateSpace = ({ isActive, onClose }: Props) => {
           </div>
         </div>
         {/* Share with options */}
-        {isPrivateMode && <UserManagement users={taskNotificationUsers} />}
+        {isPrivateMode && (
+          <SelectUsers
+            multipleSelect={true}
+            displayName={false}
+            onRemove={() => {}}
+            displayOnly={true}
+            value={invitedUsers}
+            users={taskNotificationUsers}
+            onChange={(assignees) => onToggleInvitedUsers(assignees)}
+            placeholder="No invited Users"
+            userListTitle="Select Users"
+          />
+        )}
         <Separator decorative={false} className={'!h-[.5px]'} />
 
         <SettingsCard
@@ -224,21 +212,22 @@ export const UpdateSpace = ({ isActive, onClose }: Props) => {
   );
 };
 
-export function SettingsCard({
+interface SettingsCardProps {
+  icon: ReactNode;
+  title: string;
+  content?: string;
+  isList?: boolean;
+  colorItems?: { name: string; color: string }[];
+  onClickSettings?: () => void;
+}
+export const SettingsCard = ({
   icon,
   title,
   content,
   isList = false,
   colorItems = [],
   onClickSettings,
-}: {
-  icon: React.ReactNode;
-  title: string;
-  content?: string;
-  isList?: boolean;
-  colorItems?: { name: string; color: string }[];
-  onClickSettings?: () => void;
-}) {
+}: SettingsCardProps) => {
   return (
     <div
       className="mt-2 cursor-pointer border items-center rounded-xl p-[12px] flex justify-between"
@@ -286,185 +275,4 @@ export function SettingsCard({
       </div>
     </div>
   );
-}
-
-function SelectOwner({ users }) {
-  return (
-    <div className="w-full">
-      <Select>
-        <SelectTrigger className="w-full !h-[40px]">
-          <span className="text-primary">Jawahiir Nabhan</span>
-        </SelectTrigger>
-        <SelectContent className="w-full max-h-60 overflow-y-auto">
-          <SelectGroup>
-            {users.map((user) => (
-              <SelectItem key={user.userName} value={user.userName}>
-                {user.userName}
-              </SelectItem>
-            ))}
-          </SelectGroup>
-        </SelectContent>
-      </Select>
-    </div>
-  );
-}
-
-// Avatars showing will be updated if new user has been added...
-function UserManagement({ users }) {
-  return (
-    <div className={'w-full flex justify-between'}>
-      <span className={'text-base'}>Share only with: </span>
-
-      <div className="flex">
-        {/* Display first 3 users */}
-        {users.slice(0, 3).map((user, index) => (
-          <img
-            key={user.userName}
-            alt={user.userName}
-            src={user.avatar}
-            className="w-8 h-8 shadow-sm bg-background rounded-full object-cover border-2 border-gray-50"
-            style={{
-              zIndex: 10 - index,
-              marginLeft: index === 0 ? 0 : -10,
-            }}
-          />
-        ))}
-
-        {/* Show count if more than 3 users */}
-        {users.length > 3 && (
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <div
-                  className="w-8 h-8 shadow-sm bg-theme-main-light text-muted-foreground cursor-pointer rounded-full flex items-center justify-center text-xs font-medium"
-                  style={{
-                    zIndex: 10 - 3,
-                    marginLeft: -10,
-                  }}
-                >
-                  +{users.length - 3}
-                </div>
-              </TooltipTrigger>
-              <TooltipContent>
-                <div className="p-1">
-                  {users.slice(3).map((user) => (
-                    <div key={user.userName} className="whitespace-nowrap">
-                      {user.userName}
-                    </div>
-                  ))}
-                </div>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-        )}
-
-        {/* Add user button */}
-        <Button
-          onClick={() => {}}
-          variant="outline"
-          className={cn(
-            'w-8 h-8 flex items-center justify-center text-muted-foreground rounded-full ml-[-12px]',
-            'border-[1.5px] border-muted-foreground border-dashed',
-            'hover:ml-0 transition-500 ease-out hover:border-theme-main hover:text-theme-content-primary hover:bg-primary-foreground'
-          )}
-        >
-          <UserRoundPlus className="w-4 h-4" />
-        </Button>
-      </div>
-    </div>
-  );
-}
-
-// Available icons with their names
-const iconOptions: IconOption[] = [
-  { name: 'Briefcase', icon: Briefcase },
-  { name: 'Users', icon: Users },
-  { name: 'Globe', icon: Globe },
-  { name: 'Star', icon: Star },
-  { name: 'Home', icon: Home },
-  { name: 'Book', icon: Book },
-  { name: 'Rocket', icon: Rocket },
-  { name: 'Heart', icon: Heart },
-  { name: 'Calendar', icon: Calendar },
-  { name: 'Settings', icon: Settings },
-  { name: 'Map', icon: Map },
-  { name: 'Mail', icon: Mail },
-  { name: 'Zap', icon: Zap },
-  { name: 'Coffee', icon: Coffee },
-  { name: 'Cloud', icon: Cloud },
-  { name: 'Music', icon: Music },
-  { name: 'Camera', icon: Camera },
-  { name: 'Palette', icon: Palette },
-  { name: 'Gift', icon: Gift },
-  { name: 'Trophy', icon: Trophy },
-  { name: 'Lightbulb', icon: Lightbulb },
-  { name: 'Bell', icon: Bell },
-  { name: 'Layers', icon: Layers },
-  { name: 'FileText', icon: FileText },
-  { name: 'Database', icon: Database },
-  { name: 'Target', icon: Target },
-];
-
-// Available color options with Tailwind classes
-const colorOptions: ColorOption[] = [
-  {
-    name: 'Gray',
-    bgClass: 'bg-gray-500',
-    textClass: 'text-white',
-    color: 'gray-500',
-  },
-  {
-    name: 'Blue',
-    bgClass: 'bg-blue-500',
-    textClass: 'text-white',
-    color: 'blue-500',
-  },
-  {
-    name: 'Green',
-    bgClass: 'bg-green-500',
-    textClass: 'text-white',
-    color: 'green-500',
-  },
-  {
-    name: 'Yellow',
-    bgClass: 'bg-yellow-500',
-    textClass: 'text-black',
-    color: 'yellow-500',
-  },
-  {
-    name: 'Purple',
-    bgClass: 'bg-purple-500',
-    textClass: 'text-white',
-    color: 'purple-500',
-  },
-  {
-    name: 'Pink',
-    bgClass: 'bg-pink-500',
-    textClass: 'text-white',
-    color: 'pink-500',
-  },
-  {
-    name: 'Indigo',
-    bgClass: 'bg-indigo-500',
-    textClass: 'text-white',
-    color: 'indigo-500',
-  },
-  {
-    name: 'Red',
-    bgClass: 'bg-red-500',
-    textClass: 'text-white',
-    color: 'red-500',
-  },
-  {
-    name: 'Teal',
-    bgClass: 'bg-teal-500',
-    textClass: 'text-white',
-    color: 'teal-500',
-  },
-  {
-    name: 'Orange',
-    bgClass: 'bg-orange-500',
-    textClass: 'text-white',
-    color: 'orange-500',
-  },
-];
+};

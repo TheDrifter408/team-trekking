@@ -1,6 +1,7 @@
-import { Column } from '@/types/props/Common';
+import { Column } from '@/types/props/Common.ts';
 import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
+import { QueryLifecycleApi } from '@reduxjs/toolkit/query';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -11,6 +12,9 @@ export const formatTime = (hours: number): string => {
 };
 
 export const getInitials = (name: string) => {
+  if (name.length === 0) {
+    return '';
+  }
   const words = name.trim().split(/\s+/);
   if (words.length === 1) return words[0][0].toUpperCase();
   return (words[0][0] + words[words.length - 1][0]).toUpperCase();
@@ -34,7 +38,6 @@ export const hexToRgba = (hex: string, alpha: number) => {
   return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 };
 
-
 export const columnsEqual = (cols1: Column[], cols2: Column[]): boolean => {
   if (cols1.length !== cols2.length) return false;
 
@@ -52,4 +55,39 @@ export const columnsEqual = (cols1: Column[], cols2: Column[]): boolean => {
   }
 
   return true;
+};
+
+/**
+ * Skips re-fetching if data is already cached within the given number of days.
+ *
+ * @param ttlInDays Number of days to keep data "fresh"
+ */
+export function withPersistentCache(ttlInDays: number) {
+  const ttlInMs = ttlInDays * 24 * 60 * 60 * 1000;
+
+  return {
+    async onQueryStarted<T>(
+      arg: T,
+      api: QueryLifecycleApi<any, any, any, any>
+    ): Promise<void> {
+      const { getState, queryFulfilled, endpointName } = api;
+      const state = getState() as Record<string, any>;
+      const reducerPath = (api as any).api.reducerPath;
+
+      const cacheKey = `${endpointName}(${JSON.stringify(arg)})`;
+      const cacheEntry = state?.[reducerPath]?.queries?.[cacheKey];
+      const lastFetched = cacheEntry?.fulfilledTimeStamp ?? 0;
+
+      if (Date.now() - lastFetched < ttlInMs) {
+        // Skip re-fetch if within TTL
+        return;
+      }
+
+      try {
+        await queryFulfilled;
+      } catch (error) {
+        console.error(`[${endpointName}] Fetch failed:`, error);
+      }
+    },
+  };
 }
