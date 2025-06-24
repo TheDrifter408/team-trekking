@@ -5,7 +5,7 @@ import { Dialog, DialogContentPlain } from '@/components/shadcn-ui/dialog.tsx';
 import { TUTORIAL_TIMER } from '@/lib/constants/appConstant.ts';
 import { Button } from '@/components/shadcn-ui/button';
 import { Eye, FolderCog, Inbox, SquareCheckBig } from 'lucide-react';
-import { useWorkspaceGlobalApiQuery } from '@/service/rtkQueries/workspaceQuery.ts';
+import { useWorkspaceGlobalQuery } from '@/service/rtkQueries/workspaceQuery.ts';
 import { Tutorial } from '@/types/request-response/workspace/ApiRessponse';
 import { LABEL } from '@/lib/constants';
 import { cn } from '@/lib/utils/utils.ts';
@@ -13,7 +13,7 @@ import { cn } from '@/lib/utils/utils.ts';
 export const TutorialDialog = () => {
   const [open, setOpen] = useState(false);
 
-  const { data: workSpaceGlobal } = useWorkspaceGlobalApiQuery();
+  const { data: workSpaceGlobal } = useWorkspaceGlobalQuery();
 
   const [selectedTutorial, setSelectedTutorial] = useState<Tutorial>({
     id: 0,

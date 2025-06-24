@@ -12,6 +12,7 @@ import {
 } from '@/lib/constants/appConstant.ts';
 import { getWelcomeMessage } from '@/lib/utils/utils.ts';
 import { ShareSpaceDialog } from '@/components/common/share-space-dialog';
+import { useWorkspaceDashBoardRecentQuery } from '@/service/rtkQueries/workspaceQuery.ts';
 
 enum Direction {
   NEXT = 'next',
@@ -23,7 +24,8 @@ const Dashboard = () => {
   const [cardsList, setCardsList] = useState(HARD_CARD_LIST);
   const isCardExpanded = expandedCardId !== null;
   const [sharingSpaceDialogOpen, setSharingSpaceDialogOpen] = useState(true);
-  
+  const { data: workspaceRecent } = useWorkspaceDashBoardRecentQuery();
+
   const onCancelFullView = () => {
     setExpandedCardId(null);
   };
@@ -79,6 +81,7 @@ const Dashboard = () => {
             <div className="grid grid-cols-1 gap-4 my-2 xl:grid-cols-2">
               {isCardAdded(HOME_CARD_TITLE.RECENTS) && (
                 <RecentContent
+                  data={workspaceRecent ?? []}
                   isExpanded={false}
                   onExpand={onExpandToFullView}
                   cardTitle={HOME_CARD_TITLE.RECENTS}
@@ -132,7 +135,10 @@ const Dashboard = () => {
         </div>
       )}
       <TutorialDialog />
-      <ShareSpaceDialog isOpen={sharingSpaceDialogOpen} setIsOpen={(open) => setSharingSpaceDialogOpen(!open)}  />
+      <ShareSpaceDialog
+        isOpen={sharingSpaceDialogOpen}
+        setIsOpen={(open) => setSharingSpaceDialogOpen(!open)}
+      />
     </div>
   );
 };
