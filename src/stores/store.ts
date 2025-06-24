@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { authApi } from '@/service/rtkQueries/authQuery.ts';
-import { globalApi } from '@/service/rtkQueries/globalQuery.ts';
+import { workspaceApi } from '@/service/rtkQueries/workspaceQuery.ts';
 import { spaceApi } from '@/service/rtkQueries/spaceQuery.ts';
 import { setupListeners } from '@reduxjs/toolkit/query';
 import { apiErrorMiddleware } from '@/stores/apiErrorMiddleware.ts';
@@ -11,13 +11,16 @@ import storage from 'redux-persist/lib/storage'; // defaults to localStorage
 const persistConfig = {
   key: 'api-persistor',
   storage,
-  whitelist: [globalApi.reducerPath],
+  whitelist: [workspaceApi.reducerPath],
 };
 
 const rootReducer = {
   [authApi.reducerPath]: persistReducer(persistConfig, authApi.reducer),
-  [globalApi.reducerPath]: persistReducer(persistConfig, globalApi.reducer),
   [spaceApi.reducerPath]: persistReducer(persistConfig, spaceApi.reducer),
+  [workspaceApi.reducerPath]: persistReducer(
+    persistConfig,
+    workspaceApi.reducer
+  ),
 };
 
 const configureAppStore = () => {
@@ -28,7 +31,7 @@ const configureAppStore = () => {
         serializableCheck: false, // required for redux-persist
       }).concat([
         authApi.middleware,
-        globalApi.middleware,
+          workspaceApi.middleware,
         spaceApi.middleware,
         apiErrorMiddleware,
       ]),
