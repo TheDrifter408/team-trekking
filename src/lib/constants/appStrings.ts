@@ -221,6 +221,7 @@ export const LABEL = {
   ALWAYS_REQUIRED: 'ALWAYS REQUIRED',
   DEFAULT_VIEW: 'Default View',
   DEFAULT_VIEWS: 'Default Views',
+  EDIT_SPACE_SETTINGS: 'Edit Space settings',
   REQUIRED_VIEWS_DESCRIPTION:
     'When navigating to Spaces, Folders, and Lists in ClickUp, you can set which view(s) are automatically created and required, without having to create them manually. These views cannot be deleted.',
 };

@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -24,7 +24,7 @@ export const DefaultViews = ({ isOpen, setIsOpen, data }: Props) => {
   const transformedViews = useMemo(() => {
     return (data ?? []).map((view) => ({
       id: String(view.id),
-      icon: viewIconMap[view.type.toLowerCase()],
+      icon: viewIconMap[view.type?.toLowerCase()] || viewIconMap['List'],
       defaultView: view.title === 'List',
       name: view.title,
       isSelected: view.isActive,
@@ -91,7 +91,11 @@ function RequiredViewsContent({
 }: {
   requiredViews: RequiredView[];
 }) {
-  const [views, setViews] = useState<RequiredView[]>(requiredViews);
+  const [views, setViews] = useState<RequiredView[]>([]);
+
+  useEffect(() => {
+    setViews(requiredViews);
+  }, [requiredViews]);
 
   const onToggle = (id: string) => {
     setViews((prev) =>

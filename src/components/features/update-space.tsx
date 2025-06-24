@@ -1,5 +1,5 @@
 import { ReactNode, useState } from 'react';
-import { ChevronRight, ChevronsUpDown, CircleDot, Layers } from 'lucide-react';
+import { ChevronRight } from 'lucide-react';
 import { cn, getInitials } from '@/lib/utils/utils.ts';
 import { Assignee, ColorOption, IconOption } from '@/types/props/Common.ts';
 import {
@@ -18,9 +18,11 @@ import { DefaultViews } from '@/components/common/space-default-views.tsx';
 import { DropDownContent } from '@/components/common/space-icon-name-dropdown.tsx';
 import { SelectUsers } from '@/components/common/select-users';
 import { StatusTemplate } from '@/components/features/status-template.tsx';
+import { SpaceDefaults } from '@/components/features/space-defaults.tsx';
 import { useAppContext } from '@/lib/context/app-layout-context';
 
 import { iconOptions, colorOptions, taskNotificationUsers } from '@/mock';
+import { LABEL } from '@/lib/constants';
 
 interface Props {
   isActive: boolean;
@@ -93,7 +95,7 @@ export const UpdateSpace = ({ isActive, setIsActive }: Props) => {
         <DialogHeader>
           <DialogTitle>
             <p className="text-xl text-primary font-semibold">
-              Edit Space settings
+              {LABEL.EDIT_SPACE_SETTINGS}
             </p>
           </DialogTitle>
           <p className="text-base text-muted-foreground mt-1 w-full md:w-[90%]">
@@ -194,28 +196,10 @@ export const UpdateSpace = ({ isActive, setIsActive }: Props) => {
         )}
         <Separator decorative={false} className={'!h-[.5px]'} />
 
-        <SettingsCard
-          icon={<Layers className="h-[18px] text-primary" />}
-          title="Default views"
-          content="List, Board, Team, Calendar, Gantt, Timeline, Activity, Workload, Map, Mind Map, Table"
-          onClickSettings={onClickDefaultView}
-        />
-
-        <SettingsCard
-          icon={<CircleDot className="h-[18px] text-primary" />}
-          title="Task statuses"
-          isList
-          colorItems={colorOptions.map((c) => ({
-            name: c.name,
-            color: c.name.toLowerCase(),
-          }))}
-          onClickSettings={onClickStatus}
-        />
-
-        <SettingsCard
-          icon={<ChevronsUpDown className="h-[18px] text-primary" />}
-          title="ClickApps"
-          content="Time Tracking, Sprint Points, Priority, Tags, Time Estimates, Remap Subtask Due Dates, Multiple Assignees, Email, Work In Progress Limits, Income"
+        <SpaceDefaults
+          colorOptions={colorOptions}
+          onClickDefaultView={onClickDefaultView}
+          onClickStatus={onClickStatus}
         />
         <DialogFooter className={''}>
           <Button variant={'default'} className={'bg-theme-main'}>
