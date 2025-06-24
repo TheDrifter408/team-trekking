@@ -242,4 +242,7 @@ export const LABEL = {
   SAVE_CHANGES: 'Save Changes',
   PROJECTX_MOON: 'ProjecX Moon',
   DEFAULT_INITIAL: 'P',
+  EDIT_SPACE_STATUS: 'Edit Space Status',
+  STATUS_TEMPLATE: 'Status template',
+  SAVE_TEMPLATE: 'Save Template',
 };

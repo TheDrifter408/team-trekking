@@ -31,6 +31,7 @@ import { Input } from '@/components/shadcn-ui/input.tsx';
 import { Info, GripVertical, Ellipsis } from 'lucide-react';
 import { Button } from '@/components/shadcn-ui/button.tsx';
 import { cn } from '@/lib/utils/utils.ts';
+import { LABEL } from '@/lib/constants/appStrings.ts';
 import {
   DndContext,
   DragEndEvent,
@@ -49,20 +50,7 @@ import {
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { SyntheticListenerMap } from '@dnd-kit/core/dist/hooks/utilities';
-
-// Types
-interface TaskTemplate {
-  id: number;
-  name: string;
-  statuses: TaskStatus[];
-}
-
-interface TaskStatus {
-  id: number;
-  name: string;
-  color: string;
-  category: string;
-}
+import { StatusItem } from '@/types/request-response/space/ApiResponse.ts';
 
 interface Category {
   id: string;
@@ -72,7 +60,7 @@ interface Category {
 
 interface CategoryStatusGroup {
   description: string;
-  statuses: TaskStatus[];
+  statuses: StatusItem[];
 }
 
 interface StatusesByCategory {
@@ -82,33 +70,31 @@ interface StatusesByCategory {
 interface Props {
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
+  data?: Record<string, StatusItem[]>;
 }
 
-const getFilteredTemplates = (
-  templates: TaskTemplate[],
-  query: string
-): TaskTemplate[] => {
+const getFilteredTemplates = (templates: any[], query: string): any[] => {
   return templates.filter((template) =>
     template.name.toLowerCase().includes(query.toLowerCase())
   );
 };
 
 const getCurrentTemplate = (
-  templates: TaskTemplate[],
+  templates: any[],
   templateName: string
-): TaskTemplate | undefined => {
+): any | undefined => {
   return templates.find((template) => template.name === templateName);
 };
 
 const getStatusesByCategory = (
-  currentTemplate: TaskTemplate | undefined,
+  statusData: Record<string, StatusItem[]> | undefined,
   categories: Category[]
 ): StatusesByCategory => {
-  if (!currentTemplate) return {};
+  if (!statusData) return {};
 
   const statusesByCategory: StatusesByCategory = {};
 
-  // Initialize categories
+  // Initialize categories from the predefined list
   categories.forEach((category) => {
     statusesByCategory[category.id] = {
       description: category.description,
@@ -116,16 +102,36 @@ const getStatusesByCategory = (
     };
   });
 
-  currentTemplate.statuses.forEach((status) => {
-    if (statusesByCategory[status.category]) {
-      statusesByCategory[status.category].statuses.push(status);
+  // Map the API data to categories
+  // The API data has keys like "Not Started", "Active", "Done", "Closed"
+  // We need to map these to our category structure
+  Object.entries(statusData).forEach(([categoryKey, statuses]) => {
+    // Find matching category or create a new one
+    const existingCategory = categories.find((cat) => cat.id === categoryKey);
+    if (existingCategory) {
+      statusesByCategory[categoryKey] = {
+        description: existingCategory.description,
+        statuses: statuses.map((status) => ({
+          ...status,
+          category: categoryKey,
+        })),
+      };
+    } else {
+      // Create new category if it doesn't exist in predefined categories
+      statusesByCategory[categoryKey] = {
+        description: categoryKey,
+        statuses: statuses.map((status) => ({
+          ...status,
+          category: categoryKey,
+        })),
+      };
     }
   });
 
   return statusesByCategory;
 };
 
-export const StatusTemplate = ({ isOpen, setIsOpen }: Props) => {
+export const StatusTemplate = ({ isOpen, setIsOpen, data }: Props) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTemplate, setSelectedTemplate] = useState(
     taskTemplates.templates[0]?.name ?? ''
@@ -143,14 +149,29 @@ export const StatusTemplate = ({ isOpen, setIsOpen }: Props) => {
     selectedTemplate
   );
 
-  // Set initial status groups
   useEffect(() => {
-    const groups = getStatusesByCategory(
-      currentTemplate,
-      taskTemplates.categories
-    );
-    setStatusGroups(groups);
-  }, [currentTemplate]);
+    if (data) {
+      // Use the data prop when available (from selected workflow template)
+      const groups = getStatusesByCategory(data, taskTemplates.categories);
+      setStatusGroups(groups);
+    } else if (currentTemplate) {
+      // Fallback to current template logic for backward compatibility
+      const groups = getStatusesByCategory(
+        currentTemplate.statuses?.reduce(
+          (acc: Record<string, StatusItem[]>, status: any) => {
+            if (!acc[status.category]) {
+              acc[status.category] = [];
+            }
+            acc[status.category].push(status);
+            return acc;
+          },
+          {}
+        ),
+        taskTemplates.categories
+      );
+      setStatusGroups(groups);
+    }
+  }, [currentTemplate, data]);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -160,8 +181,8 @@ export const StatusTemplate = ({ isOpen, setIsOpen }: Props) => {
     })
   );
 
-  // Handle when drag starts
-  const handleDragStart = (event: DragStartEvent) => {
+  // on when drag starts
+  const onDragStart = (event: DragStartEvent) => {
     const { active } = event;
     setActiveId(active.id as number);
 
@@ -177,8 +198,8 @@ export const StatusTemplate = ({ isOpen, setIsOpen }: Props) => {
     }
   };
 
-  // Handle when dragging over a different category
-  const handleDragOver = (event: DragOverEvent) => {
+  // on when dragging over a different category
+  const onDragOver = (event: DragOverEvent) => {
     const { over } = event;
 
     if (!over || !activeCategory) return;
@@ -229,8 +250,8 @@ export const StatusTemplate = ({ isOpen, setIsOpen }: Props) => {
     }
   };
 
-  // Handle when drag ends
-  const handleDragEnd = (event: DragEndEvent) => {
+  // on when drag ends
+  const onDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
 
     if (!over || !activeCategory) {
@@ -251,7 +272,7 @@ export const StatusTemplate = ({ isOpen, setIsOpen }: Props) => {
       }
     }
 
-    // If we're in the same category, handle reordering
+    // If we're in the same category, on reordering
     if (targetCategory === activeCategory && active.id !== over.id) {
       setStatusGroups((current) => {
         const statusList = [...current[activeCategory].statuses];
@@ -283,14 +304,14 @@ export const StatusTemplate = ({ isOpen, setIsOpen }: Props) => {
       <DialogContent className="!max-w-[690px] flex flex-col">
         <DialogHeader>
           <DialogTitle className="text-2xl">
-            Edit Space Status
+            {LABEL.EDIT_SPACE_STATUS}
             <div className="border-b mt-3" />
           </DialogTitle>
         </DialogHeader>
         <div className="flex flex-1 rounded-md overflow-hidden">
           <div className="w-[40%] p-2">
             <span className="font-medium text-sm text-muted-foreground">
-              Status template
+              {LABEL.STATUS_TEMPLATE}
             </span>
             <Select
               value={selectedTemplate}
@@ -326,20 +347,26 @@ export const StatusTemplate = ({ isOpen, setIsOpen }: Props) => {
             <DndContext
               sensors={sensors}
               collisionDetection={closestCenter}
-              onDragStart={handleDragStart}
-              onDragOver={handleDragOver}
-              onDragEnd={handleDragEnd}
+              onDragStart={onDragStart}
+              onDragOver={onDragOver}
+              onDragEnd={onDragEnd}
             >
               <div className="px-4">
-                {taskTemplates.categories.map(
-                  (category: Category) =>
-                    statusGroups[category.id]?.statuses.length > 0 && (
-                      <div key={category.id} className="mt-4">
-                        <TemplateCategory category={category} />
+                {Object.entries(statusGroups).map(
+                  ([categoryId, group]) =>
+                    group.statuses.length > 0 && (
+                      <div key={categoryId} className="mt-4">
+                        <TemplateCategory
+                          category={{
+                            id: categoryId,
+                            description: group.description,
+                            status: group.statuses.map((s) => s.id),
+                          }}
+                        />
                         <div className="space-y-1 mt-2">
                           <CategoryStatusList
-                            statuses={statusGroups[category.id].statuses}
-                            categoryId={category.id}
+                            statuses={group.statuses}
+                            categoryId={categoryId}
                           />
                         </div>
                       </div>
@@ -351,7 +378,9 @@ export const StatusTemplate = ({ isOpen, setIsOpen }: Props) => {
         </div>
         <DialogFooter className="border-t-theme-main pt-3">
           <div className="flex justify-end w-full">
-            <Button className={'bg-theme-main text-base'}>Save Template</Button>
+            <Button className={'bg-theme-main text-base'}>
+              {LABEL.SAVE_TEMPLATE}
+            </Button>
           </div>
         </DialogFooter>
       </DialogContent>
@@ -359,11 +388,11 @@ export const StatusTemplate = ({ isOpen, setIsOpen }: Props) => {
   );
 };
 
-// Component to handle the list of statuses in a category
+// Component to on the list of statuses in a category
 function CategoryStatusList({
   statuses,
 }: {
-  statuses: TaskStatus[];
+  statuses: StatusItem[];
   categoryId: string;
 }) {
   return (
@@ -409,7 +438,7 @@ function AddStatusItem() {
 }
 
 // Wrapper component that adds drag-and-drop functionality to StatusItem
-function SortableStatusItem({ status }: { status: TaskStatus }) {
+function SortableStatusItem({ status }: { status: StatusItem }) {
   const {
     attributes,
     listeners,
@@ -428,33 +457,33 @@ function SortableStatusItem({ status }: { status: TaskStatus }) {
 
   return (
     <div ref={setNodeRef} style={style} {...attributes}>
-      <StatusItem
+      <StatusItemComponent
         status={status}
-        dragHandleProps={listeners}
+        dragonProps={listeners}
         isDragging={isDragging}
       />
     </div>
   );
 }
 
-function StatusItem({
+function StatusItemComponent({
   status,
-  dragHandleProps = {},
+  dragonProps = {},
   isDragging = false,
 }: {
-  status: TaskStatus;
-  dragHandleProps?: SyntheticListenerMap;
+  status: StatusItem;
+  dragonProps?: SyntheticListenerMap;
   isDragging?: boolean;
 }) {
   const [isEditing, setIsEditing] = useState(false);
   const [statusName, setStatusName] = useState(status.name);
 
-  // Handle when user finishes editing
+  // on when user finishes editing
   const onBlur = () => {
     setIsEditing(false);
   };
 
-  // Handle key press events (e.g., Enter to save)
+  // on key press events (e.g., Enter to save)
   const onKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
       setIsEditing(false);
@@ -485,7 +514,7 @@ function StatusItem({
         // Editing mode - Input field with icons
         <div className="flex items-center w-full">
           <div className="flex items-center flex-1 px-1">
-            <div {...dragHandleProps} onClick={(e) => e.stopPropagation()}>
+            <div {...dragonProps} onClick={(e) => e.stopPropagation()}>
               <GripVertical
                 size={14}
                 className="text-muted-foreground ml-1 mr-2 cursor-grab"
@@ -521,7 +550,7 @@ function StatusItem({
       ) : (
         <>
           <div className="flex items-center flex-1">
-            <div {...dragHandleProps} onClick={(e) => e.stopPropagation()}>
+            <div {...dragonProps} onClick={(e) => e.stopPropagation()}>
               <GripVertical
                 size={14}
                 className="text-muted-foreground mx-1 cursor-grab"

@@ -188,7 +188,6 @@ export const CreateSpace = ({ createSpaceOpen, setCreateSpaceOpen }: Props) => {
           </div>
         </DialogContent>
       </Dialog>
-
       <CreateSpaceWorkflow
         isOpen={isWorkflowOpen}
         setIsOpen={setIsWorkflowOpen}

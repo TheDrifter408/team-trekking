@@ -14,7 +14,10 @@ import { StatusTemplate } from '@/components/features/status-template';
 import { cn } from '@/lib/utils/utils.ts';
 import { useAppContext } from '@/lib/context/app-layout-context.tsx';
 import { LABEL } from '@/lib/constants/appStrings.ts';
-import { View } from '@/types/request-response/space/ApiResponse.ts';
+import {
+  View,
+  StatusItem,
+} from '@/types/request-response/space/ApiResponse.ts';
 
 interface Props {
   isOpen: boolean;
@@ -29,6 +32,9 @@ export const CreateSpaceWorkflow = ({ isOpen, setIsOpen, onBack }: Props) => {
 
   const [selectedTemplate, setSelectedTemplate] = useState<number | null>(1);
   const [defaultViewData, setDefaultViewData] = useState<View[]>([]);
+  const [taskStatuses, setTaskStatuses] = useState<
+    Record<string, StatusItem[]>
+  >({});
 
   const templates = spaceGlobal?.workflow ?? [];
 
@@ -36,6 +42,7 @@ export const CreateSpaceWorkflow = ({ isOpen, setIsOpen, onBack }: Props) => {
     const selected = templates.find((tpl) => tpl.id === templateId);
     setSelectedTemplate(templateId);
     setDefaultViewData(selected?.defaultView || []);
+    setTaskStatuses(selected?.statusItems || {});
   };
 
   return (
@@ -106,6 +113,7 @@ export const CreateSpaceWorkflow = ({ isOpen, setIsOpen, onBack }: Props) => {
           setIsTaskStatusOpen(false);
           setIsOpen(true);
         }}
+        data={taskStatuses}
       />
     </>
   );
