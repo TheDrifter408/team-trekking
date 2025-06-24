@@ -1,21 +1,27 @@
 import { FC } from 'react';
-import { recentData } from '@/mock';
-import { Circle, List } from 'lucide-react';
+import { List, Folder } from 'lucide-react';
 import { CardContent } from '@/components/shadcn-ui/card';
 import { HoverableCard } from './hoverable-card';
 import { cn } from '@/lib/utils/utils.ts';
+import { WorkSpaceRecent } from '@/types/request-response/workspace/ApiRessponse.ts';
 
 interface Props {
+  data: WorkSpaceRecent[];
   isExpanded: boolean;
   onExpand: (cardTitle: string) => void;
   cardTitle: string;
 }
 
-const RecentContent = ({ isExpanded, onExpand, cardTitle }: Props) => (
-  <Recents isExpanded={isExpanded} onExpand={onExpand} cardTitle={cardTitle} />
+const RecentContent = ({ data, isExpanded, onExpand, cardTitle }: Props) => (
+  <Recents
+    data={data}
+    isExpanded={isExpanded}
+    onExpand={onExpand}
+    cardTitle={cardTitle}
+  />
 );
 
-const Recents: FC<Props> = ({ isExpanded, onExpand, cardTitle }) => (
+const Recents: FC<Props> = ({ data, isExpanded, onExpand, cardTitle }) => (
   <HoverableCard
     isExpanded={isExpanded}
     title={cardTitle}
@@ -27,19 +33,20 @@ const Recents: FC<Props> = ({ isExpanded, onExpand, cardTitle }) => (
         isExpanded && 'pb-[90px]'
       )}
     >
-      <Content className={isExpanded ? 'flex-grow' : ''} />
+      <Content data={data} className={isExpanded ? 'flex-grow' : ''} />
     </CardContent>
   </HoverableCard>
 );
 
 interface ContentProps {
+  data: WorkSpaceRecent[];
   className?: string;
 }
 
-const Content: FC<ContentProps> = ({ className }) => (
+const Content: FC<ContentProps> = ({ data, className }) => (
   <div className={cn('space-y-1', className)}>
-    {recentData.map((item, index) => {
-      const Icon = item.type === 'List' ? List : Circle;
+    {data.map((item, index) => {
+      const Icon = item.type === 'List' ? List : Folder;
       return (
         <div
           key={index}
@@ -54,7 +61,7 @@ const Content: FC<ContentProps> = ({ className }) => (
                 {item.name}
               </span>
               <span className="truncate text-muted-foreground text-base ">
-                {item.location}
+                {item.location.name}
               </span>
             </div>
           </div>
