@@ -1,12 +1,12 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import axiosBaseQuery from '@/service/baseQuery.ts';
 import { ApiResponse } from '@/types/request-response/ApiResponse.ts';
+import { API_URLS } from '@/lib/constants';
+import { withPersistentCache } from '@/lib/utils/utils.ts';
 import {
   WorkSpaceGlobal,
   WorkSpaceRecent,
-} from '@/types/request-response/workspace/ApiRessponse.ts';
-import { API_URLS } from '@/lib/constants';
-import { withPersistentCache } from '@/lib/utils/utils.ts';
+} from '@/types/request-response/workspace/ApiResponse';
 
 export const workspaceApi = createApi({
   reducerPath: 'workspaceApi',
