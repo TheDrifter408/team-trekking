@@ -17,7 +17,7 @@ import {
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { DataTableRow } from './data-table-row';
 import { flattenTasks, removeTaskById, insertTaskAt } from '@/mock/task.ts';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/utils/utils.ts';
 import { Task } from '@/types/props/Common.ts';
 
 interface DataTableBodyProps {
