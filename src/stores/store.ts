@@ -1,6 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { authApi } from '@/service/rtkQueries/authQuery.ts';
 import { globalApi } from '@/service/rtkQueries/globalQuery.ts';
+import { spaceApi } from '@/service/rtkQueries/spaceQuery.ts';
 import { setupListeners } from '@reduxjs/toolkit/query';
 import { apiErrorMiddleware } from '@/stores/apiErrorMiddleware.ts';
 
@@ -16,6 +17,7 @@ const persistConfig = {
 const rootReducer = {
   [authApi.reducerPath]: persistReducer(persistConfig, authApi.reducer),
   [globalApi.reducerPath]: persistReducer(persistConfig, globalApi.reducer),
+  [spaceApi.reducerPath]: persistReducer(persistConfig, spaceApi.reducer),
 };
 
 const configureAppStore = () => {
@@ -24,7 +26,12 @@ const configureAppStore = () => {
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware({
         serializableCheck: false, // required for redux-persist
-      }).concat([authApi.middleware, globalApi.middleware, apiErrorMiddleware]),
+      }).concat([
+        authApi.middleware,
+        globalApi.middleware,
+        spaceApi.middleware,
+        apiErrorMiddleware,
+      ]),
     devTools: process.env.NODE_ENV === 'development',
   });
 
