@@ -1,5 +1,7 @@
 import { ReactNode, useState } from 'react';
 import { ChevronRight, ChevronsUpDown, CircleDot, Layers } from 'lucide-react';
+import { cn, getInitials } from '@/lib/utils/utils.ts';
+import { Assignee, ColorOption, IconOption } from '@/types/props/Common.ts';
 import {
   Dialog,
   DialogContent,
@@ -12,20 +14,21 @@ import { Input } from '@/components/shadcn-ui/input.tsx';
 import { Separator } from '@/components/shadcn-ui/separator.tsx';
 import { Textarea } from '@/components/shadcn-ui/textarea.tsx';
 import { Switch } from '@/components/shadcn-ui/switch.tsx';
-import { cn, getInitials } from '@/lib/utils/utils.ts';
 import { DefaultViews } from '@/components/common/space-default-views.tsx';
 import { DropDownContent } from '@/components/common/space-icon-name-dropdown.tsx';
-import { StatusTemplate } from '@/components/features/status-template.tsx';
-import { Assignee, ColorOption, IconOption } from '@/types/props/Common.ts';
-import { iconOptions, colorOptions, taskNotificationUsers } from '@/mock';
 import { SelectUsers } from '@/components/common/select-users';
+import { StatusTemplate } from '@/components/features/status-template.tsx';
+import { useAppContext } from '@/lib/context/app-layout-context';
 
-interface UpdateSpaceProps {
+import { iconOptions, colorOptions, taskNotificationUsers } from '@/mock';
+
+interface Props {
   isActive: boolean;
   setIsActive: (isActive: boolean) => void;
 }
 
-export const UpdateSpace = ({ isActive, setIsActive }: UpdateSpaceProps) => {
+export const UpdateSpace = ({ isActive, setIsActive }: Props) => {
+  const { spaceGlobal } = useAppContext();
   const [selectedIcon, setSelectedIcon] = useState<IconOption | null>(null);
   const [selectedColor, setSelectedColor] = useState<ColorOption>(
     colorOptions[0]
@@ -80,6 +83,8 @@ export const UpdateSpace = ({ isActive, setIsActive }: UpdateSpaceProps) => {
   const onToggleInvitedUsers = (assignees: Assignee[]) => {
     setInvitedUsers(assignees);
   };
+
+  const defaultView = spaceGlobal?.defaultView;
 
   return (
     <Dialog open={isActive} onOpenChange={onClose} modal={true}>
@@ -218,7 +223,12 @@ export const UpdateSpace = ({ isActive, setIsActive }: UpdateSpaceProps) => {
           </Button>
         </DialogFooter>
       </DialogContent>
-      <DefaultViews isOpen={isDefaultViewOpen} setIsOpen={onCloseDefaultView} />
+      {/* Extra dialogs */}
+      <DefaultViews
+        data={defaultView}
+        isOpen={isDefaultViewOpen}
+        setIsOpen={onCloseDefaultView}
+      />
       <StatusTemplate isOpen={isTaskStatusOpen} setIsOpen={onCloseStatus} />
     </Dialog>
   );

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -7,26 +7,39 @@ import {
 } from '@/components/shadcn-ui/dialog.tsx';
 import { Switch } from '@/components/shadcn-ui/switch.tsx';
 import { Button } from '@/components/shadcn-ui/button.tsx';
-import { requiredViews } from '@/mock';
+import { viewIconMap } from '@/lib/constants/viewIcons';
+import { View } from '@/types/request-response/space/ApiResponse.ts';
+import { LABEL } from '@/lib/constants/appStrings';
 
 interface Props {
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
+  data?: View[] | null;
 }
 
-export const DefaultViews = ({ isOpen, setIsOpen }: Props) => {
-  const [activeView, setActiveView] = useState<string>('Required Views');
-  const views = ['Required Views', 'Default View Templates'];
+export const DefaultViews = ({ isOpen, setIsOpen, data }: Props) => {
+  const [activeView, setActiveView] = useState<string>(LABEL.REQUIRED_VIEWS);
+  const views = [LABEL.REQUIRED_VIEWS, LABEL.DEFAULT_VIEW_TEMPLATES];
+
+  const transformedViews = useMemo(() => {
+    return (data ?? []).map((view) => ({
+      id: String(view.id),
+      icon: viewIconMap[view.type.toLowerCase()],
+      defaultView: view.title === 'List',
+      name: view.title,
+      isSelected: view.isActive,
+    }));
+  }, [data]);
 
   return (
     <Dialog open={isOpen} onOpenChange={() => setIsOpen(false)}>
-      <DialogContent className="!max-w-[690px] flex flex-col">
+      <DialogContent className="!max-w-[690px] min-h-[90vh] flex flex-col">
         <DialogHeader className="w-full flex items-center justify-center">
           <DialogTitle className="text-3xl mt-4">
-            Default settings for Views
+            {LABEL.DEFAULT_SETTINGS_FOR_VIEWS}
           </DialogTitle>
         </DialogHeader>
-        <div className="w-full mt-5 ">
+        <div className="w-full mt-5 max-h-[90vh]">
           <div className="relative w-full px-[40px] flex border-b-[1px]">
             {views.map((view, i) => (
               <div
@@ -43,9 +56,9 @@ export const DefaultViews = ({ isOpen, setIsOpen }: Props) => {
           </div>
         </div>
         <div className="px-[40px] flex justify-center">
-          <div className="w-full ">
-            {activeView === 'Required Views' ? (
-              <RequiredViewsContent />
+          <div className="w-full">
+            {activeView === LABEL.REQUIRED_VIEWS ? (
+              <RequiredViewsContent requiredViews={transformedViews} />
             ) : (
               <DefaultViewsContent />
             )}
@@ -53,10 +66,11 @@ export const DefaultViews = ({ isOpen, setIsOpen }: Props) => {
         </div>
         <div className="px-[40px] flex justify-center mt-auto mb-4">
           <Button
-            size={'lg'}
+            onClick={() => setIsOpen(false)}
+            size="lg"
             className="w-full bg-theme-main-dark text-base font-medium justify-center items-center"
           >
-            Done
+            {LABEL.DONE}
           </Button>
         </div>
       </DialogContent>
@@ -64,8 +78,20 @@ export const DefaultViews = ({ isOpen, setIsOpen }: Props) => {
   );
 };
 
-function RequiredViewsContent() {
-  const [views, setViews] = useState(requiredViews);
+interface RequiredView {
+  id: string;
+  icon: React.FC<{ className?: string }>;
+  name: string;
+  defaultView: boolean;
+  isSelected: boolean;
+}
+
+function RequiredViewsContent({
+  requiredViews,
+}: {
+  requiredViews: RequiredView[];
+}) {
+  const [views, setViews] = useState<RequiredView[]>(requiredViews);
 
   const onToggle = (id: string) => {
     setViews((prev) =>
@@ -78,20 +104,17 @@ function RequiredViewsContent() {
   return (
     <div className="w-full flex flex-col items-center gap-6">
       <div className="text-center text-base max-w-[550px]">
-        When navigating to Spaces, Folders, and Lists in ClickUp, you can set
-        which view(s) are automatically created and required, without having to
-        create them manually. These views cannot be deleted.
+        {LABEL.REQUIRED_VIEWS_DESCRIPTION}
       </div>
-      <div className="grid grid-cols-2 grid-flow-row-dense gap-y-4 gap-x-6 w-full max-w-[550px] items-end">
+      <div className="grid grid-cols-2 gap-y-4 gap-x-6 w-full max-w-[550px] items-end">
         {views.map((view) => (
           <div
             key={view.id}
             className="relative flex flex-col border-[2px] rounded-sm border-theme-main self-end"
-            style={{ height: 'auto' }}
           >
             {view.defaultView && (
               <div className="bg-theme-main text-white text-sm font-medium text-center px-2">
-                ALWAYS REQUIRED
+                {LABEL.ALWAYS_REQUIRED}
               </div>
             )}
             <div className="flex p-4 justify-between items-center">
@@ -102,7 +125,7 @@ function RequiredViewsContent() {
               <div className="gap-2 flex items-center">
                 {view.defaultView && (
                   <span className="text-sm font-medium text-theme-main">
-                    Default View
+                    {LABEL.DEFAULT_VIEW}
                   </span>
                 )}
                 <Switch
@@ -123,7 +146,7 @@ function RequiredViewsContent() {
 function DefaultViewsContent() {
   return (
     <div className="w-full flex justify-center">
-      <div>Default views</div>
+      <div>{LABEL.DEFAULT_VIEWS}</div>
     </div>
   );
 }

@@ -213,5 +213,14 @@ export const LABEL = {
   SAVE: 'Save',
   WORKSPACE_COLOR: 'Workspace color',
   ADD_CUSTOM_COLOR: 'Add custom avatar',
-  WATCH_THESE_VIDEOS: 'Watch these quick videos to know how Team Trekking can transform your productivity.'
+  WATCH_THESE_VIDEOS:
+    'Watch these quick videos to know how Team Trekking can transform your productivity.',
+  REQUIRED_VIEWS: 'Required Views',
+  DEFAULT_VIEW_TEMPLATES: 'Default View Templates',
+  DEFAULT_SETTINGS_FOR_VIEWS: 'Default settings for Views',
+  ALWAYS_REQUIRED: 'ALWAYS REQUIRED',
+  DEFAULT_VIEW: 'Default View',
+  DEFAULT_VIEWS: 'Default Views',
+  REQUIRED_VIEWS_DESCRIPTION:
+    'When navigating to Spaces, Folders, and Lists in ClickUp, you can set which view(s) are automatically created and required, without having to create them manually. These views cannot be deleted.',
 };
