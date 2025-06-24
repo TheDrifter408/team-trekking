@@ -20,7 +20,7 @@ export const DefaultViews = ({ isOpen, setIsOpen }: Props) => {
 
   return (
     <Dialog open={isOpen} onOpenChange={() => setIsOpen(false)}>
-      <DialogContent className="!max-w-[690px] flex flex-col h-[80%]">
+      <DialogContent className="!max-w-[690px] flex flex-col">
         <DialogHeader className="w-full flex items-center justify-center">
           <DialogTitle className="text-3xl mt-4">
             Default settings for Views
