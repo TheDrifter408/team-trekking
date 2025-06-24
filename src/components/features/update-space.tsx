@@ -1,5 +1,7 @@
 import { ReactNode, useState } from 'react';
 import { ChevronRight, ChevronsUpDown, CircleDot, Layers } from 'lucide-react';
+import { cn, getInitials } from '@/lib/utils/utils.ts';
+import { Assignee, ColorOption, IconOption } from '@/types/props/Common.ts';
 import {
   Dialog,
   DialogContent,
@@ -12,20 +14,21 @@ import { Input } from '@/components/shadcn-ui/input.tsx';
 import { Separator } from '@/components/shadcn-ui/separator.tsx';
 import { Textarea } from '@/components/shadcn-ui/textarea.tsx';
 import { Switch } from '@/components/shadcn-ui/switch.tsx';
-import { cn, getInitials } from '@/lib/utils/utils.ts';
 import { DefaultViews } from '@/components/common/space-default-views.tsx';
 import { DropDownContent } from '@/components/common/space-icon-name-dropdown.tsx';
-import { StatusTemplate } from '@/components/features/status-template.tsx';
-import { Assignee, ColorOption, IconOption } from '@/types/props/Common.ts';
-import { iconOptions, colorOptions, taskNotificationUsers } from '@/mock';
 import { SelectUsers } from '@/components/common/select-users';
+import { StatusTemplate } from '@/components/features/status-template.tsx';
+import { useAppContext } from '@/lib/context/app-layout-context';
 
-interface UpdateSpaceProps {
+import { iconOptions, colorOptions, taskNotificationUsers } from '@/mock';
+
+interface Props {
   isActive: boolean;
-  onClose: () => void;
+  setIsActive: (isActive: boolean) => void;
 }
 
-export const UpdateSpace = ({ isActive, onClose }: UpdateSpaceProps) => {
+export const UpdateSpace = ({ isActive, setIsActive }: Props) => {
+  const { spaceGlobal } = useAppContext();
   const [selectedIcon, setSelectedIcon] = useState<IconOption | null>(null);
   const [selectedColor, setSelectedColor] = useState<ColorOption>(
     colorOptions[0]
@@ -40,6 +43,10 @@ export const UpdateSpace = ({ isActive, onClose }: UpdateSpaceProps) => {
   const [isTaskStatusOpen, setIsTaskStatusOpen] = useState<boolean>(false);
   const initials = getInitials(spaceName)[0] ?? 'P';
 
+  const onClose = () => {
+    setIsActive(false);
+  };
+
   const onSelectIcon = (icon: IconOption) => {
     setSelectedIcon(icon);
   };
@@ -53,10 +60,20 @@ export const UpdateSpace = ({ isActive, onClose }: UpdateSpaceProps) => {
   };
 
   const onClickDefaultView = () => {
+    setIsActive(false);
     setIsDefaultViewOpen(true);
   };
+  const onCloseDefaultView = () => {
+    setIsDefaultViewOpen(false);
+    setIsActive(true);
+  };
   const onClickStatus = () => {
+    setIsActive(false);
     setIsTaskStatusOpen(true);
+  };
+  const onCloseStatus = () => {
+    setIsTaskStatusOpen(false);
+    setIsActive(true);
   };
 
   const onSelectedUser = (assignees: Assignee[]) => {
@@ -67,9 +84,11 @@ export const UpdateSpace = ({ isActive, onClose }: UpdateSpaceProps) => {
     setInvitedUsers(assignees);
   };
 
+  const defaultView = spaceGlobal?.defaultView;
+
   return (
-    <Dialog open={isActive} onOpenChange={onClose} modal={false}>
-      <DialogContent className="!max-w-[700px] flex flex-col h-[85%]">
+    <Dialog open={isActive} onOpenChange={onClose} modal={true}>
+      <DialogContent className="!max-w-[700px] flex flex-col">
         {/* Header Text */}
         <DialogHeader>
           <DialogTitle>
@@ -82,7 +101,11 @@ export const UpdateSpace = ({ isActive, onClose }: UpdateSpaceProps) => {
             Lists, workflows, and settings.
           </p>
         </DialogHeader>
-        <div className={'col-span-2 space-x-2 items-center grid grid-cols-2'}>
+        <div
+          className={
+            'col-span-2 space-x-2 max-h-[90vh] overflow-y-auto items-center grid grid-cols-2'
+          }
+        >
           {/* Icon, Name & Color selection */}
           <div className="">
             <p className="text-base font-medium text-muted-foreground">
@@ -200,14 +223,13 @@ export const UpdateSpace = ({ isActive, onClose }: UpdateSpaceProps) => {
           </Button>
         </DialogFooter>
       </DialogContent>
+      {/* Extra dialogs */}
       <DefaultViews
+        data={defaultView}
         isOpen={isDefaultViewOpen}
-        setIsOpen={setIsDefaultViewOpen}
+        setIsOpen={onCloseDefaultView}
       />
-      <StatusTemplate
-        isOpen={isTaskStatusOpen}
-        setIsOpen={setIsTaskStatusOpen}
-      />
+      <StatusTemplate isOpen={isTaskStatusOpen} setIsOpen={onCloseStatus} />
     </Dialog>
   );
 };

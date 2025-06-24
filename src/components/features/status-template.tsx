@@ -280,7 +280,7 @@ export const StatusTemplate = ({ isOpen, setIsOpen }: Props) => {
 
   return (
     <Dialog open={isOpen} onOpenChange={() => setIsOpen(!isOpen)}>
-      <DialogContent className="!max-w-[690px] flex flex-col h-[80%]">
+      <DialogContent className="!max-w-[690px] flex flex-col">
         <DialogHeader>
           <DialogTitle className="text-2xl">
             Edit Space Status

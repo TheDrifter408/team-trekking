@@ -6,7 +6,7 @@ import {
   InterestedFeature,
   ManageType,
   WorkType,
-} from '@/types/request-response/workspace/ApiRessponse.ts';
+} from '@/types/request-response/workspace/ApiResponse.ts';
 
 interface User {
   name: string;

@@ -18,7 +18,6 @@ export const LABEL = {
   DESELECT_ALL: 'Deselect all',
   WHAT_WILL_YOU_USE_THIS_WORKSPACE_FOR: 'What will you use this workspace for?',
   WHAT_WOULD_YOU_LIKE_TO_MANAGE: 'What would you like to manage?',
-  HOW_DID_YOU_HEAR_ABOUT_THIS: 'How did you hear about this?',
   INVITE_PEOPLE_TO_YOUR_WORKSPACE: 'Invite people to your workspace',
   DO_YOU_USE_ANY_OF_THESE_TOOLS: 'Do you use any of these tools?',
   WHICH_TOOLS_WOULD_YOU_LIKE_TO_INTEGRATE:
@@ -216,4 +215,12 @@ export const LABEL = {
   ADD_CUSTOM_COLOR: 'Add custom avatar',
   WATCH_THESE_VIDEOS:
     'Watch these quick videos to know how Team Trekking can transform your productivity.',
+  REQUIRED_VIEWS: 'Required Views',
+  DEFAULT_VIEW_TEMPLATES: 'Default View Templates',
+  DEFAULT_SETTINGS_FOR_VIEWS: 'Default settings for Views',
+  ALWAYS_REQUIRED: 'ALWAYS REQUIRED',
+  DEFAULT_VIEW: 'Default View',
+  DEFAULT_VIEWS: 'Default Views',
+  REQUIRED_VIEWS_DESCRIPTION:
+    'When navigating to Spaces, Folders, and Lists in ClickUp, you can set which view(s) are automatically created and required, without having to create them manually. These views cannot be deleted.',
 };

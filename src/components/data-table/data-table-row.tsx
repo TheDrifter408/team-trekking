@@ -4,7 +4,7 @@ import { TableCell } from '@/components/shadcn-ui/table';
 import { GripIcon } from 'lucide-react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { cn } from '@/lib/utils.ts';
+import { cn } from '@/lib/utils/utils.ts';
 
 export const DataTableRow = ({
   row,

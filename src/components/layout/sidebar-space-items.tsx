@@ -34,8 +34,6 @@ export const SidebarSpaceItems = ({ name, children }: Props) => {
   const [isRename, setIsRename] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
-  
-
   const onToggleCollapse = () => {
     setIsOpen(!isOpen);
   };
@@ -91,25 +89,37 @@ export const SidebarSpaceItems = ({ name, children }: Props) => {
             </TooltipProvider>
           </div>
         </div>
+        <Button
+          onClick={() => setIsRename(true)}
+          size={'icon'}
+          variant={'ghost'}
+          className={'h-5 w-5'}
+        >
+          <Icon name={'menu03'} />
+        </Button>
         <ContextMenu
-          trigger={
-            <Button size={'icon'} variant={'ghost'} className={'h-5 w-5'}>
-              <Icon name={'menu03'} />
-            </Button>
-          }
+          trigger={null}
           sections={spacesMenuConfig}
           width="w-64"
-          onItemClick={() => { }}
+          onItemClick={() => {}}
           hasButton={true}
           buttonElement={
-            <Button className='w-full mt-2 rounded-xl'>
-              Sharing &amp; Permissions 
+            <Button
+              type={'button'}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation(); // prevent closing ContextMenu
+                setTimeout(() => setIsRename(true), 0); // delay state update to avoid ContextMenu unmount issues
+              }}
+              className="w-full mt-2 rounded-xl"
+            >
+              Sharing &amp; Permissions
             </Button>
           }
         />
       </div>
 
-      <UpdateSpace isActive={isRename} onClose={() => setIsRename(false)} />
+      <UpdateSpace isActive={isRename} setIsActive={setIsRename} />
 
       <CollapsibleContent>
         <motion.div

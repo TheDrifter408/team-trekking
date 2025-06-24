@@ -40,7 +40,7 @@ export const Login = () => {
       setErrorMessage(response.error.data.message);
     } else if (response) {
       saveUser(response as UserResponse);
-      navigate('/home');
+      navigate('/home'); 
     }
   };
   const onForgotPasswordClick = () => {
