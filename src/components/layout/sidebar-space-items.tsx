@@ -97,30 +97,26 @@ export const SidebarSpaceItems = ({ name, children }: Props) => {
         >
           <Icon name={'menu03'} />
         </Button>
-        {/*<ContextMenu*/}
-        {/*  trigger={*/}
-        {/*    <Button size={'icon'} variant={'ghost'} className={'h-5 w-5'}>*/}
-        {/*      <Icon name={'menu03'} />*/}
-        {/*    </Button>*/}
-        {/*  }*/}
-        {/*  sections={spacesMenuConfig}*/}
-        {/*  width="w-64"*/}
-        {/*  onItemClick={() => {}}*/}
-        {/*  hasButton={true}*/}
-        {/*  buttonElement={*/}
-        {/*    <Button*/}
-        {/*      type={'button'}*/}
-        {/*      onClick={(e) => {*/}
-        {/*        e.preventDefault();*/}
-        {/*        e.stopPropagation(); // prevent closing ContextMenu*/}
-        {/*        setTimeout(() => setIsRename(true), 0); // delay state update to avoid ContextMenu unmount issues*/}
-        {/*      }}*/}
-        {/*      className="w-full mt-2 rounded-xl"*/}
-        {/*    >*/}
-        {/*      Sharing &amp; Permissions*/}
-        {/*    </Button>*/}
-        {/*  }*/}
-        {/*/>*/}
+        <ContextMenu
+          trigger={null}
+          sections={spacesMenuConfig}
+          width="w-64"
+          onItemClick={() => {}}
+          hasButton={true}
+          buttonElement={
+            <Button
+              type={'button'}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation(); // prevent closing ContextMenu
+                setTimeout(() => setIsRename(true), 0); // delay state update to avoid ContextMenu unmount issues
+              }}
+              className="w-full mt-2 rounded-xl"
+            >
+              Sharing &amp; Permissions
+            </Button>
+          }
+        />
       </div>
 
       <UpdateSpace isActive={isRename} setIsActive={setIsRename} />

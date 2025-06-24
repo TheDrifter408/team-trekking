@@ -87,7 +87,6 @@ export const DataTableBody = ({
         draggedOverZone: null,
         isDragging: true,
       });
-      console.log('🎯 Drag started:', activeTask.name);
     }
   };
 
@@ -103,13 +102,11 @@ export const DataTableBody = ({
     setActiveDropZoneId(null);
 
     if (!active || !over) {
-      console.log('❌ Drag cancelled - no valid drop target');
       return;
     }
 
     const draggedTask = active.data.current?.task;
     if (!draggedTask) {
-      console.log('❌ No dragged task found');
       return;
     }
 
@@ -131,8 +128,6 @@ export const DataTableBody = ({
       handleDirectRowDrop(draggedTask, over.id);
       return;
     }
-
-    console.log('❌ Unhandled drop type');
   };
 
   const handleDropZoneDrop = (draggedTask: Task, over: any) => {
@@ -146,23 +141,13 @@ export const DataTableBody = ({
       parentId: dropZoneParentId,
     } = dropData;
 
-    console.log('📍 Drop zone details:', {
-      targetTaskId,
-      position,
-      targetDepth,
-      dropZoneParentId,
-      draggedTask: draggedTask.name,
-    });
-
     // Edge case: Prevent dropping on self
     if (draggedTask.id === targetTaskId) {
-      console.log('❌ Cannot drop task on itself');
       return;
     }
 
     // Edge case: Prevent dropping parent on its descendant
     if (isTaskDescendant(draggedTask, targetTaskId)) {
-      console.log('❌ Cannot drop parent on its descendant');
       return;
     }
 
@@ -180,24 +165,18 @@ export const DataTableBody = ({
         // Drop as child of target task
         newParentId = targetTaskId;
         siblingId = ''; // Insert at the beginning of children
-        console.log('📁 Dropping as child of:', targetTask?.name);
       } else {
         // Drop as sibling after target task
         newParentId = dropZoneParentId;
-        console.log('👥 Dropping as sibling after:', targetTask?.name);
       }
     } else {
       // Drop as sibling before target task
       newParentId = dropZoneParentId;
-      console.log(
-        '👥 Dropping as sibling before:',
-        findTaskById(tasks, targetTaskId)?.name
-      );
+      console.log(findTaskById(tasks, targetTaskId)?.name);
     }
 
     // Edge case: Check depth limits
     if (newParentId && getTaskDepth(tasks, newParentId) >= maxDepth - 1) {
-      console.log('❌ Maximum depth exceeded');
       return;
     }
 
@@ -208,15 +187,10 @@ export const DataTableBody = ({
     const targetTask = findTaskById(tasks, targetRowId);
     if (!targetTask) return;
 
-    console.log('🔄 Direct row drop:', draggedTask.name, '->', targetTask.name);
-
     // Only allow reordering within the same parent level
     if (draggedTask.parentId === targetTask.parentId) {
       performTaskMove(draggedTask, targetTask.parentId, targetRowId, 'above');
     } else {
-      console.log(
-        '❌ Cannot reorder across different parent levels via direct drop'
-      );
     }
   };
 
@@ -226,13 +200,6 @@ export const DataTableBody = ({
     siblingId: string,
     position: 'above' | 'below'
   ) => {
-    console.log('🚀 Performing task move:', {
-      taskName: draggedTask.name,
-      newParentId,
-      siblingId,
-      position,
-    });
-
     try {
       // Step 1: Remove the task from its current position
       let updatedTasks = removeTaskById(tasks, draggedTask.id);
@@ -271,14 +238,8 @@ export const DataTableBody = ({
             : null;
           onTaskMove(updatedTask, newParent, position);
         }
-
-        console.log('✅ Task move completed successfully');
-      } else {
-        console.error('❌ Task structure validation failed');
       }
-    } catch (error) {
-      console.error('❌ Error during task move:', error);
-    }
+    } catch (error) {}
   };
 
   const onDragOver = (event: DragOverEvent) => {
