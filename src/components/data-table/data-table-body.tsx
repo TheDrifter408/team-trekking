@@ -110,13 +110,6 @@ export const DataTableBody = ({
       return;
     }
 
-    console.log('🎯 Processing drop:', {
-      draggedTask: draggedTask.name,
-      draggedId: draggedTask.id,
-      overId: over.id,
-      overData: over.data?.current,
-    });
-
     // Handle drop zone drops (hierarchical changes)
     if (typeof over.id === 'string' && over.id.startsWith('dropzone-')) {
       handleDropZoneDrop(draggedTask, over);
@@ -172,7 +165,6 @@ export const DataTableBody = ({
     } else {
       // Drop as sibling before target task
       newParentId = dropZoneParentId;
-      console.log(findTaskById(tasks, targetTaskId)?.name);
     }
 
     // Edge case: Check depth limits
@@ -485,7 +477,6 @@ const validateTaskStructure = (tasks: Task[]): boolean => {
   const validate = (taskList: Task[]): boolean => {
     for (const task of taskList) {
       if (seenIds.has(task.id)) {
-        console.error('Duplicate task ID found:', task.id);
         return false;
       }
       seenIds.add(task.id);
