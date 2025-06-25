@@ -23,7 +23,7 @@ const Dashboard = () => {
   const [expandedCardId, setExpandedCardId] = useState<string | null>(null);
   const [cardsList, setCardsList] = useState(HARD_CARD_LIST);
   const isCardExpanded = expandedCardId !== null;
-  const [sharingSpaceDialogOpen, setSharingSpaceDialogOpen] = useState(true);
+  const [sharingSpaceDialogOpen, setSharingSpaceDialogOpen] = useState(false);
   const { data: workspaceRecent } = useWorkspaceDashBoardRecentQuery();
 
   const onCancelFullView = () => {
