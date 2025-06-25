@@ -257,4 +257,10 @@ export const LABEL = {
   WORKSPACES: 'Workspaces',
   NOTIFICATIONS: 'Notications',
   REFERALS: 'Referrals',
+  WARNING: 'Warning',
+  DELETING_THIS_WORKSPACE_WILL_DELETE_ALL_FILES:
+    'Deleting this Workspace will delete all files, tasks, and history. This action is permanent and cannot be reverted. To continue, please type Workspace name to delete.',
+  ALSO_PERMANENTLY_DELETE_ALL_THIRD_PARTY_DATA:
+    'Also permanently delete all third-party data and do not follow\n' +
+    '                recovery of this Workspace',
 };
