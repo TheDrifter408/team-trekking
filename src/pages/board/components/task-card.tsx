@@ -1,5 +1,4 @@
 import { useState, memo, MouseEvent, useRef, KeyboardEvent } from 'react';
-import { useDraggable } from '@dnd-kit/core';
 import { CSS } from '@dnd-kit/utilities';
 import {
   Calendar,
@@ -25,6 +24,7 @@ import { useAutoFocus } from '@/lib/hooks/use-auto-focus';
 import { MenuItem, SubmenuItem } from '@/types/interfaces/ContextMenu';
 import { useTheme } from '@/lib/context/theme-context';
 import { PRIORITY_COLORS } from '@/mock';
+import { useSortable } from '@dnd-kit/sortable';
 
 const TaskCard = ({
   task,
@@ -33,6 +33,13 @@ const TaskCard = ({
   isSubtask = false,
   isDragOverlay = false,
 }: TaskCardProps) => {
+  // Only make the main tasks draggable, not subtasks
+  const { attributes, listeners, setNodeRef, transform, isDragging } =
+    useSortable({
+      id: task.id,
+      disabled: isSubtask || isDragOverlay,
+    });
+
   const { theme } = useTheme();
   const [showSubtasks, setShowSubtasks] = useState(false);
   const [onEnterTask, setOnEnterTask] = useState(false);
@@ -43,6 +50,26 @@ const TaskCard = ({
   const contentRef = useRef<HTMLDivElement>(null);
 
   const inputRef = useAutoFocus<HTMLDivElement>(isEditingTaskName);
+
+  const onMouseCardEnter = (e: MouseEvent) => {
+    if (isDragOverlay) {
+      return;
+    }
+    e.stopPropagation();
+    setOnEnterTask(true);
+  }
+
+  const onMouseCardLeave = (e: MouseEvent) => {
+    if (isDragOverlay) {
+      return;
+    }
+    e.stopPropagation();
+    // to handle if the ContextMenu is Open
+    if (!isContextMenuOpen) {
+      setOnEnterTask(false);
+    }
+  }
+
 
   const handleKeyDown = (e: KeyboardEvent) => {
     if (e.key === 'Enter') {
@@ -74,28 +101,14 @@ const TaskCard = ({
   };
 
   const hasSubtasks = task.subTask && task.subTask.length > 0;
-  // function to handle if the ContextMenu is Open
-  const onMouseLeave = (e: MouseEvent) => {
-    e.stopPropagation();
-    if (!isContextMenuOpen) {
-      setOnEnterTask(false);
-    }
-  };
-
-  // Only make the main tasks draggable, not subtasks
-  const { attributes, listeners, setNodeRef, transform, isDragging } =
-    useDraggable({
-      id: task.id,
-      disabled: isSubtask || isDragOverlay,
-    });
 
   const style =
     transform && !isDragOverlay
       ? {
-          transform: CSS.Translate.toString(transform),
-          opacity: isDragging ? 0.5 : 1,
-          zIndex: isDragging ? 50 : 'auto',
-        }
+        transform: CSS.Translate.toString(transform),
+        opacity: isDragging ? 0.5 : 1,
+        zIndex: isDragging ? 50 : 'auto',
+      }
       : undefined;
 
   const toggleSubtasks = (e: MouseEvent) => {
@@ -162,18 +175,18 @@ const TaskCard = ({
   return (
     <div>
       <Card
-        ref={isSubtask || isDragOverlay ? undefined : setNodeRef}
+        ref={setNodeRef}
         style={style}
         className={cn(
           className,
           'bg-background cursor-pointer transition-all duration-150 relative py-2',
           isSubtask && 'border-l-4 border-l-primary/30 ',
           isDragOverlay &&
-            'w-[244px] shadow-2xl ring-2 ring-primary z-50 scale-[1.03] border-primary/80 rotate-1 bg-background'
+          'w-[244px] shadow-2xl ring-2 ring-primary z-50 scale-[1.03] rotate-1 bg-background transition-all'
         )}
         {...(isSubtask || isDragOverlay ? {} : { ...attributes, ...listeners })}
-        onMouseEnter={() => setOnEnterTask(true)}
-        onMouseLeave={(e) => onMouseLeave(e)}
+        onMouseEnter={(e) => onMouseCardEnter(e)}
+        onMouseLeave={(e) => onMouseCardLeave(e)}
       >
         <CardContent className="px-3" ref={contentRef}>
           {/* task title */}
@@ -266,8 +279,8 @@ const TaskCard = ({
               <span className="text-sm text-content-tertiary font-semibold">
                 {task.startDate && task.dueDate
                   ? `${formatDate(task.startDate)}` +
-                    '-' +
-                    `${formatDate(task.dueDate)}`
+                  '-' +
+                  `${formatDate(task.dueDate)}`
                   : ''}
               </span>
             </div>
