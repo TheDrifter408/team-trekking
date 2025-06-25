@@ -135,7 +135,6 @@ const MyWork: FC<MyWorkProps> = ({ isExpanded, onExpand, cardTitle }) => {
         <Content
           todoWorkData={todoWorkData}
           completedTasks={completedTasks}
-          className={isExpanded ? 'flex-grow' : ''}
           onTaskReorder={onTaskReorder}
           onTaskMove={onTaskMove}
         />
