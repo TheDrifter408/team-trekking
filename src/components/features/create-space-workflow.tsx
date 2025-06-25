@@ -7,8 +7,7 @@ import {
 } from '@/components/shadcn-ui/dialog';
 import { Button } from '@/components/shadcn-ui/button';
 import { SpaceDefaults } from '@/components/features/space-defaults.tsx';
-import { colorOptions } from '@/mock';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { DefaultViews } from '@/components/common/space-default-views';
 import { StatusTemplate } from '@/components/features/status-template';
 import { cn } from '@/lib/utils/utils.ts';
@@ -17,6 +16,8 @@ import { LABEL } from '@/lib/constants/appStrings.ts';
 import {
   View,
   StatusItem,
+  Workflow,
+  ClickApp,
 } from '@/types/request-response/space/ApiResponse.ts';
 
 interface Props {
@@ -30,20 +31,32 @@ export const CreateSpaceWorkflow = ({ isOpen, setIsOpen, onBack }: Props) => {
   const [isDefaultViewOpen, setIsDefaultViewOpen] = useState(false);
   const [isTaskStatusOpen, setIsTaskStatusOpen] = useState(false);
 
-  const [selectedTemplate, setSelectedTemplate] = useState<number | null>(1);
+  const [selectedTemplate, setSelectedTemplate] = useState<Workflow | null>(null);
+  
   const [defaultViewData, setDefaultViewData] = useState<View[]>([]);
-  const [taskStatuses, setTaskStatuses] = useState<
-    Record<string, StatusItem[]>
-  >({});
+  const [taskStatuses, setTaskStatuses] = useState<Record<string, StatusItem[]>>({});
+  const [clickApps, setClickApps] = useState<ClickApp[]>([]);
 
   const templates = spaceGlobal?.workflow ?? [];
 
   const onSelectTemplate = (templateId: number) => {
     const selected = templates.find((tpl) => tpl.id === templateId);
-    setSelectedTemplate(templateId);
-    setDefaultViewData(selected?.defaultView || []);
-    setTaskStatuses(selected?.statusItems || {});
+    if (selected) {
+      setSelectedTemplate(selected);
+      setDefaultViewData(selected.defaultView);
+      setTaskStatuses(selected.statusItems);
+    }
+
   };
+
+  useEffect(() => {
+    if (spaceGlobal) {
+      setSelectedTemplate(spaceGlobal.workflow[0]);
+      setDefaultViewData(spaceGlobal.workflow[0].defaultView);
+      setTaskStatuses(spaceGlobal.workflow[0].statusItems);
+      setClickApps(spaceGlobal.clickApps);
+    }
+  }, [spaceGlobal]);
 
   return (
     <>
@@ -65,7 +78,7 @@ export const CreateSpaceWorkflow = ({ isOpen, setIsOpen, onBack }: Props) => {
                   key={template.id}
                   templateTitle={template.title}
                   templateDescription={template.subTitle}
-                  isSelected={selectedTemplate === template.id}
+                  isSelected={selectedTemplate ? selectedTemplate.id === template.id : false}
                   onClick={() => onSelectTemplate(template.id)}
                 />
               ))}
@@ -73,15 +86,18 @@ export const CreateSpaceWorkflow = ({ isOpen, setIsOpen, onBack }: Props) => {
           </div>
 
           <SpaceDefaults
-            colorOptions={colorOptions}
             onClickDefaultView={() => {
               setIsOpen(false);
               setIsDefaultViewOpen(true);
             }}
+            defaultContent={defaultViewData}
+            statusContent={taskStatuses}
+            clickAppContent={clickApps}
             onClickStatus={() => {
               setIsOpen(false);
               setIsTaskStatusOpen(true);
             }}
+
           />
 
           <DialogFooter className="w-full flex !justify-between">

@@ -1,6 +1,5 @@
-import { ReactNode, useState } from 'react';
-import { ChevronRight } from 'lucide-react';
-import { cn, getInitials } from '@/lib/utils/utils.ts';
+import { useEffect, useState } from 'react';
+import { getInitials } from '@/lib/utils/utils.ts';
 import { Assignee, ColorOption, IconOption } from '@/types/props/Common.ts';
 import {
   Dialog,
@@ -23,6 +22,7 @@ import { useAppContext } from '@/lib/context/app-layout-context';
 
 import { iconOptions, colorOptions, taskNotificationUsers } from '@/mock';
 import { LABEL } from '@/lib/constants';
+import { ClickApp, StatusItem, View } from '@/types/request-response/space/ApiResponse';
 
 interface Props {
   isActive: boolean;
@@ -44,6 +44,11 @@ export const UpdateSpace = ({ isActive, setIsActive }: Props) => {
   const [isDefaultViewOpen, setIsDefaultViewOpen] = useState<boolean>(false);
   const [isTaskStatusOpen, setIsTaskStatusOpen] = useState<boolean>(false);
   const initials = getInitials(spaceName)[0] ?? LABEL.DEFAULT_INITIAL; // e.g. 'P'
+
+  const [defaultViewData, setDefaultViewData] = useState<View[]>([]);
+  const [taskStatuses, setTaskStatuses] = useState<Record<string, StatusItem[]>>({});
+  const [clickApps, setClickApps] = useState<ClickApp[]>([]);
+
 
   const onClose = () => {
     setIsActive(false);
@@ -86,7 +91,14 @@ export const UpdateSpace = ({ isActive, setIsActive }: Props) => {
     setInvitedUsers(assignees);
   };
 
-  const defaultView = spaceGlobal?.defaultView;
+  useEffect(() => {
+    if (spaceGlobal) {
+      setDefaultViewData(spaceGlobal.workflow[0].defaultView);
+      setTaskStatuses(spaceGlobal.workflow[0].statusItems);
+      setClickApps(spaceGlobal.clickApps);
+    }
+  }, [spaceGlobal]);
+
 
   return (
     <Dialog open={isActive} onOpenChange={onClose} modal={true}>
@@ -142,7 +154,7 @@ export const UpdateSpace = ({ isActive, setIsActive }: Props) => {
                 value={selectedUser ? [selectedUser] : []}
                 displayName={true}
                 multipleSelect={false}
-                onRemove={() => {}}
+                onRemove={() => { }}
                 placeholder={LABEL.PLEASE_SELECT_OWNER}
                 userListTitle={LABEL.USERS}
                 users={taskNotificationUsers}
@@ -186,7 +198,7 @@ export const UpdateSpace = ({ isActive, setIsActive }: Props) => {
           <SelectUsers
             multipleSelect={true}
             displayName={false}
-            onRemove={() => {}}
+            onRemove={() => { }}
             displayOnly={true}
             value={invitedUsers}
             users={taskNotificationUsers}
@@ -198,7 +210,9 @@ export const UpdateSpace = ({ isActive, setIsActive }: Props) => {
         <Separator decorative={false} className={'!h-[.5px]'} />
 
         <SpaceDefaults
-          colorOptions={colorOptions}
+          defaultContent={defaultViewData}
+          statusContent={taskStatuses}
+          clickAppContent={clickApps}
           onClickDefaultView={onClickDefaultView}
           onClickStatus={onClickStatus}
         />
@@ -210,76 +224,11 @@ export const UpdateSpace = ({ isActive, setIsActive }: Props) => {
       </DialogContent>
       {/* Extra dialogs */}
       <DefaultViews
-        data={defaultView}
+        data={defaultViewData}
         isOpen={isDefaultViewOpen}
         setIsOpen={onCloseDefaultView}
       />
       <StatusTemplate isOpen={isTaskStatusOpen} setIsOpen={onCloseStatus} />
     </Dialog>
-  );
-};
-
-interface SettingsCardProps {
-  icon: ReactNode;
-  title: string;
-  content?: string;
-  isList?: boolean;
-  colorItems?: { name: string; color: string }[];
-  onClickSettings?: () => void;
-}
-export const SettingsCard = ({
-  icon,
-  title,
-  content,
-  isList = false,
-  colorItems = [],
-  onClickSettings,
-}: SettingsCardProps) => {
-  return (
-    <div
-      className="mt-2 cursor-pointer border items-center rounded-xl p-[12px] flex justify-between"
-      onClick={onClickSettings}
-    >
-      <div className="flex overflow-hidden">
-        <div className="size-[42px] items-center justify-center bg-accent/40 border rounded-xl flex flex-shrink-0">
-          {icon}
-        </div>
-        <div className="ml-2 max-w-[70%] overflow-hidden">
-          <p className="text-base font-medium">{title}</p>
-
-          {isList ? (
-            <div className="mt-1 text-sm text-muted-foreground flex items-center gap-2 overflow-hidden">
-              <div className="flex items-center gap-1 overflow-hidden truncate whitespace-nowrap">
-                {colorItems.map((color) => (
-                  <span
-                    className="flex items-center gap-1 flex-shrink-0"
-                    key={color.name}
-                  >
-                    <div
-                      className={cn(
-                        'w-3 h-3 rounded-full border-[1.5px]',
-                        `border-${color.color}-500`
-                      )}
-                    />
-                    {color.name}
-                  </span>
-                ))}
-              </div>
-            </div>
-          ) : (
-            <span className="text-base text-muted-foreground truncate whitespace-nowrap overflow-hidden block mt-1">
-              {content}
-            </span>
-          )}
-        </div>
-      </div>
-
-      <div className="flex-shrink-0 flex items-center ml-2">
-        <span className="text-xs font-medium text-muted-foreground bg-accent rounded-full size-[16px] flex items-center justify-center">
-          ?
-        </span>
-        <ChevronRight className="h-4 w-4 font-medium text-muted-foreground" />
-      </div>
-    </div>
   );
 };

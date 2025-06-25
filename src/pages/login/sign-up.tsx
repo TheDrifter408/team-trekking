@@ -22,6 +22,7 @@ import {
 import { LABEL } from '@/lib/constants/appStrings.ts';
 import { z } from 'zod';
 import { OtpType, RegistrationType, UserRole } from '@/lib/constants/enum.ts';
+import { toast } from 'sonner';
 
 export const SignUp = () => {
   const navigate = useNavigate();
@@ -36,7 +37,6 @@ export const SignUp = () => {
   const [otp, setOtp] = useState('');
   const otpType = OtpType.REGISTRATION;
   const registrationType = RegistrationType.EMAIL;
-  const permissionIds = [2];
 
   // Initialize form with Zod schema
   const form = useForm({
@@ -82,10 +82,15 @@ export const SignUp = () => {
       };
 
       // Create user and navigate on success
-      const createResponse = await createUser(createUserForm).unwrap();
-      if (createResponse) {
-        navigate('/home');
+      try {
+        const createResponse = await createUser(createUserForm).unwrap();
+        if (createResponse) {
+          navigate('/home');
+        }
+      } catch (e) {
+        toast.error(e?.data?.message)
       }
+      
     }
   };
   const onResendOtp = async () => {
