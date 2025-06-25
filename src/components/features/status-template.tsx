@@ -301,7 +301,7 @@ export const StatusTemplate = ({ isOpen, setIsOpen, data }: Props) => {
 
   return (
     <Dialog open={isOpen} onOpenChange={() => setIsOpen(!isOpen)}>
-      <DialogContent className="!max-w-[690px] flex flex-col">
+      <DialogContent className="!max-w-[690px] flex flex-col h-[85vh] max-h-[85vh]">
         <DialogHeader>
           <DialogTitle className="text-2xl">
             {LABEL.EDIT_SPACE_STATUS}
@@ -343,7 +343,7 @@ export const StatusTemplate = ({ isOpen, setIsOpen, data }: Props) => {
             </Select>
           </div>
           <div className="w-px bg-border" />
-          <div className="w-[60%] p-2 overflow-y-auto">
+          <div className="w-[60%] p-2 overflow--auto max-h-full max-w-full">
             <DndContext
               sensors={sensors}
               collisionDetection={closestCenter}
