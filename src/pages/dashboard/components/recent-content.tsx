@@ -3,7 +3,7 @@ import { List, Folder } from 'lucide-react';
 import { CardContent } from '@/components/shadcn-ui/card';
 import { HoverableCard } from './hoverable-card';
 import { cn } from '@/lib/utils/utils.ts';
-import { WorkSpaceRecent } from '@/types/request-response/workspace/ApiRessponse.ts';
+import { WorkSpaceRecent } from '@/types/request-response/workspace/ApiResponse.ts';
 
 interface Props {
   data: WorkSpaceRecent[];
