@@ -20,8 +20,8 @@ function Input({ className, type, ...props }: React.ComponentProps<'input'>) {
 
 interface InputIconProps extends React.InputHTMLAttributes<HTMLInputElement> {
   icon: React.ReactNode | string;
-  iconClassName?: string;
   className?: string;
+  iconClassName?: string;
 }
 
 const InputIcon = React.forwardRef<HTMLInputElement, InputIconProps>(
@@ -30,20 +30,11 @@ const InputIcon = React.forwardRef<HTMLInputElement, InputIconProps>(
       typeof icon === 'string' ? (
         <Icon
           name={icon as never}
-          className={cn('transition-colors', iconClassName)}
+          className={cn(iconClassName, 'transition-colors')}
         />
-      ) : React.isValidElement(icon) ? (
-        React.cloneElement(icon as React.ReactElement, {
-          className: cn(
-            'transition-colors',
-            icon.props?.className,
-            iconClassName
-          ),
-        })
       ) : (
         icon
       );
-
     return (
       <div className="relative focus-within:text-theme-main-dark text-content-tertiary transition-colors">
         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">

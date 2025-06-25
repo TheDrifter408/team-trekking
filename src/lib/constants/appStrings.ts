@@ -253,4 +253,8 @@ export const LABEL = {
   FULL_NAME: 'Full Name',
   EMAIL: 'Email',
   PASSWORD: 'Password',
+  PEOPLE: 'People',
+  WORKSPACES: 'Workspaces',
+  NOTIFICATIONS: 'Notications',
+  REFERALS: 'Referrals',
 };
