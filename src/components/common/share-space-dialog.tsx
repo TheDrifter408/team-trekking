@@ -74,27 +74,25 @@ export const ShareSpaceDialog = ({
             <DialogTitle>Share this space</DialogTitle>
             <DialogDescription>Sharing space with all views</DialogDescription>
           </DialogHeader>
-          <div className="bg-white px-4">
+          <div className="bg-white px-4 py-2">
             <div className="border rounded-lg flex items-center gap-1 py-1 px-1 ring-0 ring-theme-main justify-between focus-within:ring-1">
               <Input
                 placeholder="Invite by name or email"
                 className="rounded-lg border-0 focus-visible:ring-0 focus-visible:ring-transparent focus-visible:ring-offset-0 px-2 py-0.5"
               />
-              <Button className="bg-theme-main font-bold py-0.5 px-2">
+              <Button className="bg-theme-main font-bold py-0.5">
                 Invite
               </Button>
             </div>
           </div>
           <div className="flex items-center justify-between py-2 px-4 bg-white">
-            <Button variant={'ghost'} asChild>
-              <div className="flex">
-                <Link2 className="-rotate-45" />
-                <a href="thisisalink" className="font-bold">
-                  Private Link
-                </a>
-                <Info />
-              </div>
-            </Button>
+            <div className="flex items-center gap-1">
+              <Link2 className="p-0 -rotate-45" size={16} />
+              <a href="thisisalink" className="font-bold text-sm">
+                Private Link
+              </a>
+              <Info className="p-0" size={16} />
+            </div>
             <Button
               variant={'ghost'}
               className={cn(
@@ -129,7 +127,7 @@ export const ShareSpaceDialog = ({
                     </div>
                   </div>
                   <UsersArray
-                    onRemove={() => {}}
+                    onRemove={() => { }}
                     visibleUsers={invited.slice(0, 3)}
                     extraUsers={invited.slice(3)}
                   />
@@ -178,7 +176,7 @@ const CollapsibleSpace = ({
             <AssigneeAvatar
               assignee={user}
               displayName={true}
-              onRemove={() => {}}
+              onRemove={() => { }}
             />
             <Switch
               checked={isInvited}
