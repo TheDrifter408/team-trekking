@@ -107,7 +107,7 @@ const Dashboard = () => {
       </div>
 
       {isCardExpanded && (
-        <div className="fixed">
+        <div className="flex-1 flex w-full">
           {expandedCardId === HOME_CARD_TITLE.RECENTS &&
             isCardAdded(HOME_CARD_TITLE.RECENTS) && (
               <RecentContent

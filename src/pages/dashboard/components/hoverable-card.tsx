@@ -33,7 +33,7 @@ export const HoverableCard = ({
         <CardTitle className="flex items-center cursor-default">
           {title}
         </CardTitle>
-        {isHovered && (
+        {isHovered && !isExpanded && (
           <Button
             onClick={onExpand}
             size={'icon_sm'}
