@@ -27,7 +27,9 @@ export const BoardColumn = ({
   const onSubmit = (values: z.infer<typeof addTaskSchema>) => {
     // Create a new Task
     const newTask: Task = {
-      id: faker.number.int(),
+      parentId:'0',
+      checklist: [],
+      id: faker.food.fruit(),
       name: values.name,
       description: '',
       progress: 0,
