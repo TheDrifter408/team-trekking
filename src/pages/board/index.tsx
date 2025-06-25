@@ -29,6 +29,7 @@ import { cn, columnsEqual } from '@/lib/utils/utils.ts';
 import { Column, Task } from '@/types/props/Common.ts';
 import { StrictPointerSensor } from '@/lib/classes/StrictPointerSensor.ts';
 import { useDragScroll } from '@/lib/hooks/use-dragScroll.tsx';
+import { useDebounceCallback } from '@/lib/hooks/use-debounceCallback.tsx';
 
 export const Board = () => {
   const [columns, setColumns] = useState<Column[]>(mockColumns);
@@ -72,14 +73,14 @@ export const Board = () => {
     const { active } = event;
     const taskId = active.id as string;
     // Find the task in all columns
-    const draggedTask = findTaskInColumns(Number(taskId));
+    const draggedTask = findTaskInColumns(taskId);
 
     if (draggedTask) {
       setActiveTask(draggedTask);
 
       // Find which column the task is from
       const sourceColumn = columns.find((column) =>
-        column.tasks.some((task) => task.id === Number(taskId))
+        column.tasks.some((task) => task.id === taskId)
       );
 
       if (sourceColumn) {
@@ -88,42 +89,78 @@ export const Board = () => {
     }
   };
 
+  const debouncedSetActiveColumn = useDebounceCallback(
+    (newColumns:Column[], targetColumnId:string) => {
+      setColumns(newColumns);
+      setActiveColumnId(targetColumnId);
+    },
+    100 // 100 ms delay in updating 
+  )
+
   const onDragOver = (event: DragOverEvent) => {
     const { active, over } = event;
 
     if (!over) return;
 
-    const activeId = active.id as number;
-    const overId = over.id as number;
+    const activeId = active.id.toString();
+    const overId = over.id.toString();
+
+    // If hovering over the same item, skip
+    if (activeId === overId) {
+      return;
+    }
 
     // Find the columns
-    const activeColumnIndex = columns.findIndex((column) =>
+    const sourceColIndex = columns.findIndex((column) =>
       column.tasks.some((task) => task.id === activeId)
     );
 
     // If we couldn't find the task in any column, return
-    if (activeColumnIndex === -1) return;
+    if (sourceColIndex === -1) return;
 
+    const sourceCol = columns[sourceColIndex];
+    const activeTaskIndex = sourceCol.tasks.findIndex((t) => t.id === activeId);
+    const activeTask = sourceCol.tasks[activeTaskIndex];
+    
     // Check if we're dragging over a task or a column
     const isOverATask = columns.some((column) =>
       column.tasks.some((task) => task.id === overId)
     );
 
-    if (!isOverATask) {
-      // Over a column
-      const overColumn = columns.find((col) => col.id === overId.toString());
-      if (overColumn && overColumn.id !== activeColumnId) {
-        setActiveColumnId(overColumn.id); // Track for visual feedback only
-      }
-    } else {
+    let targetColIndex:number;
+
+    if (isOverATask) {
       // Over a task
-      const overTaskColumn = columns.find((column) =>
-        column.tasks.some((task) => task.id === overId)
+      targetColIndex = columns.findIndex((column) => 
+        column.tasks.some((t) => t.id === overId)
       );
-      if (overTaskColumn && overTaskColumn.id !== activeColumnId) {
-        setActiveColumnId(overTaskColumn.id); // Track for highlight etc.
-      }
+      
+    } else {
+      // Hovering Over a Column
+      targetColIndex = columns.findIndex((col) => col.id === overId);
     }
+
+    if (targetColIndex === -1) {
+      return;
+    }
+
+    const targetCol = columns[targetColIndex];
+
+    // if the source column and target Column are the same don't do anything
+    if (sourceCol.id === targetCol.id) {
+      return;
+    }
+
+    const newColumns = [...columns];
+
+    // Remove the Task from the source
+    newColumns[sourceColIndex].tasks.splice(activeTaskIndex,1);
+
+    // Insert at the end of the target Column
+    newColumns[targetColIndex].tasks.push(activeTask);
+
+    debouncedSetActiveColumn(newColumns, targetCol.id);
+
   };
 
   const onDragEnd = (event: DragEndEvent) => {
@@ -150,12 +187,12 @@ export const Board = () => {
 
     // Find the source column and Task
     const sourceColIndex = newColumns.findIndex((col) =>
-      col.tasks.some((t) => t.id === activeId)
+      col.tasks.some((t) => t.id === activeId.toString())
     );
     if (sourceColIndex === -1) return; // Task not found in any column
     const sourceCol = newColumns[sourceColIndex];
 
-    const taskIndex = sourceCol.tasks.findIndex((task) => task.id === activeId);
+    const taskIndex = sourceCol.tasks.findIndex((task) => task.id === activeId.toString());
     if (taskIndex === -1) return; // Task not found in source column
     // Remove the Task from the source column and assign it to movedTask
     const [movedTask] = sourceCol.tasks.splice(taskIndex, 1);
@@ -172,11 +209,11 @@ export const Board = () => {
     } else {
       // Case 2: Dragging it over another Task
       const destColIndex = newColumns.findIndex((col) =>
-        col.tasks.some((task) => task.id === overId)
+        col.tasks.some((task) => task.id === overId.toString())
       );
       const destCol = newColumns[destColIndex];
       const overTaskIndex = destCol.tasks.findIndex(
-        (task) => task.id === overId
+        (task) => task.id === overId.toString()
       );
 
       // Insert dragged Task before the overTaskIndex
@@ -199,7 +236,7 @@ export const Board = () => {
   };
 
   // Helper function to find a task in all columns
-  const findTaskInColumns = (taskId: number): Task | null => {
+  const findTaskInColumns = (taskId: string): Task | null => {
     for (const column of columns) {
       const task = column.tasks.find((t) => t.id === taskId);
       if (task) return task;
@@ -312,9 +349,12 @@ export const Board = () => {
             {/* Drag Overlay - This ensures the dragged task appears on top */}
             <DragOverlay>
               {activeTask ? (
-                <div className="w-[244px]">
-                  <TaskCard task={activeTask} isDragOverlay={true} />
-                </div>
+                <>
+                  {console.log("Rendering:",activeTask)}
+                  <div className="w-[244px]">
+                    <TaskCard task={activeTask} isDragOverlay={true} />
+                  </div>
+                </>
               ) : null}
             </DragOverlay>
           </DndContext>

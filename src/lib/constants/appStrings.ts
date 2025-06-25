@@ -19,6 +19,7 @@ export const LABEL = {
   WHAT_WILL_YOU_USE_THIS_WORKSPACE_FOR: 'What will you use this workspace for?',
   WHAT_WOULD_YOU_LIKE_TO_MANAGE: 'What would you like to manage?',
   INVITE_PEOPLE_TO_YOUR_WORKSPACE: 'Invite people to your workspace',
+  HOW_DID_YOU_HEAR_ABOUT_THIS: 'How did you hear about this?',
   DO_YOU_USE_ANY_OF_THESE_TOOLS: 'Do you use any of these tools?',
   WHICH_TOOLS_WOULD_YOU_LIKE_TO_INTEGRATE:
     'Which tools would you like to integrate?',
