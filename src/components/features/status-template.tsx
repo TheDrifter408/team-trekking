@@ -513,7 +513,7 @@ function StatusItemComponent({
       {isEditing ? (
         // Editing mode - Input field with icons
         <div className="flex items-center w-full">
-          <div className="flex items-center flex-1 px-1">
+          <div className="flex items-center flex-1 px">
             <div {...dragonProps} onClick={(e) => e.stopPropagation()}>
               <GripVertical
                 size={14}
@@ -521,11 +521,11 @@ function StatusItemComponent({
               />
             </div>
             <div
-              className="w-3 h-3 rounded-full mr-2"
+              className="min-w-[12px] h-3 w-3 rounded-full shrink-0"
               style={{ backgroundColor: status.color }}
             />
             <Input
-              className="h-7 !border-0 !ring-0 py-0 px-1 text-base font-normal"
+              className="h-7 !border-0 !ring-0 py-0 px-1 !text-base font-normal"
               value={statusName.toUpperCase()}
               onChange={(e) => setStatusName(e.target.value)}
               onKeyDown={onKeyDown}
@@ -549,7 +549,7 @@ function StatusItemComponent({
         </div>
       ) : (
         <>
-          <div className="flex items-center flex-1">
+          <div className="flex items-center flex-1 border-1 border-transparent">
             <div {...dragonProps} onClick={(e) => e.stopPropagation()}>
               <GripVertical
                 size={14}
