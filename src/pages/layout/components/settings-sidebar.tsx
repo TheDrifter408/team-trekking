@@ -7,40 +7,37 @@ import {
   SidebarContent,
   SidebarFooter,
   SidebarGroup,
-  SidebarGroupLabel,
   SidebarHeader,
   SidebarRail,
   useSidebar,
+  SidebarSeparator,
 } from '@/components/shadcn-ui/sidebar';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeftIcon, SettingsIcon } from 'lucide-react';
+import { ArrowLeftIcon } from 'lucide-react';
 import { LABEL } from '@/lib/constants/appStrings.ts';
-import { useTMTStore } from '@/stores/zustand';
+import { NavGroup } from '@/components/layout/nav-group';
+import {
+  workspaceSettingsNav,
+  personalSettingsNav,
+} from '@/lib/constants/sidebarConstants.ts';
 
 export const SettingsSidebar = (
   props: React.ComponentProps<typeof Sidebar>
 ) => {
   const { state } = useSidebar();
   const navigate = useNavigate();
-  const { user } = useTMTStore();
   const isOpen = state !== 'collapsed';
-
-  const fullName = user?.userData.fullName ?? 'Jawahiir Nabhan';
 
   return (
     <Sidebar
       collapsible="icon"
-      className={cn(
-        'h-[calc(100%-45px)] border-r-[2px] mt-[44px] ',
-        'peer-data-[state=collapsed]:w-[calc(100%-var(--sidebar-width-icon))]',
-        'peer-data-[state=expanded]:w-[calc(100%-var(--sidebar-width))]'
-      )}
+      className={cn('h-[calc(100%-45px)] border-r-[2px] mt-[44px]')}
       {...props}
     >
       <SidebarHeader className="border-b !px-0">
         <div
           onClick={() => navigate('/home')}
-          className="space-x-3 flex items-center m-1 rounded-lg hover:bg-content-secondary cursor-pointer"
+          className="space-x-3 flex items-center m-1 p-1.5 rounded-lg hover:bg-gray-200/60 cursor-pointer"
         >
           <ArrowLeftIcon className={'size-4'} />{' '}
           <span className={'font-normal text-base'}>
@@ -52,16 +49,9 @@ export const SettingsSidebar = (
       <SidebarContent>
         {isOpen ? (
           <SidebarGroup>
-            <SidebarGroupLabel className="text-sm  font-medium tracking-wider">
-              <span className="capitalize">
-                {fullName.toUpperCase()} {LABEL.WORKSPACE.toUpperCase()}
-              </span>
-            </SidebarGroupLabel>
-            <div className={'flex flex-col space-y-3'}>
-              <div className="flex items-center p-1 gap-x-3 rounded-lg text-base text-theme-main-dark bg-theme-main-light font-medium">
-                <SettingsIcon className={'size-4'} /> {LABEL.SETTINGS}
-              </div>
-            </div>
+            <NavGroup {...workspaceSettingsNav} />
+            <SidebarSeparator />
+            <NavGroup {...personalSettingsNav} />
           </SidebarGroup>
         ) : (
           <SidebarGroup className="justify-center flex items-center">
