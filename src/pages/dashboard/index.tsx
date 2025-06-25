@@ -111,6 +111,7 @@ const Dashboard = () => {
           {expandedCardId === HOME_CARD_TITLE.RECENTS &&
             isCardAdded(HOME_CARD_TITLE.RECENTS) && (
               <RecentContent
+                data={workspaceRecent ?? []}
                 isExpanded={true}
                 onExpand={onExpandToFullView}
                 cardTitle={HOME_CARD_TITLE.RECENTS}
