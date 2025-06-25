@@ -112,7 +112,7 @@ export function ProfileDropdown({ user }: Props) {
         {/* Main Menu Items */}
         <DropdownMenuGroup>
           <DropdownMenuItem asChild>
-            <Link to="/profile" className="flex items-center">
+            <Link to="/settings/profile" className="flex items-center">
               <User className="mr-3 h-4 w-4" />
               <span>Profile</span>
             </Link>
@@ -124,7 +124,7 @@ export function ProfileDropdown({ user }: Props) {
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
-            <Link to="/settings" className="flex items-center">
+            <Link to="/settings/general" className="flex items-center">
               <Settings className="mr-3 h-4 w-4" />
               <span>Settings</span>
             </Link>

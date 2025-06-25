@@ -245,4 +245,12 @@ export const LABEL = {
   EDIT_SPACE_STATUS: 'Edit Space Status',
   STATUS_TEMPLATE: 'Status template',
   SAVE_TEMPLATE: 'Save Template',
+  MY_SETTINGS: 'My Settings',
+  PROFILE: 'Profile',
+  YOUR_PERSONAL_INFORMATION_AND_ACCOUNT_SECURITY:
+    'Your personal information and account security settings.',
+  AVATAR: 'Avatar',
+  FULL_NAME: 'Full Name',
+  EMAIL: 'Email',
+  PASSWORD: 'Password',
 };

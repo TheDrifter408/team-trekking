@@ -46,8 +46,12 @@ import TrashIcon from '@/assets/icons/trash-icon.svg?react';
 import UserIcon from '@/assets/icons/user.svg?react';
 import DocIcon from '@/assets/icons/doc-icon.svg?react';
 import FilterIcon from '@/assets/icons/filter-icon.svg?react';
+import EmailIcon from '@/assets/icons/email.svg?react';
+import LockIcon from '@/assets/icons/lock.svg?react';
 
 const iconPaths = {
+  lock: LockIcon,
+  email: EmailIcon,
   filter: FilterIcon,
   user: UserIcon,
   trash: TrashIcon,

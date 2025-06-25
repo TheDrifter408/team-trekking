@@ -1,4 +1,4 @@
-import Settings from '@/pages/settings';
+import { Outlet } from 'react-router-dom';
 import { SettingsSidebar } from '@/pages/layout/components/settings-sidebar.tsx';
 import { AppHeader } from '@/pages/layout/components/app-header';
 import { SidebarInset, SidebarProvider } from '@/components/shadcn-ui/sidebar';
@@ -13,7 +13,7 @@ const SettingsLayout = () => {
         <div className="flex flex-1 overflow-hidden">
           <SettingsSidebar />
           <SidebarInset className="flex-1 overflow-auto">
-            <Settings />
+            <Outlet />
           </SidebarInset>
         </div>
       </SidebarProvider>
