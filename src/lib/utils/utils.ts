@@ -91,3 +91,9 @@ export function withPersistentCache(ttlInDays: number) {
     },
   };
 }
+
+export const convertToEmbedURL = (url: string):string => {
+  const videoIdMatch = url.match(/(?:youtu\.be\/|v=)([\w-]{11})/);
+  const videoId = videoIdMatch?.[1];
+  return videoId ? `https://www.youtube.com/embed/${videoId}` : url;
+}

@@ -6,9 +6,9 @@ import { TUTORIAL_TIMER } from '@/lib/constants/appConstant.ts';
 import { Button } from '@/components/shadcn-ui/button';
 import { Eye, FolderCog, Inbox, SquareCheckBig } from 'lucide-react';
 import { useWorkspaceGlobalQuery } from '@/service/rtkQueries/workspaceQuery.ts';
-import { Tutorial } from '@/types/request-response/workspace/ApiRessponse';
+import { Tutorial } from '@/types/request-response/workspace/ApiResponse.ts';
 import { LABEL } from '@/lib/constants';
-import { cn } from '@/lib/utils/utils.ts';
+import { cn, convertToEmbedURL } from '@/lib/utils/utils.ts';
 
 export const TutorialDialog = () => {
   const [open, setOpen] = useState(false);
@@ -30,7 +30,10 @@ export const TutorialDialog = () => {
 
   const onSelectVideo = (index: number) => {
     if (workSpaceGlobal) {
-      setSelectedTutorial(workSpaceGlobal.tutorial[index]);
+      setSelectedTutorial({
+        ...workSpaceGlobal.tutorial[index],
+        tutorialUrl: convertToEmbedURL(workSpaceGlobal.tutorial[index].tutorialUrl), // convert the given URL to be embed friendly
+      });
     }
   };
 
@@ -48,8 +51,11 @@ export const TutorialDialog = () => {
       <DialogContentPlain onClose={onClose} className="overflow-visible">
         <div className="relative">
           <VideoPlayer
+            // This 'key' is added to ensure the component rerenders onClick (state change) as the Youtube embed doesn't always reload
+            // when the <iframe> element remains mounted which is inside the <VideoPlayer> Component 
+            key={selectedTutorial.id} 
             title="Youtube Video Player"
-            src={workSpaceGlobal?.tutorial[0].tutorialUrl}
+            src={selectedTutorial.tutorialUrl}
             accelerometer
             autoPlay
             clipboardWrite
