@@ -116,7 +116,7 @@ const Profile = () => {
                     id="fullName"
                     value={formData.fullName}
                     onChange={(e) => onInputChange('fullName', e.target.value)}
-                    className={`block w-full !py-[7px] !text-base border rounded-lg shadow-sm ${
+                    className={`block w-full !h-[32px] !text-base border rounded-lg shadow-sm ${
                       errors.fullName ? 'border-red-300' : ''
                     }`}
                     placeholder="Enter your full name"
@@ -139,7 +139,7 @@ const Profile = () => {
                     id="email"
                     value={formData.email}
                     onChange={(e) => onInputChange('email', e.target.value)}
-                    className={`block w-full !py-[7px] !text-base border rounded-lg shadow-sm ${
+                    className={`block w-full !h-[32px] !text-base border rounded-lg shadow-sm ${
                       errors.email ? 'border-red-300' : ''
                     }`}
                     placeholder="Enter your email address"
@@ -162,7 +162,7 @@ const Profile = () => {
                     id="password"
                     value={formData.password}
                     onChange={(e) => onInputChange('password', e.target.value)}
-                    className={`block w-full !py-[7px] !text-base border rounded-lg shadow-sm ${
+                    className={`block w-full !h-[32px] !text-base border rounded-lg shadow-sm ${
                       errors.password ? 'border-red-300' : ''
                     }`}
                     placeholder="Enter New Password"
