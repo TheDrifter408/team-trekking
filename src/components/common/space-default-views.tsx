@@ -10,6 +10,7 @@ import { Button } from '@/components/shadcn-ui/button.tsx';
 import { viewIconMap } from '@/lib/constants/viewIcons';
 import { View } from '@/types/request-response/space/ApiResponse.ts';
 import { LABEL } from '@/lib/constants/appStrings';
+import { cn } from '@/lib/utils/utils';
 
 interface Props {
   isOpen: boolean;
@@ -33,7 +34,10 @@ export const DefaultViews = ({ isOpen, setIsOpen, data }: Props) => {
 
   return (
     <Dialog open={isOpen} onOpenChange={() => setIsOpen(false)}>
-      <DialogContent className="!max-w-[690px] min-h-[90vh] flex flex-col">
+      <DialogContent className={cn(
+        "!max-w-[690px] min-h-[90vh] flex flex-col transition-opacity duration-300", 
+        "data-[state=open]:opacity-100 data-[state=closed]:opacity-0"
+        )}>
         <DialogHeader className="w-full flex items-center justify-center">
           <DialogTitle className="text-3xl mt-4">
             {LABEL.DEFAULT_SETTINGS_FOR_VIEWS}

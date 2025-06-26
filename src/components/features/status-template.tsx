@@ -301,7 +301,10 @@ export const StatusTemplate = ({ isOpen, setIsOpen, data }: Props) => {
 
   return (
     <Dialog open={isOpen} onOpenChange={() => setIsOpen(!isOpen)}>
-      <DialogContent className="!max-w-[690px] flex flex-col h-[85vh] max-h-[85vh]">
+      <DialogContent className={cn(
+        "!max-w-[690px] flex flex-col h-[85vh] max-h-[85vh] transition-opacity duration-300",
+        "data-[state=open]:opacity-100 data-[state=closed]:opacity-0"
+        )}>
         <DialogHeader>
           <DialogTitle className="text-2xl">
             {LABEL.EDIT_SPACE_STATUS}

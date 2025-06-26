@@ -42,7 +42,6 @@ export const SettingsSidebar = (
           </span>
         </div>
       </SidebarHeader>
-
       <SidebarContent>
         <SidebarGroup>
           <NavGroup {...workspaceSettingsNav} />
@@ -50,11 +49,9 @@ export const SettingsSidebar = (
           <NavGroup {...personalSettingsNav} />
         </SidebarGroup>
       </SidebarContent>
-
       <SidebarFooter>
         {/* Optional: footer actions, such as user profile or logout */}
       </SidebarFooter>
-
       <SidebarRail />
     </Sidebar>
   );

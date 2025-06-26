@@ -37,6 +37,8 @@ export const DataTableRow = ({
   return (
     <div
       ref={setNodeRef}
+      {...attributes}
+      {...listeners}
       style={{
         ...style,
         position: 'absolute',
