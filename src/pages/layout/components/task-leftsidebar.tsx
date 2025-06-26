@@ -4,7 +4,6 @@ import {
   Sidebar,
   SidebarContent,
   SidebarHeader,
-  useSidebar,
 } from '@/components/shadcn-ui/sidebar.tsx';
 import { Button } from '@/components/shadcn-ui/button.tsx';
 import { cn } from '@/lib/utils/utils.ts';
@@ -22,8 +21,6 @@ export const LeftSidebarTrigger = forwardRef<
   HTMLButtonElement,
   SidebarTriggerProps
 >(({ children, className, onClick, ...props }, ref) => {
-  const { toggleSidebar } = useSidebar();
-
   return (
     <Button
       ref={ref}
@@ -33,7 +30,6 @@ export const LeftSidebarTrigger = forwardRef<
       className={cn(className, 'items-center justify-center h-auto')}
       onClick={(event) => {
         onClick?.(event);
-        toggleSidebar();
       }}
       {...props}
     >
@@ -48,15 +44,12 @@ interface LeftSidebarProps {
   className?: string;
 }
 
-interface TaskListProps {
-  task: Task;
-}
-
 interface ExpandableSubtasks {
   subtask: Task;
 }
 
-const TaskList = ({ task }: TaskListProps) => {
+export const TaskList = () => {
+  const [task] = useState<Task>(mockColumns[0].tasks[2]);
   return (
     <>
       <div className="px-2 flex items-center justify-between bg-slate-200 group/right_buttons">
@@ -177,8 +170,6 @@ const ExpandableSubTasks = ({ subtask }: ExpandableSubtasks) => {
 };
 
 export const LeftSidebar = ({ className, ...props }: LeftSidebarProps) => {
-  const [task, setTask] = useState<Task>(mockColumns[0].tasks[0]);
-
   return (
     <Sidebar
       collapsible="offcanvas"

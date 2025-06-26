@@ -168,6 +168,7 @@ export const removeTaskById = (tasks: Task[], taskId: string): Task[] => {
     })
     .filter(Boolean) as Task[];
 };
+
 export const insertTaskAt = (
   tasks: Task[],
   parentId: string | null,

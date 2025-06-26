@@ -29,10 +29,19 @@ import {
 import { ShareTask } from '@/components/features/share-task.tsx';
 import MoveTask from '@/components/common/move-task.tsx';
 import { useNavigate } from 'react-router-dom';
-import { DropdownMenu, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger, DropdownMenuContent } from '@/components/shadcn-ui/dropdown-menu';
-import { LeftSidebarTrigger } from '@/pages/layout/components/task-leftsidebar';
+import {
+  DropdownMenu,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+} from '@/components/shadcn-ui/dropdown-menu';
 
-export const PageHeader = () => {
+export const PageHeader = ({
+  onToggleSidebarOpen,
+}: {
+  onToggleSidebarOpen: (open: boolean) => void;
+}) => {
   const [openShareTask, setOpenShareTask] = useState<boolean>(false);
 
   const navigate = useNavigate();
@@ -45,9 +54,9 @@ export const PageHeader = () => {
     <div className="py-2 bg-sidebar/80 border w-full flex items-center justify-between px-4">
       <TooltipProvider>
         <div className="relative flex items-center justify-between">
-          <LeftSidebarTrigger>
+          <Button onClick={onToggleSidebarOpen} variant={'ghost'}>
             <SidebarIcon />
-          </LeftSidebarTrigger>
+          </Button>
           <Button size="icon_sm" variant="ghost">
             <ChevronUp size={12} />
           </Button>
@@ -123,10 +132,11 @@ export const PageHeader = () => {
                       <ChevronDown className="size-5 border-l text-primary hover:bg-slate-200" />
                     </Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent side='bottom' className='-translate-x-10'>
-                    <DropdownMenuItem>
-                      Favorites
-                    </DropdownMenuItem>
+                  <DropdownMenuContent
+                    side="bottom"
+                    className="-translate-x-10"
+                  >
+                    <DropdownMenuItem>Favorites</DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem>
                       <ArrowUp /> Top
@@ -135,15 +145,9 @@ export const PageHeader = () => {
                       <ArrowDown /> Down
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem>
-                      Another List
-                    </DropdownMenuItem>
-                    <DropdownMenuItem>
-                      Personal Priorities
-                    </DropdownMenuItem>
-                    <DropdownMenuItem>
-                      Personal List
-                    </DropdownMenuItem>
+                    <DropdownMenuItem>Another List</DropdownMenuItem>
+                    <DropdownMenuItem>Personal Priorities</DropdownMenuItem>
+                    <DropdownMenuItem>Personal List</DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
               </Button>
