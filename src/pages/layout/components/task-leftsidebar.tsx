@@ -4,7 +4,6 @@ import {
   Sidebar,
   SidebarContent,
   SidebarHeader,
-  useSidebar,
 } from '@/components/shadcn-ui/sidebar.tsx';
 import { Button } from '@/components/shadcn-ui/button.tsx';
 import { cn } from '@/lib/utils/utils.ts';
@@ -22,8 +21,6 @@ export const LeftSidebarTrigger = forwardRef<
   HTMLButtonElement,
   SidebarTriggerProps
 >(({ children, className, onClick, ...props }, ref) => {
-  const { toggleSidebar } = useSidebar();
-
   return (
     <Button
       ref={ref}
@@ -33,7 +30,6 @@ export const LeftSidebarTrigger = forwardRef<
       className={cn(className, 'items-center justify-center h-auto')}
       onClick={(event) => {
         onClick?.(event);
-        toggleSidebar();
       }}
       {...props}
     >

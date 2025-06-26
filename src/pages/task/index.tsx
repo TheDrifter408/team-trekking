@@ -61,6 +61,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/shadcn-ui/dropdown-menu.tsx';
+import { useSidebar } from '@/components/shadcn-ui/sidebar.tsx';
 import { $getRoot, EditorState } from 'lexical';
 import { TabActionBar } from '@/components/common/table-floating-actoin-bar.tsx';
 import { SelectUsers } from '@/components/common/select-users.tsx';
@@ -74,6 +75,8 @@ export const Task: FC = () => {
   const [enterTags, setEnterTags] = useState<boolean>(false);
   const [description, setDescription] = useState(sampleTask.description);
   const [selectedTags, setSelectedTags] = useState<string[]>(['backend']);
+
+  const { open: isSidebarOpen } = useSidebar();
 
   const availableTags: TagOption[] = [
     { id: 'initiative', label: 'initiative' },
@@ -153,7 +156,9 @@ export const Task: FC = () => {
 
   return (
     <DataTableProvider value={store}>
-      <div className={'w-2/3 mx-auto my-10 items-center'}>
+      <div
+        className={'2xl:w-3/4 xl:w-[80%] sm:w-[95%] mx-auto my-10 items-center'}
+      >
         <div className="space-y-4">
           {/* Show the parent task title if this is a subtask */}
           {sampleTask.parentTask && (
@@ -194,7 +199,12 @@ export const Task: FC = () => {
               className="!text-3xl w-full !font-bold tracking-tight bg-transparent border-none focus-visible:ring-0 focus-visible:ring-offset-0 px-0"
             />
           </div>
-          <div className="grid grid-cols-1 xl:grid-cols-2 gap-2">
+          <div
+            className={cn(
+              'grid sm:grid-cols-1',
+              isSidebarOpen ? '2xl:grid-cols-2' : 'xl:grid-cols-2'
+            )}
+          >
             {/* Column one contains Status, Dates, Time Estimates, Track Time, Relationships */}
             <div className="space-y-1">
               {/* Column 1 */}

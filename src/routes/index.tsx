@@ -4,7 +4,7 @@ import PrivateRoute from '@/routes/privateRoute.tsx';
 import { Fallback } from '../pages/fallback/fallback-route.tsx';
 
 const AppLayout = lazy(() => import('@/pages/layout/app-layout.tsx'));
-const HeaderLayout = lazy(() => import('@/pages/layout/header-layout.tsx'));
+const HeaderLayout = lazy(() => import('@/pages/layout/task-layout.tsx'));
 const SettingsLayout = lazy(() => import('@/pages/layout/settings-layout.tsx'));
 const Login = lazy(() => import('@/pages/login/sign-in.tsx'));
 const SignUp = lazy(() => import('@/pages/login/sign-up'));
