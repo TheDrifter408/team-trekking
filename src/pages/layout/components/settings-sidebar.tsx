@@ -28,7 +28,7 @@ export const SettingsSidebar = (
   return (
     <Sidebar
       collapsible={'none'}
-      className={cn('h-[calc(100%-45px)] border-r-[2px] mt-[44px]')}
+      className={cn('h-[calc(100%-45px)] border-r-[2px]')}
       {...props}
     >
       <SidebarHeader className="border-b !px-0">
