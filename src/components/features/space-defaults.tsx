@@ -1,55 +1,65 @@
 // components/common/space-settings-options.tsx
 
-import { Layers, CircleDot, ChevronsUpDown } from 'lucide-react';
-import { SettingsCard } from '@/components/features/update-space';
-import { ColorOption } from '@/types/props/Common';
+import { Layers, CircleDot, ChevronsUpDown, ArrowRight } from 'lucide-react';
+import { SettingsCard } from '@/components/features/settings-card';
+import { ClickApp, StatusItem, View } from '@/types/request-response/space/ApiResponse';
+import { cn, extractDefaultViews, extractTaskStatus } from '@/lib/utils/utils';
 
 interface Props {
-  colorOptions: ColorOption[];
   onClickDefaultView?: () => void;
   onClickStatus?: () => void;
-  defaultContent?: string;
-  statusContent?: string;
-  clickAppContent?: string;
+  defaultContent: View[];
+  statusContent: Record<string, StatusItem[]>;
+  clickAppContent: ClickApp[];
 }
 
 export const SpaceDefaults = ({
-  colorOptions,
   onClickDefaultView,
   onClickStatus,
   defaultContent,
   statusContent,
   clickAppContent,
 }: Props) => {
+  const defalutViewsContent = extractDefaultViews(defaultContent);
+  const taskStatusContent = extractTaskStatus(statusContent);
+
   return (
     <>
       <SettingsCard
         icon={<Layers className="h-[18px] text-primary" />}
         title="Default views"
-        content={
-          defaultContent ??
-          'List, Board, Team, Calendar, Gantt, Timeline, Activity, Workload, Map, Mind Map, Table'
-        }
         onClickSettings={onClickDefaultView}
-      />
+      >
+        <p className='text-base text-muted-foreground'>{defalutViewsContent}</p>
+      </SettingsCard>
       <SettingsCard
         icon={<CircleDot className="h-[18px] text-primary" />}
-        title={statusContent ?? 'Task statuses'}
-        isList
-        colorItems={colorOptions.map((c) => ({
-          name: c.name,
-          color: c.name.toLowerCase(),
-        }))}
+        title={'Task statuses'}
         onClickSettings={onClickStatus}
-      />
+      >
+        <div className="text-base text-muted-foreground flex items-center gap-1 overflow-hidden whitespace-nowrap">
+          {taskStatusContent.map((color) => (
+            <span
+              className="flex items-center gap-1 flex-shrink-0"
+              key={color.name}
+            >
+              <div
+                className={cn(
+                  'w-3 h-3 rounded-full border-[1.5px]',
+                )}
+                style={{ backgroundColor: `${color.color}` }}
+              />
+              {color.name}<ArrowRight size={14} />
+            </span>
+          ))}
+        </div>
+      </SettingsCard>
       <SettingsCard
         icon={<ChevronsUpDown className="h-[18px] text-primary" />}
         title="ClickApps"
-        content={
-          clickAppContent ??
-          'Time Tracking, Sprint Points, Priority, Tags, Time Estimates, Remap Subtask Due Dates, Multiple Assignees, Email, Work In Progress Limits, Income'
-        }
-      />
+      >
+        <p className="text-base text-muted-foreground">{clickAppContent.map((value:ClickApp) => value.title).join(',')}</p>
+      </SettingsCard>
     </>
   );
 };
