@@ -8,6 +8,7 @@ import { cn, extractDefaultViews, extractTaskStatus } from '@/lib/utils/utils';
 interface Props {
   onClickDefaultView?: () => void;
   onClickStatus?: () => void;
+  onClickClickApps: () => void;
   defaultContent: View[];
   statusContent: Record<string, StatusItem[]>;
   clickAppContent: ClickApp[];
@@ -16,6 +17,7 @@ interface Props {
 export const SpaceDefaults = ({
   onClickDefaultView,
   onClickStatus,
+  onClickClickApps,
   defaultContent,
   statusContent,
   clickAppContent,
@@ -57,6 +59,7 @@ export const SpaceDefaults = ({
       <SettingsCard
         icon={<ChevronsUpDown className="h-[18px] text-primary" />}
         title="ClickApps"
+        onClickSettings={onClickClickApps}
       >
         <p className="text-base text-muted-foreground">{clickAppContent.map((value:ClickApp) => value.title).join(',')}</p>
       </SettingsCard>
