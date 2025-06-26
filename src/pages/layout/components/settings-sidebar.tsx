@@ -24,13 +24,11 @@ import {
 export const SettingsSidebar = (
   props: React.ComponentProps<typeof Sidebar>
 ) => {
-  const { state } = useSidebar();
   const navigate = useNavigate();
-  const isOpen = state !== 'collapsed';
 
   return (
     <Sidebar
-      collapsible="icon"
+      collapsible={'none'}
       className={cn('h-[calc(100%-45px)] border-r-[2px] mt-[44px]')}
       {...props}
     >
@@ -47,17 +45,11 @@ export const SettingsSidebar = (
       </SidebarHeader>
 
       <SidebarContent>
-        {isOpen ? (
-          <SidebarGroup>
-            <NavGroup {...workspaceSettingsNav} />
-            <SidebarSeparator />
-            <NavGroup {...personalSettingsNav} />
-          </SidebarGroup>
-        ) : (
-          <SidebarGroup className="justify-center flex items-center">
-            {/* You can show an icon here for collapsed state */}
-          </SidebarGroup>
-        )}
+        <SidebarGroup>
+          <NavGroup {...workspaceSettingsNav} />
+          <SidebarSeparator />
+          <NavGroup {...personalSettingsNav} />
+        </SidebarGroup>
       </SidebarContent>
 
       <SidebarFooter>
