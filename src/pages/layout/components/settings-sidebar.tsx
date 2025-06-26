@@ -9,7 +9,6 @@ import {
   SidebarGroup,
   SidebarHeader,
   SidebarRail,
-  useSidebar,
   SidebarSeparator,
 } from '@/components/shadcn-ui/sidebar';
 import { useNavigate } from 'react-router-dom';

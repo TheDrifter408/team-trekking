@@ -65,11 +65,6 @@ import { useSidebar } from '@/components/shadcn-ui/sidebar.tsx';
 import { $getRoot, EditorState } from 'lexical';
 import { TabActionBar } from '@/components/common/table-floating-actoin-bar.tsx';
 import { SelectUsers } from '@/components/common/select-users.tsx';
-import {
-  Sheet,
-  SheetContent,
-  SheetTrigger,
-} from '@/components/shadcn-ui/sheet';
 
 export const Task: FC = () => {
   const [enterDates, setEnterDates] = useState<boolean>(false);
