@@ -64,6 +64,15 @@ export const CreateSpaceWorkflow = ({ isOpen, setIsOpen, onBack }: Props) => {
     }
   }
 
+  const onToggleEveryApp = () => {
+    const shouldTurnOn = !clickApps.every((a) => a.isActive);
+    const allSelected = clickApps.map((a) => ({
+      ...a, 
+      isActive:shouldTurnOn })
+    );
+    setClickApps(allSelected);
+  }
+
   useEffect(() => {
     if (spaceGlobal) {
       setSelectedTemplate(spaceGlobal.workflow[0]);
@@ -77,7 +86,7 @@ export const CreateSpaceWorkflow = ({ isOpen, setIsOpen, onBack }: Props) => {
     <>
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogContent className={cn(
-          "!max-w-[700px] flex flex-col transition-opacity duration-300",
+          "!max-w-[700px] flex flex-col transition-opacity duration-0",
           "data-[state=open]:opacity-100 data-[state=closed]:opacity-0"
           )}>
           <DialogHeader>
@@ -154,6 +163,7 @@ export const CreateSpaceWorkflow = ({ isOpen, setIsOpen, onBack }: Props) => {
       />
       <ClickAppsDialog
         isOpen={isClickAppsOpen}
+        onToggleEveryApp={onToggleEveryApp}
         onOpenChange={() => {
           setIsClickAppsOpen(false);
           setIsOpen(true);

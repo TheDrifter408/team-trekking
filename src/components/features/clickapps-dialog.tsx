@@ -9,11 +9,14 @@ import { Separator } from "../shadcn-ui/separator";
 interface ClickAppsDialogProps {
     selectedClickApps: ClickApp[],
     onSelectClickApp: (app: ClickApp) => void;
+    onToggleEveryApp: () => void;
     isOpen: boolean;
     onOpenChange: (open: boolean) => void;
 }
 
-export const ClickAppsDialog = ({ selectedClickApps, onSelectClickApp, isOpen, onOpenChange }: ClickAppsDialogProps) => {
+export const ClickAppsDialog = ({ selectedClickApps, onSelectClickApp, onToggleEveryApp,isOpen, onOpenChange }: ClickAppsDialogProps) => {
+
+    const allChecked = selectedClickApps.every((app) => app.isActive);
 
     return (
         <Dialog open={isOpen} onOpenChange={() => onOpenChange(!isOpen)}>
@@ -28,7 +31,7 @@ export const ClickAppsDialog = ({ selectedClickApps, onSelectClickApp, isOpen, o
                 <Separator />
                 <div className="">
                     <div className="flex items-center gap-1 w-min mx-auto">
-                        <Switch /> <span className="text-nowrap">{'Turn off all ClickApps'}</span>
+                        <Switch checked={allChecked} onCheckedChange={onToggleEveryApp} /> <span className="text-nowrap">{'Turn off all ClickApps'}</span>
                     </div>
                 </div>
                 <div className="grid grid-cols-2 gap-1">
