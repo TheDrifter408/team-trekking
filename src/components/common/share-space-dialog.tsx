@@ -1,5 +1,5 @@
 import { Info, Link2, User } from 'lucide-react';
-import { Button } from '../shadcn-ui/button';
+import { Button } from '@/components/shadcn-ui/button';
 import {
   Dialog,
   DialogContent,
@@ -7,33 +7,35 @@ import {
   DialogHeader,
   DialogTitle,
 } from '../shadcn-ui/dialog';
-import { Input } from '../shadcn-ui/input';
-import { Assignee, Space } from '@/types/props/Common';
+import { Input } from '@/components/shadcn-ui/input';
+import { Assignee } from '@/types/props/Common';
 import { MouseEvent, useState } from 'react';
 import { cn } from '@/lib/utils/utils';
 import { UsersArray } from './users-array';
-import { AssigneeAvatar } from './assignee-avatar';
-import { Switch } from '../shadcn-ui/switch';
+import { AssigneeAvatar } from '@/components/common/assignee-avatar';
+import { Switch } from '@/components/shadcn-ui/switch';
 import { taskNotificationUsers } from '@/mock';
-import { Collapsible, CollapsibleContent } from '../shadcn-ui/collapsible';
+import {
+  Collapsible,
+  CollapsibleContent,
+} from '@/components/shadcn-ui/collapsible';
 import { IconCaretRightFilled } from '@tabler/icons-react';
 
 interface ShareSpaceDialogProps {
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
+  space: {
+    id: number;
+    description: string;
+    shareLink?: string;
+  };
 }
 
 export const ShareSpaceDialog = ({
   isOpen,
   setIsOpen,
+  space,
 }: ShareSpaceDialogProps) => {
-  const [spaceInfo, setSpaceInfo] = useState<Space>({
-    id: 0,
-    name: 'MySpace',
-    description: '',
-    shareLink: 'https://teamtrekking.com/share/anm12kls',
-  });
-
   const [copySuccess, setCopySuccess] = useState(false);
 
   const [invited, setInvited] = useState<Assignee[]>(taskNotificationUsers);
@@ -59,15 +61,15 @@ export const ShareSpaceDialog = ({
 
   const copyToClipboard = async () => {
     try {
-      await navigator.clipboard.writeText(spaceInfo.shareLink!);
+      await navigator.clipboard.writeText(space.shareLink!);
       setCopySuccess(true);
-    } catch (e) {
+    } catch (error) {
       setCopySuccess(false);
     }
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={(open) => setIsOpen(!open)}>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <form>
         <DialogContent className="bg-muted p-0 gap-0">
           <DialogHeader className="bg-white py-4 px-4">
@@ -80,9 +82,7 @@ export const ShareSpaceDialog = ({
                 placeholder="Invite by name or email"
                 className="rounded-lg border-0 focus-visible:ring-0 focus-visible:ring-transparent focus-visible:ring-offset-0 px-2 py-0.5"
               />
-              <Button className="bg-theme-main font-bold py-0.5">
-                Invite
-              </Button>
+              <Button className="bg-theme-main font-bold py-0.5">Invite</Button>
             </div>
           </div>
           <div className="flex items-center justify-between py-2 px-4 bg-white">
@@ -104,15 +104,15 @@ export const ShareSpaceDialog = ({
               {copySuccess ? 'Copied!' : 'Copy Link'}
             </Button>
           </div>
-          <div>
-            <p className="text-xs font-bold bg-white px-4">Share With</p>
+          <div className="m-0 bg-white">
+            <p className="text-xs px-4">Share With</p>
             <Collapsible
               open={collapsibleOpen}
               onOpenChange={(open) => setCollapsibleOpen(!open)}
               className="transition-transform p-0"
             >
-              <div className="bg-white px-4" onClick={onToggleCollapsible}>
-                <div className="flex items-center py-2 px-4 justify-between hover:bg-slate-200 rounded-xl">
+              <div className="bg-white px-4 m-0" onClick={onToggleCollapsible}>
+                <div className="flex items-center py-2 px-2 justify-between hover:bg-slate-200 rounded-xl">
                   <div className="flex items-center gap-1">
                     <IconCaretRightFilled
                       size={14}
@@ -127,7 +127,7 @@ export const ShareSpaceDialog = ({
                     </div>
                   </div>
                   <UsersArray
-                    onRemove={() => { }}
+                    onRemove={() => {}}
                     visibleUsers={invited.slice(0, 3)}
                     extraUsers={invited.slice(3)}
                   />
@@ -176,7 +176,7 @@ const CollapsibleSpace = ({
             <AssigneeAvatar
               assignee={user}
               displayName={true}
-              onRemove={() => { }}
+              onRemove={() => {}}
             />
             <Switch
               checked={isInvited}
