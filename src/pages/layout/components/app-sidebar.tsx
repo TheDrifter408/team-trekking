@@ -72,7 +72,11 @@ export const AppSidebar = (props: React.ComponentProps<typeof Sidebar>) => {
                 <div className="flex gap-2">
                   <ContextMenu
                     trigger={
-                      <Button size="icon" variant="ghost" className="h-5 w-5">
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        className="h-5 w-5 pl-2"
+                      >
                         <Icon name="menu03" />
                       </Button>
                     }
@@ -100,7 +104,7 @@ export const AppSidebar = (props: React.ComponentProps<typeof Sidebar>) => {
 
               <Button
                 variant="ghost"
-                className="w-full justify-start px-4 py-2 font-normal text-base hover:bg-muted"
+                className="w-full justify-start px-2 py-2 font-normal text-base hover:bg-muted"
               >
                 <Icon name="menu02" className="w-4 h-4 mr-2" />
                 {LABEL.EVERYTHING}

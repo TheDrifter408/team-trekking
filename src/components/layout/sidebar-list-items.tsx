@@ -20,7 +20,7 @@ export const SidebarListItems = ({ listItem }: Props) => {
   return (
     <div
       key={listItem.id}
-      className="flex items-center justify-between pl-1 rounded-md hover:bg-gray-200 transition-all duration-200"
+      className="flex items-center justify-between pl-2 rounded-md hover:bg-gray-200 transition-all duration-200"
     >
       <div className="flex items-center gap-1">
         <div className="flex items-center">
@@ -30,10 +30,10 @@ export const SidebarListItems = ({ listItem }: Props) => {
             size={'sm'}
             onClick={() => navigate('/list')}
             className={
-              'text-sm hover:text-primary hover:underline underline-gray-600 decoration-1 underline-offset-4 transition-colors duration-600'
+              'hover:text-primary text-base no-underline hover:no-underline decoration-1 transition-colors duration-600'
             }
           >
-            <span className={cn('text-xs truncate')}>{listItem.name}</span>
+            <span className={cn('')}>{listItem.name}</span>
           </Button>
         </div>
       </div>

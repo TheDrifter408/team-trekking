@@ -24,7 +24,6 @@ export const SidebarFolderItems = ({
   const navigate = useNavigate();
   const [isHovered, setIsHovered] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const [isButtonEntered, setIsButtonEntered] = useState(false);
   const listData = folder.lists;
 
   const onToggleCollapse = () => {
@@ -61,64 +60,48 @@ export const SidebarFolderItems = ({
                 />
               )}
             </Button>
-
-            <div className="flex flex-1 items-center">
-              <Button
-                variant={'link'}
-                size={'sm'}
-                onMouseEnter={() => setIsButtonEntered(true)}
-                onMouseLeave={() => setIsButtonEntered(false)}
-                onClick={() => navigate('/folder')}
-                className={
-                  'text-sm hover:text-primary hover:underline underline-gray-600 decoration-1 underline-offset-4 transition-colors duration-600'
-                }
-              >
-                <span
-                  className={cn(
-                    'text-xs truncate',
-                    isButtonEntered ? 'max-w-[120px]' : 'max-w-[80px] '
-                  )}
-                >
-                  {name}
-                </span>
-              </Button>
-            </div>
+            <Button
+              variant="link"
+              size={'sm'}
+              onClick={() => navigate('/folder')}
+              className={cn(
+                'no-underline hover:no-underline decoration-1 transition-colors duration-600 flex-1 max-w-32'
+              )}
+            >
+              <span className={cn('text-base capitalize truncate')}>
+                {name}
+              </span>
+            </Button>
           </div>
-          {!isButtonEntered && (
-            <ContextMenu
-              trigger={
-                <Button size={'icon'} variant={'ghost'} className={'h-5 w-5'}>
-                  <Icon name={'menu03'} />
-                </Button>
-              }
-              sections={folderMenuConfig}
-              width="w-64"
-              onItemClick={() => {}}
-            />
-          )}
+          <ContextMenu
+            trigger={
+              <Button size={'icon'} variant={'ghost'} className={'h-5 w-5'}>
+                <Icon name={'menu03'} />
+              </Button>
+            }
+            sections={folderMenuConfig}
+            width="w-64"
+            onItemClick={() => {}}
+          />
         </div>
 
         <CollapsibleContent className="pl-6 mt-1 space-y-1">
           {listData.map((listItem) => (
             <div
               key={listItem.id}
-              className="flex items-center justify-between pl-1 rounded-md hover:bg-gray-200 transition-all duration-200"
+              className="flex items-center justify-between pl-2 rounded-md transition-all duration-200 hover:bg-gray-200 hover:cursor-pointer"
             >
               <div className="flex items-center">
                 <div className="flex items-center">
                   <ListIcon className="w-3 text-muted-foreground" />
                   <Button
-                    variant={'link'}
+                    variant="ghost"
                     size={'sm'}
-                    onMouseEnter={() => setIsButtonEntered(true)}
-                    onMouseLeave={() => setIsButtonEntered(false)}
-                    className={
-                      'text-sm hover:text-primary hover:underline underline-gray-600 decoration-1 underline-offset-4 transition-colors duration-600'
-                    }
+                    className={'hover:bg-transparent'}
                   >
                     <span
                       onClick={() => navigate('/link')}
-                      className={cn('text-xs truncate')}
+                      className={cn('text-base')}
                     >
                       {listItem.name}
                     </span>
