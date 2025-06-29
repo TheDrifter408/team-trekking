@@ -255,4 +255,7 @@ export const ACTION = {
   TOGGLE_TEMPATES_DIALOG: 'toggle_tempates_dialog',
   SAVE_AS_TEMPLATE: 'save_as_template',
   UPDATE_EXISTING_TEMPLATE: 'update_existing_template',
+  CREATE_LIST: 'create_list',
+  CREATE_FOLDER: 'create_folder',
+  CREATE_DASHBOARD: 'create_dashboard',
 };

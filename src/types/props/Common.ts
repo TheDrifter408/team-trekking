@@ -2,12 +2,13 @@ import { LucideIcon } from 'lucide-react';
 import { LABEL } from '@/lib/constants/appStrings.ts';
 import { Folder } from '@/types/props/Layout.ts';
 import { Dispatch, SetStateAction } from 'react';
+import { MenuItem, SubmenuItem } from '@/types/interfaces/ContextMenu';
 
 export interface Space {
   id: number;
   name: string;
   description: string;
-  shareLink?:string;
+  shareLink?: string;
 }
 
 export type HeaderType = 'HOME' | 'SPACE' | 'FOLDER' | 'LIST' | 'TASK';
@@ -162,6 +163,7 @@ export interface Task {
 export interface SidebarFolderItemsProps {
   name: string;
   folder: Folder;
+  onItemClick?: (item: MenuItem | SubmenuItem) => void;
 }
 
 export interface SortableChecklistRowProps {

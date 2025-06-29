@@ -10,7 +10,6 @@ import {
   DropdownMenuTrigger,
 } from '@/components/shadcn-ui/dropdown-menu.tsx';
 import { Button } from '@/components/shadcn-ui/button.tsx';
-import { ChevronRight } from 'lucide-react';
 import {
   ContextMenuProps as ContextMenuBaseProps,
   MenuItem,
@@ -21,14 +20,14 @@ import { LABEL } from '@/lib/constants/appStrings.ts';
 
 // Updated ContextMenu Component with reduced vertical gaps
 type WithButton = {
-  hasButton:true;
+  hasButton: true;
   buttonElement: ReactNode;
-}
+};
 
 type WithoutButton = {
-  hasButton?:false;
-  buttonElement?:never;
-}
+  hasButton?: false;
+  buttonElement?: never;
+};
 
 type ContextMenuProps = ContextMenuBaseProps & (WithButton | WithoutButton);
 
@@ -54,18 +53,21 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({
               )}
               <span className="text-gray-900">{item.label}</span>
             </div>
-            <ChevronRight className="w-4 h-4 text-gray-400" />
           </DropdownMenuSubTrigger>
           <DropdownMenuSubContent className="w-48">
-            {item.submenu?.map((subItem: SubmenuItem, subIndex: number) => (
-              <DropdownMenuItem
-                key={subIndex}
-                className="px-4 py-1.5 text-sm text-gray-900 hover:bg-gray-50 cursor-pointer"
-                onClick={() => onItemClick(subItem)}
-              >
-                {subItem.label}
-              </DropdownMenuItem>
-            ))}
+            {item.submenu?.map((subItem: SubmenuItem, subIndex: number) => {
+              const SubItemIcon = subItem.icon;
+              return (
+                <DropdownMenuItem
+                  key={subIndex}
+                  className="px-4 py-1.5 text-sm text-gray-900 hover:bg-gray-50 cursor-pointer"
+                  onClick={(event) => onItemClick(subItem, event)}
+                >
+                  {SubItemIcon ? <SubItemIcon /> : <></>}
+                  {subItem.label}
+                </DropdownMenuItem>
+              );
+            })}
           </DropdownMenuSubContent>
         </DropdownMenuSub>
       );
@@ -76,7 +78,7 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({
         <div key={index} className="p-2 pt-1">
           <Button
             className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg text-sm"
-            onClick={() => onItemClick(item)}
+            onClick={(event) => onItemClick(item, event)}
           >
             {item.label}
           </Button>
@@ -89,7 +91,7 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({
         <DropdownMenuItem
           key={index}
           className="flex items-center justify-between px-4 py-1.5 text-sm hover:bg-gray-50 cursor-pointer"
-          onClick={() => onItemClick(item)}
+          onClick={(event) => onItemClick(item, event)}
         >
           <div className="flex items-center gap-3">
             {IconComponent && (
@@ -139,7 +141,7 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({
   };
 
   return (
-    <DropdownMenu>
+    <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>{trigger}</DropdownMenuTrigger>
 
       <DropdownMenuContent
@@ -157,7 +159,7 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({
               )}
           </React.Fragment>
         ))}
-        { hasButton && buttonElement }
+        {hasButton && buttonElement}
       </DropdownMenuContent>
     </DropdownMenu>
   );
