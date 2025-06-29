@@ -8,7 +8,7 @@ import {
   DialogTrigger,
 } from '@/components/shadcn-ui/dialog.tsx';
 import { IconInnerShadowBottomRight } from '@tabler/icons-react';
-import { ChevronDown, ChevronRight, GripVertical } from 'lucide-react';
+import { ChevronDown, ChevronRight, Disc2, GripVertical } from 'lucide-react';
 import { Separator } from '@/components/shadcn-ui/separator.tsx';
 import {
   DropdownMenu,
@@ -131,12 +131,22 @@ export const StatusView = ({
       <Label className="text-right mb-2">Settings</Label>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
-          <div className="py-4 bg-background w-full border rounded flex items-center px-3 cursor-pointer hover:bg-gray-50">
+          <div className="py-4 bg-background w-full border rounded-xl flex items-center px-3 cursor-pointer hover:bg-gray-50">
             <div className="flex justify-between items-center w-full">
-              <IconInnerShadowBottomRight />
               <div className="flex items-center space-x-3">
-                <span className="text-base">Edit Statuses</span>
-                <ChevronRight className="h-3 w-3 rounded-full" />
+                <div className="rounded-md border border-1 p-2">
+                  <Disc2 />
+                </div>
+                <div>
+                  <p className="text-base">Edit Statuses</p>
+                  <p className="text-xs text-muted-foreground">
+                    Use Space statuses
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="rounded-full bg-muted px-2 py-1 text-xs">?</div>
+                <ChevronRight />
               </div>
             </div>
           </div>
