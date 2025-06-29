@@ -29,6 +29,9 @@ import {
   AlignVerticalDistributeStart,
   WandSparkles,
   CircleDotIcon,
+  ListPlus,
+  FolderPlus,
+  LayoutDashboard,
 } from 'lucide-react';
 import { MenuSection } from '@/types/interfaces/ContextMenu.ts';
 import { LABEL } from './appStrings';
@@ -100,9 +103,21 @@ export const folderMenuConfig: MenuSection[] = [
         icon: Plus,
         label: LABEL.CREATE_NEW,
         submenu: [
-          { label: LABEL.PAGE, action: ACTION.CREATE_PAGE },
-          { label: LABEL.DATABASE, action: ACTION.CREATE_DATABASE },
-          { label: LABEL.BOARD, action: ACTION.CREATE_BOARD },
+          {
+            label: LABEL.LIST,
+            action: ACTION.CREATE_LIST,
+            icon: ListPlus,
+          },
+          {
+            label: LABEL.FOLDER,
+            action: ACTION.CREATE_FOLDER,
+            icon: FolderPlus,
+          },
+          {
+            label: LABEL.BOARD,
+            action: ACTION.CREATE_DASHBOARD,
+            icon: LayoutDashboard,
+          },
         ],
       },
       {
@@ -317,7 +332,6 @@ export const listMenuConfig: MenuSection[] = [
   },
 ];
 
-
 // Board Column context menu
 export const columnMenuConfig: MenuSection[] = [
   {
@@ -460,29 +474,29 @@ export const boardTaskMenuConfig: MenuSection[] = [
 ];
 
 // Task Type Configuration
-export const taskTypeConfig:MenuSection[] = [
+export const taskTypeConfig: MenuSection[] = [
   {
     items: [
       {
-        icon:CircleDotIcon,
+        icon: CircleDotIcon,
         label: LABEL.TASK,
-        action:ACTION.CHANGE_TYPE_TO_TASK
+        action: ACTION.CHANGE_TYPE_TO_TASK,
       },
       {
         icon: Disc2,
         label: LABEL.MILESTONE,
-        action: ACTION.CHANGE_TYPE_TO_MILESTONE
+        action: ACTION.CHANGE_TYPE_TO_MILESTONE,
       },
       {
         icon: File,
         label: LABEL.FORM_RESPONSE,
-        action: ACTION.CHANGE_TYPE_TO_FORM_RESPONSE
+        action: ACTION.CHANGE_TYPE_TO_FORM_RESPONSE,
       },
       {
         icon: Repeat2,
         label: LABEL.BUG,
-        action: ACTION.CHANGE_TYPE_TO_BUG
-      }
-    ]
-  }
+        action: ACTION.CHANGE_TYPE_TO_BUG,
+      },
+    ],
+  },
 ];

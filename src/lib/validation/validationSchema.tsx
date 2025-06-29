@@ -90,3 +90,8 @@ export const addTaskSchema = z.object({
   assignees: z.array(AssigneeObject).optional(),
   priority: z.string(),
 });
+
+export const createListSchema = z.object({
+  name: z.string().min(1, 'List Name is required'),
+  isPrivateMode: z.boolean(),
+});

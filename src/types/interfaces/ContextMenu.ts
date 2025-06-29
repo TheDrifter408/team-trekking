@@ -1,6 +1,6 @@
 // Type definitions
 import { LucideIcon } from 'lucide-react';
-import React from 'react';
+import { ReactNode, MouseEvent } from 'react';
 
 // Base interface
 export interface BaseMenuItem {
@@ -15,7 +15,7 @@ export interface RegularMenuItem extends BaseMenuItem {
   type?: 'regular';
 }
 
-export interface SubmenuItem {
+export interface SubmenuItem extends BaseMenuItem {
   label: string;
   action: string;
 }
@@ -54,9 +54,9 @@ export interface MenuSection {
 
 // Context menu props
 export interface ContextMenuProps {
-  trigger: React.ReactNode;
+  trigger: ReactNode;
   sections?: MenuSection[];
   width?: string;
   align?: 'start' | 'center' | 'end';
-  onItemClick?: (item: MenuItem | SubmenuItem) => void;
+  onItemClick?: (item: MenuItem | SubmenuItem, event?: MouseEvent) => void;
 }

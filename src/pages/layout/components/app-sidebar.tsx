@@ -124,6 +124,7 @@ export const AppSidebar = (props: React.ComponentProps<typeof Sidebar>) => {
                       key={folder.id}
                       name={folder.name}
                       folder={folder}
+                      onItemClick={() => {}}
                     />
                   ))}
                   {space.lists.map((listItem) => (
