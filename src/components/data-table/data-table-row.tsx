@@ -10,7 +10,6 @@ export const DataTableRow = ({
   onRowHover,
   activeDialogRowId,
 }: TableRowProps) => {
-  //   Sortable object definition
   const {
     attributes,
     listeners,
@@ -19,23 +18,31 @@ export const DataTableRow = ({
     transition,
     isDragging,
   } = useSortable({ id: row.id });
+
+  const getTransform = () => {
+    if (isDragging && transform) {
+      return CSS.Transform.toString({
+        x: transform.x,
+        y: transform.y,
+        scaleX: transform.scaleX ?? 1,
+        scaleY: transform.scaleY ?? 1,
+      });
+    }
+    return undefined;
+  };
+
   return (
     <div
       ref={setNodeRef}
       style={{
         transition,
         position: 'absolute',
-        top: 0,
-        transform: CSS.Transform.toString({
-          x: transform?.x ?? 0,
-          y: (transform?.y ?? 0) + virtualRow.start,
-          scaleX: transform?.scaleX ?? 1,
-          scaleY: transform?.scaleY ?? 1,
-        }),
+        top: virtualRow.start, // Set top when dragging
+        transform: getTransform(),
         width: '100%',
         height: '40px',
-        zIndex: isDragging ? 2 : 1,
-        opacity: isDragging ? 0.5 : 1,
+        zIndex: isDragging ? 10 : 1,
+        opacity: isDragging ? 0 : 1,
         pointerEvents: isDragging ? 'none' : 'auto',
       }}
       {...attributes}
@@ -49,17 +56,20 @@ export const DataTableRow = ({
         }
       }}
       className={cn(
-        'flex hover:bg-muted/50 items-center transition-colors border-b border-border'
+        'flex hover:bg-muted/50 items-center transition-colors border-b border-border cursor-grab',
+        {
+          'cursor-grabbing': isDragging,
+        }
       )}
     >
       {/* Left pinned cells */}
       <DataTableCellSection cells={row.getLeftVisibleCells()} position="left" />
-
       {/* Center (scrollable) cells */}
       <DataTableCellSection
         cells={row.getCenterVisibleCells()}
         position="center"
       />
+      {/* Right pinned cells */}
       <DataTableCellSection
         cells={row.getRightVisibleCells()}
         position="right"
