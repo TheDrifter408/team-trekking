@@ -258,4 +258,5 @@ export const ACTION = {
   CREATE_LIST: 'create_list',
   CREATE_FOLDER: 'create_folder',
   CREATE_DASHBOARD: 'create_dashboard',
+  EDIT_SPACE: 'edit_space',
 };
