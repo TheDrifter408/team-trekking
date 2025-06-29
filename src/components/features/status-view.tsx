@@ -34,6 +34,7 @@ import {
   useSortable,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
+import { LABEL } from '@/lib/constants';
 
 interface Status {
   id: string;
@@ -138,9 +139,9 @@ export const StatusView = ({
                   <Disc2 />
                 </div>
                 <div>
-                  <p className="text-base">Edit Statuses</p>
+                  <p className="text-base">{LABEL.EDIT_STATUSES}</p>
                   <p className="text-xs text-muted-foreground">
-                    Use Space statuses
+                    {LABEL.USE_SPACE_STATUSES}
                   </p>
                 </div>
               </div>
