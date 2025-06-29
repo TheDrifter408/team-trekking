@@ -6,7 +6,7 @@ import {
   IconList,
   IconCheckbox,
 } from '@tabler/icons-react';
-import { cn, getInitials } from '@/lib/utils/utils.ts';
+import { cn } from '@/lib/utils/utils.ts';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -22,6 +22,7 @@ import { ViewType } from '@/lib/context/page-header-context.tsx';
 import { Calendar, Grid, LayoutDashboard, List } from 'lucide-react';
 import { LucideIcon } from 'lucide-react';
 import { BreadcrumbMenuDropdown } from '@/components/common/breadcrumb-menu-dropdown.tsx';
+import { PlaceholderAvatar } from '@/components/common/avatar-generator.tsx';
 
 interface BreadcrumbItem {
   meta: HeaderType;
@@ -175,11 +176,11 @@ const BreadcrumbTypeContent = ({
   if (type === 'SPACE') {
     return (
       <div className="flex items-center gap-2">
-        <div className="p-[4px] flex justify-center rounded bg-yellow-500">
-          <span className="text-xs text-content-default font-semibold">
-            {getInitials(label)}
-          </span>
-        </div>
+        <PlaceholderAvatar
+          className={'size-[22px] rounded-sm'}
+          seed={label}
+          variant={'initials'}
+        />
         <span>{label}</span>
       </div>
     );

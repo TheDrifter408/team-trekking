@@ -9,7 +9,6 @@ import {
   SidebarGroup,
   SidebarHeader,
   SidebarRail,
-  useSidebar,
   SidebarSeparator,
 } from '@/components/shadcn-ui/sidebar';
 import { useNavigate } from 'react-router-dom';
@@ -24,14 +23,12 @@ import {
 export const SettingsSidebar = (
   props: React.ComponentProps<typeof Sidebar>
 ) => {
-  const { state } = useSidebar();
   const navigate = useNavigate();
-  const isOpen = state !== 'collapsed';
 
   return (
     <Sidebar
-      collapsible="icon"
-      className={cn('h-[calc(100%-45px)] border-r-[2px] mt-[44px]')}
+      collapsible={'none'}
+      className={cn('h-[calc(100%-45px)] border-r-[2px]')}
       {...props}
     >
       <SidebarHeader className="border-b !px-0">
@@ -45,25 +42,16 @@ export const SettingsSidebar = (
           </span>
         </div>
       </SidebarHeader>
-
       <SidebarContent>
-        {isOpen ? (
-          <SidebarGroup>
-            <NavGroup {...workspaceSettingsNav} />
-            <SidebarSeparator />
-            <NavGroup {...personalSettingsNav} />
-          </SidebarGroup>
-        ) : (
-          <SidebarGroup className="justify-center flex items-center">
-            {/* You can show an icon here for collapsed state */}
-          </SidebarGroup>
-        )}
+        <SidebarGroup>
+          <NavGroup {...workspaceSettingsNav} />
+          <SidebarSeparator />
+          <NavGroup {...personalSettingsNav} />
+        </SidebarGroup>
       </SidebarContent>
-
       <SidebarFooter>
         {/* Optional: footer actions, such as user profile or logout */}
       </SidebarFooter>
-
       <SidebarRail />
     </Sidebar>
   );

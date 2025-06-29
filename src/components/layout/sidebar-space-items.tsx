@@ -22,6 +22,7 @@ import { ContextMenu } from '@/components/common/context-menu.tsx';
 import { Icon } from '@/assets/icon-path.tsx';
 import { spacesMenuConfig } from '@/lib/constants/staticData.ts';
 import { cn } from '@/lib/utils/utils.ts';
+import { PlaceholderAvatar } from '@/components/common/avatar-generator.tsx';
 
 interface Props {
   name: string;
@@ -53,11 +54,11 @@ export const SidebarSpaceItems = ({ name, children }: Props) => {
             className="h-6 w-6 text-slate-600 hover:text-slate-800 hover:bg-slate-200 transition-all"
           >
             {!isHovered ? (
-              isOpen ? (
-                <IconFolderOpen />
-              ) : (
-                <IconFolder />
-              )
+              <PlaceholderAvatar
+                className={'w-[20px] h-[20px] font-medium text-xl rounded-sm'}
+                variant={'initials'}
+                seed={name}
+              />
             ) : (
               <IconCaretRightFilled
                 className={cn(
@@ -118,9 +119,7 @@ export const SidebarSpaceItems = ({ name, children }: Props) => {
           }
         />
       </div>
-
       <UpdateSpace isActive={isRename} setIsActive={setIsRename} />
-
       <CollapsibleContent>
         <motion.div
           initial={{ opacity: 0, y: -5 }}
