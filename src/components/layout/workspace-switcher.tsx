@@ -24,6 +24,7 @@ import {
   TooltipTrigger,
 } from '@radix-ui/react-tooltip';
 import { LABEL } from '@/lib/constants';
+import { PlaceholderAvatar } from '@/components/common/avatar-generator.tsx';
 
 export function WorkspaceSwitcher({
   workspaces,
@@ -75,10 +76,9 @@ export function WorkspaceSwitcher({
                 }}
               >
                 {activeWorkspace.logo ? (
-                  <img
-                    src={activeWorkspace.logo}
-                    alt={activeWorkspace.name}
-                    className="size-4 shrink-0 object-cover w-full h-full rounded-md"
+                  <PlaceholderAvatar
+                    seed={activeWorkspace.name}
+                    variant={'botttsNeutral'}
                   />
                 ) : (
                   <div>{activeWorkspace.name?.charAt(0).toUpperCase()}</div>

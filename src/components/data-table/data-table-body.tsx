@@ -1,3 +1,4 @@
+// Enhanced DataTableBody component
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { DataTableRow } from './data-table-row';
 import {
@@ -9,6 +10,8 @@ import {
   DragOverlay,
   DragStartEvent,
   DragEndEvent,
+  DragMoveEvent,
+  DragOverEvent,
 } from '@dnd-kit/core';
 import { SortableContext } from '@dnd-kit/sortable';
 import { Task } from '@/types/props/Common.ts';
@@ -16,6 +19,7 @@ import { mockTasksFlattened } from '@/mock/task.ts';
 import { useState } from 'react';
 import { createPortal } from 'react-dom';
 import { DataTableCellSection } from './data-table-cell.tsx';
+import { getProjection } from '@/lib/utils/utils.ts';
 
 interface DataTableBodyProps {
   table: any;
@@ -29,7 +33,6 @@ interface DataTableBodyProps {
     newParent: Task | null,
     position: string
   ) => void;
-  maxDepth?: number;
 }
 
 export const DataTableBody = ({
@@ -39,7 +42,14 @@ export const DataTableBody = ({
   activeDialogRowId,
 }: DataTableBodyProps) => {
   const [activeId, setActiveId] = useState<string | null>(null);
+  const [offsetLeft, setOffsetLeft] = useState<number>(0);
   const [draggedRow, setDraggedRow] = useState<any>(null);
+  const [overId, setOverId] = useState<string | null>(null);
+  const [dropPosition, setDropPosition] = useState<{
+    type: 'before' | 'after' | 'child';
+    depth: number;
+    parentId: string | null;
+  } | null>(null);
 
   const rows = table.getRowModel().rows;
   const rowVirtualizer = useVirtualizer({
@@ -54,45 +64,82 @@ export const DataTableBody = ({
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
-        distance: 6, // Small distance to prevent accidental drags
+        distance: 6,
       },
     })
   );
+
+  const projected =
+    activeId && overId
+      ? getProjection({
+          rows,
+          activeId,
+          overId,
+          offsetLeft,
+          indentationWidth: 36,
+          maxDepth: 5,
+        })
+      : null;
 
   const onDragStart = (event: DragStartEvent) => {
     const { active } = event;
     setActiveId(active.id as string);
 
-    // Find the row being dragged
     const draggedRowData = rows.find((row: any) => row.id === active.id);
     setDraggedRow(draggedRowData);
+  };
+
+  const onDragMove = ({ delta }: DragMoveEvent) => {
+    setOffsetLeft(delta.x);
+  };
+
+  const onDragOver = ({ over }: DragOverEvent) => {
+    const newOverId = over?.id.toString() ?? null;
+    setOverId(newOverId);
+
+    if (activeId && newOverId && newOverId !== activeId) {
+      const projection = getProjection({
+        rows,
+        activeId,
+        overId: newOverId,
+        offsetLeft,
+        indentationWidth: 30,
+        maxDepth: 5,
+      });
+
+      if (projection) {
+        console.log(projection, 'projection');
+        setDropPosition(projection); // { type, depth, parentId }
+      } else {
+        setDropPosition(null);
+      }
+    } else {
+      setDropPosition(null);
+    }
   };
 
   const onDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
 
-    console.log('Drag ended:', { active: active.id, over: over?.id });
-    console.log(mockTasksFlattened, 'onDragEnd');
-
-    // Reset drag state
     setActiveId(null);
     setDraggedRow(null);
-
-    // on your drag logic here
-    if (over && active.id !== over.id) {
-      // Implement your reordering logic
-    }
+    setOverId(null);
+    setDropPosition(null);
   };
 
   const onDragCancel = () => {
     setActiveId(null);
     setDraggedRow(null);
+    setOverId(null);
+    setDropPosition(null);
   };
 
   return (
     <DndContext
       onDragStart={onDragStart}
       onDragEnd={onDragEnd}
+      onDragMove={onDragMove}
+      onDragOver={onDragOver}
       onDragCancel={onDragCancel}
       sensors={sensors}
       collisionDetection={closestCenter}
@@ -111,6 +158,8 @@ export const DataTableBody = ({
           >
             {virtualRows.map((virtualRow) => {
               const row = rows[virtualRow.index];
+              const isDropTarget = row.id === overId && row.id !== activeId;
+
               return (
                 <DataTableRow
                   key={row.id}
@@ -118,6 +167,8 @@ export const DataTableBody = ({
                   virtualRow={virtualRow}
                   onRowHover={onRowHover}
                   activeDialogRowId={activeDialogRowId}
+                  isDragOver={isDropTarget}
+                  dropPosition={isDropTarget ? dropPosition : null}
                 />
               );
             })}
@@ -125,7 +176,6 @@ export const DataTableBody = ({
         </div>
       </div>
 
-      {/* DragOverlay for better visual feedback */}
       {createPortal(
         <DragOverlay>
           {activeId && draggedRow ? (
@@ -136,20 +186,18 @@ export const DataTableBody = ({
                 backgroundColor: 'white',
                 borderRadius: '4px',
                 boxShadow: '0 8px 16px rgba(0, 0, 0, 0.15)',
+                border: '1px solid #e5e7eb',
               }}
-              className="flex items-center"
+              className="flex items-center opacity-90"
             >
-              {/* Left pinned cells */}
               <DataTableCellSection
                 cells={draggedRow.getLeftVisibleCells()}
                 position="left"
               />
-              {/* Center (scrollable) cells */}
               <DataTableCellSection
                 cells={draggedRow.getCenterVisibleCells()}
                 position="center"
               />
-              {/* Right pinned cells */}
               <DataTableCellSection
                 cells={draggedRow.getRightVisibleCells()}
                 position="right"
