@@ -15,8 +15,8 @@ const persistConfig = {
 };
 
 const rootReducer = {
-  [authApi.reducerPath]: persistReducer(persistConfig, authApi.reducer),
-  [spaceApi.reducerPath]: persistReducer(persistConfig, spaceApi.reducer),
+  [authApi.reducerPath]: authApi.reducer,
+  [spaceApi.reducerPath]: spaceApi.reducer,
   [workspaceApi.reducerPath]: persistReducer(
     persistConfig,
     workspaceApi.reducer
@@ -31,7 +31,7 @@ const configureAppStore = () => {
         serializableCheck: false, // required for redux-persist
       }).concat([
         authApi.middleware,
-          workspaceApi.middleware,
+        workspaceApi.middleware,
         spaceApi.middleware,
         apiErrorMiddleware,
       ]),

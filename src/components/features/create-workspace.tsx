@@ -31,8 +31,12 @@ import {
 import { LABEL } from '@/lib/constants';
 import { emailInputSchema } from '@/lib/validation/validationSchema';
 import { useIsMobile } from '@/lib/hooks/use-mobile';
-import { useWorkspaceGlobalQuery } from '@/service/rtkQueries/workspaceQuery.ts';
+import {
+  useCreateWorkSpaceMutation,
+  useWorkspaceGlobalQuery,
+} from '@/service/rtkQueries/workspaceQuery.ts';
 import { useAuthStore } from '@/stores/zustand/auth-store.ts';
+import { WorkType } from '@/types/request-response/workspace/ApiResponse.ts';
 
 interface Props {
   isOpen: boolean;
@@ -48,7 +52,9 @@ export const CreateWorkspace: React.FC<Props> = ({
   const { isFirstTimeLogin, setIsFirstTimeLogin } = useAuthStore();
   const [step, setStep] = useState<number>(1);
   // State for form data with proper types
-  const [selectedPurpose, setSelectedPurpose] = useState<string | ''>('');
+  const [selectedWorkSpaceType, setSelectedWorkSpaceType] = useState<
+    WorkType | undefined
+  >(undefined);
   const [selectedManage, setSelectedManage] = useState<string | ''>('');
   const [selectedDiscovery, setSelectedDiscovery] = useState<string | ''>('');
   const [email, setEmail] = useState<string>('');
@@ -64,6 +70,8 @@ export const CreateWorkspace: React.FC<Props> = ({
   const inputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const { data: workSpaceGlobal } = useWorkspaceGlobalQuery();
+  /* const [createWorkSpaceApi, { data, isLoading }] =
+    useCreateWorkSpaceMutation();*/
 
   // Calculate total steps based on first-time login status
   const totalSteps = isFirstTimeLogin ? 7 : 6;
@@ -76,7 +84,7 @@ export const CreateWorkspace: React.FC<Props> = ({
   const canProceedToNextStep = (): boolean => {
     switch (step) {
       case 1:
-        return selectedPurpose !== '';
+        return selectedWorkSpaceType?.name !== undefined;
       case 2:
         return selectedManage !== '';
       case 3:
@@ -128,15 +136,24 @@ export const CreateWorkspace: React.FC<Props> = ({
     stepCalculation();
   };
 
-  const onSubmit = (): void => {
+  const onSubmit = async (): void => {
+    const requestParams = {
+      name: workspaceName,
+      workTypeId: '',
+      manageTypeId: '',
+    };
+    if (isFirstTimeLogin) {
+      return;
+    }
+    /*const { data } = await createWorkSpaceApi({}).unwrap();
     setIsOpen(false);
     resetForm();
-    setIsFirstTimeLogin(false);
+    setIsFirstTimeLogin(false);*/
   };
 
   const resetForm = (): void => {
     setStep(1);
-    setSelectedPurpose('');
+    setSelectedWorkSpaceType(undefined);
     setSelectedManage('');
     setSelectedDiscovery('');
     setEmail('');
@@ -147,8 +164,8 @@ export const CreateWorkspace: React.FC<Props> = ({
   };
 
   // Form input handlers with proper types
-  const onSelectPurpose = (option: string): void => {
-    setSelectedPurpose(option);
+  const onSelectPurpose = (option: WorkType): void => {
+    setSelectedWorkSpaceType(option);
     stepCalculation();
   };
 
@@ -223,7 +240,7 @@ export const CreateWorkspace: React.FC<Props> = ({
               title={LABEL.WHAT_WILL_YOU_USE_THIS_WORKSPACE_FOR}
               workspacePurposeOptions={workSpaceGlobal?.WorkType ?? []}
               onSelectPurpose={onSelectPurpose}
-              selectedPurpose={selectedPurpose}
+              selectedPurpose={selectedWorkSpaceType}
             />
           );
         case 2:
@@ -292,7 +309,7 @@ export const CreateWorkspace: React.FC<Props> = ({
               title={LABEL.WHAT_WILL_YOU_USE_THIS_WORKSPACE_FOR}
               workspacePurposeOptions={workSpaceGlobal?.WorkType ?? []}
               onSelectPurpose={onSelectPurpose}
-              selectedPurpose={selectedPurpose}
+              selectedPurpose={selectedWorkSpaceType}
             />
           );
         case 2:
@@ -421,15 +438,15 @@ const ManagePurpose: React.FC<ManagePurposeProps> = ({
           <Button
             key={option.id}
             variant="outline"
-            onClick={() => onSelectPurpose(option.name)}
+            onClick={() => onSelectPurpose(option)}
             className={cn(
               'w-full sm:w-auto sm:min-w-[180px] py-3 sm:py-[12px] px-4 sm:px-[20px] hover:bg-theme-main hover:text-primary-foreground h-12 text-lg sm:text-xl font-medium text-content-onboarding-secondary ',
-              selectedPurpose === option.name
+              selectedPurpose?.name === option?.name
                 ? 'bg-theme-main-dark shadow-theme-main shadow-lg border-theme-main text-primary-foreground'
                 : ''
             )}
           >
-            {option.name}
+            {option?.name}
           </Button>
         ))}
       </div>

@@ -7,6 +7,7 @@ import {
   WorkSpaceGlobal,
   WorkSpaceRecent,
 } from '@/types/request-response/workspace/ApiResponse';
+import { CreateWorkSpace } from '@/types/request-response/workspace/ApiRequest.ts';
 
 export const workspaceApi = createApi({
   reducerPath: 'workspaceApi',
@@ -27,11 +28,18 @@ export const workspaceApi = createApi({
       }),
       transformResponse: (response: ApiResponse<Array<WorkSpaceRecent>>) =>
         response.data,
-      keepUnusedDataFor: 60 * 60 * 24,
-      ...withPersistentCache(15),
+    }),
+    createWorkSpace: builder.mutation<String, CreateWorkSpace>({
+      query: () => ({
+        url: 'workspace/dashboard/recents',
+      }),
+      transformResponse: (response: ApiResponse<String>) => response.data,
     }),
   }),
 });
 
-export const { useWorkspaceGlobalQuery, useWorkspaceDashBoardRecentQuery } =
-  workspaceApi;
+export const {
+  useWorkspaceGlobalQuery,
+  useWorkspaceDashBoardRecentQuery,
+  useCreateWorkSpaceMutation,
+} = workspaceApi;

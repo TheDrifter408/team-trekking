@@ -55,8 +55,8 @@ interface SidebarData {
 export interface ManagePurposeProps {
   title: string;
   workspacePurposeOptions: WorkType[];
-  onSelectPurpose: (option: string) => void;
-  selectedPurpose: string | '';
+  onSelectPurpose: (option: WorkType) => void;
+  selectedPurpose: WorkType | undefined;
 }
 
 export interface ManageFeaturesProps {
