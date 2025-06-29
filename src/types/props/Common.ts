@@ -7,7 +7,7 @@ export interface Space {
   id: number;
   name: string;
   description: string;
-  shareLink?:string;
+  shareLink?: string;
 }
 
 export type HeaderType = 'HOME' | 'SPACE' | 'FOLDER' | 'LIST' | 'TASK';
@@ -157,6 +157,7 @@ export interface Task {
   parentId: string | null;
   comments?: Comment[];
   tags?: Tag[];
+  depth?: number;
 }
 
 export interface SidebarFolderItemsProps {

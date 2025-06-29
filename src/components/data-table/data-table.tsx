@@ -35,7 +35,7 @@ export const DataTable = ({ className = '' }: DataTableProps) => {
     state: {
       columnSizing: colSizing,
       columnPinning: {
-        left: [Columns[0]?.id || ''],
+        left: [],
         right: [Columns[Columns.length - 1]?.id || ''],
       },
     },

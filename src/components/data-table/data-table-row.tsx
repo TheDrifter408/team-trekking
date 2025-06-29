@@ -1,10 +1,8 @@
 import { TableRowProps } from '@/types/props/DataTableProps.ts';
 import { DataTableCellSection } from './data-table-cell.tsx';
-import { TableCell } from '@/components/shadcn-ui/table';
-import { GripIcon } from 'lucide-react';
-import { useSortable } from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
 import { cn } from '@/lib/utils/utils.ts';
+import { CSS } from '@dnd-kit/utilities';
+import { useSortable } from '@dnd-kit/sortable';
 
 export const DataTableRow = ({
   row,
@@ -12,6 +10,7 @@ export const DataTableRow = ({
   onRowHover,
   activeDialogRowId,
 }: TableRowProps) => {
+  //   Sortable object definition
   const {
     attributes,
     listeners,
@@ -19,35 +18,28 @@ export const DataTableRow = ({
     transform,
     transition,
     isDragging,
-  } = useSortable({
-    id: row.id,
-    data: {
-      type: 'task',
-      task: row.original,
-      depth: row.depth || 0,
-      parentId: row.parentId,
-    },
-  });
-
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-  };
-
+  } = useSortable({ id: row.id });
   return (
     <div
       ref={setNodeRef}
-      {...attributes}
-      {...listeners}
       style={{
-        ...style,
+        transition,
         position: 'absolute',
         top: 0,
-        transform: `translateY(${virtualRow.start}px) ${transform ? CSS.Transform.toString(transform) : ''}`,
+        transform: CSS.Transform.toString({
+          x: transform?.x ?? 0,
+          y: (transform?.y ?? 0) + virtualRow.start,
+          scaleX: transform?.scaleX ?? 1,
+          scaleY: transform?.scaleY ?? 1,
+        }),
         width: '100%',
         height: '40px',
-        zIndex: isDragging ? 1000 : 1,
+        zIndex: isDragging ? 2 : 1,
+        opacity: isDragging ? 0.5 : 1,
+        pointerEvents: isDragging ? 'none' : 'auto',
       }}
+      {...attributes}
+      {...listeners}
       key={row.id}
       data-index={virtualRow.index}
       onMouseEnter={() => onRowHover(row.original.id)}
@@ -57,21 +49,9 @@ export const DataTableRow = ({
         }
       }}
       className={cn(
-        'flex hover:bg-muted/50 items-center transition-colors border-b border-border',
-        isDragging && 'opacity-50 shadow-lg bg-white'
+        'flex hover:bg-muted/50 items-center transition-colors border-b border-border'
       )}
     >
-      <TableCell
-        {...attributes}
-        {...listeners}
-        className={cn(
-          'flex items-center h-full justify-between -ml-[10px] cursor-grab',
-          isDragging && 'cursor-grabbing'
-        )}
-      >
-        <GripIcon className={'size-4'} />
-      </TableCell>
-
       {/* Left pinned cells */}
       <DataTableCellSection cells={row.getLeftVisibleCells()} position="left" />
 
@@ -80,7 +60,6 @@ export const DataTableRow = ({
         cells={row.getCenterVisibleCells()}
         position="center"
       />
-
       <DataTableCellSection
         cells={row.getRightVisibleCells()}
         position="right"
