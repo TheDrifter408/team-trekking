@@ -15,8 +15,8 @@ const persistConfig = {
 };
 
 const rootReducer = {
-  [authApi.reducerPath]: authApi.reducer,
-  [spaceApi.reducerPath]: spaceApi.reducer,
+  [authApi.reducerPath]: persistReducer(persistConfig, authApi.reducer),
+  [spaceApi.reducerPath]: persistReducer(persistConfig, spaceApi.reducer),
   [workspaceApi.reducerPath]: persistReducer(
     persistConfig,
     workspaceApi.reducer

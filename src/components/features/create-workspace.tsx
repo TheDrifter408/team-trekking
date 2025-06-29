@@ -36,7 +36,12 @@ import {
   useWorkspaceGlobalQuery,
 } from '@/service/rtkQueries/workspaceQuery.ts';
 import { useAuthStore } from '@/stores/zustand/auth-store.ts';
-import { WorkType } from '@/types/request-response/workspace/ApiResponse.ts';
+import {
+  ConnectedTool,
+  InterestedFeature,
+  ManageType,
+  WorkType,
+} from '@/types/request-response/workspace/ApiResponse.ts';
 
 interface Props {
   isOpen: boolean;
@@ -55,12 +60,18 @@ export const CreateWorkspace: React.FC<Props> = ({
   const [selectedWorkSpaceType, setSelectedWorkSpaceType] = useState<
     WorkType | undefined
   >(undefined);
-  const [selectedManage, setSelectedManage] = useState<string | ''>('');
-  const [selectedDiscovery, setSelectedDiscovery] = useState<string | ''>('');
+  const [selectedManage, setSelectedManage] = useState<ManageType | undefined>(
+    undefined
+  );
+  const [selectedDiscovery, setSelectedDiscovery] = useState<
+    ManageType | undefined
+  >(undefined);
   const [email, setEmail] = useState<string>('');
   const [selectedEmails, setSelectedEmails] = useState<string[]>([]);
-  const [selectedTools, setSelectedTools] = useState<string[]>([]);
-  const [selectedFeatures, setSelectedFeatures] = useState<string[]>([]);
+  const [selectedTools, setSelectedTools] = useState<ConnectedTool[]>([]);
+  const [selectedFeatures, setSelectedFeatures] = useState<InterestedFeature[]>(
+    []
+  );
   const [workspaceName, setWorkspaceName] = useState<string>(
     LABEL.JAWAHIIRS_WORKSPACE
   );
@@ -70,8 +81,8 @@ export const CreateWorkspace: React.FC<Props> = ({
   const inputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const { data: workSpaceGlobal } = useWorkspaceGlobalQuery();
-  /* const [createWorkSpaceApi, { data, isLoading }] =
-    useCreateWorkSpaceMutation();*/
+  const [createWorkSpaceApi, { data, isLoading }] =
+    useCreateWorkSpaceMutation();
 
   // Calculate total steps based on first-time login status
   const totalSteps = isFirstTimeLogin ? 7 : 6;
@@ -82,41 +93,12 @@ export const CreateWorkspace: React.FC<Props> = ({
 
   // Validation function to check if current step can proceed
   const canProceedToNextStep = (): boolean => {
-    switch (step) {
-      case 1:
-        return selectedWorkSpaceType?.name !== undefined;
-      case 2:
-        return selectedManage !== '';
-      case 3:
-        // For first-time login, step 3 is discovery source
-        // For returning users, step 3 is invite people
-        return isFirstTimeLogin
-          ? selectedDiscovery !== ''
-          : selectedEmails.length > 0;
-      case 4:
-        // For first-time login, step 4 is invite people
-        // For returning users, step 4 is tools
-        return isFirstTimeLogin
-          ? selectedEmails.length > 0
-          : selectedTools.length > 0;
-      case 5:
-        // For first-time login, step 5 is tools
-        // For returning users, step 5 is features
-        return isFirstTimeLogin
-          ? selectedTools.length > 0
-          : selectedFeatures.length > 0;
-      case 6:
-        // For first-time login, step 6 is features
-        // For returning users, step 6 is workspace name
-        return isFirstTimeLogin
-          ? selectedFeatures.length > 0
-          : workspaceName.trim() !== '';
-      case 7:
-        // Only for first-time login, step 7 is workspace name
-        return workspaceName.trim() !== '';
-      default:
-        return true;
+    // Allow all steps to proceed, except the final step
+    if ((!isFirstTimeLogin && step === 6) || (isFirstTimeLogin && step === 7)) {
+      return workspaceName.trim() !== '';
     }
+    // All other steps are optional
+    return true;
   };
 
   // Form navigation
@@ -137,25 +119,45 @@ export const CreateWorkspace: React.FC<Props> = ({
   };
 
   const onSubmit = async (): void => {
-    const requestParams = {
-      name: workspaceName,
-      workTypeId: '',
-      manageTypeId: '',
-    };
     if (isFirstTimeLogin) {
       return;
     }
-    /*const { data } = await createWorkSpaceApi({}).unwrap();
-    setIsOpen(false);
-    resetForm();
-    setIsFirstTimeLogin(false);*/
+    const requestParams = {
+      name: workspaceName,
+      connectedToolIds: selectedTools.map((data) => data.id),
+      interestedFeatureIds: selectedFeatures.map((data) => data.id),
+      members: selectedEmails.map((email) => {
+        return { email: email };
+      }),
+      ...(selectedWorkSpaceType?.id !== undefined && {
+        workTypeId: Number(selectedWorkSpaceType.id),
+      }),
+      ...(selectedManage?.id !== undefined && {
+        manageTypeId: Number(selectedManage.id),
+      }),
+      ...(selectedManage?.name && {
+        customManageType: selectedManage.name,
+      }),
+      ...(selectedDiscovery?.id !== undefined && {
+        discoverySourceId: Number(selectedDiscovery.id),
+      }),
+      ...(selectedDiscovery?.name && {
+        customDiscoverySource: selectedDiscovery.name,
+      }),
+    };
+    const { data } = await createWorkSpaceApi(requestParams);
+    if (data) {
+      setIsOpen(false);
+      resetForm();
+      setIsFirstTimeLogin(false);
+    }
   };
 
   const resetForm = (): void => {
     setStep(1);
     setSelectedWorkSpaceType(undefined);
-    setSelectedManage('');
-    setSelectedDiscovery('');
+    setSelectedManage(undefined);
+    setSelectedDiscovery(undefined);
     setEmail('');
     setSelectedEmails([]);
     setSelectedTools([]);
@@ -169,11 +171,11 @@ export const CreateWorkspace: React.FC<Props> = ({
     stepCalculation();
   };
 
-  const onSelectManage = (option: string): void => {
+  const onSelectManage = (option: ManageType): void => {
     setSelectedManage(option);
     stepCalculation();
   };
-  const onSelectDiscovery = (option: string): void => {
+  const onSelectDiscovery = (option: ManageType): void => {
     setSelectedDiscovery(option);
     stepCalculation();
   };
@@ -214,7 +216,7 @@ export const CreateWorkspace: React.FC<Props> = ({
     }
   };
 
-  const onToggleTool = (tool: string): void => {
+  const onToggleTool = (tool: ConnectedTool): void => {
     setSelectedTools((prev) => {
       return prev.includes(tool)
         ? prev.filter((item) => item !== tool)
@@ -222,7 +224,7 @@ export const CreateWorkspace: React.FC<Props> = ({
     });
   };
 
-  const onToggleFeature = (option: string): void => {
+  const onToggleFeature = (option: InterestedFeature): void => {
     setSelectedFeatures((prev) => {
       return prev.includes(option)
         ? prev.filter((item) => item !== option)
@@ -470,11 +472,11 @@ const ManageFeatures: React.FC<ManageFeaturesProps> = ({
           {manageOptions.map((option) => (
             <Button
               key={option.id}
-              onClick={() => onSelectOption(option.name)}
+              onClick={() => onSelectOption(option)}
               variant="outline"
               className={cn(
                 'w-full sm:w-auto h-12 text-base sm:text-lg text-content-onboarding-secondary hover:bg-theme-main-dark hover:text-white hover:shadow-lg',
-                selectedOption === option.name
+                selectedOption?.name === option.name
                   ? 'bg-theme-main-dark shadow-md shadow-theme-main text-white border-none'
                   : ''
               )}
@@ -578,12 +580,12 @@ const ManageTools: React.FC<ManageToolsProps> = ({
       <div className="h-full w-full flex items-center">
         <div className="w-full  justify-center items-center flex flex-col sm:flex-row sm:flex-wrap gap-3">
           {connectedTools.map((tool) => {
-            const isSelected = selectedTools.includes(tool.name);
+            const isSelected = selectedTools.includes(tool);
             return (
               <Button
                 key={tool.id}
                 variant="outline"
-                onClick={() => onToggleTool(tool.name)}
+                onClick={() => onToggleTool(tool)}
                 className={cn(
                   'w-full sm:w-auto h-12 rounded-xl text-content-onboarding-secondary text-sm sm:text-base font-medium hover:shadow-lg transition-all duration-200',
                   isSelected && ' border-theme-main shadow-theme-main shadow-sm'
@@ -626,12 +628,12 @@ const SelectFeatures: React.FC<SelectFeaturesProps> = ({
       <div className="flex h-full w-full items-center">
         <div className="w-full  justify-center items-center flex flex-col sm:flex-row sm:flex-wrap gap-3 sm:gap-2">
           {interestedFeature.map((option) => {
-            const isSelected = selectedFeatures.includes(option.name);
+            const isSelected = selectedFeatures.includes(option);
             return (
               <Button
                 key={option.id}
                 variant="outline"
-                onClick={() => onToggleFeature(option.name)}
+                onClick={() => onToggleFeature(option)}
                 className={cn(
                   'w-full sm:w-auto h-12 rounded-xl text-content-onboarding-secondary text-sm sm:text-base font-medium',
                   isSelected &&
