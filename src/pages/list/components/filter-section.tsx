@@ -4,6 +4,12 @@ import { Button } from '@/components/shadcn-ui/button';
 import { Input } from '@/components/shadcn-ui/input';
 import { LABEL } from '@/lib/constants/appStrings';
 import { useComponentStore } from '@/stores/zustand/component-state-store.ts';
+import { CreateTask } from '@/components/features/create-task.tsx';
+
+interface Props {
+  isOpen: boolean;
+  setIsOpen: (isOpen: boolean) => void;
+}
 
 interface FilterButtonConfig {
   label: string;
@@ -11,10 +17,11 @@ interface FilterButtonConfig {
   onClick?: () => void;
 }
 
-export const FilterSection = () => {
+export const FilterSection = ({ isOpen, setIsOpen }: Props) => {
   const openDrawer = useComponentStore((s) => s.openDrawer);
   const [searchTerm, setSearchTerm] = useState('');
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isOpenTaskCreate, setIsOpenTaskCreate] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const searchContainerRef = useRef<HTMLDivElement>(null);
 
@@ -117,10 +124,15 @@ export const FilterSection = () => {
             />
           )}
         </div>
-        <Button className="bg-theme-main-dark hover:bg-theme-main text-base text-white px-3 h-[26px] font-medium rounded-md gap-x-1">
-          {LABEL.ADD_TASK}
-          <Icon name="dropdownarrow" className="text-white w-3 h-3" />
-        </Button>
+        <CreateTask isOpen={isOpenTaskCreate} setIsOpen={setIsOpenTaskCreate}>
+          <Button
+            onClick={() => setIsOpen(!isOpen)}
+            className="bg-theme-main-dark hover:bg-theme-main text-base text-white px-3 h-[26px] font-medium rounded-md gap-x-1"
+          >
+            {LABEL.ADD_TASK}
+            <Icon name="dropdownarrow" className="text-white w-3 h-3" />
+          </Button>
+        </CreateTask>
       </div>
     </div>
   );

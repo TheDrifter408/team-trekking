@@ -40,7 +40,7 @@ export const PlaceholderAvatar = ({
   }
   return (
     <Avatar className={cn(className)}>
-      <AvatarImage src={avatar.toDataUri()} alt={'avatar/placeholder'} />
+      <AvatarImage src={avatar?.toDataUri()} alt={'avatar/placeholder'} />
       <AvatarFallback>{seed.charAt(0).toUpperCase()}</AvatarFallback>
     </Avatar>
   );
