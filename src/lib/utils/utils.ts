@@ -2,11 +2,7 @@ import { Column } from '@/types/props/Common.ts';
 import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { QueryLifecycleApi } from '@reduxjs/toolkit/query';
-import {
-  StatusItem,
-  View,
-  Workflow,
-} from '@/types/request-response/space/ApiResponse';
+import { StatusItem, View } from '@/types/request-response/space/ApiResponse';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -101,7 +97,7 @@ export const convertToEmbedURL = (url: string): string => {
   const videoIdMatch = url.match(/(?:youtu\.be\/|v=)([\w-]{11})/);
   const videoId = videoIdMatch?.[1];
   return videoId ? `https://www.youtube.com/embed/${videoId}` : url;
-}
+};
 
 export const extractDefaultViews = (views: View[]): string => {
   return views.map((view: View) => view.title).join(', ');

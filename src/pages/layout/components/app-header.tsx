@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { SidebarIcon } from 'lucide-react';
 import { Button } from '@/components/shadcn-ui/button';
 import { useSidebar } from '@/components/shadcn-ui/sidebar';
@@ -9,11 +10,14 @@ import { ThemeSwitch } from '@/components/common/theme-switch.tsx';
 import { ProfileDropdown } from '@/components/common/profile-dropdown.tsx';
 import { UserResponse } from '@/types/request-response/auth/ApiResponse.ts';
 import { Icon } from '@/assets/icon-path.tsx';
+import { LABEL } from '@/lib/constants/appStrings.ts';
+import { CreateTask } from '@/components/features/create-task.tsx';
 interface Props {
   user: UserResponse | null;
 }
 export function AppHeader({ user }: Props) {
   const { toggleSidebar } = useSidebar();
+  const [isAddTaskDialogOpen, setIsAddTaskDialogOpen] = useState(false);
   return (
     <header className="flex flex-col sticky w-full z-50 items-center bg-theme-dark">
       <div className="flex  w-full items-center gap-2 px-4 h-[44px]">
@@ -39,10 +43,14 @@ export function AppHeader({ user }: Props) {
               className="w-full h-8 pl-8 bg-theme-secondary-dark border-none placeholder:text-gray-200"
             />
           </div>
-
-          <Button className="bg-theme-secondary-dark hover:bg-theme-main-dark hover:opacity-30 px-3 rounded-md text-gray-200  h-8 font-medium text-base">
-            <PlusCircle /> New
-          </Button>
+          <CreateTask
+            isOpen={isAddTaskDialogOpen}
+            setIsOpen={setIsAddTaskDialogOpen}
+          >
+            <Button className="bg-theme-secondary-dark hover:bg-theme-main-dark hover:opacity-30 px-3 rounded-md text-gray-200 h-8 font-medium text-base">
+              <PlusCircle /> {LABEL.NEW}
+            </Button>
+          </CreateTask>
         </div>
         <div className="flex items-center gap-2">
           <ThemeSwitch />
