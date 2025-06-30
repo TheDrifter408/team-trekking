@@ -1,7 +1,7 @@
 export interface SpaceGlobal {
   clickApps: ClickApp[];
-  defaultView: View[];
-  workflow: Workflow[];
+  defaultViews: DefaultView[];
+  workFlows: WorkFlows;
 }
 
 export interface ClickApp {
@@ -9,11 +9,11 @@ export interface ClickApp {
   title: string;
   iconUrl: string;
   type: string;
-  tooltip: string | null;
+  tooltip: any;
   isActive: boolean;
 }
 
-export interface View {
+export interface DefaultView {
   id: number;
   title: string;
   iconUrl: string;
@@ -21,18 +21,50 @@ export interface View {
   isActive: boolean;
 }
 
-export interface Workflow {
-  id: number;
-  title: string;
-  subTitle: string;
-  isActive: boolean;
-  statusItems: Record<string, StatusItem[]>;
-  defaultView: View[];
+export interface WorkFlows {
+  Starter: Starter;
+  'Marketing Teams': MarketingTeams;
+  'Project Management': ProjectManagement;
+  'Product + Engineering': ProductEngineering;
 }
 
-export interface StatusItem {
+export interface Starter {
+  defaultViews: DefaultView[];
+  statusItems: StatusItems;
+}
+
+export interface StatusItems {
   id: number;
   name: string;
-  color: string;
+  isCopy: boolean;
+  groups: Group[];
+}
+
+export interface Group {
+  id: number;
+  name: string;
   order: number;
+  tooltip: any;
+  items: Item[];
+}
+
+export interface Item {
+  id: number;
+  name: string;
+  order: number;
+}
+
+export interface MarketingTeams {
+  defaultViews: DefaultView[];
+  statusItems: StatusItems;
+}
+
+export interface ProjectManagement {
+  defaultViews: DefaultView[];
+  statusItems: StatusItems;
+}
+
+export interface ProductEngineering {
+  defaultViews: DefaultView[];
+  statusItems: StatusItems;
 }

@@ -4,6 +4,7 @@ import { ApiResponse } from '@/types/request-response/auth/ApiResponse.ts';
 import { SpaceGlobal } from '@/types/request-response/space/ApiResponse.ts';
 import { API_URLS } from '@/lib/constants';
 import { withPersistentCache } from '@/lib/utils/utils.ts';
+import { CreateSpace } from '@/types/request-response/space/ApiRequest.ts';
 
 export const spaceApi = createApi({
   reducerPath: 'spaceApi',
@@ -17,7 +18,15 @@ export const spaceApi = createApi({
       keepUnusedDataFor: 60 * 60 * 24,
       ...withPersistentCache(15),
     }),
+    createSpace: builder.mutation<string, CreateSpace>({
+      query: (data: CreateSpace) => ({
+        url: 'space',
+        method: 'POST',
+        data,
+      }),
+      transformResponse: (response: ApiResponse<string>) => response.data,
+    }),
   }),
 });
 
-export const { useSpaceGlobalApiQuery } = spaceApi;
+export const { useSpaceGlobalApiQuery, useCreateSpaceMutation } = spaceApi;
