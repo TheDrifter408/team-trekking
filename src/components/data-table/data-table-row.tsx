@@ -31,7 +31,7 @@ const DropIndicator = ({
   depth: number;
   type: 'before' | 'after' | 'child';
 }) => {
-  const paddingLeft = 15 + depth * 35; // Base padding + depth offset
+  const indent = (depth + 2) * 35;
 
   if (type === 'child') {
     return (
@@ -39,8 +39,8 @@ const DropIndicator = ({
         <div
           className="absolute top-0 transform -translate-y-1/2 h-0.5 bg-pink-500"
           style={{
-            left: `${paddingLeft + 16}px`, // Indent more for child level
-            right: '8px', // Small margin from right edge
+            left: `${indent}px`,
+            right: '8px',
           }}
         />
       </div>
@@ -54,7 +54,7 @@ const DropIndicator = ({
         position === 'top' ? 'top-0' : 'bottom-0'
       )}
       style={{
-        marginLeft: `${paddingLeft}px`,
+        marginLeft: `${indent}px`,
         marginRight: '8px',
       }}
     />
@@ -77,6 +77,7 @@ export const DataTableRow = ({
     transition,
     isDragging,
   } = useSortable({ id: row.id });
+  const currentRowDepth = row.depth ?? row.original.depth ?? 0;
 
   const getTransform = () => {
     if (isDragging && transform) {
@@ -122,27 +123,26 @@ export const DataTableRow = ({
         }
       )}
     >
-      {/* Drop indicators */}
       {isDragOver && dropPosition && (
         <>
           {dropPosition.type === 'before' && (
             <DropIndicator
               position="top"
-              depth={dropPosition.depth}
+              depth={currentRowDepth}
               type="before"
             />
           )}
           {dropPosition.type === 'after' && (
             <DropIndicator
               position="bottom"
-              depth={dropPosition.depth}
+              depth={currentRowDepth}
               type="after"
             />
           )}
           {dropPosition.type === 'child' && (
             <DropIndicator
               position="child"
-              depth={dropPosition.depth}
+              depth={currentRowDepth}
               type="child"
             />
           )}
