@@ -35,11 +35,13 @@ import { LABEL } from '@/lib/constants/appStrings.ts';
 import { ContextMenu } from '@/components/common/context-menu.tsx';
 import { spacesMenuConfig } from '@/lib/constants/staticData.ts';
 import { WorkspaceSwitcher } from '@/components/layout/workspace-switcher.tsx';
+import { useGetWorkSpaceQuery } from '@/service/rtkQueries/workspaceQuery.ts';
 
 export const AppSidebar = (props: React.ComponentProps<typeof Sidebar>) => {
   const { state } = useSidebar();
   const [inviteUserOpen, setInviteUserOpen] = useState(false);
   const [isCreateSpaceOpen, setIsCreateSpaceOpen] = useState(false);
+  const { data: workSpaces } = useGetWorkSpaceQuery();
 
   const isOpen = state !== 'collapsed';
 
@@ -55,7 +57,7 @@ export const AppSidebar = (props: React.ComponentProps<typeof Sidebar>) => {
       {...props}
     >
       <SidebarHeader className="border-b py-0">
-        <WorkspaceSwitcher workspaces={sidebarData.workspaces} />
+        <WorkspaceSwitcher workspaces={workSpaces ?? []} />
       </SidebarHeader>
       <SidebarContent>
         {sidebarData.navGroups.map((props) => (
