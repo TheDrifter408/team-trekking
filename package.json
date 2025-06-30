@@ -74,6 +74,7 @@
     "@tanstack/virtual-core": "^3.13.6",
     "@types/react-beautiful-dnd": "^13.1.8",
     "axios": "^1.8.2",
+    "axios-logger": "^2.8.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.0.4",

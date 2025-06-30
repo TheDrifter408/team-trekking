@@ -55,15 +55,15 @@ interface SidebarData {
 export interface ManagePurposeProps {
   title: string;
   workspacePurposeOptions: WorkType[];
-  onSelectPurpose: (option: string) => void;
-  selectedPurpose: string | '';
+  onSelectPurpose: (option: WorkType) => void;
+  selectedPurpose: WorkType | undefined;
 }
 
 export interface ManageFeaturesProps {
   title: string;
-  onSelectOption: (option: string) => void;
+  onSelectOption: (option: ManageType) => void;
   manageOptions: ManageType[];
-  selectedOption: string | '';
+  selectedOption: ManageType | undefined;
 }
 
 export interface InvitePeopleProps {
@@ -79,8 +79,8 @@ export interface InvitePeopleProps {
 
 export interface SelectFeaturesProps {
   interestedFeature: InterestedFeature[];
-  selectedFeatures: string[];
-  onToggleFeature: (option: string) => void;
+  selectedFeatures: InterestedFeature[];
+  onToggleFeature: (option: InterestedFeature) => void;
 }
 
 export interface NameWorkspaceProps {
@@ -102,8 +102,8 @@ export interface FooterProps {
 }
 export interface ManageToolsProps {
   connectedTools: ConnectedTool[];
-  selectedTools: string[];
-  onToggleTool: (tool: string) => void;
+  selectedTools: ConnectedTool[];
+  onToggleTool: (tool: ConnectedTool) => void;
 }
 
 export interface List {

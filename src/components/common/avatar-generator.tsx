@@ -1,5 +1,5 @@
 import { createAvatar } from '@dicebear/core';
-import { initials, avataaars } from '@dicebear/collection';
+import { initials, avataaars, botttsNeutral } from '@dicebear/collection';
 import { cn } from '@/lib/utils/utils.ts';
 import {
   Avatar,
@@ -11,7 +11,7 @@ interface Props {
   seed: string;
   className?: string;
   size?: number;
-  variant: 'avataaars' | 'initials';
+  variant: 'avataaars' | 'initials' | 'botttsNeutral';
 }
 
 export const PlaceholderAvatar = ({
@@ -33,8 +33,10 @@ export const PlaceholderAvatar = ({
         'd1d4f9',
       ],
     });
-  } else {
+  } else if (variant === 'initials') {
     avatar = createAvatar(initials, { seed, fontWeight: 700, fontSize: size });
+  } else if (variant === 'botttsNeutral') {
+    avatar = createAvatar(botttsNeutral);
   }
   return (
     <Avatar className={cn(className)}>

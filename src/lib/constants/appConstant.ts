@@ -21,7 +21,7 @@ import {
 const API_URLS = {
   AUTH_BASE_URL: 'http://192.168.0.102:3001/',
   SPACE_BASE_URL: 'http://192.168.0.101:3006/',
-  WORK_SPACE_BASE_URL: 'http://192.168.0.101:3008/',
+  WORK_SPACE_BASE_URL: 'http://192.168.0.102:3008/',
   FOLDER_BASE_URL: 'http://146.190.195.64:3003/',
 };
 const HOME_CARD_TITLE = {
@@ -34,7 +34,7 @@ const HARD_CARD_LIST = [
   {
     id: HOME_CARD_TITLE.RECENTS,
     description:
-      'A list of all the ClickUp objects and locations you’ve recently viewed.',
+      'A list of all the TeamTrekking objects and locations you’ve recently viewed.',
     isAdded: true,
     imageSource: 'https://app-cdn.clickup.com/media/clock-J2RYU6UH.svg',
   },

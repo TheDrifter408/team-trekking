@@ -11,18 +11,6 @@ export interface TableHeaderSectionProps {
   centerTotalSize?: number;
 }
 
-export interface TableRowProps {
-  row: Row<any>;
-  depth?: number;
-  virtualRow: {
-    index: number;
-    start: number;
-    size: number;
-  };
-  onRowHover: (id: string | null) => void;
-  activeDialogRowId: string | null;
-}
-
 export interface TableCellSectionProps {
   cells: Cell<any, unknown>[];
   position: 'left' | 'center' | 'right';

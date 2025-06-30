@@ -2,7 +2,11 @@ import { Column } from '@/types/props/Common.ts';
 import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { QueryLifecycleApi } from '@reduxjs/toolkit/query';
-import { StatusItem, View, Workflow } from '@/types/request-response/space/ApiResponse';
+import {
+  StatusItem,
+  View,
+  Workflow,
+} from '@/types/request-response/space/ApiResponse';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -93,18 +97,102 @@ export function withPersistentCache(ttlInDays: number) {
   };
 }
 
-export const convertToEmbedURL = (url: string):string => {
+export const convertToEmbedURL = (url: string): string => {
   const videoIdMatch = url.match(/(?:youtu\.be\/|v=)([\w-]{11})/);
   const videoId = videoIdMatch?.[1];
   return videoId ? `https://www.youtube.com/embed/${videoId}` : url;
 }
 
-export const extractDefaultViews = (views:View[]):string => {
-  return views.map((view:View) => view.title).join(', ');
-}
+export const extractDefaultViews = (views: View[]): string => {
+  return views.map((view: View) => view.title).join(', ');
+};
 
-export const extractTaskStatus = (statusItems: Record<string, StatusItem[]>) => {
+export const extractTaskStatus = (
+  statusItems: Record<string, StatusItem[]>
+) => {
   return Object.values(statusItems) // first convert it to this type: StatusItem[][]
     .flat() // StatusItem[]
-    .map( ({ name, color }) => ({ name, color }));
+    .map(({ name, color }) => ({ name, color }));
+};
+
+export const handleMutation = async <T>(
+  mutation: any,
+  params: any
+): Promise<{ data?: T; error?: any }> => {
+  try {
+    const data = await mutation(params).unwrap();
+    return { data }; // Return data on success
+  } catch (error) {
+    console.error('Mutation error:', error);
+    return { error };
+  }
+};
+
+interface Projection {
+  depth: number;
+  parentId: string | null;
+  type: 'before' | 'after' | 'child';
+}
+
+interface RowLike {
+  id: string;
+  parentId: string | null;
+  depth: number;
+}
+
+interface GetProjectionArgs {
+  rows: RowLike[];
+  activeId: string;
+  overId: string;
+  offsetLeft: number;
+  indentationWidth: number;
+  maxDepth: number;
+}
+
+export function getProjection({
+  rows,
+  activeId,
+  overId,
+  offsetLeft,
+  indentationWidth = 25,
+  maxDepth,
+}: GetProjectionArgs): Projection | null {
+  if (!activeId || !overId) return null;
+  if (activeId === overId) return null;
+
+  const overRow = rows.find((r) => r.id === overId);
+  const activeRow = rows.find((r) => r.id === activeId);
+
+  if (!overRow || !activeRow) return null;
+
+  const projectedDepth = Math.min(
+    Math.max(0, overRow.depth + Math.round(offsetLeft / indentationWidth)),
+    maxDepth
+  );
+
+  const findParentId = (depth: number, index: number): string | null => {
+    for (let i = index - 1; i >= 0; i--) {
+      if (rows[i].depth === depth - 1) {
+        return rows[i].id;
+      }
+    }
+    return null;
+  };
+
+  const overIndex = rows.findIndex((r) => r.id === overId);
+  const parentId =
+    projectedDepth === 0 ? null : findParentId(projectedDepth, overIndex);
+
+  const type: Projection['type'] =
+    projectedDepth > overRow.depth
+      ? 'child'
+      : projectedDepth === overRow.depth
+        ? 'after'
+        : 'before';
+
+  return {
+    depth: projectedDepth,
+    parentId,
+    type,
+  };
 }

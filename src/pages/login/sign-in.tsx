@@ -14,6 +14,7 @@ import { UserResponse } from '@/types/request-response/auth/ApiResponse.ts';
 import { useTMTStore } from '@/stores/zustand/index.tsx';
 import { z } from 'zod';
 import { UserRole } from '@/lib/constants/enum.ts';
+import { handleMutation } from '@/lib/utils/utils.ts';
 
 export const Login = () => {
   const navigate = useNavigate();
@@ -30,17 +31,17 @@ export const Login = () => {
     },
   });
 
-  const onSubmit = async (data: z.infer<typeof loginSchema>) => {
+  const onSubmit = async (userData: z.infer<typeof loginSchema>) => {
     const loginForm = {
-      ...data,
+      ...userData,
       roleId: UserRole.User,
     };
-    const response = await signIn(loginForm).unwrap();
-    if (response.error) {
-      setErrorMessage(response.error.data.message);
-    } else if (response) {
-      saveUser(response as UserResponse);
+    const { data, error } = await handleMutation(signIn, loginForm);
+    if (data) {
+      saveUser(data as UserResponse);
       navigate('/home');
+    } else if (error) {
+      setErrorMessage(error.data.message);
     }
   };
   const onForgotPasswordClick = () => {
