@@ -158,6 +158,7 @@ export interface Task {
   parentId: string | null;
   comments?: Comment[];
   tags?: Tag[];
+  depth?: number;
 }
 
 export interface SidebarFolderItemsProps {

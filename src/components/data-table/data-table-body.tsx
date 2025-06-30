@@ -1,24 +1,23 @@
-import { useState } from 'react';
+import { useVirtualizer } from '@tanstack/react-virtual';
+import { DataTableRow } from './data-table-row';
 import {
-  pointerWithin,
   DndContext,
   PointerSensor,
   useSensor,
-  DragOverEvent,
   useSensors,
-  useDroppable,
+  closestCenter,
+  DragOverlay,
   DragStartEvent,
   DragEndEvent,
+  DragMoveEvent,
+  DragOverEvent,
 } from '@dnd-kit/core';
-import {
-  SortableContext,
-  verticalListSortingStrategy,
-} from '@dnd-kit/sortable';
-import { useVirtualizer } from '@tanstack/react-virtual';
-import { DataTableRow } from './data-table-row';
-import { flattenTasks, removeTaskById, insertTaskAt } from '@/mock/task.ts';
-import { cn } from '@/lib/utils/utils.ts';
+import { SortableContext } from '@dnd-kit/sortable';
 import { Task } from '@/types/props/Common.ts';
+import { useState } from 'react';
+import { createPortal } from 'react-dom';
+import { DataTableCellSection } from './data-table-cell.tsx';
+import { getProjection } from '@/lib/utils/utils.ts';
 
 interface DataTableBodyProps {
   table: any;
@@ -32,13 +31,6 @@ interface DataTableBodyProps {
     newParent: Task | null,
     position: string
   ) => void;
-  maxDepth?: number;
-}
-
-interface DragState {
-  activeTask: Task | null;
-  draggedOverZone: string | null;
-  isDragging: boolean;
 }
 
 export const DataTableBody = ({
@@ -48,211 +40,106 @@ export const DataTableBody = ({
   tasks,
   setTasks,
   activeDialogRowId,
-  onTaskMove,
-  maxDepth = 3,
 }: DataTableBodyProps) => {
+  const [activeId, setActiveId] = useState<string | null>(null);
+  const [offsetLeft, setOffsetLeft] = useState<number>(0);
+  const [draggedRow, setDraggedRow] = useState<any>(null);
+
+  const [overId, setOverId] = useState<string | null>(null);
+
   const rows = table.getRowModel().rows;
+
   const rowVirtualizer = useVirtualizer({
     count: rows.length,
     getScrollElement: () => parentRef.current,
     estimateSize: () => 40,
   });
 
-  const flat = flattenTasks(tasks);
   const virtualRows = rowVirtualizer.getVirtualItems();
   const totalHeight = rowVirtualizer.getTotalSize();
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
-        distance: 8, // Require 8px movement before starting drag
+        distance: 6,
       },
     })
   );
 
-  // Enhanced drag state management
-  const [dragState, setDragState] = useState<DragState>({
-    activeTask: null,
-    draggedOverZone: null,
-    isDragging: false,
-  });
-
-  const [activeDropZoneId, setActiveDropZoneId] = useState<string | null>(null);
-
   const onDragStart = (event: DragStartEvent) => {
-    const activeTask = event.active.data.current?.task;
-    if (activeTask) {
-      setDragState({
-        activeTask,
-        draggedOverZone: null,
-        isDragging: true,
+    const { active } = event;
+    setActiveId(active.id as string);
+    const draggedRowData = rows.find((row: any) => row.id === active.id);
+    setDraggedRow(draggedRowData);
+  };
+
+  const onDragMove = ({ delta }: DragMoveEvent) => {
+    setOffsetLeft(delta.x);
+  };
+
+  const [projected, setProjected] = useState();
+
+  const onDragOver = ({ over }: DragOverEvent) => {
+    const overId = over?.id?.toString() ?? null;
+    setOverId(overId);
+
+    if (activeId && overId && activeId !== overId) {
+      const projection = getProjection({
+        rows,
+        activeId,
+        overId,
+        offsetLeft,
+        indentationWidth: 30,
+        maxDepth: 5,
       });
+
+      setProjected(projection); // ✅ Use this for visual & final drop
+    } else {
+      setProjected(null);
     }
   };
 
   const onDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
 
-    // Reset drag state
-    setDragState({
-      activeTask: null,
-      draggedOverZone: null,
-      isDragging: false,
-    });
-    setActiveDropZoneId(null);
+    if (!active || !over || active.id === over.id) return;
 
-    if (!active || !over) {
-      return;
-    }
+    const activeId = active.id as string;
+    const overId = over.id as string;
 
-    const draggedTask = active.data.current?.task;
-    if (!draggedTask) {
-      return;
-    }
+    if (!projected) return;
 
-    // Handle drop zone drops (hierarchical changes)
-    if (typeof over.id === 'string' && over.id.startsWith('dropzone-')) {
-      handleDropZoneDrop(draggedTask, over);
-      return;
-    }
+    const updated = moveTaskInTree(
+      tasks,
+      active.id as string,
+      over.id as string,
+      projected.type,
+      projected.parentId,
+      projected.depth
+    );
 
-    // Handle direct row drops (same-level reordering)
-    if (typeof over.id === 'string') {
-      handleDirectRowDrop(draggedTask, over.id);
-      return;
-    }
+    setTasks(updated);
+
+    setActiveId(null);
+    setDraggedRow(null);
+    setOverId(null);
   };
 
-  const handleDropZoneDrop = (draggedTask: Task, over: any) => {
-    const dropData = over.data?.current;
-    if (!dropData) return;
-
-    const {
-      taskId: targetTaskId,
-      position,
-      depth: targetDepth,
-      parentId: dropZoneParentId,
-    } = dropData;
-
-    // Edge case: Prevent dropping on self
-    if (draggedTask.id === targetTaskId) {
-      return;
-    }
-
-    // Edge case: Prevent dropping parent on its descendant
-    if (isTaskDescendant(draggedTask, targetTaskId)) {
-      return;
-    }
-
-    // Determine the new parent based on drop zone
-    let newParentId: string | null = null;
-    let siblingId: string = targetTaskId;
-
-    if (position === 'below') {
-      // Check if target task is expanded and we're dropping at increased depth
-      const targetTask = findTaskById(tasks, targetTaskId);
-      const targetRow = rows.find((r) => r.original.id === targetTaskId);
-      const isTargetExpanded = targetRow?.getIsExpanded?.() || false;
-
-      if (isTargetExpanded && targetDepth < maxDepth - 1) {
-        // Drop as child of target task
-        newParentId = targetTaskId;
-        siblingId = ''; // Insert at the beginning of children
-      } else {
-        // Drop as sibling after target task
-        newParentId = dropZoneParentId;
-      }
-    } else {
-      // Drop as sibling before target task
-      newParentId = dropZoneParentId;
-    }
-
-    // Edge case: Check depth limits
-    if (newParentId && getTaskDepth(tasks, newParentId) >= maxDepth - 1) {
-      return;
-    }
-
-    performTaskMove(draggedTask, newParentId, siblingId, position);
-  };
-
-  const handleDirectRowDrop = (draggedTask: Task, targetRowId: string) => {
-    const targetTask = findTaskById(tasks, targetRowId);
-    if (!targetTask) return;
-
-    // Only allow reordering within the same parent level
-    if (draggedTask.parentId === targetTask.parentId) {
-      performTaskMove(draggedTask, targetTask.parentId, targetRowId, 'above');
-    } else {
-    }
-  };
-
-  const performTaskMove = (
-    draggedTask: Task,
-    newParentId: string | null,
-    siblingId: string,
-    position: 'above' | 'below'
-  ) => {
-    try {
-      // Step 1: Remove the task from its current position
-      let updatedTasks = removeTaskById(tasks, draggedTask.id);
-
-      // Step 2: Create the updated task with new parent
-      const updatedTask: Task = {
-        ...draggedTask,
-        parentId: newParentId,
-      };
-
-      // Step 3: Insert at the new position
-      if (siblingId) {
-        updatedTasks = insertTaskAt(
-          updatedTasks,
-          newParentId,
-          updatedTask,
-          siblingId,
-          position
-        );
-      } else {
-        // Insert as first child if no sibling specified
-        updatedTasks = insertTaskAt(updatedTasks, newParentId, updatedTask);
-      }
-
-      // Step 4: Update subtask counts
-      updatedTasks = updateSubtaskCounts(updatedTasks);
-
-      // Step 5: Validate the new structure
-      if (validateTaskStructure(updatedTasks)) {
-        setTasks(updatedTasks);
-
-        // Notify parent component of the change
-        if (onTaskMove) {
-          const newParent = newParentId
-            ? findTaskById(updatedTasks, newParentId)
-            : null;
-          onTaskMove(updatedTask, newParent, position);
-        }
-      }
-    } catch (error) {}
-  };
-
-  const onDragOver = (event: DragOverEvent) => {
-    const overId = event.over?.id?.toString();
-
-    if (overId && overId.startsWith('dropzone-')) {
-      setActiveDropZoneId(overId);
-      setDragState((prev) => ({ ...prev, draggedOverZone: overId }));
-    } else {
-      setActiveDropZoneId(null);
-      setDragState((prev) => ({ ...prev, draggedOverZone: null }));
-    }
+  const onDragCancel = () => {
+    setActiveId(null);
+    setDraggedRow(null);
+    setOverId(null);
   };
 
   return (
     <DndContext
-      sensors={sensors}
       onDragStart={onDragStart}
       onDragEnd={onDragEnd}
+      onDragMove={onDragMove}
       onDragOver={onDragOver}
-      collisionDetection={pointerWithin}
+      onDragCancel={onDragCancel}
+      sensors={sensors}
+      collisionDetection={closestCenter}
     >
       <div className="flex-1" ref={parentRef}>
         <div
@@ -264,229 +151,149 @@ export const DataTableBody = ({
           }}
         >
           <SortableContext
-            items={virtualRows.map((r) => rows[r.index].id)}
-            strategy={verticalListSortingStrategy}
+            items={table.getRowModel().rows.map((row: Task) => row.id)}
           >
             {virtualRows.map((virtualRow) => {
               const row = rows[virtualRow.index];
-              const isBeingDragged =
-                dragState.activeTask?.id === row.original.id;
+              const isDropTarget = row.id === overId && row.id !== activeId;
 
               return (
-                <div key={row.id}>
-                  <DataTableRow
-                    row={row}
-                    virtualRow={virtualRow}
-                    onRowHover={onRowHover}
-                    activeDialogRowId={activeDialogRowId}
-                  />
-
-                  {/* Drop zones - only show when dragging and not on the dragged item */}
-                  {dragState.isDragging && !isBeingDragged && (
-                    <>
-                      {/* Above drop zone */}
-                      <DropZone
-                        rowId={row.id}
-                        taskId={row.original.id}
-                        position="above"
-                        parentId={row.original.parentId ?? null}
-                        depth={row.depth}
-                        top={virtualRow.start}
-                        activeDropZoneId={activeDropZoneId}
-                        isExpanded={false}
-                        maxDepth={maxDepth}
-                        draggedTask={dragState.activeTask}
-                      />
-
-                      {/* Below drop zone */}
-                      <DropZone
-                        rowId={row.id}
-                        taskId={row.original.id}
-                        position="below"
-                        parentId={row.original.parentId ?? null}
-                        depth={row.depth}
-                        top={virtualRow.start + 40}
-                        activeDropZoneId={activeDropZoneId}
-                        isExpanded={row.getIsExpanded?.()}
-                        maxDepth={maxDepth}
-                        draggedTask={dragState.activeTask}
-                      />
-                    </>
-                  )}
-                </div>
+                <DataTableRow
+                  key={row.id}
+                  row={row}
+                  virtualRow={virtualRow}
+                  onRowHover={onRowHover}
+                  activeDialogRowId={activeDialogRowId}
+                  isDragOver={isDropTarget}
+                  dropPosition={isDropTarget ? projected : null} // 👈 Pass projection
+                />
               );
             })}
           </SortableContext>
         </div>
       </div>
+
+      {createPortal(
+        <DragOverlay>
+          {activeId && draggedRow ? (
+            <div
+              style={{
+                width: table.getTotalSize(),
+                height: '40px',
+                backgroundColor: 'white',
+                borderRadius: '4px',
+                boxShadow: '0 8px 16px rgba(0, 0, 0, 0.15)',
+                border: '1px solid #e5e7eb',
+              }}
+              className="flex items-center opacity-90"
+            >
+              <DataTableCellSection
+                cells={draggedRow.getLeftVisibleCells()}
+                position="left"
+              />
+              <DataTableCellSection
+                cells={draggedRow.getCenterVisibleCells()}
+                position="center"
+              />
+              <DataTableCellSection
+                cells={draggedRow.getRightVisibleCells()}
+                position="right"
+              />
+            </div>
+          ) : null}
+        </DragOverlay>,
+        document.body
+      )}
     </DndContext>
   );
 };
 
-// Enhanced DropZone component with better validation
-interface DropZoneProps {
-  rowId: string;
-  taskId: string;
-  depth: number;
-  top: number;
-  position: 'above' | 'below';
-  activeDropZoneId: string | null;
-  isExpanded?: boolean;
-  parentId: string | null;
-  maxDepth: number;
-  draggedTask: Task | null;
+function moveTaskInTree(
+  tasks: Task[],
+  taskId: string,
+  targetId: string,
+  position: 'before' | 'after' | 'child',
+  newParentId: string | null,
+  newDepth: number
+): Task[] {
+  const flat: Task[] = [];
+
+  const flatten = (list: Task[]) => {
+    for (const task of list) {
+      flat.push(task);
+      if (task.subTask?.length) flatten(task.subTask);
+    }
+  };
+
+  flatten(tasks);
+
+  const originalTask = flat.find((t) => t.id === taskId);
+  if (!originalTask) return tasks;
+
+  const clonedTask = {
+    ...originalTask,
+    parentId: newParentId,
+    depth: newDepth,
+    subTask: originalTask.subTask ? [...originalTask.subTask] : [],
+  };
+
+  // Recalculate all child depths
+  recalculateDepths(clonedTask.subTask, newDepth + 1);
+
+  // Step 1: Remove the task
+  const removeTask = (list: Task[]): Task[] =>
+    list
+      .map((t) => ({ ...t, subTask: removeTask(t.subTask || []) }))
+      .filter((t) => t.id !== taskId);
+
+  const withoutMoved = removeTask([...tasks]);
+
+  // Step 2: Insert it
+  const insertTask = (list: Task[]): Task[] => {
+    const index = list.findIndex((t) => t.id === targetId);
+
+    if (index === -1) {
+      return [...list, clonedTask]; // fallback
+    }
+
+    if (position === 'before') {
+      return [...list.slice(0, index), clonedTask, ...list.slice(index)];
+    }
+
+    if (position === 'after') {
+      return [
+        ...list.slice(0, index + 1),
+        clonedTask,
+        ...list.slice(index + 1),
+      ];
+    }
+
+    if (position === 'child') {
+      return list.map((t) => {
+        if (t.id === targetId) {
+          return {
+            ...t,
+            subTask: [...(t.subTask || []), clonedTask],
+          };
+        }
+        return {
+          ...t,
+          subTask: insertTask(t.subTask || []),
+        };
+      });
+    }
+
+    return list;
+  };
+
+  return insertTask(withoutMoved);
 }
 
-const DropZone = ({
-  rowId,
-  taskId,
-  depth,
-  top,
-  position,
-  activeDropZoneId,
-  isExpanded,
-  parentId,
-  maxDepth,
-  draggedTask,
-}: DropZoneProps) => {
-  const zoneId = `dropzone-${rowId}-${position}`;
-
-  // Determine if this is a valid drop zone
-  const isValidDropZone = () => {
-    if (!draggedTask) return false;
-
-    // Can't drop on self
-    if (draggedTask.id === taskId) return false;
-
-    // Can't drop parent on descendant
-    if (isTaskDescendant(draggedTask, taskId)) return false;
-
-    // Check depth limits for child drops
-    if (position === 'below' && isExpanded && depth >= maxDepth - 1) {
-      return false;
+function recalculateDepths(tasks: Task[], baseDepth: number) {
+  tasks.forEach((task) => {
+    task.depth = baseDepth;
+    if (task.subTask && task.subTask.length) {
+      recalculateDepths(task.subTask, baseDepth + 1);
     }
-
-    return true;
-  };
-
-  const { setNodeRef } = useDroppable({
-    id: zoneId,
-    data: {
-      rowId,
-      depth,
-      position,
-      parentId,
-      taskId,
-      isValid: isValidDropZone(),
-    },
-    disabled: !isValidDropZone(),
   });
-
-  const isActive = activeDropZoneId === zoneId;
-  const effectiveDepth = position === 'below' && isExpanded ? depth + 1 : depth;
-  const isValid = isValidDropZone();
-
-  return (
-    <div
-      ref={setNodeRef}
-      className={cn(
-        'absolute w-full h-[8px] z-20 pointer-events-auto',
-        !isValid && 'pointer-events-none'
-      )}
-      style={{
-        top: top,
-        paddingLeft: `${effectiveDepth * 60}px`,
-      }}
-    >
-      <div
-        className={cn(
-          'h-[2px] w-full transition-all duration-200 rounded',
-          isActive && isValid ? 'bg-theme-main shadow-lg' : 'bg-transparent',
-          isActive && !isValid ? 'bg-red-400' : ''
-        )}
-      />
-
-      {/* Visual indicator for child drop */}
-      {isActive && isValid && position === 'below' && isExpanded && (
-        <div
-          className="absolute left-0 top-0 w-4 h-[2px] bg-theme-main rounded"
-          style={{ marginLeft: `${(effectiveDepth - 1) * 60 + 50}px` }}
-        />
-      )}
-    </div>
-  );
-};
-
-// Helper functions
-const findTaskById = (tasks: Task[], taskId: string): Task | null => {
-  for (const task of tasks) {
-    if (task.id === taskId) return task;
-    if (task.subTask?.length) {
-      const found = findTaskById(task.subTask, taskId);
-      if (found) return found;
-    }
-  }
-  return null;
-};
-
-const isTaskDescendant = (parentTask: Task, childTaskId: string): boolean => {
-  if (!parentTask.subTask) return false;
-
-  for (const subTask of parentTask.subTask) {
-    if (subTask.id === childTaskId) return true;
-    if (isTaskDescendant(subTask, childTaskId)) return true;
-  }
-  return false;
-};
-
-const getTaskDepth = (tasks: Task[], taskId: string): number => {
-  const findDepth = (
-    taskList: Task[],
-    targetId: string,
-    currentDepth: number
-  ): number => {
-    for (const task of taskList) {
-      if (task.id === targetId) return currentDepth;
-      if (task.subTask?.length) {
-        const depth = findDepth(task.subTask, targetId, currentDepth + 1);
-        if (depth !== -1) return depth;
-      }
-    }
-    return -1;
-  };
-
-  return findDepth(tasks, taskId, 0);
-};
-
-const updateSubtaskCounts = (tasks: Task[]): Task[] => {
-  return tasks.map((task) => {
-    const updatedTask = { ...task };
-    if (updatedTask.subTask?.length) {
-      updatedTask.subTask = updateSubtaskCounts(updatedTask.subTask);
-      updatedTask.subTaskCount = updatedTask.subTask.length;
-    } else {
-      updatedTask.subTaskCount = 0;
-    }
-    return updatedTask;
-  });
-};
-
-const validateTaskStructure = (tasks: Task[]): boolean => {
-  const seenIds = new Set<string>();
-
-  const validate = (taskList: Task[]): boolean => {
-    for (const task of taskList) {
-      if (seenIds.has(task.id)) {
-        return false;
-      }
-      seenIds.add(task.id);
-
-      if (task.subTask?.length && !validate(task.subTask)) {
-        return false;
-      }
-    }
-    return true;
-  };
-
-  return validate(tasks);
-};
+}
