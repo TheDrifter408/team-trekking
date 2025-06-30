@@ -3,7 +3,6 @@ import axiosBaseQuery from '@/service/baseQuery.ts';
 import { CreateFolderRequest } from '@/types/request-response/folder/ApiRequest.ts';
 import { Folder } from '@/types/request-response/folder/ApiResponse.ts';
 import { API_URLS } from '@/lib/constants';
-import { withPersistentCache } from '@/lib/utils/utils.ts';
 import { ApiResponse } from '@/types/request-response/auth/ApiResponse';
 
 export const folderApi = createApi({
@@ -16,7 +15,6 @@ export const folderApi = createApi({
         method: 'POST',
         data: body,
       }),
-      ...withPersistentCache(15),
     }),
   }),
 });
