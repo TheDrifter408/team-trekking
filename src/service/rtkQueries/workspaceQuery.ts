@@ -6,6 +6,8 @@ import { withPersistentCache } from '@/lib/utils/utils.ts';
 import {
   WorkSpaceGlobal,
   WorkSpaceRecent,
+  WorkSpaceCreated,
+  WorkSpaceResponse,
 } from '@/types/request-response/workspace/ApiResponse';
 import { CreateWorkSpace } from '@/types/request-response/workspace/ApiRequest.ts';
 
@@ -29,11 +31,21 @@ export const workspaceApi = createApi({
       transformResponse: (response: ApiResponse<Array<WorkSpaceRecent>>) =>
         response.data,
     }),
-    createWorkSpace: builder.mutation<any, CreateWorkSpace>({
+    getWorkSpace: builder.query<WorkSpaceResponse, void>({
       query: () => ({
         url: 'workspace',
       }),
-      transformResponse: (response: ApiResponse<any>) => response.data,
+      transformResponse: (response: ApiResponse<WorkSpaceResponse>) =>
+        response.data,
+    }),
+    createWorkSpace: builder.mutation<WorkSpaceCreated, CreateWorkSpace>({
+      query: (body: CreateWorkSpace) => ({
+        url: 'workspace',
+        method: 'POST',
+        data: body,
+      }),
+      transformResponse: (response: ApiResponse<WorkSpaceCreated>) =>
+        response.data,
     }),
   }),
 });
@@ -41,5 +53,6 @@ export const workspaceApi = createApi({
 export const {
   useWorkspaceGlobalQuery,
   useWorkspaceDashBoardRecentQuery,
+  useGetWorkSpaceQuery,
   useCreateWorkSpaceMutation,
 } = workspaceApi;

@@ -5,10 +5,10 @@ export interface CreateWorkSpace {
   customManageType?: string;
   discoverySourceId?: number;
   customDiscoverySource?: string;
-  connectedToolIds: number[];
-  interestedFeatureIds: number[];
+  connectedToolIds?: number[];
+  interestedFeatureIds?: number[];
   planId?: number;
-  members: Member[];
+  members?: Member[];
 }
 
 export interface Member {

@@ -42,6 +42,7 @@ import {
   ManageType,
   WorkType,
 } from '@/types/request-response/workspace/ApiResponse.ts';
+import { useWorkspaceStore } from '@/stores/zustand/workspace-store.ts';
 
 interface Props {
   isOpen: boolean;
@@ -55,6 +56,7 @@ export const CreateWorkspace: React.FC<Props> = ({
   setIsOpen,
 }) => {
   const { isFirstTimeLogin, setIsFirstTimeLogin } = useAuthStore();
+  const { setCurrentWorkspace } = useWorkspaceStore();
   const [step, setStep] = useState<number>(1);
   // State for form data with proper types
   const [selectedWorkSpaceType, setSelectedWorkSpaceType] = useState<
@@ -124,29 +126,45 @@ export const CreateWorkspace: React.FC<Props> = ({
     }
     const requestParams = {
       name: workspaceName,
-      connectedToolIds: selectedTools.map((data) => data.id),
-      interestedFeatureIds: selectedFeatures.map((data) => data.id),
-      members: selectedEmails.map((email) => {
-        return { email: email };
+
+      ...(selectedTools.length > 0 && {
+        connectedToolIds: selectedTools.map((data) => data.id),
       }),
+
+      ...(selectedFeatures.length > 0 && {
+        interestedFeatureIds: selectedFeatures.map((data) => data.id),
+      }),
+
+      ...(selectedEmails.length > 0 && {
+        members: selectedEmails.map((email) => ({ email })),
+      }),
+
       ...(selectedWorkSpaceType?.id !== undefined && {
         workTypeId: Number(selectedWorkSpaceType.id),
       }),
+
       ...(selectedManage?.id !== undefined && {
         manageTypeId: Number(selectedManage.id),
       }),
+
       ...(selectedManage?.name && {
         customManageType: selectedManage.name,
       }),
+
       ...(selectedDiscovery?.id !== undefined && {
         discoverySourceId: Number(selectedDiscovery.id),
       }),
+
       ...(selectedDiscovery?.name && {
         customDiscoverySource: selectedDiscovery.name,
       }),
     };
     const { data } = await createWorkSpaceApi(requestParams);
     if (data) {
+      setCurrentWorkspace({
+        name: data.name,
+        id: data.id,
+      });
       setIsOpen(false);
       resetForm();
       setIsFirstTimeLogin(false);
