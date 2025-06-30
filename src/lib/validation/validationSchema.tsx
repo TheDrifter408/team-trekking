@@ -95,3 +95,10 @@ export const createListSchema = z.object({
   name: z.string().min(1, 'List Name is required'),
   isPrivateMode: z.boolean(),
 });
+
+export const createFolderSchema = z.object({
+  name: z.string().min(1, 'A Name is required'),
+  isPrivateMode: z.boolean(),
+  color: z.string().optional(),
+  invitees: z.array(AssigneeObject).optional(),
+});

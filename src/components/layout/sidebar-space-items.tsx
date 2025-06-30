@@ -23,6 +23,7 @@ import { MenuItem, SubmenuItem } from '@/types/interfaces/ContextMenu';
 import { ACTION } from '@/lib/constants';
 import { UpdateSpace } from '../features/update-space';
 import { ShareSpaceDialog } from '@/components/common/share-space-dialog';
+import { CreateFolder } from '../features/create-folder';
 
 interface Props {
   space: {
@@ -50,6 +51,7 @@ export const SidebarSpaceItems = ({ space, children }: Props) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isShareSpace, setIsShareSpace] = useState(false);
   const [isEditingSpace, setIsEditingSpace] = useState(false);
+  const [isCreateFolderOpen, setIsCreateFolderOpen] = useState(false);
   const [isCreateListOpen, setIsCreateListOpen] = useState(false);
 
   const onToggleCollapse = () => {
@@ -62,6 +64,8 @@ export const SidebarSpaceItems = ({ space, children }: Props) => {
       setIsCreateListOpen(true);
     } else if (item.action && item.action === ACTION.EDIT_SPACE) {
       setIsEditingSpace(true);
+    } else if (item.action && item.action === ACTION.CREATE_FOLDER) {
+      setIsCreateFolderOpen(true);
     }
   };
 
@@ -146,6 +150,10 @@ export const SidebarSpaceItems = ({ space, children }: Props) => {
           space={space}
           createListOpen={isCreateListOpen}
           setCreateListOpen={setIsCreateListOpen}
+        />
+        <CreateFolder
+          createFolderOpen={isCreateFolderOpen}
+          setCreateFolderOpen={setIsCreateFolderOpen}
         />
         <UpdateSpace
           isActive={isEditingSpace}

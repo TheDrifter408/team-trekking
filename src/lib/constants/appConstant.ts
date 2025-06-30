@@ -19,7 +19,7 @@ import {
 } from 'lucide-react';
 
 const API_URLS = {
-  AUTH_BASE_URL: 'http://192.168.0.101:3001/',
+  AUTH_BASE_URL: 'http://192.168.0.102:3001/',
   SPACE_BASE_URL: 'http://192.168.0.101:3006/',
   WORK_SPACE_BASE_URL: 'http://192.168.0.101:3008/',
 };
