@@ -106,26 +106,19 @@ const getStatusesByCategory = (
   // The API data has keys like "Not Started", "Active", "Done", "Closed"
   // We need to map these to our category structure
   Object.entries(statusData).forEach(([categoryKey, statuses]) => {
+    // Ensure statuses is always an array
+    const safeStatuses = Array.isArray(statuses) ? statuses : [];
+
     // Find matching category or create a new one
     const existingCategory = categories.find((cat) => cat.id === categoryKey);
-    if (existingCategory) {
-      statusesByCategory[categoryKey] = {
-        description: existingCategory.description,
-        statuses: statuses.map((status) => ({
-          ...status,
-          category: categoryKey,
-        })),
-      };
-    } else {
-      // Create new category if it doesn't exist in predefined categories
-      statusesByCategory[categoryKey] = {
-        description: categoryKey,
-        statuses: statuses.map((status) => ({
-          ...status,
-          category: categoryKey,
-        })),
-      };
-    }
+
+    statusesByCategory[categoryKey] = {
+      description: existingCategory?.description ?? categoryKey,
+      statuses: safeStatuses.map((status) => ({
+        ...status,
+        category: categoryKey,
+      })),
+    };
   });
 
   return statusesByCategory;
@@ -301,10 +294,12 @@ export const StatusTemplate = ({ isOpen, setIsOpen, data }: Props) => {
 
   return (
     <Dialog open={isOpen} onOpenChange={() => setIsOpen(!isOpen)}>
-      <DialogContent className={cn(
-        "!max-w-[690px] flex flex-col h-[85vh] max-h-[85vh] transition-opacity duration-300",
-        "data-[state=open]:opacity-100 data-[state=closed]:opacity-0"
-        )}>
+      <DialogContent
+        className={cn(
+          '!max-w-[690px] flex flex-col h-[85vh] max-h-[85vh] transition-opacity duration-300',
+          'data-[state=open]:opacity-100 data-[state=closed]:opacity-0'
+        )}
+      >
         <DialogHeader>
           <DialogTitle className="text-2xl">
             {LABEL.EDIT_SPACE_STATUS}
@@ -363,7 +358,9 @@ export const StatusTemplate = ({ isOpen, setIsOpen, data }: Props) => {
                           category={{
                             id: categoryId,
                             description: group.description,
-                            status: group.statuses.map((s) => s.id),
+                            status: Array.isArray(group.statuses)
+                              ? group.statuses.map((s) => s.id)
+                              : [],
                           }}
                         />
                         <div className="space-y-1 mt-2">
@@ -400,10 +397,10 @@ function CategoryStatusList({
 }) {
   return (
     <SortableContext
-      items={statuses.map((status) => status.id)}
+      items={Array.isArray(statuses) ? statuses.map((status) => status.id) : []}
       strategy={verticalListSortingStrategy}
     >
-      {statuses.map((status) => (
+      {(Array.isArray(statuses) ? statuses : []).map((status) => (
         <SortableStatusItem key={status.id} status={status} />
       ))}
       <AddStatusItem />

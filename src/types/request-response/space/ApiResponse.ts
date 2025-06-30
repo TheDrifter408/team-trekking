@@ -1,7 +1,7 @@
 export interface SpaceGlobal {
   clickApps: ClickApp[];
   defaultViews: DefaultView[];
-  workFlows: WorkFlows;
+  workFlows: WorkFlow[];
 }
 
 export interface ClickApp {
@@ -13,6 +13,12 @@ export interface ClickApp {
   isActive: boolean;
 }
 
+export interface WorkFlow {
+  name: string;
+  defaultViews: DefaultView[];
+  statusItems: StatusItems;
+}
+
 export interface DefaultView {
   id: number;
   title: string;
@@ -20,19 +26,6 @@ export interface DefaultView {
   type: string;
   isActive: boolean;
 }
-
-export interface WorkFlows {
-  Starter: Starter;
-  'Marketing Teams': MarketingTeams;
-  'Project Management': ProjectManagement;
-  'Product + Engineering': ProductEngineering;
-}
-
-export interface Starter {
-  defaultViews: DefaultView[];
-  statusItems: StatusItems;
-}
-
 export interface StatusItems {
   id: number;
   name: string;
@@ -52,19 +45,4 @@ export interface Item {
   id: number;
   name: string;
   order: number;
-}
-
-export interface MarketingTeams {
-  defaultViews: DefaultView[];
-  statusItems: StatusItems;
-}
-
-export interface ProjectManagement {
-  defaultViews: DefaultView[];
-  statusItems: StatusItems;
-}
-
-export interface ProductEngineering {
-  defaultViews: DefaultView[];
-  statusItems: StatusItems;
 }

@@ -14,10 +14,10 @@ import { cn } from '@/lib/utils/utils.ts';
 import { useAppContext } from '@/lib/context/app-layout-context.tsx';
 import { LABEL } from '@/lib/constants/appStrings.ts';
 import {
-  View,
-  StatusItem,
-  Workflow,
   ClickApp,
+  DefaultView,
+  StatusItems,
+  WorkFlow,
 } from '@/types/request-response/space/ApiResponse.ts';
 import { ClickAppsDialog } from './clickapps-dialog';
 
@@ -29,27 +29,30 @@ interface Props {
 
 export const CreateSpaceWorkflow = ({ isOpen, setIsOpen, onBack }: Props) => {
   const { spaceGlobal } = useAppContext(); // contains workflow data
-  // Dialog States for default views, task Statuses and ClickApps 
+  // Dialog States for default views, task Statuses and ClickApps
   const [isDefaultViewOpen, setIsDefaultViewOpen] = useState(false);
   const [isTaskStatusOpen, setIsTaskStatusOpen] = useState(false);
   const [isClickAppsOpen, setIsClickAppsOpen] = useState(false);
 
-  const [selectedTemplate, setSelectedTemplate] = useState<Workflow | null>(null);
+  const [selectedTemplate, setSelectedTemplate] = useState<WorkFlow | null>(
+    null
+  );
 
-  const [defaultViewData, setDefaultViewData] = useState<View[]>([]);
-  const [taskStatuses, setTaskStatuses] = useState<Record<string, StatusItem[]>>({});
+  const [defaultViewData, setDefaultViewData] = useState<DefaultView[]>([]);
+  const [taskStatuses, setTaskStatuses] = useState<Record<string, StatusItems>>(
+    {}
+  );
   const [clickApps, setClickApps] = useState<ClickApp[]>([]);
 
-  const templates = spaceGlobal?.workflow ?? [];
+  const templates = spaceGlobal?.workFlows ?? [];
 
-  const onSelectTemplate = (templateId: number) => {
-    const selected = templates.find((tpl) => tpl.id === templateId);
+  const onSelectTemplate = (templateName: string) => {
+    const selected = templates.find((tpl) => tpl.name === templateName);
     if (selected) {
       setSelectedTemplate(selected);
-      setDefaultViewData(selected.defaultView);
+      setDefaultViewData(selected.defaultViews);
       setTaskStatuses(selected.statusItems);
     }
-
   };
 
   const onSelectClickApp = (app: ClickApp) => {
@@ -57,27 +60,27 @@ export const CreateSpaceWorkflow = ({ isOpen, setIsOpen, onBack }: Props) => {
     if (!foundClickApp) {
       return;
     } else {
-      const newSelectedClickApps = clickApps.map(
-        (a) => a.id === foundClickApp.id ? { ...a, isActive: !a.isActive } : a
+      const newSelectedClickApps = clickApps.map((a) =>
+        a.id === foundClickApp.id ? { ...a, isActive: !a.isActive } : a
       );
       setClickApps(newSelectedClickApps);
     }
-  }
+  };
 
   const onToggleEveryApp = () => {
     const shouldTurnOn = !clickApps.every((a) => a.isActive);
     const allSelected = clickApps.map((a) => ({
-      ...a, 
-      isActive:shouldTurnOn })
-    );
+      ...a,
+      isActive: shouldTurnOn,
+    }));
     setClickApps(allSelected);
-  }
+  };
 
   useEffect(() => {
     if (spaceGlobal) {
-      setSelectedTemplate(spaceGlobal.workflow[0]);
-      setDefaultViewData(spaceGlobal.workflow[0].defaultView);
-      setTaskStatuses(spaceGlobal.workflow[0].statusItems);
+      setSelectedTemplate(spaceGlobal.workFlows[0]);
+      setDefaultViewData(spaceGlobal.workFlows[0].defaultViews);
+      setTaskStatuses(spaceGlobal.workFlows[0].statusItems);
       setClickApps(spaceGlobal.clickApps);
     }
   }, [spaceGlobal]);
@@ -85,10 +88,12 @@ export const CreateSpaceWorkflow = ({ isOpen, setIsOpen, onBack }: Props) => {
   return (
     <>
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogContent className={cn(
-          "!max-w-[700px] flex flex-col transition-opacity duration-0",
-          "data-[state=open]:opacity-100 data-[state=closed]:opacity-0"
-          )}>
+        <DialogContent
+          className={cn(
+            '!max-w-[700px] flex flex-col transition-opacity duration-0',
+            'data-[state=open]:opacity-100 data-[state=closed]:opacity-0'
+          )}
+        >
           <DialogHeader>
             <DialogTitle className="text-xl font-semibold text-primary">
               {LABEL.DEFINE_YOUR_WORKFLOW}
@@ -102,11 +107,15 @@ export const CreateSpaceWorkflow = ({ isOpen, setIsOpen, onBack }: Props) => {
             <div className="grid grid-cols-2 gap-3">
               {templates.map((template) => (
                 <Template
-                  key={template.id}
-                  templateTitle={template.title}
-                  templateDescription={template.subTitle}
-                  isSelected={selectedTemplate ? selectedTemplate.id === template.id : false}
-                  onClick={() => onSelectTemplate(template.id)}
+                  key={template.name}
+                  templateTitle={template.name}
+                  templateDescription={template.name}
+                  isSelected={
+                    selectedTemplate
+                      ? selectedTemplate.name === template.name
+                      : false
+                  }
+                  onClick={() => onSelectTemplate(template.name)}
                 />
               ))}
             </div>
@@ -169,7 +178,8 @@ export const CreateSpaceWorkflow = ({ isOpen, setIsOpen, onBack }: Props) => {
           setIsOpen(true);
         }}
         selectedClickApps={clickApps}
-        onSelectClickApp={onSelectClickApp} />
+        onSelectClickApp={onSelectClickApp}
+      />
     </>
   );
 };

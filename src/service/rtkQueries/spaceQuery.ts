@@ -15,8 +15,6 @@ export const spaceApi = createApi({
         url: 'space/global',
       }),
       transformResponse: (response: ApiResponse<SpaceGlobal>) => response.data,
-      keepUnusedDataFor: 60 * 60 * 24,
-      ...withPersistentCache(15),
     }),
     createSpace: builder.mutation<string, CreateSpace>({
       query: (data: CreateSpace) => ({

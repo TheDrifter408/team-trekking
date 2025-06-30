@@ -22,7 +22,11 @@ import { useAppContext } from '@/lib/context/app-layout-context';
 
 import { iconOptions, colorOptions, taskNotificationUsers } from '@/mock';
 import { LABEL } from '@/lib/constants';
-import { ClickApp, StatusItem, View } from '@/types/request-response/space/ApiResponse';
+import {
+  ClickApp,
+  StatusItem,
+  View,
+} from '@/types/request-response/space/ApiResponse';
 
 interface Props {
   isActive: boolean;
@@ -46,9 +50,10 @@ export const UpdateSpace = ({ isActive, setIsActive }: Props) => {
   const initials = getInitials(spaceName)[0] ?? LABEL.DEFAULT_INITIAL; // e.g. 'P'
 
   const [defaultViewData, setDefaultViewData] = useState<View[]>([]);
-  const [taskStatuses, setTaskStatuses] = useState<Record<string, StatusItem[]>>({});
+  const [taskStatuses, setTaskStatuses] = useState<
+    Record<string, StatusItem[]>
+  >({});
   const [clickApps, setClickApps] = useState<ClickApp[]>([]);
-
 
   const onClose = () => {
     setIsActive(false);
@@ -93,12 +98,11 @@ export const UpdateSpace = ({ isActive, setIsActive }: Props) => {
 
   useEffect(() => {
     if (spaceGlobal) {
-      setDefaultViewData(spaceGlobal.workflow[0].defaultView);
-      setTaskStatuses(spaceGlobal.workflow[0].statusItems);
+      setDefaultViewData(spaceGlobal.workFlows[0].defaultViews);
+      setTaskStatuses(spaceGlobal.workFlows[0].statusItems);
       setClickApps(spaceGlobal.clickApps);
     }
   }, [spaceGlobal]);
-
 
   return (
     <Dialog open={isActive} onOpenChange={onClose} modal={true}>
@@ -154,7 +158,7 @@ export const UpdateSpace = ({ isActive, setIsActive }: Props) => {
                 value={selectedUser ? [selectedUser] : []}
                 displayName={true}
                 multipleSelect={false}
-                onRemove={() => { }}
+                onRemove={() => {}}
                 placeholder={LABEL.PLEASE_SELECT_OWNER}
                 userListTitle={LABEL.USERS}
                 users={taskNotificationUsers}
@@ -198,7 +202,7 @@ export const UpdateSpace = ({ isActive, setIsActive }: Props) => {
           <SelectUsers
             multipleSelect={true}
             displayName={false}
-            onRemove={() => { }}
+            onRemove={() => {}}
             displayOnly={true}
             value={invitedUsers}
             users={taskNotificationUsers}
