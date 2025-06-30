@@ -265,4 +265,5 @@ export const LABEL = {
     'Also permanently delete all third-party data and do not follow\n' +
     '                recovery of this Workspace',
   USE_SPACE_STATUSES: 'Use Space statuses',
+  ADD_TASK: 'Add Task',
 };
