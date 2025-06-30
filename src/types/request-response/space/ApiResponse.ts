@@ -46,3 +46,33 @@ export interface Item {
   name: string;
   order: number;
 }
+export interface StatusItem {
+  id: number;
+  name: string;
+  type: string;
+  identifier: any;
+  identifierId: any;
+  isActive: boolean;
+  color: string;
+  order: number;
+  createdAt: string;
+}
+
+export interface Space {
+  id: number;
+  name: string;
+  iconUrl: string;
+  avatarKey: string;
+  visibility: string;
+  color: string;
+  description: string;
+  isPrivate: boolean;
+  startDate: string;
+  dueDate: string;
+  isActive: boolean;
+  createdAt: string;
+  focusColor: string;
+  createdBy: number;
+  priority: number;
+  status: StatusItem;
+}
