@@ -1,7 +1,5 @@
 import {
   Plus,
-  Grid3X3,
-  ChevronDown,
   Eye,
   Archive,
   Edit,
@@ -29,6 +27,9 @@ import {
   AlignVerticalDistributeStart,
   WandSparkles,
   CircleDotIcon,
+  ListPlus,
+  FolderPlus,
+  LayoutDashboard,
 } from 'lucide-react';
 import { MenuSection } from '@/types/interfaces/ContextMenu.ts';
 import { LABEL } from './appStrings';
@@ -37,23 +38,40 @@ export const spacesMenuConfig: MenuSection[] = [
   {
     items: [
       {
-        icon: Plus,
-        label: LABEL.CREATE_SPACE,
-        action: ACTION.CREATE_SPACE,
+        icon: Pencil,
+        label: LABEL.RENAME,
+        action: ACTION.EDIT_SPACE,
       },
       {
-        icon: Grid3X3,
-        label: LABEL.MANAGE_SPACES,
-        action: ACTION.MANAGE_SPACES,
+        icon: Link,
+        label: LABEL.COPY_LINK,
+        action: ACTION.COPY_LINK,
       },
     ],
   },
   {
     items: [
       {
-        icon: ChevronDown,
-        label: LABEL.EXPAND_ALL_FOLDERS,
-        action: ACTION.EXPAND_FOLDERS,
+        type: 'submenu',
+        icon: Plus,
+        label: LABEL.CREATE_NEW,
+        submenu: [
+          {
+            label: LABEL.LIST,
+            action: ACTION.CREATE_LIST,
+            icon: ListPlus,
+          },
+          {
+            label: LABEL.FOLDER,
+            action: ACTION.CREATE_FOLDER,
+            icon: FolderPlus,
+          },
+          {
+            label: LABEL.BOARD,
+            action: ACTION.CREATE_DASHBOARD,
+            icon: LayoutDashboard,
+          },
+        ],
       },
     ],
   },
@@ -100,9 +118,21 @@ export const folderMenuConfig: MenuSection[] = [
         icon: Plus,
         label: LABEL.CREATE_NEW,
         submenu: [
-          { label: LABEL.PAGE, action: ACTION.CREATE_PAGE },
-          { label: LABEL.DATABASE, action: ACTION.CREATE_DATABASE },
-          { label: LABEL.BOARD, action: ACTION.CREATE_BOARD },
+          {
+            label: LABEL.LIST,
+            action: ACTION.CREATE_LIST,
+            icon: ListPlus,
+          },
+          {
+            label: LABEL.FOLDER,
+            action: ACTION.CREATE_FOLDER,
+            icon: FolderPlus,
+          },
+          {
+            label: LABEL.BOARD,
+            action: ACTION.CREATE_DASHBOARD,
+            icon: LayoutDashboard,
+          },
         ],
       },
       {
@@ -317,7 +347,6 @@ export const listMenuConfig: MenuSection[] = [
   },
 ];
 
-
 // Board Column context menu
 export const columnMenuConfig: MenuSection[] = [
   {
@@ -460,29 +489,29 @@ export const boardTaskMenuConfig: MenuSection[] = [
 ];
 
 // Task Type Configuration
-export const taskTypeConfig:MenuSection[] = [
+export const taskTypeConfig: MenuSection[] = [
   {
     items: [
       {
-        icon:CircleDotIcon,
+        icon: CircleDotIcon,
         label: LABEL.TASK,
-        action:ACTION.CHANGE_TYPE_TO_TASK
+        action: ACTION.CHANGE_TYPE_TO_TASK,
       },
       {
         icon: Disc2,
         label: LABEL.MILESTONE,
-        action: ACTION.CHANGE_TYPE_TO_MILESTONE
+        action: ACTION.CHANGE_TYPE_TO_MILESTONE,
       },
       {
         icon: File,
         label: LABEL.FORM_RESPONSE,
-        action: ACTION.CHANGE_TYPE_TO_FORM_RESPONSE
+        action: ACTION.CHANGE_TYPE_TO_FORM_RESPONSE,
       },
       {
         icon: Repeat2,
         label: LABEL.BUG,
-        action: ACTION.CHANGE_TYPE_TO_BUG
-      }
-    ]
-  }
+        action: ACTION.CHANGE_TYPE_TO_BUG,
+      },
+    ],
+  },
 ];

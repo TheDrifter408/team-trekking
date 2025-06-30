@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { MouseEvent, useState } from 'react';
 import {
   Collapsible,
   CollapsibleContent,
@@ -16,6 +16,9 @@ import { Icon } from '@/assets/icon-path.tsx';
 import { folderMenuConfig } from '@/lib/constants/staticData.ts';
 import { ContextMenu } from '@/components/common/context-menu.tsx';
 import { SidebarFolderItemsProps } from '@/types/props/Common';
+import { CreateList } from '../features/create-list';
+import { MenuItem, SubmenuItem } from '@/types/interfaces/ContextMenu';
+import { ACTION } from '@/lib/constants';
 
 export const SidebarFolderItems = ({
   name,
@@ -28,6 +31,15 @@ export const SidebarFolderItems = ({
 
   const onToggleCollapse = () => {
     setIsOpen(!isOpen);
+  };
+
+  const [isCreateListOpen, setIsCreateListOpen] = useState(false);
+
+  const onClickItem = (item: MenuItem | SubmenuItem, event?: MouseEvent) => {
+    event?.stopPropagation(); // to prevent the modal from closing as parent is closing
+    if (item.action && item.action === ACTION.CREATE_LIST) {
+      setIsCreateListOpen(true);
+    }
   };
 
   return (
@@ -81,7 +93,9 @@ export const SidebarFolderItems = ({
             }
             sections={folderMenuConfig}
             width="w-64"
-            onItemClick={() => {}}
+            onItemClick={(item, event) => {
+              onClickItem(item, event);
+            }}
           />
         </div>
 
@@ -122,6 +136,11 @@ export const SidebarFolderItems = ({
           ))}
         </CollapsibleContent>
       </Collapsible>
+      <CreateList
+        folder={folder}
+        createListOpen={isCreateListOpen}
+        setCreateListOpen={setIsCreateListOpen}
+      />
     </>
   );
 };

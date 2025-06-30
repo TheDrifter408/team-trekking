@@ -21,7 +21,7 @@ import {
 const API_URLS = {
   AUTH_BASE_URL: 'http://192.168.0.102:3001/',
   SPACE_BASE_URL: 'http://192.168.0.101:3006/',
-  WORK_SPACE_BASE_URL: 'http://192.168.0.101:3008/',
+  WORK_SPACE_BASE_URL: 'http://192.168.0.102:3008/',
 };
 const HOME_CARD_TITLE = {
   MY_WORK: 'My Work',
@@ -255,4 +255,8 @@ export const ACTION = {
   TOGGLE_TEMPATES_DIALOG: 'toggle_tempates_dialog',
   SAVE_AS_TEMPLATE: 'save_as_template',
   UPDATE_EXISTING_TEMPLATE: 'update_existing_template',
+  CREATE_LIST: 'create_list',
+  CREATE_FOLDER: 'create_folder',
+  CREATE_DASHBOARD: 'create_dashboard',
+  EDIT_SPACE: 'edit_space',
 };

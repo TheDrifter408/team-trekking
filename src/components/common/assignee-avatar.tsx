@@ -76,7 +76,10 @@ export const AssigneeAvatar = ({
           <Button
             size="icon"
             variant="destructive"
-            onClick={() => onRemove()}
+            onClick={(e) => {
+              e.preventDefault();
+              onRemove();
+            }}
             className={cn(
               'absolute -top-2 z-50 -right-2 h-4 w-4 p-0 rounded-full',
               enterAssignee && isSelected ? 'visible' : 'invisible',

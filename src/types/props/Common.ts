@@ -2,6 +2,7 @@ import { LucideIcon } from 'lucide-react';
 import { LABEL } from '@/lib/constants/appStrings.ts';
 import { Folder } from '@/types/props/Layout.ts';
 import { Dispatch, SetStateAction } from 'react';
+import { MenuItem, SubmenuItem } from '@/types/interfaces/ContextMenu';
 
 export interface Space {
   id: number;
@@ -163,6 +164,7 @@ export interface Task {
 export interface SidebarFolderItemsProps {
   name: string;
   folder: Folder;
+  onItemClick?: (item: MenuItem | SubmenuItem) => void;
 }
 
 export interface SortableChecklistRowProps {

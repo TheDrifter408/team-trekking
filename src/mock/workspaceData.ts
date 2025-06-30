@@ -13,21 +13,15 @@ export const spaceData = [
   {
     id: 1,
     name: 'ProjectX Moon',
+    description: 'A mission-oriented workspace focused on aerospace R&D.',
+    shareLink: 'https://spaces.example.com/projectx',
     folders: [
       {
         id: 11,
         name: 'space shuttle',
         lists: [
-          {
-            id: 111,
-            name: 'Steps',
-            taskNumber: 21,
-          },
-          {
-            id: 112,
-            name: 'Rocks',
-            taskNumber: 120,
-          },
+          { id: 111, name: 'Steps', taskNumber: 21 },
+          { id: 112, name: 'Rocks', taskNumber: 120 },
         ],
       },
       {
@@ -37,21 +31,15 @@ export const spaceData = [
       },
     ],
     lists: [
-      {
-        id: 13,
-        name: 'Mock list',
-        taskNumber: 779,
-      },
-      {
-        id: 14,
-        name: 'Mock list',
-        taskNumber: 120,
-      },
+      { id: 13, name: 'Mock list', taskNumber: 779 },
+      { id: 14, name: 'Mock list', taskNumber: 120 },
     ],
   },
   {
     id: 2,
     name: 'Peanut App Development PVT LTD.',
+    description: 'Development space for the Peanut mobile app project.',
+    shareLink: 'https://spaces.example.com/peanut',
     folders: [
       {
         id: 21,
@@ -65,7 +53,7 @@ export const spaceData = [
         ],
       },
       {
-        id: 21,
+        id: 22,
         name: 'Peanut App Backend Development',
         lists: [
           {
@@ -81,35 +69,20 @@ export const spaceData = [
   {
     id: 3,
     name: 'Giant Timber Ltd.',
+    description: 'Workspace for Giant Timber’s operations and logistics.',
     folders: [
       {
         id: 31,
         name: 'space shuttle',
         lists: [
-          {
-            id: 311,
-            name: 'Steps',
-            taskNumber: 21,
-          },
-          {
-            id: 312,
-            name: 'Rocks',
-            taskNumber: 120,
-          },
+          { id: 311, name: 'Steps', taskNumber: 21 },
+          { id: 312, name: 'Rocks', taskNumber: 120 },
         ],
       },
     ],
     lists: [
-      {
-        id: 313,
-        name: 'Mock list',
-        taskNumber: 779,
-      },
-      {
-        id: 314,
-        name: 'Mock list',
-        taskNumber: 120,
-      },
+      { id: 313, name: 'Mock list', taskNumber: 779 },
+      { id: 314, name: 'Mock list', taskNumber: 120 },
     ],
   },
 ];
@@ -301,7 +274,7 @@ export const priorityColors: Record<string, string> = {
   low: 'bg-gray-500',
 };
 
-export const mockUsers:Assignee[] = [
+export const mockUsers: Assignee[] = [
   {
     id: 1,
     name: 'John Doe',
@@ -316,7 +289,7 @@ export const mockUsers:Assignee[] = [
   },
 ];
 
-export const mockSubtasks:Task[] = [
+export const mockSubtasks: Task[] = [
   {
     id: '1',
     name: 'Design UI components',
@@ -324,7 +297,7 @@ export const mockSubtasks:Task[] = [
     dueDate: '2024-03-25T15:00:00.000Z',
     estimatedTime: '4',
     priority: 'high',
-    status: { id:0, name: 'in_progress', color: "", category: ""},
+    status: { id: 0, name: 'in_progress', color: "", category: "" },
     subTask: [],
     checklist: []
   },
@@ -335,13 +308,13 @@ export const mockSubtasks:Task[] = [
     dueDate: '2024-03-28T15:00:00.000Z',
     estimatedTime: '6',
     priority: 'normal',
-    status: { id:1, name: 'todo', color: "", category: "" },
+    status: { id: 1, name: 'todo', color: "", category: "" },
     subTask: [],
     checklist: []
   },
 ];
 
-export const mockChecklist:Checklist[] = [
+export const mockChecklist: Checklist[] = [
   {
     id: '1',
     name: 'Review requirements document',
@@ -447,7 +420,7 @@ export const recentData: RecentActions[] = [
   },
 ];
 
-const getRandomColor = ():ColorOption => {
+const getRandomColor = (): ColorOption => {
   const randomIndex = Math.floor(Math.random() * colorOptions.length);
   return colorOptions[randomIndex];
 };

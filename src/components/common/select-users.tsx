@@ -70,17 +70,22 @@ export const SelectUsers: FC<SelectUsersProps> = ({
     onChange(newSelection);
   };
 
-    const renderAvatars = (
-        value: Assignee[],
-        onRemove: (user: Assignee) => void,
-        isMouseEnter?: boolean
-    ) => {
-        const visibleUsers = value.slice(0, 3);
-        const extraUsers = value.slice(3);
-        return (
-            <UsersArray onRemove={onRemove} isMouseEnter={isMouseEnter} visibleUsers={visibleUsers} extraUsers={extraUsers} />
-        )
-    }
+  const renderAvatars = (
+    value: Assignee[],
+    onRemove: (user: Assignee) => void,
+    isMouseEnter?: boolean
+  ) => {
+    const visibleUsers = value.slice(0, 3);
+    const extraUsers = value.slice(3);
+    return (
+      <UsersArray
+        onRemove={onRemove}
+        isMouseEnter={isMouseEnter}
+        visibleUsers={visibleUsers}
+        extraUsers={extraUsers}
+      />
+    );
+  };
 
   const renderUserDropdown = () => {
     return (
@@ -113,6 +118,7 @@ export const SelectUsers: FC<SelectUsersProps> = ({
                     assignee={assignee}
                     displayName={true}
                     showAvatarRing={isSelected}
+                    enterAssignee={true}
                     className={cn('justify-between')}
                     onRemove={() => {}}
                     isSelected={isSelected}
@@ -130,7 +136,7 @@ export const SelectUsers: FC<SelectUsersProps> = ({
   if (displayOnly) {
     return (
       <div className="flex justify-end items-center gap-1">
-        {renderAvatars(value, () => {}, false)}
+        {renderAvatars(value, toggleAssignee, true)}
         <Popover open={open} onOpenChange={setOpen} modal={false}>
           <PopoverTrigger asChild>
             <Button

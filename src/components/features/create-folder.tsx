@@ -18,29 +18,57 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/shadcn-ui/dropdown-menu.tsx';
-import { Droplet, Ban } from 'lucide-react';
+import { Droplet, Ban, Circle } from 'lucide-react';
 import { Separator } from '@/components/shadcn-ui/separator.tsx';
 import { StatusView } from '@/components/features/status-view.tsx';
-import { taskStatuses } from '@/mock';
+import { taskNotificationUsers, taskStatuses } from '@/mock';
+import { Controller, useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { createFolderSchema } from '@/lib/validation/validationSchema';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { SelectUsers } from '../common/select-users';
+import { LABEL } from '@/lib/constants';
+import { Switch } from '../shadcn-ui/switch';
+
+type FormValues = z.infer<typeof createFolderSchema>;
 
 interface Props {
   createFolderOpen?: boolean;
   setCreateFolderOpen: (open: boolean) => void;
-  folderName?: string;
-  setFolderName: (name: string) => void;
-  onCreateFolder: () => void;
 }
 
 export const CreateFolder = ({
   createFolderOpen,
   setCreateFolderOpen,
-  folderName,
-  setFolderName,
-  onCreateFolder,
 }: Props) => {
   const [open, setOpen] = useState(false);
 
-  const disabledInput = !!(folderName && folderName.trim().length > 0);
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    watch,
+    reset,
+    control,
+    formState: { isValid, errors },
+  } = useForm<FormValues>({
+    resolver: zodResolver(createFolderSchema),
+    defaultValues: {
+      name: '',
+      color: '',
+      isPrivateMode: false,
+      invitees: [],
+    },
+  });
+
+  const selectedColor = watch('color');
+  const isPrivateMode = watch('isPrivateMode');
+
+  const onSubmit = (data: z.infer<typeof createFolderSchema>) => {
+    reset();
+    setCreateFolderOpen(false);
+    return data;
+  };
 
   return (
     <Dialog open={createFolderOpen} onOpenChange={setCreateFolderOpen}>
@@ -51,17 +79,16 @@ export const CreateFolder = ({
             Enter a name for your new folder.
           </DialogDescription>
         </DialogHeader>
-        <div className="grid gap-4 py-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="grid gap-4 py-4">
           <div className=" items-center gap-4 space-y-4">
             <div className="">
-              <Label htmlFor="folderName" className="text-right mb-2">
+              <Label htmlFor="name" className="text-right mb-2">
                 Name
               </Label>
               <div className="relative">
                 <Input
-                  id="folderName"
-                  value={folderName}
-                  onChange={(e) => setFolderName(e.target.value)}
+                  id="name"
+                  {...register('name')}
                   placeholder="My New Folder"
                   autoFocus
                   className="pr-10"
@@ -74,46 +101,33 @@ export const CreateFolder = ({
                       size="icon"
                       className="absolute right-2 top-1/2 transform -translate-y-1/2 h-6 w-6"
                     >
-                      <Droplet className="h-4 w-4" />
+                      {selectedColor && selectedColor.length > 0 ? (
+                        <Circle
+                          className={`h-4 w-4 text-${selectedColor}-500`}
+                        />
+                      ) : (
+                        <Droplet className={`h-4 w-4 `} />
+                      )}
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
                     <DropdownMenuLabel>Color Options</DropdownMenuLabel>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem
-                      onClick={() => console.log('Blue selected')}
-                    >
-                      <div className="flex items-center">
-                        <div className="w-4 h-4 rounded-full border-2 border-blue-500 mr-2"></div>
-                        Blue
-                      </div>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      onClick={() => console.log('Green selected')}
-                    >
-                      <div className="flex items-center">
-                        <div className="w-4 h-4 rounded-full border-green-500 border-2 mr-2"></div>
-                        Green
-                      </div>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      onClick={() => console.log('Red selected')}
-                    >
-                      <div className="flex items-center">
-                        <div className="w-4 h-4 rounded-full border-2 border-red-500 mr-2"></div>
-                        Red
-                      </div>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      onClick={() => console.log('Purple selected')}
-                    >
-                      <div className="flex items-center">
-                        <div className="w-4 h-4 rounded-full border-2 border-purple-500 mr-2"></div>
-                        Purple
-                      </div>
-                    </DropdownMenuItem>
+                    {['blue', 'green', 'red', 'purple'].map((value) => (
+                      <DropdownMenuItem
+                        key={value}
+                        onClick={() => setValue('color', value)}
+                      >
+                        <div className="flex items-center">
+                          <div
+                            className={`w-4 h-4 rounded-full border-2 border-${value}-500 mr-2`}
+                          ></div>
+                          {value.charAt(0).toUpperCase() + value.slice(1)}
+                        </div>
+                      </DropdownMenuItem>
+                    ))}
                     <Separator />
-                    <DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setValue('color', '')}>
                       <div className="flex items-center">
                         <Ban className={'h-4 w-4 mr-2'} />
                         Clear
@@ -122,6 +136,11 @@ export const CreateFolder = ({
                   </DropdownMenuContent>
                 </DropdownMenu>
               </div>
+              {errors.name && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.name.message}
+                </p>
+              )}
             </div>
             <div className="">
               <StatusView
@@ -130,26 +149,71 @@ export const CreateFolder = ({
                 statuses={taskStatuses}
               />
             </div>
+            <Separator />
+            <div className="relative">
+              <Label
+                htmlFor="isPrivateMode"
+                className="text-muted-foreground text-right mb-1"
+              >
+                Make Private
+              </Label>
+              <div className="flex justify-between items-center">
+                <span className="text-muted-foreground text-base font-normal">
+                  {LABEL.ONLY_YOU_AND_INVITED_HAVE_ACCESS}
+                </span>
+                <Controller
+                  control={control}
+                  name="isPrivateMode"
+                  render={({ field }) => (
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                      className={field.value ? '!bg-theme-main' : ''}
+                      id=""
+                    />
+                  )}
+                />
+              </div>
+            </div>
+            {isPrivateMode && (
+              <Controller
+                control={control}
+                name="invitees"
+                render={({ field }) => (
+                  <SelectUsers
+                    multipleSelect={true}
+                    displayName={false}
+                    onRemove={() => {}}
+                    displayOnly={true}
+                    isSelected={true}
+                    value={field.value ?? []}
+                    users={taskNotificationUsers}
+                    onChange={field.onChange}
+                    placeholder={LABEL.NO_INVITED_USERS}
+                    userListTitle={LABEL.SELECT_USERS}
+                  />
+                )}
+              />
+            )}
           </div>
-        </div>
-        <DialogFooter>
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => setCreateFolderOpen(false)}
-          >
-            Cancel
-          </Button>
-          <Button
-            type="button"
-            variant="default"
-            className="bg-indigo-600 hover:bg-indigo-700 text-white"
-            onClick={onCreateFolder}
-            disabled={disabledInput}
-          >
-            Create
-          </Button>
-        </DialogFooter>
+          <DialogFooter className="space-x-2">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setCreateFolderOpen(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              variant="default"
+              className="bg-indigo-600 hover:bg-indigo-700 text-white"
+              disabled={!isValid}
+            >
+              Create
+            </Button>
+          </DialogFooter>
+        </form>
       </DialogContent>
     </Dialog>
   );
