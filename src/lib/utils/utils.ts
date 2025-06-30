@@ -2,7 +2,11 @@ import { Column } from '@/types/props/Common.ts';
 import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { QueryLifecycleApi } from '@reduxjs/toolkit/query';
-import { StatusItem, View, Workflow } from '@/types/request-response/space/ApiResponse';
+import {
+  StatusItem,
+  View,
+  Workflow,
+} from '@/types/request-response/space/ApiResponse';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -93,18 +97,33 @@ export function withPersistentCache(ttlInDays: number) {
   };
 }
 
-export const convertToEmbedURL = (url: string):string => {
+export const convertToEmbedURL = (url: string): string => {
   const videoIdMatch = url.match(/(?:youtu\.be\/|v=)([\w-]{11})/);
   const videoId = videoIdMatch?.[1];
   return videoId ? `https://www.youtube.com/embed/${videoId}` : url;
-}
+};
 
-export const extractDefaultViews = (views:View[]):string => {
-  return views.map((view:View) => view.title).join(', ');
-}
+export const extractDefaultViews = (views: View[]): string => {
+  return views.map((view: View) => view.title).join(', ');
+};
 
-export const extractTaskStatus = (statusItems: Record<string, StatusItem[]>) => {
+export const extractTaskStatus = (
+  statusItems: Record<string, StatusItem[]>
+) => {
   return Object.values(statusItems) // first convert it to this type: StatusItem[][]
     .flat() // StatusItem[]
-    .map( ({ name, color }) => ({ name, color }));
-}
+    .map(({ name, color }) => ({ name, color }));
+};
+
+export const handleMutation = async <T>(
+  mutation: any,
+  params: any
+): Promise<{ data?: T; error?: any }> => {
+  try {
+    const data = await mutation(params).unwrap();
+    return { data }; // Return data on success
+  } catch (error) {
+    console.error('Mutation error:', error);
+    return { error };
+  }
+};

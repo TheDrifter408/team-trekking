@@ -58,3 +58,54 @@ export interface Location {
   name: string;
   type: string;
 }
+
+export interface WorkSpaceCreated {
+  name: string;
+  createdBy: CreatedBy;
+  customManageType: any;
+  customDiscoverySource: any;
+  id: number;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface WorkSpaceResponse {
+  id: number;
+  status: string;
+  workspace: Workspace;
+  role: Role;
+  permission: Permission;
+}
+export interface Workspace {
+  id: number;
+  name: string;
+  customManageType: any;
+  customDiscoverySource: any;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+  plan: any;
+  createdBy: CreatedBy;
+  members: number;
+}
+
+export interface Permission {
+  id: number;
+  name: string;
+}
+export interface CreatedBy {
+  id: number;
+  fullName: string;
+  email: string;
+  image: any;
+  forcePasswordChange: boolean;
+  isActive: boolean;
+  role: Role;
+  userPermissions: any[];
+}
+
+export interface Role {
+  id: number;
+  title: string;
+}

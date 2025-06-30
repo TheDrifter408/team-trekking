@@ -31,7 +31,7 @@ const configureAppStore = () => {
         serializableCheck: false, // required for redux-persist
       }).concat([
         authApi.middleware,
-          workspaceApi.middleware,
+        workspaceApi.middleware,
         spaceApi.middleware,
         apiErrorMiddleware,
       ]),
