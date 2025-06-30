@@ -4,7 +4,6 @@ import { CreateFolderRequest } from '@/types/request-response/folder/ApiRequest.
 import { Folder } from '@/types/request-response/folder/ApiResponse.ts';
 import { API_URLS } from '@/lib/constants';
 import { withPersistentCache } from '@/lib/utils/utils.ts';
-import { useTMTStore } from '@/stores/zustand';
 import { ApiResponse } from '@/types/request-response/auth/ApiResponse';
 
 export const folderApi = createApi({
@@ -16,11 +15,6 @@ export const folderApi = createApi({
         url: 'folder',
         method: 'POST',
         data: body,
-        headers: {
-          Authorization: `Bearer ${useTMTStore.getState()?.user?.refreshToken}`,
-          'Content-Type': 'application/json',
-          Accept: 'application/json',
-        },
       }),
       ...withPersistentCache(15),
     }),
