@@ -1,16 +1,73 @@
-import { TableRowProps } from '@/types/props/DataTableProps.ts';
 import { DataTableCellSection } from './data-table-cell.tsx';
-import { TableCell } from '@/components/shadcn-ui/table';
-import { GripIcon } from 'lucide-react';
-import { useSortable } from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
 import { cn } from '@/lib/utils/utils.ts';
+import { CSS } from '@dnd-kit/utilities';
+import { useSortable } from '@dnd-kit/sortable';
+import { Row } from '@tanstack/react-table';
+import { Task } from '@/types/props/Common.ts';
+
+interface TableRowProps {
+  row: Row<Task>;
+  virtualRow: {
+    index: number;
+    start: number;
+    size: number;
+  };
+  onRowHover: (id: string | null) => void;
+  activeDialogRowId: string | null;
+  isDragOver?: boolean;
+  dropPosition?: {
+    type: 'before' | 'after' | 'child';
+    depth: number;
+    parentId: string | null;
+  } | null;
+}
+
+const DropIndicator = ({
+  position,
+  depth,
+  type,
+}: {
+  position: 'top' | 'bottom' | 'child';
+  depth: number;
+  type: 'before' | 'after' | 'child';
+}) => {
+  const indent = (depth + 2) * 35;
+
+  if (type === 'child') {
+    return (
+      <div className="absolute left-0 top-0 w-full h-full pointer-events-none z-20">
+        <div
+          className="absolute top-0 transform -translate-y-1/2 h-0.5 bg-pink-500"
+          style={{
+            left: `${indent}px`,
+            right: '8px',
+          }}
+        />
+      </div>
+    );
+  }
+
+  return (
+    <div
+      className={cn(
+        'absolute left-0 w-full h-0.5 bg-pink-500 pointer-events-none z-20',
+        position === 'top' ? 'top-0' : 'bottom-0'
+      )}
+      style={{
+        marginLeft: `${indent}px`,
+        marginRight: '8px',
+      }}
+    />
+  );
+};
 
 export const DataTableRow = ({
   row,
   virtualRow,
   onRowHover,
   activeDialogRowId,
+  isDragOver,
+  dropPosition,
 }: TableRowProps) => {
   const {
     attributes,
@@ -19,35 +76,37 @@ export const DataTableRow = ({
     transform,
     transition,
     isDragging,
-  } = useSortable({
-    id: row.id,
-    data: {
-      type: 'task',
-      task: row.original,
-      depth: row.depth || 0,
-      parentId: row.parentId,
-    },
-  });
+  } = useSortable({ id: row.id });
+  const currentRowDepth = row.depth ?? row.original.depth ?? 0;
 
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
+  const getTransform = () => {
+    if (isDragging && transform) {
+      return CSS.Transform.toString({
+        x: transform.x,
+        y: transform.y,
+        scaleX: transform.scaleX ?? 1,
+        scaleY: transform.scaleY ?? 1,
+      });
+    }
+    return undefined;
   };
 
   return (
     <div
       ref={setNodeRef}
-      {...attributes}
-      {...listeners}
       style={{
-        ...style,
+        transition,
         position: 'absolute',
-        top: 0,
-        transform: `translateY(${virtualRow.start}px) ${transform ? CSS.Transform.toString(transform) : ''}`,
+        top: virtualRow.start,
+        transform: getTransform(),
         width: '100%',
         height: '40px',
-        zIndex: isDragging ? 1000 : 1,
+        zIndex: isDragging ? 10 : 1,
+        opacity: isDragging ? 0 : 1,
+        pointerEvents: isDragging ? 'none' : 'auto',
       }}
+      {...attributes}
+      {...listeners}
       key={row.id}
       data-index={virtualRow.index}
       onMouseEnter={() => onRowHover(row.original.id)}
@@ -57,30 +116,45 @@ export const DataTableRow = ({
         }
       }}
       className={cn(
-        'flex hover:bg-muted/50 items-center transition-colors border-b border-border',
-        isDragging && 'opacity-50 shadow-lg bg-white'
+        'flex hover:bg-muted/50 items-center transition-colors border-b border-border cursor-grab relative',
+        {
+          'cursor-grabbing': isDragging,
+          'bg-blue-50': isDragOver && dropPosition?.type === 'child',
+        }
       )}
     >
-      <TableCell
-        {...attributes}
-        {...listeners}
-        className={cn(
-          'flex items-center h-full justify-between -ml-[10px] cursor-grab',
-          isDragging && 'cursor-grabbing'
-        )}
-      >
-        <GripIcon className={'size-4'} />
-      </TableCell>
+      {isDragOver && dropPosition && (
+        <>
+          {dropPosition.type === 'before' && (
+            <DropIndicator
+              position="top"
+              depth={currentRowDepth}
+              type="before"
+            />
+          )}
+          {dropPosition.type === 'after' && (
+            <DropIndicator
+              position="bottom"
+              depth={currentRowDepth}
+              type="after"
+            />
+          )}
+          {dropPosition.type === 'child' && (
+            <DropIndicator
+              position="child"
+              depth={currentRowDepth}
+              type="child"
+            />
+          )}
+        </>
+      )}
 
-      {/* Left pinned cells */}
+      {/* Table cells */}
       <DataTableCellSection cells={row.getLeftVisibleCells()} position="left" />
-
-      {/* Center (scrollable) cells */}
       <DataTableCellSection
         cells={row.getCenterVisibleCells()}
         position="center"
       />
-
       <DataTableCellSection
         cells={row.getRightVisibleCells()}
         position="right"

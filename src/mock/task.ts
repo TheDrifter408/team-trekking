@@ -88,6 +88,8 @@ const getRandomPriority = (): TaskPriority =>
 
 let taskIdCounter = 1;
 
+const flattenedTasks: Task[] = [];
+
 const generateTask = (
   level = 1,
   maxDepth = 3,
@@ -112,6 +114,7 @@ const generateTask = (
     subTask: [],
     subTaskCount: 0,
     checkListCount: 0,
+    depth: level,
   };
 
   if (level < maxDepth && faker.datatype.boolean({ probability: 0.5 })) {
@@ -132,31 +135,20 @@ const generateTask = (
     }
   }
 
+  flattenedTasks.push(task);
+
   return task;
 };
-
 export const generateTasks = (count: number, maxDepth = 3): Task[] => {
   taskIdCounter = 1;
+  flattenedTasks.length = 0;
+
   return Array.from({ length: count }).map(() => generateTask(1, maxDepth));
 };
 
 export const mockTasks: Task[] = generateTasks(5, 3);
+export const mockTasksFlattened: Task[] = [...flattenedTasks];
 
-export const flattenTasks = (tasks: Task[]): Task[] => {
-  const result: Task[] = [];
-
-  const flatten = (taskList: Task[]) => {
-    for (const task of taskList) {
-      result.push(task);
-      if (task.subTask?.length) {
-        flatten(task.subTask);
-      }
-    }
-  };
-
-  flatten(tasks);
-  return result;
-};
 export const removeTaskById = (tasks: Task[], taskId: string): Task[] => {
   return tasks
     .map((task) => {
@@ -167,60 +159,4 @@ export const removeTaskById = (tasks: Task[], taskId: string): Task[] => {
       return task;
     })
     .filter(Boolean) as Task[];
-};
-
-export const insertTaskAt = (
-  tasks: Task[],
-  parentId: string | null,
-  newTask: Task,
-  siblingId?: string,
-  position: 'above' | 'below' = 'below'
-): Task[] => {
-  const deepCopy = structuredClone(tasks);
-
-  const insert = (taskList: Task[]): boolean => {
-    for (let i = 0; i < taskList.length; i++) {
-      const task = taskList[i];
-
-      // Found the parent where the new task should go
-      if (task.id === parentId) {
-        if (!task.subTask) task.subTask = [];
-
-        const idx = siblingId
-          ? task.subTask.findIndex((t) => t.id === siblingId)
-          : -1;
-
-        if (idx !== -1) {
-          task.subTask.splice(position === 'below' ? idx + 1 : idx, 0, newTask);
-        } else {
-          task.subTask.push(newTask);
-        }
-
-        return true;
-      }
-
-      if (task.subTask?.length) {
-        const inserted = insert(task.subTask);
-        if (inserted) return true;
-      }
-    }
-
-    return false;
-  };
-
-  if (parentId === null) {
-    // Insert at root level
-    const idx = siblingId ? deepCopy.findIndex((t) => t.id === siblingId) : -1;
-
-    if (idx !== -1) {
-      deepCopy.splice(position === 'below' ? idx + 1 : idx, 0, newTask);
-    } else {
-      deepCopy.push(newTask);
-    }
-
-    return deepCopy;
-  }
-
-  insert(deepCopy);
-  return deepCopy;
 };

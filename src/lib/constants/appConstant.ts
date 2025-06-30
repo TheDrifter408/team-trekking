@@ -33,7 +33,7 @@ const HARD_CARD_LIST = [
   {
     id: HOME_CARD_TITLE.RECENTS,
     description:
-      'A list of all the ClickUp objects and locations you’ve recently viewed.',
+      'A list of all the TeamTrekking objects and locations you’ve recently viewed.',
     isAdded: true,
     imageSource: 'https://app-cdn.clickup.com/media/clock-J2RYU6UH.svg',
   },

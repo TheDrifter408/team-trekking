@@ -26,6 +26,7 @@ import {
 import { LABEL } from '@/lib/constants';
 import { WorkSpaceResponse } from '@/types/request-response/workspace/ApiResponse.ts';
 import { useWorkspaceStore } from '@/stores/zustand/workspace-store.ts';
+import { PlaceholderAvatar } from '@/components/common/avatar-generator.tsx';
 
 export function WorkspaceSwitcher({
   workspaces,
@@ -78,10 +79,9 @@ export function WorkspaceSwitcher({
                 }}
               >
                 {activeWorkspace?.workspace?.logo} ? (
-                <img
-                  src={activeWorkspace?.workspace?.logo}
-                  alt={activeWorkspace?.workspace?.name}
-                  className="size-4 shrink-0 object-cover w-full h-full rounded-md"
+                <PlaceholderAvatar
+                  seed={activeWorkspace?.workspace?.name ?? ''}
+                  variant={'botttsNeutral'}
                 />
                 ) : (
                 <div>
