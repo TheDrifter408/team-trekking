@@ -152,6 +152,7 @@ export const SidebarSpaceItems = ({ space, children }: Props) => {
           setCreateListOpen={setIsCreateListOpen}
         />
         <CreateFolder
+          space={space}
           createFolderOpen={isCreateFolderOpen}
           setCreateFolderOpen={setIsCreateFolderOpen}
         />

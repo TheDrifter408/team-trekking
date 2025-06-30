@@ -1,4 +1,9 @@
 import { useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { createFolderSchema } from '@/lib/validation/validationSchema';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useCreateFolderMutation } from '@/service/rtkQueries/folderQuery';
 import {
   Dialog,
   DialogContent,
@@ -6,10 +11,10 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '@/components/shadcn-ui/dialog.tsx';
-import { Label } from '@/components/shadcn-ui/label.tsx';
-import { Input } from '@/components/shadcn-ui/input.tsx';
-import { Button } from '@/components/shadcn-ui/button.tsx';
+  DialogTrigger,
+} from '@/components/shadcn-ui/dialog';
+import { Label } from '@/components/shadcn-ui/label';
+import { Input } from '@/components/shadcn-ui/input';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,57 +22,72 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/shadcn-ui/dropdown-menu.tsx';
-import { Droplet, Ban, Circle } from 'lucide-react';
-import { Separator } from '@/components/shadcn-ui/separator.tsx';
-import { StatusView } from '@/components/features/status-view.tsx';
-import { taskNotificationUsers, taskStatuses } from '@/mock';
-import { Controller, useForm } from 'react-hook-form';
-import { z } from 'zod';
-import { createFolderSchema } from '@/lib/validation/validationSchema';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { SelectUsers } from '../common/select-users';
+} from '@/components/shadcn-ui/dropdown-menu';
+import { Button } from '@/components/shadcn-ui/button';
+import { Ban, ChevronRight, Circle, Disc2, Droplet } from 'lucide-react';
+import { Separator } from '@/components/shadcn-ui/separator';
 import { LABEL } from '@/lib/constants';
+import { StatusTemplate } from '@/components/features/status-template';
 import { Switch } from '../shadcn-ui/switch';
-
+import { SelectUsers } from '@/components/common/select-users';
+import { Space } from '@/types/props/Common';
+import { toast } from 'sonner';
+import { taskNotificationUsers, taskStatuses } from '@/mock';
+import { CreateFolderRequest } from '@/types/request-response/folder/ApiRequest';
+import { AxiosError } from 'axios';
 type FormValues = z.infer<typeof createFolderSchema>;
 
 interface Props {
   createFolderOpen?: boolean;
   setCreateFolderOpen: (open: boolean) => void;
+  space: Space;
 }
 
 export const CreateFolder = ({
   createFolderOpen,
   setCreateFolderOpen,
+  space,
 }: Props) => {
   const [open, setOpen] = useState(false);
+
+  const [createFolder, { isLoading }] = useCreateFolderMutation();
 
   const {
     register,
     handleSubmit,
     setValue,
     watch,
-    reset,
     control,
     formState: { isValid, errors },
   } = useForm<FormValues>({
     resolver: zodResolver(createFolderSchema),
     defaultValues: {
-      name: '',
-      color: '',
-      isPrivateMode: false,
-      invitees: [],
+      iconURL: 'https://example.com/icon.png',
+      avatarKey: 'avatar123',
+      visibility: 'public',
+      color: '#FF5733',
+      spaceId: 12,
+      focusColorId: 1,
+      priorityColorId: 1,
+      statusViewGroupId: 0,
+      isInheritStatus: true,
     },
   });
 
   const selectedColor = watch('color');
-  const isPrivateMode = watch('isPrivateMode');
+  const isPrivateMode = watch('visibility');
 
-  const onSubmit = (data: z.infer<typeof createFolderSchema>) => {
-    reset();
-    setCreateFolderOpen(false);
-    return data;
+  const onSubmit = async (data: z.infer<typeof createFolderSchema>) => {
+    const formattedData: CreateFolderRequest = {
+      ...data,
+    };
+    const parsed = createFolderSchema.parse(formattedData);
+    try {
+      await createFolder(parsed).unwrap();
+      toast.success('Successfully created Folder');
+    } catch (error: unknown) {
+      toast.error(error.data.message);
+    }
   };
 
   return (
@@ -143,10 +163,36 @@ export const CreateFolder = ({
               )}
             </div>
             <div className="">
-              <StatusView
-                open={open}
-                setOpen={setOpen}
-                statuses={taskStatuses}
+              <Label className="text-right mb-2">Settings</Label>
+              <Dialog open={open} onOpenChange={setOpen}>
+                <DialogTrigger asChild>
+                  <div className="py-4 bg-background w-full border rounded-xl flex items-center px-3 cursor-pointer hover:bg-gray-50">
+                    <div className="flex justify-between items-center w-full">
+                      <div className="flex items-center space-x-3">
+                        <div className="rounded-md border border-1 p-2">
+                          <Disc2 />
+                        </div>
+                        <div>
+                          <p className="text-base">{LABEL.EDIT_STATUSES}</p>
+                          <p className="text-xs text-muted-foreground">
+                            {LABEL.USE_SPACE_STATUSES}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="rounded-full bg-muted px-2 py-1 text-xs">
+                          ?
+                        </div>
+                        <ChevronRight />
+                      </div>
+                    </div>
+                  </div>
+                </DialogTrigger>
+              </Dialog>
+              <StatusTemplate
+                isOpen={open}
+                setIsOpen={setOpen}
+                data={taskStatuses}
               />
             </div>
             <Separator />
@@ -163,19 +209,23 @@ export const CreateFolder = ({
                 </span>
                 <Controller
                   control={control}
-                  name="isPrivateMode"
+                  name="visibility"
                   render={({ field }) => (
                     <Switch
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                      className={field.value ? '!bg-theme-main' : ''}
+                      checked={field.value === 'private'}
+                      onCheckedChange={(checked) => {
+                        field.onChange(checked ? 'private' : 'public');
+                      }}
+                      className={
+                        field.value === 'private' ? '!bg-theme-main' : ''
+                      }
                       id=""
                     />
                   )}
                 />
               </div>
             </div>
-            {isPrivateMode && (
+            {isPrivateMode === 'private' && (
               <Controller
                 control={control}
                 name="invitees"
@@ -208,9 +258,9 @@ export const CreateFolder = ({
               type="submit"
               variant="default"
               className="bg-indigo-600 hover:bg-indigo-700 text-white"
-              disabled={!isValid}
+              disabled={!isValid || isLoading}
             >
-              Create
+              {isLoading ? 'Creating...' : 'Create'}
             </Button>
           </DialogFooter>
         </form>

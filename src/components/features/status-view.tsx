@@ -7,7 +7,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/shadcn-ui/dialog.tsx';
-import { IconInnerShadowBottomRight } from '@tabler/icons-react';
 import { ChevronDown, ChevronRight, Disc2, GripVertical } from 'lucide-react';
 import { Separator } from '@/components/shadcn-ui/separator.tsx';
 import {

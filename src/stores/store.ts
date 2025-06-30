@@ -7,6 +7,7 @@ import { apiErrorMiddleware } from '@/stores/apiErrorMiddleware.ts';
 
 import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage'; // defaults to localStorage
+import { folderApi } from '@/service/rtkQueries/folderQuery';
 
 const persistConfig = {
   key: 'api-persistor',
@@ -21,6 +22,7 @@ const rootReducer = {
     persistConfig,
     workspaceApi.reducer
   ),
+  [folderApi.reducerPath]: persistReducer(persistConfig, folderApi.reducer),
 };
 
 const configureAppStore = () => {
@@ -31,8 +33,9 @@ const configureAppStore = () => {
         serializableCheck: false, // required for redux-persist
       }).concat([
         authApi.middleware,
-          workspaceApi.middleware,
+        workspaceApi.middleware,
         spaceApi.middleware,
+        folderApi.middleware,
         apiErrorMiddleware,
       ]),
     devTools: process.env.NODE_ENV === 'development',

@@ -98,7 +98,16 @@ export const createListSchema = z.object({
 
 export const createFolderSchema = z.object({
   name: z.string().min(1, 'A Name is required'),
-  isPrivateMode: z.boolean(),
-  color: z.string().optional(),
+  iconURL: z.string(),
+  avatarKey: z.string(),
+  visibility: z.enum(['public', 'private']),
+  color: z.string(),
+  spaceId: z.number(),
+  focusColorId: z.number(),
+  priorityColorId: z.number(),
+  startDate: z.string().optional(),
+  dueDate: z.string().optional(),
+  statusViewGroupId: z.number(),
+  isInheritStatus: z.boolean(),
   invitees: z.array(AssigneeObject).optional(),
 });
