@@ -39,18 +39,18 @@ import {
   DragStartEvent,
   PointerSensor,
   closestCenter,
+  useDroppable,
   useSensor,
   useSensors,
 } from '@dnd-kit/core';
 import {
   SortableContext,
-  arrayMove,
   useSortable,
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { SyntheticListenerMap } from '@dnd-kit/core/dist/hooks/utilities';
-import { StatusItem } from '@/types/request-response/space/ApiResponse.ts';
+import { Group, Item } from '@/types/request-response/space/ApiResponse.ts';
 
 interface Category {
   id: string;
@@ -58,19 +58,10 @@ interface Category {
   description: string;
 }
 
-interface CategoryStatusGroup {
-  description: string;
-  statuses: StatusItem[];
-}
-
-interface StatusesByCategory {
-  [key: string]: CategoryStatusGroup;
-}
-
 interface Props {
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
-  data?: Record<string, StatusItem[]>;
+  data: Group[];
 }
 
 const getFilteredTemplates = (templates: any[], query: string): any[] => {
@@ -86,50 +77,10 @@ const getCurrentTemplate = (
   return templates.find((template) => template.name === templateName);
 };
 
-const getStatusesByCategory = (
-  statusData: Record<string, StatusItem[]> | undefined,
-  categories: Category[]
-): StatusesByCategory => {
-  if (!statusData) return {};
-
-  const statusesByCategory: StatusesByCategory = {};
-
-  // Initialize categories from the predefined list
-  categories.forEach((category) => {
-    statusesByCategory[category.id] = {
-      description: category.description,
-      statuses: [],
-    };
-  });
-
-  // Map the API data to categories
-  // The API data has keys like "Not Started", "Active", "Done", "Closed"
-  // We need to map these to our category structure
-  Object.entries(statusData).forEach(([categoryKey, statuses]) => {
-    // Ensure statuses is always an array
-    const safeStatuses = Array.isArray(statuses) ? statuses : [];
-
-    // Find matching category or create a new one
-    const existingCategory = categories.find((cat) => cat.id === categoryKey);
-
-    statusesByCategory[categoryKey] = {
-      description: existingCategory?.description ?? categoryKey,
-      statuses: safeStatuses.map((status) => ({
-        ...status,
-        category: categoryKey,
-      })),
-    };
-  });
-
-  return statusesByCategory;
-};
-
 export const StatusTemplate = ({ isOpen, setIsOpen, data }: Props) => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedTemplate, setSelectedTemplate] = useState(
-    taskTemplates.templates[0]?.name ?? ''
-  );
-  const [statusGroups, setStatusGroups] = useState<StatusesByCategory>({});
+  const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null);
+  const [statusGroups, setStatusGroups] = useState<Group[]>([]);
   const [activeId, setActiveId] = useState<number | null>(null);
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
 
@@ -142,30 +93,6 @@ export const StatusTemplate = ({ isOpen, setIsOpen, data }: Props) => {
     selectedTemplate
   );
 
-  useEffect(() => {
-    if (data) {
-      // Use the data prop when available (from selected workflow template)
-      const groups = getStatusesByCategory(data, taskTemplates.categories);
-      setStatusGroups(groups);
-    } else if (currentTemplate) {
-      // Fallback to current template logic for backward compatibility
-      const groups = getStatusesByCategory(
-        currentTemplate.statuses?.reduce(
-          (acc: Record<string, StatusItem[]>, status: any) => {
-            if (!acc[status.category]) {
-              acc[status.category] = [];
-            }
-            acc[status.category].push(status);
-            return acc;
-          },
-          {}
-        ),
-        taskTemplates.categories
-      );
-      setStatusGroups(groups);
-    }
-  }, [currentTemplate, data]);
-
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
@@ -177,15 +104,13 @@ export const StatusTemplate = ({ isOpen, setIsOpen, data }: Props) => {
   // on when drag starts
   const onDragStart = (event: DragStartEvent) => {
     const { active } = event;
-    setActiveId(active.id as number);
 
-    // Find which category this status belongs to
-    for (const categoryId in statusGroups) {
-      const found = statusGroups[categoryId].statuses.find(
-        (status) => status.id === active.id
-      );
+    // Find the Category (group name) of the item
+    for (const group of statusGroups) {
+      const found = group.items.find((item) => item.id === active.id);
       if (found) {
-        setActiveCategory(categoryId);
+        setActiveId(active.id as number);
+        setActiveCategory(group.name);
         break;
       }
     }
@@ -193,104 +118,128 @@ export const StatusTemplate = ({ isOpen, setIsOpen, data }: Props) => {
 
   // on when dragging over a different category
   const onDragOver = (event: DragOverEvent) => {
-    const { over } = event;
+    const { active, over } = event;
 
-    if (!over || !activeCategory) return;
+    if (!active || !over) return;
 
-    // Find the target category
-    let targetCategory = activeCategory;
-    for (const categoryId in statusGroups) {
-      const found = statusGroups[categoryId].statuses.find(
-        (status) => status.id === over.id
-      );
-      if (found) {
-        targetCategory = categoryId;
-        break;
+    const activeId = Number(active.id);
+    const overId = Number(over.id);
+
+    if (activeId === overId) return;
+
+    let activeGroupIndex = -1;
+    let overGroupIndex = -1;
+
+    statusGroups.forEach((group, index) => {
+      if (group.items.some((item) => item.id === activeId)) {
+        activeGroupIndex = index;
       }
+      if (group.items.some((item) => item.id === overId)) {
+        overGroupIndex = index;
+      }
+    });
+
+    if (
+      activeGroupIndex === -1 ||
+      overGroupIndex === -1 ||
+      activeGroupIndex === overGroupIndex
+    ) {
+      return;
     }
 
-    // If we're dragging into a different category
-    if (targetCategory !== activeCategory && activeId) {
-      setStatusGroups((current) => {
-        // Find the item we're dragging
-        const activeStatus = current[activeCategory].statuses.find(
-          (status) => status.id === activeId
-        );
+    const activeItem = statusGroups[activeGroupIndex].items.find(
+      (item) => item.id === activeId
+    );
+    if (!activeItem) return;
 
-        if (!activeStatus) return current;
+    const updatedGroups = [...statusGroups];
+    updatedGroups[activeGroupIndex].items = updatedGroups[
+      activeGroupIndex
+    ].items.filter((item) => item.id !== activeId);
 
-        // Create a copy with the item removed from its original category
-        const updatedGroups = { ...current };
-        updatedGroups[activeCategory] = {
-          ...current[activeCategory],
-          statuses: current[activeCategory].statuses.filter(
-            (status) => status.id !== activeId
-          ),
-        };
+    const overIndex = updatedGroups[overGroupIndex].items.findIndex(
+      (item) => item.id === overId
+    );
 
-        // Update the category on the status
-        const updatedStatus = { ...activeStatus, category: targetCategory };
+    updatedGroups[overGroupIndex].items.splice(overIndex + 1, 0, activeItem);
 
-        // Add the item to the new category
-        updatedGroups[targetCategory] = {
-          ...current[targetCategory],
-          statuses: [...current[targetCategory].statuses, updatedStatus],
-        };
-
-        setActiveCategory(targetCategory);
-        return updatedGroups;
-      });
-    }
+    setStatusGroups(updatedGroups);
+    setActiveCategory(updatedGroups[overGroupIndex].name);
   };
 
   // on when drag ends
   const onDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
 
-    if (!over || !activeCategory) {
+    if (!active || !over) {
       setActiveId(null);
       setActiveCategory(null);
       return;
     }
 
-    // Find which category the over item belongs to
-    let targetCategory = activeCategory;
-    for (const categoryId in statusGroups) {
-      const found = statusGroups[categoryId].statuses.find(
-        (status) => status.id === over.id
-      );
-      if (found) {
-        targetCategory = categoryId;
-        break;
+    const activeId = Number(active.id);
+    const overId = Number(over.id);
+
+    if (activeId === overId) {
+      setActiveId(null);
+      setActiveCategory(null);
+      return;
+    }
+
+    let sourceGroupIndex = -1;
+    let destinationGroupIndex = -1;
+
+    for (let i = 0; i < statusGroups.length; i++) {
+      if (statusGroups[i].items.some((item) => item.id === activeId)) {
+        sourceGroupIndex = i;
+      }
+      if (statusGroups[i].items.some((item) => item.id === overId)) {
+        destinationGroupIndex = i;
       }
     }
 
-    // If we're in the same category, on reordering
-    if (targetCategory === activeCategory && active.id !== over.id) {
-      setStatusGroups((current) => {
-        const statusList = [...current[activeCategory].statuses];
-        const oldIndex = statusList.findIndex(
-          (status) => status.id === active.id
-        );
-        const newIndex = statusList.findIndex(
-          (status) => status.id === over.id
-        );
-
-        const newStatusList = arrayMove(statusList, oldIndex, newIndex);
-
-        return {
-          ...current,
-          [activeCategory]: {
-            ...current[activeCategory],
-            statuses: newStatusList,
-          },
-        };
-      });
+    if (sourceGroupIndex === -1 || destinationGroupIndex === -1) {
+      setActiveId(null);
+      setActiveCategory(null);
+      return;
     }
 
+    const draggedItem = statusGroups[sourceGroupIndex].items.find(
+      (item) => item.id === activeId
+    );
+    if (!draggedItem) {
+      setActiveId(null);
+      setActiveCategory(null);
+      return;
+    }
+
+    const updatedGroups = [...statusGroups];
+
+    updatedGroups[sourceGroupIndex].items = updatedGroups[
+      sourceGroupIndex
+    ].items.filter((item) => item.id !== activeId);
+
+    const overIndex = updatedGroups[destinationGroupIndex].items.findIndex(
+      (item) => item.id === overId
+    );
+
+    updatedGroups[destinationGroupIndex].items.splice(
+      overIndex,
+      0,
+      draggedItem
+    );
+
+    setStatusGroups(updatedGroups);
     setActiveId(null);
     setActiveCategory(null);
   };
+
+  useEffect(() => {
+    if (data) {
+      // Use the data prop when available (from selected workflow template)
+      setStatusGroups(data);
+    }
+  }, [currentTemplate, data]);
 
   return (
     <Dialog open={isOpen} onOpenChange={() => setIsOpen(!isOpen)}>
@@ -312,7 +261,7 @@ export const StatusTemplate = ({ isOpen, setIsOpen, data }: Props) => {
               {LABEL.STATUS_TEMPLATE}
             </span>
             <Select
-              value={selectedTemplate}
+              value={selectedTemplate ? selectedTemplate : 'Custom'}
               onValueChange={setSelectedTemplate}
             >
               <SelectTrigger className="w-[80%] mt-2">
@@ -350,28 +299,13 @@ export const StatusTemplate = ({ isOpen, setIsOpen, data }: Props) => {
               onDragEnd={onDragEnd}
             >
               <div className="px-4">
-                {Object.entries(statusGroups).map(
-                  ([categoryId, group]) =>
-                    group.statuses.length > 0 && (
-                      <div key={categoryId} className="mt-4">
-                        <TemplateCategory
-                          category={{
-                            id: categoryId,
-                            description: group.description,
-                            status: Array.isArray(group.statuses)
-                              ? group.statuses.map((s) => s.id)
-                              : [],
-                          }}
-                        />
-                        <div className="space-y-1 mt-2">
-                          <CategoryStatusList
-                            statuses={group.statuses}
-                            categoryId={categoryId}
-                          />
-                        </div>
-                      </div>
-                    )
-                )}
+                {statusGroups.map((group) => (
+                  <div key={group.id} className="mt-4">
+                    <div className="space-y-2 mt-2">
+                      <GroupDroppable group={group} />
+                    </div>
+                  </div>
+                ))}
               </div>
             </DndContext>
           </div>
@@ -389,24 +323,31 @@ export const StatusTemplate = ({ isOpen, setIsOpen, data }: Props) => {
 };
 
 // Component to on the list of statuses in a category
-function CategoryStatusList({
-  statuses,
-}: {
-  statuses: StatusItem[];
-  categoryId: string;
-}) {
+const GroupDroppable = ({ group }: { group: Group }) => {
+  const { setNodeRef, isOver } = useDroppable({
+    id: group.id.toString(),
+  });
+
+  const itemIds = group.items.map((item) => item.id);
+
   return (
-    <SortableContext
-      items={Array.isArray(statuses) ? statuses.map((status) => status.id) : []}
-      strategy={verticalListSortingStrategy}
-    >
-      {(Array.isArray(statuses) ? statuses : []).map((status) => (
-        <SortableStatusItem key={status.id} status={status} />
-      ))}
-      <AddStatusItem />
-    </SortableContext>
+    <div
+      ref={setNodeRef}
+      className={cn(
+        'in-h-32 p-4 border-2 rounded-lg transition-colors',
+        isOver ? 'border-blue-500' : ''
+      )}
+    > 
+      <p className="text-xs font-bold text-muted-foreground">{group.name}</p>
+      <SortableContext items={itemIds} strategy={verticalListSortingStrategy}>
+        {group.items.map((item) => (
+          <SortableStatusItem key={item.id} item={item} />
+        ))}
+        <AddStatusItem />
+      </SortableContext>
+    </div>
   );
-}
+};
 
 function AddStatusItem() {
   const [name, setName] = useState('');
@@ -438,7 +379,7 @@ function AddStatusItem() {
 }
 
 // Wrapper component that adds drag-and-drop functionality to StatusItem
-function SortableStatusItem({ status }: { status: StatusItem }) {
+function SortableStatusItem({ item }: { item: Item }) {
   const {
     attributes,
     listeners,
@@ -446,7 +387,7 @@ function SortableStatusItem({ status }: { status: StatusItem }) {
     transform,
     transition,
     isDragging,
-  } = useSortable({ id: status.id });
+  } = useSortable({ id: item.id });
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -458,8 +399,8 @@ function SortableStatusItem({ status }: { status: StatusItem }) {
   return (
     <div ref={setNodeRef} style={style} {...attributes}>
       <StatusItemComponent
-        status={status}
-        dragonProps={listeners}
+        status={item}
+        dragOnProps={listeners}
         isDragging={isDragging}
       />
     </div>
@@ -468,12 +409,12 @@ function SortableStatusItem({ status }: { status: StatusItem }) {
 
 function StatusItemComponent({
   status,
-  dragonProps = {},
-  isDragging = false,
+  dragOnProps,
+  isDragging,
 }: {
-  status: StatusItem;
-  dragonProps?: SyntheticListenerMap;
-  isDragging?: boolean;
+  status: Item;
+  dragOnProps: SyntheticListenerMap | undefined;
+  isDragging: boolean;
 }) {
   const [isEditing, setIsEditing] = useState(false);
   const [statusName, setStatusName] = useState(status.name);
@@ -514,7 +455,7 @@ function StatusItemComponent({
         // Editing mode - Input field with icons
         <div className="flex items-center w-full">
           <div className="flex items-center flex-1 px">
-            <div {...dragonProps} onClick={(e) => e.stopPropagation()}>
+            <div {...dragOnProps} onClick={(e) => e.stopPropagation()}>
               <GripVertical
                 size={14}
                 className="text-muted-foreground ml-1 mr-2 cursor-grab"
@@ -522,7 +463,7 @@ function StatusItemComponent({
             </div>
             <div
               className="min-w-[12px] h-3 w-3 rounded-full shrink-0"
-              style={{ backgroundColor: status.color }}
+              style={{ backgroundColor: status.color ?? '' }}
             />
             <Input
               className="h-7 !border-0 !ring-0 py-0 px-1 !text-base font-normal"
@@ -550,7 +491,7 @@ function StatusItemComponent({
       ) : (
         <>
           <div className="flex items-center flex-1 border-1 border-transparent">
-            <div {...dragonProps} onClick={(e) => e.stopPropagation()}>
+            <div {...dragOnProps} onClick={(e) => e.stopPropagation()}>
               <GripVertical
                 size={14}
                 className="text-muted-foreground mx-1 cursor-grab"
@@ -558,7 +499,7 @@ function StatusItemComponent({
             </div>
             <div
               className="w-3 h-3 rounded-full mr-2"
-              style={{ backgroundColor: status.color }}
+              style={{ backgroundColor: status.color ?? '' }}
             />
             <span className="text-base text-primary font-normal">
               {statusName.toUpperCase()}

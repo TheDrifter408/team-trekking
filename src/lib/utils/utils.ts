@@ -4,6 +4,7 @@ import { twMerge } from 'tailwind-merge';
 import { QueryLifecycleApi } from '@reduxjs/toolkit/query';
 import {
   StatusItem,
+  StatusItems,
   View,
   Workflow,
 } from '@/types/request-response/space/ApiResponse';
@@ -105,14 +106,6 @@ export const convertToEmbedURL = (url: string): string => {
 
 export const extractDefaultViews = (views: View[]): string => {
   return views.map((view: View) => view.title).join(', ');
-};
-
-export const extractTaskStatus = (
-  statusItems: Record<string, StatusItem[]>
-) => {
-  return Object.values(statusItems) // first convert it to this type: StatusItem[][]
-    .flat() // StatusItem[]
-    .map(({ name, color }) => ({ name, color }));
 };
 
 export const handleMutation = async <T>(

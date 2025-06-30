@@ -16,7 +16,7 @@ import { LABEL } from '@/lib/constants/appStrings.ts';
 import {
   ClickApp,
   DefaultView,
-  StatusItems,
+  Group,
   WorkFlow,
 } from '@/types/request-response/space/ApiResponse.ts';
 import { ClickAppsDialog } from './clickapps-dialog';
@@ -39,9 +39,7 @@ export const CreateSpaceWorkflow = ({ isOpen, setIsOpen, onBack }: Props) => {
   );
 
   const [defaultViewData, setDefaultViewData] = useState<DefaultView[]>([]);
-  const [taskStatuses, setTaskStatuses] = useState<Record<string, StatusItems>>(
-    {}
-  );
+  const [taskStatuses, setTaskStatuses] = useState<Group[]>([]);
   const [clickApps, setClickApps] = useState<ClickApp[]>([]);
 
   const templates = spaceGlobal?.workFlows ?? [];
@@ -51,7 +49,7 @@ export const CreateSpaceWorkflow = ({ isOpen, setIsOpen, onBack }: Props) => {
     if (selected) {
       setSelectedTemplate(selected);
       setDefaultViewData(selected.defaultViews);
-      setTaskStatuses(selected.statusItems);
+      setTaskStatuses(selected.statusItems.groups);
     }
   };
 
@@ -80,7 +78,7 @@ export const CreateSpaceWorkflow = ({ isOpen, setIsOpen, onBack }: Props) => {
     if (spaceGlobal) {
       setSelectedTemplate(spaceGlobal.workFlows[0]);
       setDefaultViewData(spaceGlobal.workFlows[0].defaultViews);
-      setTaskStatuses(spaceGlobal.workFlows[0].statusItems);
+      setTaskStatuses(spaceGlobal.workFlows[0].statusItems.groups);
       setClickApps(spaceGlobal.clickApps);
     }
   }, [spaceGlobal]);
