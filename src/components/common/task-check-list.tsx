@@ -61,7 +61,7 @@ const TaskCheckList = () => {
     };
   }, []);
 
-  const toggleItem = (itemId) => {
+  const onToggleItem = (itemId) => {
     setChecklists(
       checklists.map((checklist) => ({
         ...checklist,
@@ -72,7 +72,7 @@ const TaskCheckList = () => {
     );
   };
 
-  const addNewItem = () => {
+  const onAddNewItem = () => {
     if (newItemText.trim()) {
       setChecklists(
         checklists.map((checklist) => ({
@@ -92,25 +92,25 @@ const TaskCheckList = () => {
     }
   };
 
-  const handleDragStart = (e, item, index) => {
+  const onHandleDragStart = (e, item, index) => {
     setDraggedItem({ item, index });
     e.dataTransfer.effectAllowed = 'move';
   };
 
-  const handleDragOver = (e, index) => {
+  const onHandleDragOver = (e, index) => {
     e.preventDefault();
     e.dataTransfer.dropEffect = 'move';
     setDragOverIndex(index);
   };
 
-  const handleDragLeave = (e) => {
+  const onHandleDragLeave = (e) => {
     // Only clear drag over index if we're leaving the container
     if (!e.currentTarget.contains(e.relatedTarget)) {
       setDragOverIndex(null);
     }
   };
 
-  const handleDrop = (e, dropIndex) => {
+  const onHandleDrop = (e, dropIndex) => {
     e.preventDefault();
 
     if (draggedItem && draggedItem.index !== dropIndex) {
@@ -128,7 +128,7 @@ const TaskCheckList = () => {
     setDragOverIndex(null);
   };
 
-  const handleDragEnd = () => {
+  const onHandleDragEnd = () => {
     setDraggedItem(null);
     setDragOverIndex(null);
   };
@@ -137,7 +137,7 @@ const TaskCheckList = () => {
     setActiveMenu(activeMenu === itemId ? null : itemId);
   };
 
-  const handleMenuAction = (action, item) => {
+  const onHandleMenuAction = (action, item) => {
     switch (action) {
       case 'addItem':
         setActiveMenu(null);
@@ -166,7 +166,7 @@ const TaskCheckList = () => {
     }
   };
 
-  const handleEditSave = (itemId) => {
+  const onHandleEditSave = (itemId) => {
     if (editText.trim()) {
       setChecklists(
         checklists.map((checklist) => ({
@@ -181,22 +181,22 @@ const TaskCheckList = () => {
     setEditText('');
   };
 
-  const handleEditCancel = () => {
+  const onHandleEditCancel = () => {
     setEditingItem(null);
     setEditText('');
   };
 
-  const handleEditKeyPress = (e, itemId) => {
+  const onHandleEditKeyPress = (e, itemId) => {
     if (e.key === 'Enter') {
-      handleEditSave(itemId);
+      onHandleEditSave(itemId);
     } else if (e.key === 'Escape') {
-      handleEditCancel();
+      onHandleEditCancel();
     }
   };
 
-  const handleKeyPress = (e) => {
+  const onHandleKeyPress = (e) => {
     if (e.key === 'Enter') {
-      addNewItem();
+      onAddNewItem();
     } else if (e.key === 'Escape') {
       setIsAddingItem(false);
       setNewItemText('');
@@ -255,18 +255,18 @@ const TaskCheckList = () => {
               ${dragOverIndex === index ? 'bg-blue-50 border-t-2 border-blue-300' : 'hover:bg-gray-50'}
               ${index !== visibleItems.length - 1 ? 'border-b border-gray-100' : ''}`}
               draggable
-              onDragStart={(e) => handleDragStart(e, item, index)}
-              onDragOver={(e) => handleDragOver(e, index)}
-              onDragLeave={handleDragLeave}
-              onDrop={(e) => handleDrop(e, index)}
-              onDragEnd={handleDragEnd}
+              onDragStart={(e) => onHandleDragStart(e, item, index)}
+              onDragOver={(e) => onHandleDragOver(e, index)}
+              onDragLeave={onHandleDragLeave}
+              onDrop={(e) => onHandleDrop(e, index)}
+              onDragEnd={onHandleDragEnd}
             >
               <button className="flex-shrink-0 cursor-grab active:cursor-grabbing opacity-0 group-hover:opacity-100 transition-opacity">
                 <GripVertical className="w-4 h-4 text-gray-400" />
               </button>
 
               <button
-                onClick={() => toggleItem(item.id)}
+                onClick={() => onToggleItem(item.id)}
                 className="flex-shrink-0"
               >
                 <div
@@ -297,8 +297,8 @@ const TaskCheckList = () => {
                   type="text"
                   value={editText}
                   onChange={(e) => setEditText(e.target.value)}
-                  onKeyDown={(e) => handleEditKeyPress(e, item.id)}
-                  onBlur={() => handleEditSave(item.id)}
+                  onKeyDown={(e) => onHandleEditKeyPress(e, item.id)}
+                  onBlur={() => onHandleEditSave(item.id)}
                   className="flex-1 bg-white border border-gray-300 rounded px-2 py-1 text-gray-700 focus:outline-none focus:border-blue-500"
                   autoFocus
                 />
@@ -329,28 +329,28 @@ const TaskCheckList = () => {
                   {activeMenu === item.id && (
                     <div className="absolute right-0 top-8 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-10">
                       <button
-                        onClick={() => handleMenuAction('addItem', item)}
+                        onClick={() => onHandleMenuAction('addItem', item)}
                         className="w-full flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
                       >
                         <Plus className="w-4 h-4" />
                         Add Item
                       </button>
                       <button
-                        onClick={() => handleMenuAction('rename', item)}
+                        onClick={() => onHandleMenuAction('rename', item)}
                         className="w-full flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
                       >
                         <Edit3 className="w-4 h-4" />
                         Rename
                       </button>
                       <button
-                        onClick={() => handleMenuAction('assign', item)}
+                        onClick={() => onHandleMenuAction('assign', item)}
                         className="w-full flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
                       >
                         <User className="w-4 h-4" />
                         Assign to
                       </button>
                       <button
-                        onClick={() => handleMenuAction('delete', item)}
+                        onClick={() => onHandleMenuAction('delete', item)}
                         className="w-full flex items-center gap-3 px-4 py-2 text-sm text-red-600 hover:bg-red-50"
                       >
                         <Trash2 className="w-4 h-4" />
@@ -375,9 +375,9 @@ const TaskCheckList = () => {
                 type="text"
                 value={newItemText}
                 onChange={(e) => setNewItemText(e.target.value)}
-                onKeyDown={handleKeyPress}
+                onKeyDown={onHandleKeyPress}
                 onBlur={() =>
-                  newItemText.trim() ? addNewItem() : setIsAddingItem(false)
+                  newItemText.trim() ? onAddNewItem() : setIsAddingItem(false)
                 }
                 placeholder="New checklist item"
                 className="flex-1 bg-transparent border-none outline-none text-gray-700 placeholder-gray-400"
