@@ -31,11 +31,11 @@ export const workspaceApi = createApi({
       transformResponse: (response: ApiResponse<Array<WorkSpaceRecent>>) =>
         response.data,
     }),
-    getWorkSpace: builder.query<WorkSpaceResponse, void>({
+    getWorkSpace: builder.query<Array<WorkSpaceResponse>, void>({
       query: () => ({
         url: 'workspace',
       }),
-      transformResponse: (response: ApiResponse<WorkSpaceResponse>) =>
+      transformResponse: (response: ApiResponse<Array<WorkSpaceResponse>>) =>
         response.data,
     }),
     createWorkSpace: builder.mutation<WorkSpaceCreated, CreateWorkSpace>({

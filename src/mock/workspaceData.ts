@@ -8,6 +8,7 @@ import {
   ColorOption,
 } from '@/types/props/Common.ts';
 import { colorOptions } from './sidebarData';
+import { StatusItem } from '@/types/request-response/space/ApiResponse';
 
 export const spaceData = [
   {
@@ -87,30 +88,26 @@ export const spaceData = [
   },
 ];
 
-export const taskStatuses = [
-  { id: '1', name: 'Open', color: 'bg-gray-200', category: 'Not Started' },
-  {
-    id: '2',
-    name: 'Pending',
-    color: 'bg-yellow-300',
-    category: 'Not Started',
-  },
-  { id: '3', name: 'In Progress', color: 'bg-green-300', category: 'Active' },
-  { id: '4', name: 'Completed', color: 'bg-green-500', category: 'Active' },
-  { id: '5', name: 'Accepted', color: 'bg-green-600', category: 'Active' },
-  { id: '6', name: 'Released', color: 'bg-green-700', category: 'Active' },
-  { id: '7', name: 'Blocked', color: 'bg-orange-400', category: 'Active' },
-  { id: '8', name: 'Rejected', color: 'bg-red-400', category: 'Active' },
-  {
-    id: '9',
-    name: 'Sprint Backlog',
-    color: 'bg-yellow-400',
-    category: 'Active',
-  },
-  { id: '10', name: 'Backlog', color: 'bg-gray-400', category: 'Active' },
-  { id: '11', name: 'Closed', color: 'bg-green-800', category: 'Closed' },
-  { id: '12', name: 'Cancelled', color: 'bg-gray-900', category: 'Closed' },
-];
+export const taskStatuses: Record<string, StatusItem[]> = {
+  'Not Started': [
+    { id: 1, name: 'Open', color: 'bg-gray-200', order: 0 },
+    { id: 2, name: 'Pending', color: 'bg-yellow-300', order: 1 },
+  ],
+  'Active': [
+    { id: 3, name: 'In Progress', color: 'bg-green-300', order: 0 },
+    { id: 4, name: 'Completed', color: 'bg-green-500', order: 1 },
+    { id: 5, name: 'Accepted', color: 'bg-green-600', order: 2 },
+    { id: 6, name: 'Released', color: 'bg-green-700', order: 3 },
+    { id: 7, name: 'Blocked', color: 'bg-orange-400', order: 4 },
+    { id: 8, name: 'Rejected', color: 'bg-red-400', order: 5 },
+    { id: 9, name: 'Sprint Backlog', color: 'bg-yellow-400', order: 6 },
+    { id: 10, name: 'Backlog', color: 'bg-gray-400', order: 7 },
+  ],
+  'Closed': [
+    { id: 11, name: 'Closed', color: 'bg-green-800', order: 0 },
+    { id: 12, name: 'Cancelled', color: 'bg-gray-900', order: 1 },
+  ],
+};
 
 export const taskTemplates = {
   categories: [
@@ -292,41 +289,43 @@ export const mockUsers: Assignee[] = [
 export const mockSubtasks: Task[] = [
   {
     id: '1',
+    parentId: null,
     name: 'Design UI components',
     progress: 75,
     dueDate: '2024-03-25T15:00:00.000Z',
     estimatedTime: '4',
     priority: 'high',
-    status: { id: 0, name: 'in_progress', color: "", category: "" },
+    status: { id: 0, name: 'in_progress', color: '', category: '' },
     subTask: [],
-    checklist: []
+    checklist: [],
   },
   {
     id: '2',
+    parentId: '1',
     name: 'Implement API integration',
     progress: 30,
     dueDate: '2024-03-28T15:00:00.000Z',
     estimatedTime: '6',
     priority: 'normal',
-    status: { id: 1, name: 'todo', color: "", category: "" },
+    status: { id: 1, name: 'todo', color: '', category: '' },
     subTask: [],
-    checklist: []
+    checklist: [],
   },
 ];
 
 export const mockChecklist: Checklist[] = [
   {
-    id: '1',
+    id: 1,
     name: 'Review requirements document',
     isCompleted: true,
   },
   {
-    id: '2',
+    id: 2,
     name: 'Set up development environment',
     isCompleted: true,
   },
   {
-    id: '3',
+    id: 3,
     name: 'Create component structure',
     isCompleted: false,
   },

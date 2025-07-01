@@ -24,23 +24,22 @@ import {
   TooltipTrigger,
 } from '@radix-ui/react-tooltip';
 import { LABEL } from '@/lib/constants';
+import { WorkSpaceResponse } from '@/types/request-response/workspace/ApiResponse.ts';
+import { useWorkspaceStore } from '@/stores/zustand/workspace-store.ts';
 import { PlaceholderAvatar } from '@/components/common/avatar-generator.tsx';
 
 export function WorkspaceSwitcher({
   workspaces,
 }: {
-  workspaces: {
-    id: number;
-    name: string;
-    logo?: string;
-    plan: string;
-    color?: string;
-    member: number;
-  }[];
+  workspaces: WorkSpaceResponse[];
 }) {
+  const { setCurrentWorkspace } = useWorkspaceStore();
   const { isMobile } = useSidebar();
   const [isOpen, setIsOpen] = useState(false);
-  const [activeWorkspace, setActiveWorkspace] = useState(workspaces[0]);
+  const [activeWorkspace, setActiveWorkspace] =
+    useState<WorkSpaceResponse | null>(
+      workspaces.length > 0 ? workspaces[0] : null
+    );
   const [showSearch, setShowSearch] = useState(false);
   const [searchWorkspace, setSearchWorkspace] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
@@ -50,6 +49,10 @@ export function WorkspaceSwitcher({
       inputRef.current.focus();
     }
   }, [showSearch]);
+
+  useEffect(() => {
+    setActiveWorkspace(workspaces[0]);
+  }, [workspaces]);
 
   const onOpenDialog = () => {
     setTimeout(() => {
@@ -70,23 +73,25 @@ export function WorkspaceSwitcher({
                 className="flex aspect-square size-6 items-center justify-center rounded-md text-sidebar-primary-foreground"
                 style={{
                   backgroundColor:
-                    activeWorkspace.logo === undefined
-                      ? activeWorkspace.color
+                    activeWorkspace?.workspace?.logo === undefined
+                      ? activeWorkspace?.workspace?.color
                       : undefined,
                 }}
               >
-                {activeWorkspace.logo ? (
-                  <PlaceholderAvatar
-                    seed={activeWorkspace.name}
-                    variant={'botttsNeutral'}
-                  />
+                {activeWorkspace?.workspace?.logo} ? (
+                <PlaceholderAvatar
+                  seed={activeWorkspace?.workspace?.name ?? ''}
+                  variant={'botttsNeutral'}
+                />
                 ) : (
-                  <div>{activeWorkspace.name?.charAt(0).toUpperCase()}</div>
-                )}
+                <div>
+                  {activeWorkspace?.workspace?.name?.charAt(0).toUpperCase()}
+                </div>
+                )
               </div>
               <div className="grid flex-1 text-left text-lg leading-tight">
                 <span className="truncate font-semibold">
-                  {activeWorkspace.name}
+                  {activeWorkspace?.workspace?.name}
                 </span>
               </div>
               <ChevronDown className="ml-auto" />
@@ -103,28 +108,30 @@ export function WorkspaceSwitcher({
                 className="flex aspect-square size-8 items-center justify-center rounded-md text-sidebar-primary-foreground"
                 style={{
                   backgroundColor:
-                    activeWorkspace.logo === undefined
-                      ? activeWorkspace.color
+                    activeWorkspace?.workspace?.logo === undefined
+                      ? activeWorkspace?.workspace?.color
                       : undefined,
                 }}
               >
-                {activeWorkspace.logo ? (
-                  <img
-                    src={activeWorkspace.logo}
-                    alt={activeWorkspace.name}
-                    className="size-4 shrink-0 object-cover w-full h-full rounded-md"
-                  />
+                {activeWorkspace?.workspace?.logo} ? (
+                <img
+                  src={activeWorkspace?.workspace?.logo}
+                  alt={activeWorkspace?.workspace?.name}
+                  className="size-4 shrink-0 object-cover w-full h-full rounded-md"
+                />
                 ) : (
-                  <div>{activeWorkspace.name?.charAt(0).toUpperCase()}</div>
-                )}
+                <div>
+                  {activeWorkspace?.workspace?.name?.charAt(0).toUpperCase()}
+                </div>
+                )
               </div>
               <div className="grid leading-tight">
                 <span className="truncate text-[14px]">
-                  {activeWorkspace.name}
+                  {activeWorkspace?.workspace?.name}
                 </span>
                 <span className="truncate font-normal text-sm text-gray-500">
-                  {activeWorkspace.plan} . {activeWorkspace.member}{' '}
-                  {LABEL.MEMBERS}
+                  {activeWorkspace?.workspace?.plan} .{' '}
+                  {activeWorkspace?.workspace?.members} {LABEL.MEMBERS}
                 </span>
               </div>
             </div>
@@ -214,38 +221,49 @@ export function WorkspaceSwitcher({
               >
                 {workspaces.map(
                   (workspace, index) =>
-                    workspace.id !== activeWorkspace.id && (
+                    workspace.id !== activeWorkspace?.id && (
                       <DropdownMenuItem
-                        key={workspace.name}
-                        onClick={() => setActiveWorkspace(workspace)}
+                        key={workspace.workspace?.name}
+                        onClick={() => {
+                          setActiveWorkspace(workspace);
+                          setCurrentWorkspace({
+                            id: workspace.workspace.id,
+                            name: workspace.workspace.name,
+                          });
+                        }}
                         className="gap-2 p-2 hover:!bg-gray-200 focus:!outline-none"
                       >
                         <TooltipProvider delayDuration={200}>
                           <Tooltip>
                             <TooltipTrigger asChild>
                               <div className="flex items-center justify-center gap-2 cursor-pointer">
-                                {workspace.logo ? (
+                                {workspace.workspace?.logo ? (
                                   <div className="flex size-8 items-center justify-center rounded-sm">
                                     <img
-                                      src={workspace.logo}
-                                      alt={workspace.name}
+                                      src={workspace.workspace?.logo}
+                                      alt={workspace.workspace?.name}
                                       className="size-4 shrink-0 object-cover w-full h-full rounded-sm"
                                     />
                                   </div>
                                 ) : (
                                   <div
                                     className="flex aspect-square size-8 items-center justify-center rounded-md font-semibold text-sidebar-primary-foreground"
-                                    style={{ backgroundColor: workspace.color }}
+                                    style={{
+                                      backgroundColor:
+                                        workspace.workspace?.color,
+                                    }}
                                   >
-                                    {workspace.name?.charAt(0).toUpperCase()}
+                                    {workspace.workspace?.name
+                                      ?.charAt(0)
+                                      .toUpperCase()}
                                   </div>
                                 )}
                                 <div className="grid flex-1">
                                   <span className="truncate text-base font-medium text-gray-900">
-                                    {workspace.name}
+                                    {workspace.workspace?.name}
                                   </span>
                                   <span className="truncate text-xs text-gray-600">
-                                    {workspace.plan}
+                                    {workspace.workspace?.plan}
                                   </span>
                                 </div>
                               </div>
@@ -264,7 +282,7 @@ export function WorkspaceSwitcher({
                                 }}
                               />
                               <p className="font-medium text-sm">
-                                {workspace.member} {LABEL.MEMBERS}
+                                {workspace.workspace?.members} {LABEL.MEMBERS}
                               </p>
                             </TooltipContent>
                           </Tooltip>
