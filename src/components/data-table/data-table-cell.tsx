@@ -6,11 +6,11 @@ export const DataTableCellSection = ({
   position,
 }: TableCellSectionProps) => {
   const getCellClassName = (position: string) => {
-    const baseClasses = 'flex items-center px-3 border-border';
+    const baseClasses = 'flex items-center pl-[42px] border-border';
 
     switch (position) {
       case 'left':
-        return `${baseClasses} pl-[15px]`;
+        return `${baseClasses} `;
       case 'right':
         return `${baseClasses} bg-background/80 sticky ${position}-0 z-10`;
       default:

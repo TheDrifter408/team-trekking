@@ -88,8 +88,6 @@ const getRandomPriority = (): TaskPriority =>
 
 let taskIdCounter = 1;
 
-const flattenedTasks: Task[] = [];
-
 const generateTask = (
   level = 1,
   maxDepth = 3,
@@ -110,7 +108,7 @@ const generateTask = (
     spendTime: `${faker.number.int({ min: 1, max: 40 })}h`,
     estimatedTime: `${faker.number.int({ min: 1, max: 360000000 })}`,
     priority: getRandomPriority(),
-    parentId, // ✅ <-- added this
+    parentId,
     subTask: [],
     subTaskCount: 0,
     checkListCount: 0,
@@ -129,34 +127,40 @@ const generateTask = (
       task.subTaskCount = subtaskCount;
       task.checkListCount = task?.checklist?.length || 0;
 
-      task.subTask = Array.from({ length: subtaskCount }).map(
-        () => generateTask(level + 1, maxDepth, id) // ✅ Pass the current task's ID as parentId
+      task.subTask = Array.from({ length: subtaskCount }).map(() =>
+        generateTask(level + 1, maxDepth, id)
       );
     }
   }
 
-  flattenedTasks.push(task);
-
   return task;
 };
+
 export const generateTasks = (count: number, maxDepth = 3): Task[] => {
   taskIdCounter = 1;
-  flattenedTasks.length = 0;
-
   return Array.from({ length: count }).map(() => generateTask(1, maxDepth));
 };
 
-export const mockTasks: Task[] = generateTasks(5, 3);
-export const mockTasksFlattened: Task[] = [...flattenedTasks];
+/**
+ * Flattens a hierarchical task tree into a flat array
+ * @param tasks - Array of root tasks
+ * @returns Flattened array of all tasks
+ */
+export const flattenTasks = (tasks: Task[]): Task[] => {
+  const flattened: Task[] = [];
 
-export const removeTaskById = (tasks: Task[], taskId: string): Task[] => {
-  return tasks
-    .map((task) => {
-      if (task.id === taskId) return null;
-      if (task.subTask?.length) {
-        task.subTask = removeTaskById(task.subTask, taskId);
+  const flatten = (taskList: Task[]) => {
+    for (const task of taskList) {
+      flattened.push(task);
+      if (task.subTask && task.subTask.length > 0) {
+        flatten(task.subTask);
       }
-      return task;
-    })
-    .filter(Boolean) as Task[];
+    }
+  };
+
+  flatten(tasks);
+  return flattened;
 };
+
+export const mockTasks: Task[] = generateTasks(5, 3);
+export const mockTasksFlattened: Task[] = flattenTasks(mockTasks);

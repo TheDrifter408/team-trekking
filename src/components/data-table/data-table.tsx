@@ -36,14 +36,14 @@ export const DataTable = ({ className = '' }: DataTableProps) => {
       columnSizing: colSizing,
       columnPinning: {
         left: [],
-        right: [Columns[Columns.length - 1]?.id || ''],
+        right: [],
       },
     },
   });
 
   useEffect(() => {
     setTable(table);
-  }, [table, setTable]);
+  }, [table, setTable, tasks]);
 
   // Synchronize scroll between header and body
   useEffect(() => {

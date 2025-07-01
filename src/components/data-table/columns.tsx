@@ -124,8 +124,8 @@ export const Columns: ColumnDef<Task>[] = [
       );
     },
     cell: () => <OptionsColumn />,
-    minSize: 60,
-    maxSize: 60,
+    minSize: 70,
+    maxSize: 70,
     enableResizing: false,
   },
 ];
