@@ -9,7 +9,7 @@ export interface ClickApp {
   title: string;
   iconUrl: string;
   type: string;
-  tooltip: any;
+  tooltip: string | null;
   isActive: boolean;
 }
 
@@ -37,25 +37,16 @@ export interface Group {
   id: number;
   name: string;
   order: number;
-  tooltip: any;
+  tooltip: string | null;
   items: Item[];
 }
 
 export interface Item {
   id: number;
   name: string;
-  order: number;
-}
-export interface StatusItem {
-  id: number;
-  name: string;
-  type: string;
-  identifier: any;
-  identifierId: any;
-  isActive: boolean;
   color: string;
   order: number;
-  createdAt: string;
+
 }
 
 export interface Space {
@@ -74,7 +65,7 @@ export interface Space {
   focusColor: string;
   createdBy: number;
   priority: number;
-  status: StatusItem;
+  status: StatusItems;
 }
 
 export interface ViewStatusResponse {
@@ -83,7 +74,7 @@ export interface ViewStatusResponse {
   identifier: string;
   isActive: boolean;
   workspace: Workspace;
-  identifierId: any;
+  identifierId: number | null;
   id: number;
   createdAt: string;
 }
@@ -91,12 +82,12 @@ export interface ViewStatusResponse {
 export interface Workspace {
   id: number;
   name: string;
-  customManageType: any;
-  customDiscoverySource: any;
+  customManageType: string | null;
+  customDiscoverySource: string | null;
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
-  plan: any;
+  plan: string | null;
   createdBy: CreatedBy;
 }
 
@@ -104,7 +95,7 @@ export interface CreatedBy {
   id: number;
   fullName: string;
   email: string;
-  image: any;
+  image: string | null;
   forcePasswordChange: boolean;
   isActive: boolean;
 }

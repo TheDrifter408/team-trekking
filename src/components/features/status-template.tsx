@@ -55,7 +55,7 @@ export const StatusTemplate = ({ isOpen, setIsOpen, data }: Props) => {
   const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null);
   const [statusGroups, setStatusGroups] = useState<Group[]>([]);
 
-  const [activeId, setActiveId] = useState<number | null>(null);
+  const [activeItem, setActiveItem] = useState<number | null>(null);
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
 
   const sensors = useSensors(
@@ -70,13 +70,16 @@ export const StatusTemplate = ({ isOpen, setIsOpen, data }: Props) => {
   const onDragStart = (event: DragStartEvent) => {
     const { active } = event;
 
-    const activeId = active.id.toString().replace('item-', '').trim(); // replace the unique id
+    const activeId = active.id
+      .toString()
+      .replace(/^item-/, '')
+      .trim(); // replace the unique id
 
     // Find the Category (group name) of the item
     for (const group of statusGroups) {
       const found = group.items.find((item) => item.id.toString() === activeId);
       if (found) {
-        setActiveId(Number(activeId));
+        setActiveItem(Number(activeId));
         setActiveCategory(group.name);
         break;
       }
@@ -87,65 +90,64 @@ export const StatusTemplate = ({ isOpen, setIsOpen, data }: Props) => {
   const onDragOver = (event: DragOverEvent) => {
     const { active, over } = event;
 
-    if (!active || !over) return;
+    if (!active || !over || !activeItem || !activeCategory) return;
 
-    const activeId = active.id.toString().replace('item-', '').trim(); // replace the unique id
-    const overId = over.id
+    const activeId = active.id
       .toString()
-      .replace(/^(item-|group-)/, '')
-      .trim(); // replace the unique id name
+      .replace(/^item-/, '')
+      .trim(); // replace the unique id
+    const overIdRaw = over.id.toString(); // can be item-00 or group-00
 
-    if (activeId === overId) return;
+    let overGroupIndex = statusGroups.findIndex(
+      (group) => `group-${group.id}` === overIdRaw
+    );
 
-    let activeGroupIndex = -1;
-    let overGroupIndex = -1;
-
-    statusGroups.forEach((group, index) => {
-      if (group.items.some((item) => item.id.toString() === activeId)) {
-        activeGroupIndex = index;
-      }
-      if (group.items.some((item) => item.id.toString() === overId)) {
-        overGroupIndex = index;
-      }
-    });
-
-    // if the group is empty
+    // if not found by group id, try to find by item id inside groups
     if (overGroupIndex === -1) {
-      overGroupIndex = statusGroups.findIndex(
-        (group) => group.id.toString() === overId.toString()
+      overGroupIndex = statusGroups.findIndex((group) =>
+        group.items.some((item) => item.id.toString() === activeId)
       );
     }
 
-    // if not found or in the same group
+    // Find activeGroupIndex by looking inside items
+    const activeGroupIndex = statusGroups.findIndex((group) =>
+      group.items.some((item) => item.id.toString() === activeId)
+    );
+
     if (
-      activeGroupIndex === -1 ||
       overGroupIndex === -1 ||
+      activeGroupIndex === -1 ||
       activeGroupIndex === overGroupIndex
     ) {
       return;
     }
 
-    const activeItem = statusGroups[activeGroupIndex].items.find(
+    // Find the active Item inside active group
+    const draggedItem = statusGroups[activeGroupIndex].items.find(
       (item) => item.id.toString() === activeId
     );
-    if (!activeItem) return;
 
-    const updatedGroups = structuredClone(statusGroups); // this creates a deep copy of statusGroups
+    if (!draggedItem) return;
+
+    const updatedGroups = structuredClone(statusGroups);
+
+    // Remove the active item from its parent group
     updatedGroups[activeGroupIndex].items = updatedGroups[
       activeGroupIndex
     ].items.filter((item) => item.id.toString() !== activeId);
 
     const overItems = updatedGroups[overGroupIndex].items;
 
+    // Find the index of the item or -1 if over group container
     const overIndex = overItems.findIndex(
-      (item) => item.id.toString() === overId
+      (item) => `item-${item.id}` === overIdRaw
     );
 
-    // If the Item is dragged over an empty group
     if (overIndex === -1) {
-      overItems.unshift(activeItem);
+      // Dragged over empty group or group container itself, add item to start
+      overItems.unshift(draggedItem);
     } else {
-      overItems.splice(overIndex + 1, 0, activeItem);
+      overItems.splice(overIndex + 1, 0, draggedItem);
     }
 
     setStatusGroups(updatedGroups);
@@ -157,71 +159,64 @@ export const StatusTemplate = ({ isOpen, setIsOpen, data }: Props) => {
     const { active, over } = event;
 
     if (!active || !over) {
-      setActiveId(null);
+      setActiveItem(null);
       setActiveCategory(null);
       return;
     }
 
-    const activeId = active.id.toString().replace('item-', '').trim(); // replace the unique id
-    const overId = over.id
+    const activeId = active.id
       .toString()
-      .replace(/^(item-|group-)/, '')
-      .trim(); // replace the unique id name
+      .replace(/^item-/, '')
+      .trim(); // replace the unique id
+    const overIdRaw = over.id.toString(); // could be group-00 or item-00
 
-    if (activeId === overId) {
-      setActiveId(null);
-      setActiveCategory(null);
-      return;
+    // Find the source group by item id
+    const sourceGroupIndex = statusGroups.findIndex(
+      (item) => item.id.toString() === activeId
+    );
+
+    // find the destination group index by group id or item id
+    let destinationGroupIndex = statusGroups.findIndex(
+      (group) => `group-${group.id}` === overIdRaw
+    );
+
+    if (destinationGroupIndex === -1) {
+      destinationGroupIndex = statusGroups.findIndex((group) =>
+        group.items.some((item) => `item-${item.id}` === overIdRaw)
+      );
     }
 
-    let sourceGroupIndex = -1;
-    let destinationGroupIndex = -1;
-
-    for (let i = 0; i < statusGroups.length; i++) {
-      if (
-        statusGroups[i].items.some((item) => item.id.toString() === activeId)
-      ) {
-        sourceGroupIndex = i;
-      }
-      if (statusGroups[i].items.some((item) => item.id.toString() === overId)) {
-        destinationGroupIndex = i;
-      }
-    }
-
-    if (sourceGroupIndex === -1 || destinationGroupIndex === -1) {
-      setActiveId(null);
-      setActiveCategory(null);
-      return;
-    }
+    if (sourceGroupIndex === -1 || destinationGroupIndex === -1) return;
 
     const draggedItem = statusGroups[sourceGroupIndex].items.find(
       (item) => item.id.toString() === activeId
     );
-    if (!draggedItem) {
-      setActiveId(null);
-      setActiveCategory(null);
-      return;
-    }
 
-    const updatedGroups = [...statusGroups];
+    if (!draggedItem) return;
 
+    const updatedGroups = structuredClone(statusGroups);
+
+    // Remove dragged item from the source group
     updatedGroups[sourceGroupIndex].items = updatedGroups[
       sourceGroupIndex
     ].items.filter((item) => item.id.toString() !== activeId);
 
+    // Find insertion index in the destination group
     const overIndex = updatedGroups[destinationGroupIndex].items.findIndex(
-      (item) => item.id.toString() === overId
+      (item) => `item-${item.id}` === overIdRaw
     );
 
-    updatedGroups[destinationGroupIndex].items.splice(
-      overIndex,
-      0,
-      draggedItem
-    );
-
-    setStatusGroups(updatedGroups);
-    setActiveId(null);
-    setActiveCategory(null);
+    if (overIndex === -1) {
+      // Dropped on empty group container: push item at the end
+      updatedGroups[destinationGroupIndex].items.push(draggedItem);
+    } else {
+      // Insert before overIndex
+      updatedGroups[destinationGroupIndex].items.splice(
+        overIndex,
+        0,
+        draggedItem
+      );
+    }
   };
 
   useEffect(() => {
@@ -292,10 +287,12 @@ export const StatusTemplate = ({ isOpen, setIsOpen, data }: Props) => {
               <div className="px-4">
                 {statusGroups.map((group) => (
                   <SortableContext
-                    key={group.id}
-                    items={group.items.map((item) => item.id)}
+                    key={`group-${group.id}`}
+                    id={`group-${group.id}`}
+                    items={group.items.map((item) => `item-${item.id}`)}
+                    strategy={verticalListSortingStrategy}
                   >
-                    <div key={group.id} className="mt-4">
+                    <div className="mt-4">
                       <div className="space-y-2 mt-2">
                         <StatusGroup group={group} />
                       </div>
@@ -321,7 +318,7 @@ export const StatusTemplate = ({ isOpen, setIsOpen, data }: Props) => {
 // Component to on the list of statuses in a category
 const StatusGroup = ({ group }: { group: Group }) => {
   const { setNodeRef, isOver } = useDroppable({
-    id: group.id.toString(),
+    id: `group-${group.id}`,
   });
 
   return (
@@ -336,18 +333,9 @@ const StatusGroup = ({ group }: { group: Group }) => {
       {group.items.length > 0 ? (
         group.items.map((item) => <StatusItem key={item.id} item={item} />)
       ) : (
-        // Render an empty div if items is empty
-        <div>
-          <div
-            className={cn(
-              'flex border justify-between rounded-lg items-center py-[1.5px] hover:bg-accent/50 cursor-pointer'
-            )}
-          >
-            <div className="flex items-center min-h-7 flex-1 border-1 border-transparent" />
-          </div>
-        </div>
+        <div key={group.id} className="min-h-2" />
       )}
-      <AddStatusItem />
+      <AddStatusItem group={group} />
     </div>
   );
 };
@@ -361,7 +349,7 @@ function StatusItem({ item }: { item: Item }) {
     transform,
     transition,
     isDragging,
-  } = useSortable({ id: item.id });
+  } = useSortable({ id: `item-${item.id}` });
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -395,7 +383,7 @@ function StatusItem({ item }: { item: Item }) {
   const onChangeColor = () => {};
 
   return (
-    <div ref={setNodeRef} style={style} {...attributes}>
+    <div ref={setNodeRef} style={style} {...listeners} {...attributes}>
       <div
         key={item.id}
         className={cn(
@@ -447,7 +435,7 @@ function StatusItem({ item }: { item: Item }) {
         ) : (
           <>
             <div className="flex items-center flex-1 border-1 border-transparent">
-              <div {...listeners} onClick={(e) => e.stopPropagation()}>
+              <div>
                 <GripVertical
                   size={14}
                   className="text-muted-foreground mx-1 cursor-grab"
@@ -481,7 +469,7 @@ function StatusItem({ item }: { item: Item }) {
   );
 }
 
-const AddStatusItem = () => {
+const AddStatusItem = ({ group }: { group: Group }) => {
   const [name, setName] = useState('');
   const [editing, setEditing] = useState(false);
 
