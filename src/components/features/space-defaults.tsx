@@ -51,7 +51,10 @@ export const SpaceDefaults = ({
                   className="flex items-center gap-1 flex-shrink-0"
                   key={status.id}
                 >
-                  <div className={cn('w-3 h-3 rounded-full border-[1.5px]')} />
+                  <div
+                    className={cn('w-3 h-3 rounded-full border-[1.5px]')}
+                    style={{ backgroundColor: status.color }}
+                  />
                   {status.name}
                   <ArrowRight size={14} />
                 </span>

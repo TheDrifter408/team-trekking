@@ -23,7 +23,10 @@ import {
   useCreateStatusMutation,
 } from '@/service/rtkQueries/spaceQuery.ts';
 import { useWorkspaceStore } from '@/stores/zustand/workspace-store.ts';
-import { ViewStatusResponse } from '@/types/request-response/space/ApiResponse.ts';
+import {
+  Group,
+  ViewStatusResponse,
+} from '@/types/request-response/space/ApiResponse.ts';
 
 interface Props {
   createSpaceOpen: boolean;
@@ -81,7 +84,7 @@ export const CreateSpace = ({ createSpaceOpen, setCreateSpaceOpen }: Props) => {
     setCreateSpaceOpen(true);
   };
 
-  const onCreateSpace = async (statusView: any) => {
+  const onCreateSpace = async (statusView: Group[]) => {
     const { data: statusViewData } = await handleMutation<ViewStatusResponse>(
       createStatusView,
       {

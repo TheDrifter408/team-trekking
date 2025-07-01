@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { Dispatch, SetStateAction, useState } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -43,20 +43,41 @@ import {
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { Group, Item } from '@/types/request-response/space/ApiResponse.ts';
+import { useGetWorkspaceViewGroupByIDQuery } from '@/service/rtkQueries/workspaceQuery';
+import { ViewGroup } from '@/types/request-response/workspace/ApiResponse';
 
 interface Props {
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
-  data: Group[];
+  spaceTemplates: Group[];
+  setSpaceTemplates: Dispatch<SetStateAction<Group[]>>;
 }
 
-export const StatusTemplate = ({ isOpen, setIsOpen, data }: Props) => {
+export const StatusTemplate = ({
+  isOpen,
+  setIsOpen,
+  spaceTemplates = [],
+  setSpaceTemplates,
+}: Props) => {
+  const { data: templates, isLoading } = useGetWorkspaceViewGroupByIDQuery({
+    id: 28,
+  });
+
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null);
-  const [statusGroups, setStatusGroups] = useState<Group[]>([]);
+  const [selectedTemplate, setSelectedTemplate] = useState<ViewGroup | null>(
+    null
+  );
 
   const [activeItem, setActiveItem] = useState<number | null>(null);
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
+
+  const onSelectTemplate = (templateName: string) => {
+    const found = templates?.find((t) => t.name === templateName);
+    if (found) {
+      setSelectedTemplate(found);
+      setSpaceTemplates(found.groups);
+    }
+  };
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -76,7 +97,7 @@ export const StatusTemplate = ({ isOpen, setIsOpen, data }: Props) => {
       .trim(); // replace the unique id
 
     // Find the Category (group name) of the item
-    for (const group of statusGroups) {
+    for (const group of spaceTemplates) {
       const found = group.items.find((item) => item.id.toString() === activeId);
       if (found) {
         setActiveItem(Number(activeId));
@@ -98,19 +119,19 @@ export const StatusTemplate = ({ isOpen, setIsOpen, data }: Props) => {
       .trim(); // replace the unique id
     const overIdRaw = over.id.toString(); // can be item-00 or group-00
 
-    let overGroupIndex = statusGroups.findIndex(
+    let overGroupIndex = spaceTemplates.findIndex(
       (group) => `group-${group.id}` === overIdRaw
     );
 
     // if not found by group id, try to find by item id inside groups
     if (overGroupIndex === -1) {
-      overGroupIndex = statusGroups.findIndex((group) =>
+      overGroupIndex = spaceTemplates.findIndex((group) =>
         group.items.some((item) => item.id.toString() === activeId)
       );
     }
 
     // Find activeGroupIndex by looking inside items
-    const activeGroupIndex = statusGroups.findIndex((group) =>
+    const activeGroupIndex = spaceTemplates.findIndex((group) =>
       group.items.some((item) => item.id.toString() === activeId)
     );
 
@@ -123,13 +144,13 @@ export const StatusTemplate = ({ isOpen, setIsOpen, data }: Props) => {
     }
 
     // Find the active Item inside active group
-    const draggedItem = statusGroups[activeGroupIndex].items.find(
+    const draggedItem = spaceTemplates[activeGroupIndex].items.find(
       (item) => item.id.toString() === activeId
     );
 
     if (!draggedItem) return;
 
-    const updatedGroups = structuredClone(statusGroups);
+    const updatedGroups = structuredClone(spaceTemplates);
 
     // Remove the active item from its parent group
     updatedGroups[activeGroupIndex].items = updatedGroups[
@@ -150,7 +171,7 @@ export const StatusTemplate = ({ isOpen, setIsOpen, data }: Props) => {
       overItems.splice(overIndex + 1, 0, draggedItem);
     }
 
-    setStatusGroups(updatedGroups);
+    setSpaceTemplates(updatedGroups);
     setActiveCategory(updatedGroups[overGroupIndex].name);
   };
 
@@ -171,30 +192,30 @@ export const StatusTemplate = ({ isOpen, setIsOpen, data }: Props) => {
     const overIdRaw = over.id.toString(); // could be group-00 or item-00
 
     // Find the source group by item id
-    const sourceGroupIndex = statusGroups.findIndex(
+    const sourceGroupIndex = spaceTemplates.findIndex(
       (item) => item.id.toString() === activeId
     );
 
     // find the destination group index by group id or item id
-    let destinationGroupIndex = statusGroups.findIndex(
+    let destinationGroupIndex = spaceTemplates.findIndex(
       (group) => `group-${group.id}` === overIdRaw
     );
 
     if (destinationGroupIndex === -1) {
-      destinationGroupIndex = statusGroups.findIndex((group) =>
+      destinationGroupIndex = spaceTemplates.findIndex((group) =>
         group.items.some((item) => `item-${item.id}` === overIdRaw)
       );
     }
 
     if (sourceGroupIndex === -1 || destinationGroupIndex === -1) return;
 
-    const draggedItem = statusGroups[sourceGroupIndex].items.find(
+    const draggedItem = spaceTemplates[sourceGroupIndex].items.find(
       (item) => item.id.toString() === activeId
     );
 
     if (!draggedItem) return;
 
-    const updatedGroups = structuredClone(statusGroups);
+    const updatedGroups = structuredClone(spaceTemplates);
 
     // Remove dragged item from the source group
     updatedGroups[sourceGroupIndex].items = updatedGroups[
@@ -219,12 +240,6 @@ export const StatusTemplate = ({ isOpen, setIsOpen, data }: Props) => {
     }
   };
 
-  useEffect(() => {
-    if (Array.isArray(data)) {
-      setStatusGroups(data);
-    }
-  }, [data]);
-
   return (
     <Dialog open={isOpen} onOpenChange={() => setIsOpen(!isOpen)}>
       <DialogContent
@@ -245,8 +260,8 @@ export const StatusTemplate = ({ isOpen, setIsOpen, data }: Props) => {
               {LABEL.STATUS_TEMPLATE}
             </span>
             <Select
-              value={selectedTemplate ? selectedTemplate : 'Custom'}
-              onValueChange={setSelectedTemplate}
+              value={selectedTemplate ? selectedTemplate.name : 'Custom'}
+              onValueChange={(templateName) => onSelectTemplate(templateName)}
             >
               <SelectTrigger className="w-[80%] mt-2">
                 <SelectValue placeholder="Select a template" />
@@ -260,16 +275,19 @@ export const StatusTemplate = ({ isOpen, setIsOpen, data }: Props) => {
                       placeholder="Search templates..."
                     />
                   </div>
-                  {['Template One', 'Template Two', 'Template Three'].map(
-                    (template, idx) => (
+                  {isLoading ? (
+                    <SelectItem value="">Loading</SelectItem>
+                  ) : (
+                    templates &&
+                    templates.map((template: ViewGroup) => (
                       <SelectItem
                         className="hover:bg-accent cursor-pointer"
-                        key={idx}
-                        value={template}
+                        key={template.id}
+                        value={template.name}
                       >
-                        {template}
+                        {template.name}
                       </SelectItem>
-                    )
+                    ))
                   )}
                 </SelectGroup>
               </SelectContent>
@@ -285,20 +303,46 @@ export const StatusTemplate = ({ isOpen, setIsOpen, data }: Props) => {
               onDragEnd={onDragEnd}
             >
               <div className="px-4">
-                {statusGroups.map((group) => (
-                  <SortableContext
-                    key={`group-${group.id}`}
-                    id={`group-${group.id}`}
-                    items={group.items.map((item) => `item-${item.id}`)}
-                    strategy={verticalListSortingStrategy}
+                {spaceTemplates.length > 0 ? (
+                  spaceTemplates.map((group) => (
+                    <SortableContext
+                      key={`group-${group.id}`}
+                      id={`group-${group.id}`}
+                      items={group.items.map((item) => `item-${item.id}`)}
+                      strategy={verticalListSortingStrategy}
+                    >
+                      <div className="">
+                        <div className="space-y-1">
+                          <StatusGroup group={group} />
+                        </div>
+                      </div>
+                    </SortableContext>
+                  ))
+                ) : (
+                  // loading state
+                  <div
+                    className={cn('space-y-2 p-4 rounded-lg transition-colors')}
                   >
-                    <div className="mt-4">
-                      <div className="space-y-2 mt-2">
-                        <StatusGroup group={group} />
+                    <div>
+                      <div
+                        className={cn(
+                          'flex border justify-between rounded-lg items-center py-[1.5px] hover:bg-accent/50 cursor-pointer'
+                        )}
+                      >
+                        <div className="flex items-center flex-1 border-1 border-transparent">
+                          <div>
+                            <GripVertical
+                              size={14}
+                              className="text-muted-foreground mx-1 cursor-grab"
+                            />
+                          </div>
+                          <div className="w-3 h-3 rounded-full mr-2" />
+                          <span className="text-base text-primary font-normal"></span>
+                        </div>
                       </div>
                     </div>
-                  </SortableContext>
-                ))}
+                  </div>
+                )}
               </div>
             </DndContext>
           </div>
@@ -333,9 +377,9 @@ const StatusGroup = ({ group }: { group: Group }) => {
       {group.items.length > 0 ? (
         group.items.map((item) => <StatusItem key={item.id} item={item} />)
       ) : (
-        <div key={group.id} className="min-h-2" />
+        <div key={group.id} className="min-h-[1px]" />
       )}
-      <AddStatusItem group={group} />
+      <AddStatusItem />
     </div>
   );
 };
@@ -469,7 +513,7 @@ function StatusItem({ item }: { item: Item }) {
   );
 }
 
-const AddStatusItem = ({ group }: { group: Group }) => {
+const AddStatusItem = () => {
   const [name, setName] = useState('');
   const [editing, setEditing] = useState(false);
 
