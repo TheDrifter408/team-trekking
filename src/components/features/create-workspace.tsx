@@ -7,7 +7,7 @@ import React, {
   ChangeEvent,
 } from 'react';
 import { Check } from 'lucide-react';
-import { cn } from '@/lib/utils/utils.ts';
+import { cn, getRandomHexColor } from '@/lib/utils/utils.ts';
 import { Icon } from '@/assets/icon-path.tsx';
 import {
   Dialog,
@@ -83,8 +83,7 @@ export const CreateWorkspace: React.FC<Props> = ({
   const inputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const { data: workSpaceGlobal } = useWorkspaceGlobalQuery();
-  const [createWorkSpaceApi, { data, isLoading }] =
-    useCreateWorkSpaceMutation();
+  const [createWorkSpaceApi] = useCreateWorkSpaceMutation();
 
   // Calculate total steps based on first-time login status
   const totalSteps = isFirstTimeLogin ? 7 : 6;
@@ -120,7 +119,7 @@ export const CreateWorkspace: React.FC<Props> = ({
     stepCalculation();
   };
 
-  const onSubmit = async (): void => {
+  const onSubmit = async (): Promise<void> => {
     if (isFirstTimeLogin) {
       return;
     }
@@ -158,6 +157,7 @@ export const CreateWorkspace: React.FC<Props> = ({
       ...(selectedDiscovery?.name && {
         customDiscoverySource: selectedDiscovery.name,
       }),
+      color: getRandomHexColor(),
     };
     const { data } = await createWorkSpaceApi(requestParams);
     if (data) {

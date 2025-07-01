@@ -14,10 +14,10 @@ import { cn } from '@/lib/utils/utils.ts';
 import { useAppContext } from '@/lib/context/app-layout-context.tsx';
 import { LABEL } from '@/lib/constants/appStrings.ts';
 import {
-  View,
-  StatusItem,
-  Workflow,
   ClickApp,
+  DefaultView,
+  Group,
+  WorkFlow,
 } from '@/types/request-response/space/ApiResponse.ts';
 import { ClickAppsDialog } from './clickapps-dialog';
 
@@ -25,33 +25,37 @@ interface Props {
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
   onBack: () => void;
+  onDone: (statusView: any) => void;
 }
 
-export const CreateSpaceWorkflow = ({ isOpen, setIsOpen, onBack }: Props) => {
+export const CreateSpaceWorkflow = ({
+  isOpen,
+  setIsOpen,
+  onBack,
+  onDone,
+}: Props) => {
   const { spaceGlobal } = useAppContext(); // contains workflow data
   // Dialog States for default views, task Statuses and ClickApps
   const [isDefaultViewOpen, setIsDefaultViewOpen] = useState(false);
   const [isTaskStatusOpen, setIsTaskStatusOpen] = useState(false);
   const [isClickAppsOpen, setIsClickAppsOpen] = useState(false);
 
-  const [selectedTemplate, setSelectedTemplate] = useState<Workflow | null>(
+  const [selectedTemplate, setSelectedTemplate] = useState<WorkFlow | null>(
     null
   );
 
-  const [defaultViewData, setDefaultViewData] = useState<View[]>([]);
-  const [taskStatuses, setTaskStatuses] = useState<
-    Record<string, StatusItem[]>
-  >({});
+  const [defaultViewData, setDefaultViewData] = useState<DefaultView[]>([]);
+  const [taskStatuses, setTaskStatuses] = useState<Group[]>([]);
   const [clickApps, setClickApps] = useState<ClickApp[]>([]);
 
-  const templates = spaceGlobal?.workflow ?? [];
+  const templates = spaceGlobal?.workFlows ?? [];
 
-  const onSelectTemplate = (templateId: number) => {
-    const selected = templates.find((tpl) => tpl.id === templateId);
+  const onSelectTemplate = (templateName: string) => {
+    const selected = templates.find((tpl) => tpl.name === templateName);
     if (selected) {
       setSelectedTemplate(selected);
-      setDefaultViewData(selected.defaultView);
-      setTaskStatuses(selected.statusItems);
+      setDefaultViewData(selected.defaultViews);
+      setTaskStatuses(selected.statusItems.groups);
     }
   };
 
@@ -78,9 +82,9 @@ export const CreateSpaceWorkflow = ({ isOpen, setIsOpen, onBack }: Props) => {
 
   useEffect(() => {
     if (spaceGlobal) {
-      setSelectedTemplate(spaceGlobal.workflow[0]);
-      setDefaultViewData(spaceGlobal.workflow[0].defaultView);
-      setTaskStatuses(spaceGlobal.workflow[0].statusItems);
+      setSelectedTemplate(spaceGlobal.workFlows[0]);
+      setDefaultViewData(spaceGlobal.workFlows[0].defaultViews);
+      setTaskStatuses(spaceGlobal.workFlows[0].statusItems.groups);
       setClickApps(spaceGlobal.clickApps);
     }
   }, [spaceGlobal]);
@@ -107,15 +111,15 @@ export const CreateSpaceWorkflow = ({ isOpen, setIsOpen, onBack }: Props) => {
             <div className="grid grid-cols-2 gap-3">
               {templates.map((template) => (
                 <Template
-                  key={template.id}
-                  templateTitle={template.title}
-                  templateDescription={template.subTitle}
+                  key={template.name}
+                  templateTitle={template.name}
+                  templateDescription={template.name}
                   isSelected={
                     selectedTemplate
-                      ? selectedTemplate.id === template.id
+                      ? selectedTemplate.name === template.name
                       : false
                   }
-                  onClick={() => onSelectTemplate(template.id)}
+                  onClick={() => onSelectTemplate(template.name)}
                 />
               ))}
             </div>
@@ -146,7 +150,7 @@ export const CreateSpaceWorkflow = ({ isOpen, setIsOpen, onBack }: Props) => {
             <Button
               variant="default"
               className="bg-theme-main"
-              onClick={() => setIsOpen(false)}
+              onClick={() => onDone(selectedTemplate?.statusItems.groups)}
             >
               {LABEL.DONE}
             </Button>
@@ -168,7 +172,7 @@ export const CreateSpaceWorkflow = ({ isOpen, setIsOpen, onBack }: Props) => {
           setIsTaskStatusOpen(false);
           setIsOpen(true);
         }}
-        data={taskStatuses}
+        data={taskStatuses ?? []}
       />
       <ClickAppsDialog
         isOpen={isClickAppsOpen}

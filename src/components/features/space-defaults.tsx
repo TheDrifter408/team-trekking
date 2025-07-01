@@ -2,15 +2,20 @@
 
 import { Layers, CircleDot, ChevronsUpDown, ArrowRight } from 'lucide-react';
 import { SettingsCard } from '@/components/features/settings-card';
-import { ClickApp, StatusItem, View } from '@/types/request-response/space/ApiResponse';
-import { cn, extractDefaultViews, extractTaskStatus } from '@/lib/utils/utils';
+import {
+  ClickApp,
+  DefaultView,
+  Item,
+  Group,
+} from '@/types/request-response/space/ApiResponse';
+import { cn, extractDefaultViews } from '@/lib/utils/utils';
 
 interface Props {
   onClickDefaultView?: () => void;
   onClickStatus?: () => void;
   onClickClickApps: () => void;
-  defaultContent: View[];
-  statusContent: Record<string, StatusItem[]>;
+  defaultContent: DefaultView[];
+  statusContent: Group[];
   clickAppContent: ClickApp[];
 }
 
@@ -23,7 +28,6 @@ export const SpaceDefaults = ({
   clickAppContent,
 }: Props) => {
   const defalutViewsContent = extractDefaultViews(defaultContent);
-  const taskStatusContent = extractTaskStatus(statusContent);
 
   return (
     <>
@@ -32,7 +36,7 @@ export const SpaceDefaults = ({
         title="Default views"
         onClickSettings={onClickDefaultView}
       >
-        <p className='text-base text-muted-foreground'>{defalutViewsContent}</p>
+        <p className="text-base text-muted-foreground">{defalutViewsContent}</p>
       </SettingsCard>
       <SettingsCard
         icon={<CircleDot className="h-[18px] text-primary" />}
@@ -40,20 +44,22 @@ export const SpaceDefaults = ({
         onClickSettings={onClickStatus}
       >
         <div className="text-base text-muted-foreground flex items-center gap-1 overflow-hidden whitespace-nowrap">
-          {taskStatusContent.map((color) => (
-            <span
-              className="flex items-center gap-1 flex-shrink-0"
-              key={color.name}
-            >
-              <div
-                className={cn(
-                  'w-3 h-3 rounded-full border-[1.5px]',
-                )}
-                style={{ backgroundColor: `${color.color}` }}
-              />
-              {color.name}<ArrowRight size={14} />
-            </span>
-          ))}
+          {statusContent ? (
+            statusContent.map((group) =>
+              group.items.map((status: Item) => (
+                <span
+                  className="flex items-center gap-1 flex-shrink-0"
+                  key={status.id}
+                >
+                  <div className={cn('w-3 h-3 rounded-full border-[1.5px]')} />
+                  {status.name}
+                  <ArrowRight size={14} />
+                </span>
+              ))
+            )
+          ) : (
+            <div />
+          )}
         </div>
       </SettingsCard>
       <SettingsCard
@@ -61,7 +67,9 @@ export const SpaceDefaults = ({
         title="ClickApps"
         onClickSettings={onClickClickApps}
       >
-        <p className="text-base text-muted-foreground">{clickAppContent.map((value:ClickApp) => value.title).join(',')}</p>
+        <p className="text-base text-muted-foreground">
+          {clickAppContent.map((value: ClickApp) => value.title).join(',')}
+        </p>
       </SettingsCard>
     </>
   );

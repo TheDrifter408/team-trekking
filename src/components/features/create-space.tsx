@@ -13,11 +13,17 @@ import { Switch } from '@/components/shadcn-ui/switch.tsx';
 import { useState } from 'react';
 import { Assignee, ColorOption, IconOption } from '@/types/props/Common';
 import { colorOptions, iconOptions, taskNotificationUsers } from '@/mock';
-import { getInitials } from '@/lib/utils/utils.ts';
+import { getInitials, handleMutation } from '@/lib/utils/utils.ts';
 import { DropDownContent } from '@/components/common/space-icon-name-dropdown';
 import { SelectUsers } from '@/components/common/select-users';
 import { CreateSpaceWorkflow } from '@/components/features/create-space-workflow.tsx';
 import { LABEL } from '@/lib/constants/appStrings.ts';
+import {
+  useCreateSpaceMutation,
+  useCreateStatusMutation,
+} from '@/service/rtkQueries/spaceQuery.ts';
+import { useWorkspaceStore } from '@/stores/zustand/workspace-store.ts';
+import { ViewStatusResponse } from '@/types/request-response/space/ApiResponse.ts';
 
 interface Props {
   createSpaceOpen: boolean;
@@ -25,6 +31,7 @@ interface Props {
 }
 
 export const CreateSpace = ({ createSpaceOpen, setCreateSpaceOpen }: Props) => {
+  const { currentWorkspace } = useWorkspaceStore();
   const [selectedIcon, setSelectedIcon] = useState<IconOption | null>(null);
   const [selectedColor, setSelectedColor] = useState<ColorOption>(
     colorOptions[0]
@@ -36,6 +43,8 @@ export const CreateSpace = ({ createSpaceOpen, setCreateSpaceOpen }: Props) => {
   const [searchAvatar, setSearchAvatar] = useState<string>('');
   const [isWorkflowOpen, setIsWorkflowOpen] = useState(false);
   const initials = getInitials(spaceName)[0] ?? 'P';
+  const [createSpace] = useCreateSpaceMutation();
+  const [createStatusView] = useCreateStatusMutation();
 
   const resetForm = () => {
     setSpaceName('');
@@ -70,6 +79,29 @@ export const CreateSpace = ({ createSpaceOpen, setCreateSpaceOpen }: Props) => {
   const onCloseWorkflow = () => {
     setIsWorkflowOpen(false);
     setCreateSpaceOpen(true);
+  };
+
+  const onCreateSpace = async (statusView: any) => {
+    const { data: statusViewData } = await handleMutation<ViewStatusResponse>(
+      createStatusView,
+      {
+        name: spaceName,
+        workspaceId: Number(currentWorkspace?.id),
+        groups: statusView,
+      }
+    );
+    if (statusViewData) {
+      const { data: spaceData } = await handleMutation(createSpace, {
+        name: spaceName,
+        description: description,
+        workspaceId: Number(currentWorkspace?.id),
+        statusViewGroupId: statusViewData.id,
+        visibility: isPrivateMode ? 'private' : 'public',
+      });
+      if (spaceData) {
+        setIsWorkflowOpen(false);
+      }
+    }
   };
 
   return (
@@ -192,6 +224,7 @@ export const CreateSpace = ({ createSpaceOpen, setCreateSpaceOpen }: Props) => {
         isOpen={isWorkflowOpen}
         setIsOpen={setIsWorkflowOpen}
         onBack={onCloseWorkflow}
+        onDone={onCreateSpace}
       />
     </React.Fragment>
   );

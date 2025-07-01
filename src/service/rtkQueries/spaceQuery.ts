@@ -1,9 +1,15 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import axiosBaseQuery from '@/service/baseQuery.ts';
 import { ApiResponse } from '@/types/request-response/auth/ApiResponse.ts';
-import { SpaceGlobal } from '@/types/request-response/space/ApiResponse.ts';
+import {
+  SpaceGlobal,
+  ViewStatusResponse,
+} from '@/types/request-response/space/ApiResponse.ts';
 import { API_URLS } from '@/lib/constants';
-import { withPersistentCache } from '@/lib/utils/utils.ts';
+import {
+  CreateSpace,
+  StatusViewRequest,
+} from '@/types/request-response/space/ApiRequest.ts';
 
 export const spaceApi = createApi({
   reducerPath: 'spaceApi',
@@ -14,10 +20,29 @@ export const spaceApi = createApi({
         url: 'space/global',
       }),
       transformResponse: (response: ApiResponse<SpaceGlobal>) => response.data,
-      keepUnusedDataFor: 60 * 60 * 24,
-      ...withPersistentCache(15),
+    }),
+    createSpace: builder.mutation<string, CreateSpace>({
+      query: (data: CreateSpace) => ({
+        url: 'space',
+        method: 'POST',
+        data,
+      }),
+      transformResponse: (response: ApiResponse<string>) => response.data,
+    }),
+    createStatus: builder.mutation<ViewStatusResponse, StatusViewRequest>({
+      query: (data: CreateSpace) => ({
+        url: 'space/status',
+        method: 'POST',
+        data,
+      }),
+      transformResponse: (response: ApiResponse<ViewStatusResponse>) =>
+        response.data,
     }),
   }),
 });
 
-export const { useSpaceGlobalApiQuery } = spaceApi;
+export const {
+  useSpaceGlobalApiQuery,
+  useCreateStatusMutation,
+  useCreateSpaceMutation,
+} = spaceApi;
