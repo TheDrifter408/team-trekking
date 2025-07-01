@@ -172,7 +172,7 @@ export const CreateSpaceWorkflow = ({
           setIsTaskStatusOpen(false);
           setIsOpen(true);
         }}
-        data={taskStatuses}
+        data={taskStatuses ?? []}
       />
       <ClickAppsDialog
         isOpen={isClickAppsOpen}
