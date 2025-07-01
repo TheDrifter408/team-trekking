@@ -23,6 +23,7 @@ const API_URLS = {
   SPACE_BASE_URL: 'http://192.168.0.102:3006/',
   WORK_SPACE_BASE_URL: 'http://192.168.0.102:3008/',
   FOLDER_BASE_URL: 'http://146.190.195.64:3003/',
+  TASK_BASE_URL: 'http://146.190.195.64:3007/',
 };
 const HOME_CARD_TITLE = {
   MY_WORK: 'My Work',
