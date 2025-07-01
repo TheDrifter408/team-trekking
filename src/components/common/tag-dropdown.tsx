@@ -380,7 +380,6 @@ const TagDropdownContent: React.FC<TagDropdownContentProps> = ({
   );
 };
 
-// Example usage following the pattern
 interface TagDropdownWrapperProps {
   placeholder?: string;
   availableTags: TagOption[];

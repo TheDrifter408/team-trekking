@@ -9,8 +9,11 @@ import {
   DataTableProvider,
 } from '@/stores/zustand/data-table-store.ts';
 import { FilterSection } from './components/filter-section.tsx';
+import { CreateTask } from '@/components/features/create-task.tsx';
 import { useComponentStore } from '@/stores/zustand/component-state-store.ts';
 import { TabActionBar } from '@/components/common/table-floating-actoin-bar.tsx';
+import { Icon } from '@/assets/icon-path.tsx';
+import { Button } from '@/components/shadcn-ui/button.tsx';
 
 export const List = () => {
   const currentPage = useMemo(
@@ -33,6 +36,7 @@ export const List = () => {
   const isDrawerOpen = useComponentStore((s) => s.isDrawerOpen('list-drawer'));
 
   const [isTableExpanded, setIsTableExpanded] = useState(false);
+  const [isOpenTaskCreate, setIsOpenTaskCreate] = useState(false);
 
   const onToggleExpand = useCallback(() => {
     setIsTableExpanded(!isTableExpanded);
@@ -44,7 +48,10 @@ export const List = () => {
     <DataTableProvider value={store}>
       <div className="flex flex-col h-screen overflow-hidden relative">
         <PageHeader currentPage={currentPage} parents={parents} />
-        <FilterSection />
+        <FilterSection
+          isOpen={isOpenTaskCreate}
+          setIsOpen={setIsOpenTaskCreate}
+        />
         <div className="flex-1 min-h-0 flex flex-col px-[20px] mt-[40px] pb-[40px] flex-shrink-0 w-full overflow-hidden">
           <ListCard
             isTableExpanded={isTableExpanded}

@@ -140,7 +140,7 @@ export const DocEditor: FC<Props> = ({
               />
             }
             placeholder={
-              <div className="absolute top-2 left-3 text-base leading-relaxed text-muted-foreground">
+              <div className="absolute top-3 left-5  text-base leading-relaxed text-muted-foreground">
                 {placeholder || "Type '/' for commands..."}
               </div>
             }
