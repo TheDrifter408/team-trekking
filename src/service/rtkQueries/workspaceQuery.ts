@@ -8,6 +8,7 @@ import {
   WorkSpaceRecent,
   WorkSpaceCreated,
   WorkSpaceResponse,
+  ViewGroup,
 } from '@/types/request-response/workspace/ApiResponse';
 import { CreateWorkSpace } from '@/types/request-response/workspace/ApiRequest.ts';
 
@@ -31,7 +32,7 @@ export const workspaceApi = createApi({
       transformResponse: (response: ApiResponse<Array<WorkSpaceRecent>>) =>
         response.data,
     }),
-    getWorkSpace: builder.query<Array<WorkSpaceResponse>, void>({
+    getAllWorkSpaces: builder.query<Array<WorkSpaceResponse>, void>({
       query: () => ({
         url: 'workspace',
       }),
@@ -47,12 +48,20 @@ export const workspaceApi = createApi({
       transformResponse: (response: ApiResponse<WorkSpaceCreated>) =>
         response.data,
     }),
+    getWorkspaceViewGroupByID: builder.query<Array<ViewGroup>, { id: number }>({
+      query: (params) => ({
+        url: `workspace/${params.id}/view-group`,
+      }),
+      transformResponse: (response: ApiResponse<Array<ViewGroup>>) =>
+        response.data,
+    }),
   }),
 });
 
 export const {
   useWorkspaceGlobalQuery,
   useWorkspaceDashBoardRecentQuery,
-  useGetWorkSpaceQuery,
+  useGetAllWorkSpacesQuery,
   useCreateWorkSpaceMutation,
+  useGetWorkspaceViewGroupByIDQuery,
 } = workspaceApi;

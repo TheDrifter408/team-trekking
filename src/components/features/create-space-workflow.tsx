@@ -25,7 +25,7 @@ interface Props {
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
   onBack: () => void;
-  onDone: (statusView: any) => void;
+  onDone: (statusView: Group[]) => void;
 }
 
 export const CreateSpaceWorkflow = ({
@@ -150,7 +150,9 @@ export const CreateSpaceWorkflow = ({
             <Button
               variant="default"
               className="bg-theme-main"
-              onClick={() => onDone(selectedTemplate?.statusItems.groups)}
+              onClick={() =>
+                selectedTemplate && onDone(selectedTemplate.statusItems.groups)
+              }
             >
               {LABEL.DONE}
             </Button>
@@ -172,7 +174,8 @@ export const CreateSpaceWorkflow = ({
           setIsTaskStatusOpen(false);
           setIsOpen(true);
         }}
-        data={taskStatuses ?? []}
+        spaceTemplates={taskStatuses}
+        setSpaceTemplates={setTaskStatuses}
       />
       <ClickAppsDialog
         isOpen={isClickAppsOpen}

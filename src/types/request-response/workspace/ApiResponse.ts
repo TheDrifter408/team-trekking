@@ -1,3 +1,5 @@
+import { Group } from '@/types/request-response/space/ApiResponse';
+
 export interface WorkSpaceGlobal {
   WorkType: WorkType[];
   manageType: ManageType[];
@@ -11,6 +13,17 @@ export interface WorkType {
   id: number;
   name: string;
   isActive: boolean;
+}
+
+export interface ViewGroup {
+  id: number;
+  name: string;
+  type: string;
+  identifier: string | null;
+  identifierId: string | null;
+  isActive: boolean;
+  createdAt: string;
+  groups: Group[];
 }
 
 export interface ManageType {
