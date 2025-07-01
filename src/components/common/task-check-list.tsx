@@ -8,6 +8,7 @@ import {
   Edit3,
   Trash2,
 } from 'lucide-react';
+import { LABEL } from '@/lib/constants';
 
 const TaskCheckList = () => {
   const [checklists, setChecklists] = useState([
@@ -212,7 +213,9 @@ const TaskCheckList = () => {
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-3">
-          <h1 className="text-2xl font-semibold text-gray-900">Checklists</h1>
+          <h1 className="text-2xl font-semibold text-gray-900">
+            {LABEL.CHECKLISTS}
+          </h1>
           <div className="flex items-center gap-2">
             <div className="w-20 h-2 bg-gray-200 rounded-full overflow-hidden">
               <div
@@ -333,28 +336,28 @@ const TaskCheckList = () => {
                         className="w-full flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
                       >
                         <Plus className="w-4 h-4" />
-                        Add Item
+                        {LABEL.ADD_ITEM}
                       </button>
                       <button
                         onClick={() => onHandleMenuAction('rename', item)}
                         className="w-full flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
                       >
                         <Edit3 className="w-4 h-4" />
-                        Rename
+                        {LABEL.RENAME}
                       </button>
                       <button
                         onClick={() => onHandleMenuAction('assign', item)}
                         className="w-full flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
                       >
                         <User className="w-4 h-4" />
-                        Assign to
+                        {LABEL.ASSIGN_TO}
                       </button>
                       <button
                         onClick={() => onHandleMenuAction('delete', item)}
                         className="w-full flex items-center gap-3 px-4 py-2 text-sm text-red-600 hover:bg-red-50"
                       >
                         <Trash2 className="w-4 h-4" />
-                        Delete
+                        {LABEL.DELETE}
                       </button>
                     </div>
                   )}
