@@ -276,4 +276,7 @@ export const LABEL = {
   CREATE_AND_START_ANOTHER: 'Create and start another',
   CREATE_AND_DUPLICATE: 'Create and duplicate',
   NEW: 'New',
+  NEW_CHECKLIST_ITEM: 'New checklist item',
+  ASSIGN_TO: 'Assign to',
+  ADD_ITEM: 'Add Item',
 };

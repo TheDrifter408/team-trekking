@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -20,15 +20,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/shadcn-ui/select.tsx';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/shadcn-ui/tooltip.tsx';
-import { taskTemplates } from '@/mock';
 import { Input } from '@/components/shadcn-ui/input.tsx';
-import { Info, GripVertical, Ellipsis } from 'lucide-react';
+import { GripVertical, Ellipsis } from 'lucide-react';
 import { Button } from '@/components/shadcn-ui/button.tsx';
 import { cn } from '@/lib/utils/utils.ts';
 import { LABEL } from '@/lib/constants/appStrings.ts';
@@ -39,139 +32,31 @@ import {
   DragStartEvent,
   PointerSensor,
   closestCenter,
+  useDroppable,
   useSensor,
   useSensors,
 } from '@dnd-kit/core';
 import {
   SortableContext,
-  arrayMove,
   useSortable,
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { SyntheticListenerMap } from '@dnd-kit/core/dist/hooks/utilities';
-import { StatusItem } from '@/types/request-response/space/ApiResponse.ts';
-
-interface Category {
-  id: string;
-  status: number[];
-  description: string;
-}
-
-interface CategoryStatusGroup {
-  description: string;
-  statuses: StatusItem[];
-}
-
-interface StatusesByCategory {
-  [key: string]: CategoryStatusGroup;
-}
+import { Group, Item } from '@/types/request-response/space/ApiResponse.ts';
 
 interface Props {
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
-  data?: Record<string, StatusItem[]>;
+  data: Group[];
 }
-
-const getFilteredTemplates = (templates: any[], query: string): any[] => {
-  return templates.filter((template) =>
-    template.name.toLowerCase().includes(query.toLowerCase())
-  );
-};
-
-const getCurrentTemplate = (
-  templates: any[],
-  templateName: string
-): any | undefined => {
-  return templates.find((template) => template.name === templateName);
-};
-
-const getStatusesByCategory = (
-  statusData: Record<string, StatusItem[]> | undefined,
-  categories: Category[]
-): StatusesByCategory => {
-  if (!statusData) return {};
-
-  const statusesByCategory: StatusesByCategory = {};
-
-  // Initialize categories from the predefined list
-  categories.forEach((category) => {
-    statusesByCategory[category.id] = {
-      description: category.description,
-      statuses: [],
-    };
-  });
-
-  // Map the API data to categories
-  // The API data has keys like "Not Started", "Active", "Done", "Closed"
-  // We need to map these to our category structure
-  Object.entries(statusData).forEach(([categoryKey, statuses]) => {
-    // Find matching category or create a new one
-    const existingCategory = categories.find((cat) => cat.id === categoryKey);
-    if (existingCategory) {
-      statusesByCategory[categoryKey] = {
-        description: existingCategory.description,
-        statuses: statuses.map((status) => ({
-          ...status,
-          category: categoryKey,
-        })),
-      };
-    } else {
-      // Create new category if it doesn't exist in predefined categories
-      statusesByCategory[categoryKey] = {
-        description: categoryKey,
-        statuses: statuses.map((status) => ({
-          ...status,
-          category: categoryKey,
-        })),
-      };
-    }
-  });
-
-  return statusesByCategory;
-};
 
 export const StatusTemplate = ({ isOpen, setIsOpen, data }: Props) => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedTemplate, setSelectedTemplate] = useState(
-    taskTemplates.templates[0]?.name ?? ''
-  );
-  const [statusGroups, setStatusGroups] = useState<StatusesByCategory>({});
-  const [activeId, setActiveId] = useState<number | null>(null);
+  const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null);
+  const [statusGroups, setStatusGroups] = useState<Group[]>([]);
+
+  const [activeItem, setActiveItem] = useState<number | null>(null);
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
-
-  const filteredTemplates = getFilteredTemplates(
-    taskTemplates.templates,
-    searchQuery
-  );
-  const currentTemplate = getCurrentTemplate(
-    taskTemplates.templates,
-    selectedTemplate
-  );
-
-  useEffect(() => {
-    if (data) {
-      // Use the data prop when available (from selected workflow template)
-      const groups = getStatusesByCategory(data, taskTemplates.categories);
-      setStatusGroups(groups);
-    } else if (currentTemplate) {
-      // Fallback to current template logic for backward compatibility
-      const groups = getStatusesByCategory(
-        currentTemplate.statuses?.reduce(
-          (acc: Record<string, StatusItem[]>, status: any) => {
-            if (!acc[status.category]) {
-              acc[status.category] = [];
-            }
-            acc[status.category].push(status);
-            return acc;
-          },
-          {}
-        ),
-        taskTemplates.categories
-      );
-      setStatusGroups(groups);
-    }
-  }, [currentTemplate, data]);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -184,120 +69,161 @@ export const StatusTemplate = ({ isOpen, setIsOpen, data }: Props) => {
   // on when drag starts
   const onDragStart = (event: DragStartEvent) => {
     const { active } = event;
-    setActiveId(active.id as number);
 
-    // Find which category this status belongs to
-    for (const categoryId in statusGroups) {
-      const found = statusGroups[categoryId].statuses.find(
-        (status) => status.id === active.id
-      );
+    const activeId = active.id
+      .toString()
+      .replace(/^item-/, '')
+      .trim(); // replace the unique id
+
+    // Find the Category (group name) of the item
+    for (const group of statusGroups) {
+      const found = group.items.find((item) => item.id.toString() === activeId);
       if (found) {
-        setActiveCategory(categoryId);
+        setActiveItem(Number(activeId));
+        setActiveCategory(group.name);
         break;
       }
     }
   };
 
-  // on when dragging over a different category
+  // on when dragging over a different group
   const onDragOver = (event: DragOverEvent) => {
-    const { over } = event;
+    const { active, over } = event;
 
-    if (!over || !activeCategory) return;
+    if (!active || !over || !activeItem || !activeCategory) return;
 
-    // Find the target category
-    let targetCategory = activeCategory;
-    for (const categoryId in statusGroups) {
-      const found = statusGroups[categoryId].statuses.find(
-        (status) => status.id === over.id
+    const activeId = active.id
+      .toString()
+      .replace(/^item-/, '')
+      .trim(); // replace the unique id
+    const overIdRaw = over.id.toString(); // can be item-00 or group-00
+
+    let overGroupIndex = statusGroups.findIndex(
+      (group) => `group-${group.id}` === overIdRaw
+    );
+
+    // if not found by group id, try to find by item id inside groups
+    if (overGroupIndex === -1) {
+      overGroupIndex = statusGroups.findIndex((group) =>
+        group.items.some((item) => item.id.toString() === activeId)
       );
-      if (found) {
-        targetCategory = categoryId;
-        break;
-      }
     }
 
-    // If we're dragging into a different category
-    if (targetCategory !== activeCategory && activeId) {
-      setStatusGroups((current) => {
-        // Find the item we're dragging
-        const activeStatus = current[activeCategory].statuses.find(
-          (status) => status.id === activeId
-        );
+    // Find activeGroupIndex by looking inside items
+    const activeGroupIndex = statusGroups.findIndex((group) =>
+      group.items.some((item) => item.id.toString() === activeId)
+    );
 
-        if (!activeStatus) return current;
-
-        // Create a copy with the item removed from its original category
-        const updatedGroups = { ...current };
-        updatedGroups[activeCategory] = {
-          ...current[activeCategory],
-          statuses: current[activeCategory].statuses.filter(
-            (status) => status.id !== activeId
-          ),
-        };
-
-        // Update the category on the status
-        const updatedStatus = { ...activeStatus, category: targetCategory };
-
-        // Add the item to the new category
-        updatedGroups[targetCategory] = {
-          ...current[targetCategory],
-          statuses: [...current[targetCategory].statuses, updatedStatus],
-        };
-
-        setActiveCategory(targetCategory);
-        return updatedGroups;
-      });
+    if (
+      overGroupIndex === -1 ||
+      activeGroupIndex === -1 ||
+      activeGroupIndex === overGroupIndex
+    ) {
+      return;
     }
+
+    // Find the active Item inside active group
+    const draggedItem = statusGroups[activeGroupIndex].items.find(
+      (item) => item.id.toString() === activeId
+    );
+
+    if (!draggedItem) return;
+
+    const updatedGroups = structuredClone(statusGroups);
+
+    // Remove the active item from its parent group
+    updatedGroups[activeGroupIndex].items = updatedGroups[
+      activeGroupIndex
+    ].items.filter((item) => item.id.toString() !== activeId);
+
+    const overItems = updatedGroups[overGroupIndex].items;
+
+    // Find the index of the item or -1 if over group container
+    const overIndex = overItems.findIndex(
+      (item) => `item-${item.id}` === overIdRaw
+    );
+
+    if (overIndex === -1) {
+      // Dragged over empty group or group container itself, add item to start
+      overItems.unshift(draggedItem);
+    } else {
+      overItems.splice(overIndex + 1, 0, draggedItem);
+    }
+
+    setStatusGroups(updatedGroups);
+    setActiveCategory(updatedGroups[overGroupIndex].name);
   };
 
   // on when drag ends
   const onDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
 
-    if (!over || !activeCategory) {
-      setActiveId(null);
+    if (!active || !over) {
+      setActiveItem(null);
       setActiveCategory(null);
       return;
     }
 
-    // Find which category the over item belongs to
-    let targetCategory = activeCategory;
-    for (const categoryId in statusGroups) {
-      const found = statusGroups[categoryId].statuses.find(
-        (status) => status.id === over.id
+    const activeId = active.id
+      .toString()
+      .replace(/^item-/, '')
+      .trim(); // replace the unique id
+    const overIdRaw = over.id.toString(); // could be group-00 or item-00
+
+    // Find the source group by item id
+    const sourceGroupIndex = statusGroups.findIndex(
+      (item) => item.id.toString() === activeId
+    );
+
+    // find the destination group index by group id or item id
+    let destinationGroupIndex = statusGroups.findIndex(
+      (group) => `group-${group.id}` === overIdRaw
+    );
+
+    if (destinationGroupIndex === -1) {
+      destinationGroupIndex = statusGroups.findIndex((group) =>
+        group.items.some((item) => `item-${item.id}` === overIdRaw)
       );
-      if (found) {
-        targetCategory = categoryId;
-        break;
-      }
     }
 
-    // If we're in the same category, on reordering
-    if (targetCategory === activeCategory && active.id !== over.id) {
-      setStatusGroups((current) => {
-        const statusList = [...current[activeCategory].statuses];
-        const oldIndex = statusList.findIndex(
-          (status) => status.id === active.id
-        );
-        const newIndex = statusList.findIndex(
-          (status) => status.id === over.id
-        );
+    if (sourceGroupIndex === -1 || destinationGroupIndex === -1) return;
 
-        const newStatusList = arrayMove(statusList, oldIndex, newIndex);
+    const draggedItem = statusGroups[sourceGroupIndex].items.find(
+      (item) => item.id.toString() === activeId
+    );
 
-        return {
-          ...current,
-          [activeCategory]: {
-            ...current[activeCategory],
-            statuses: newStatusList,
-          },
-        };
-      });
+    if (!draggedItem) return;
+
+    const updatedGroups = structuredClone(statusGroups);
+
+    // Remove dragged item from the source group
+    updatedGroups[sourceGroupIndex].items = updatedGroups[
+      sourceGroupIndex
+    ].items.filter((item) => item.id.toString() !== activeId);
+
+    // Find insertion index in the destination group
+    const overIndex = updatedGroups[destinationGroupIndex].items.findIndex(
+      (item) => `item-${item.id}` === overIdRaw
+    );
+
+    if (overIndex === -1) {
+      // Dropped on empty group container: push item at the end
+      updatedGroups[destinationGroupIndex].items.push(draggedItem);
+    } else {
+      // Insert before overIndex
+      updatedGroups[destinationGroupIndex].items.splice(
+        overIndex,
+        0,
+        draggedItem
+      );
     }
-
-    setActiveId(null);
-    setActiveCategory(null);
   };
+
+  useEffect(() => {
+    if (Array.isArray(data)) {
+      setStatusGroups(data);
+    }
+  }, [data]);
 
   return (
     <Dialog open={isOpen} onOpenChange={() => setIsOpen(!isOpen)}>
@@ -319,7 +245,7 @@ export const StatusTemplate = ({ isOpen, setIsOpen, data }: Props) => {
               {LABEL.STATUS_TEMPLATE}
             </span>
             <Select
-              value={selectedTemplate}
+              value={selectedTemplate ? selectedTemplate : 'Custom'}
               onValueChange={setSelectedTemplate}
             >
               <SelectTrigger className="w-[80%] mt-2">
@@ -334,15 +260,17 @@ export const StatusTemplate = ({ isOpen, setIsOpen, data }: Props) => {
                       placeholder="Search templates..."
                     />
                   </div>
-                  {filteredTemplates.map((template) => (
-                    <SelectItem
-                      className="hover:bg-accent cursor-pointer"
-                      key={template.id}
-                      value={template.name}
-                    >
-                      {template.name}
-                    </SelectItem>
-                  ))}
+                  {['Template One', 'Template Two', 'Template Three'].map(
+                    (template, idx) => (
+                      <SelectItem
+                        className="hover:bg-accent cursor-pointer"
+                        key={idx}
+                        value={template}
+                      >
+                        {template}
+                      </SelectItem>
+                    )
+                  )}
                 </SelectGroup>
               </SelectContent>
             </Select>
@@ -357,26 +285,20 @@ export const StatusTemplate = ({ isOpen, setIsOpen, data }: Props) => {
               onDragEnd={onDragEnd}
             >
               <div className="px-4">
-                {Object.entries(statusGroups).map(
-                  ([categoryId, group]) =>
-                    group.statuses.length > 0 && (
-                      <div key={categoryId} className="mt-4">
-                        <TemplateCategory
-                          category={{
-                            id: categoryId,
-                            description: group.description,
-                            status: group.statuses.map((s) => s.id),
-                          }}
-                        />
-                        <div className="space-y-1 mt-2">
-                          <CategoryStatusList
-                            statuses={group.statuses}
-                            categoryId={categoryId}
-                          />
-                        </div>
+                {statusGroups.map((group) => (
+                  <SortableContext
+                    key={`group-${group.id}`}
+                    id={`group-${group.id}`}
+                    items={group.items.map((item) => `item-${item.id}`)}
+                    strategy={verticalListSortingStrategy}
+                  >
+                    <div className="mt-4">
+                      <div className="space-y-2 mt-2">
+                        <StatusGroup group={group} />
                       </div>
-                    )
-                )}
+                    </div>
+                  </SortableContext>
+                ))}
               </div>
             </DndContext>
           </div>
@@ -394,26 +316,160 @@ export const StatusTemplate = ({ isOpen, setIsOpen, data }: Props) => {
 };
 
 // Component to on the list of statuses in a category
-function CategoryStatusList({
-  statuses,
-}: {
-  statuses: StatusItem[];
-  categoryId: string;
-}) {
+const StatusGroup = ({ group }: { group: Group }) => {
+  const { setNodeRef, isOver } = useDroppable({
+    id: `group-${group.id}`,
+  });
+
   return (
-    <SortableContext
-      items={statuses.map((status) => status.id)}
-      strategy={verticalListSortingStrategy}
+    <div
+      ref={setNodeRef}
+      className={cn(
+        'space-y-2 p-4 rounded-lg transition-colors',
+        isOver ? 'border-blue-500' : ''
+      )}
     >
-      {statuses.map((status) => (
-        <SortableStatusItem key={status.id} status={status} />
-      ))}
-      <AddStatusItem />
-    </SortableContext>
+      <p className="text-xs font-bold text-muted-foreground">{group.name}</p>
+      {group.items.length > 0 ? (
+        group.items.map((item) => <StatusItem key={item.id} item={item} />)
+      ) : (
+        <div key={group.id} className="min-h-2" />
+      )}
+      <AddStatusItem group={group} />
+    </div>
+  );
+};
+
+// Wrapper component that adds drag-and-drop functionality to StatusItem
+function StatusItem({ item }: { item: Item }) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: `item-${item.id}` });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    zIndex: isDragging ? 10 : 1,
+    opacity: isDragging ? 0.8 : 1,
+  };
+
+  const [isEditing, setIsEditing] = useState(false);
+  const [statusName, setStatusName] = useState(item.name);
+
+  // on when user finishes editing
+  const onBlur = () => {
+    setIsEditing(false);
+  };
+
+  // on key press events (e.g., Enter to save)
+  const onKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      setIsEditing(false);
+    } else if (e.key === 'Escape') {
+      setStatusName(item.name);
+      setIsEditing(false);
+    }
+  };
+
+  const onRename = () => {
+    setIsEditing(true);
+  };
+
+  const onChangeColor = () => {};
+
+  return (
+    <div ref={setNodeRef} style={style} {...listeners} {...attributes}>
+      <div
+        key={item.id}
+        className={cn(
+          'flex border justify-between rounded-lg items-center py-[1.5px] hover:bg-accent/50 cursor-pointer',
+          isEditing &&
+            'ring-[1px] ring-theme-main-dark border-theme-main-light',
+          isDragging && 'bg-accent/50',
+          'hover:bg-accent/50'
+        )}
+        onClick={() => !isEditing && setIsEditing(true)}
+      >
+        {isEditing ? (
+          // Editing mode - Input field with icons
+          <div className="flex items-center w-full">
+            <div className="flex items-center flex-1 px">
+              <div {...listeners} onClick={(e) => e.stopPropagation()}>
+                <GripVertical
+                  size={14}
+                  className="text-muted-foreground ml-1 mr-2 cursor-grab"
+                />
+              </div>
+              <div
+                className="min-w-[12px] h-3 w-3 rounded-full shrink-0"
+                style={{ backgroundColor: item.color ?? '' }}
+              />
+              <Input
+                className="h-7 !border-0 !ring-0 py-0 px-1 !text-base font-normal"
+                value={statusName.toUpperCase()}
+                onChange={(e) => setStatusName(e.target.value)}
+                onKeyDown={onKeyDown}
+                onBlur={onBlur}
+                autoFocus
+              />
+            </div>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
+                <Button size="icon_sm" variant="ghost">
+                  <Ellipsis className="text-muted-foreground" size={15} />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-36">
+                <DropdownMenuItem onClick={onRename}>Rename</DropdownMenuItem>
+                <DropdownMenuItem onClick={onChangeColor}>
+                  Change Color
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        ) : (
+          <>
+            <div className="flex items-center flex-1 border-1 border-transparent">
+              <div>
+                <GripVertical
+                  size={14}
+                  className="text-muted-foreground mx-1 cursor-grab"
+                />
+              </div>
+              <div
+                className="w-3 h-3 rounded-full mr-2"
+                style={{ backgroundColor: item.color ?? '' }}
+              />
+              <span className="text-base text-primary font-normal">
+                {statusName.toUpperCase()}
+              </span>
+            </div>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
+                <Button size="icon_sm" variant="ghost">
+                  <Ellipsis className="text-muted-foreground" size={15} />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-36">
+                <DropdownMenuItem onClick={onRename}>Rename</DropdownMenuItem>
+                <DropdownMenuItem onClick={onChangeColor}>
+                  Change Color
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </>
+        )}
+      </div>
+    </div>
   );
 }
 
-function AddStatusItem() {
+const AddStatusItem = ({ group }: { group: Group }) => {
   const [name, setName] = useState('');
   const [editing, setEditing] = useState(false);
 
@@ -440,175 +496,4 @@ function AddStatusItem() {
       />
     </div>
   );
-}
-
-// Wrapper component that adds drag-and-drop functionality to StatusItem
-function SortableStatusItem({ status }: { status: StatusItem }) {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-    isDragging,
-  } = useSortable({ id: status.id });
-
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-    zIndex: isDragging ? 10 : 1,
-    opacity: isDragging ? 0.8 : 1,
-  };
-
-  return (
-    <div ref={setNodeRef} style={style} {...attributes}>
-      <StatusItemComponent
-        status={status}
-        dragonProps={listeners}
-        isDragging={isDragging}
-      />
-    </div>
-  );
-}
-
-function StatusItemComponent({
-  status,
-  dragonProps = {},
-  isDragging = false,
-}: {
-  status: StatusItem;
-  dragonProps?: SyntheticListenerMap;
-  isDragging?: boolean;
-}) {
-  const [isEditing, setIsEditing] = useState(false);
-  const [statusName, setStatusName] = useState(status.name);
-
-  // on when user finishes editing
-  const onBlur = () => {
-    setIsEditing(false);
-  };
-
-  // on key press events (e.g., Enter to save)
-  const onKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      setIsEditing(false);
-    } else if (e.key === 'Escape') {
-      setStatusName(status.name);
-      setIsEditing(false);
-    }
-  };
-
-  const onRename = () => {
-    setIsEditing(true);
-  };
-
-  const onChangeColor = () => {};
-
-  return (
-    <div
-      key={status.id}
-      className={cn(
-        'flex border justify-between rounded-lg items-center py-[1.5px] hover:bg-accent/50 cursor-pointer',
-        isEditing && 'ring-[1px] ring-theme-main-dark border-theme-main-light',
-        isDragging && 'bg-accent/50',
-        'hover:bg-accent/50'
-      )}
-      onClick={() => !isEditing && setIsEditing(true)}
-    >
-      {isEditing ? (
-        // Editing mode - Input field with icons
-        <div className="flex items-center w-full">
-          <div className="flex items-center flex-1 px">
-            <div {...dragonProps} onClick={(e) => e.stopPropagation()}>
-              <GripVertical
-                size={14}
-                className="text-muted-foreground ml-1 mr-2 cursor-grab"
-              />
-            </div>
-            <div
-              className="min-w-[12px] h-3 w-3 rounded-full shrink-0"
-              style={{ backgroundColor: status.color }}
-            />
-            <Input
-              className="h-7 !border-0 !ring-0 py-0 px-1 !text-base font-normal"
-              value={statusName.toUpperCase()}
-              onChange={(e) => setStatusName(e.target.value)}
-              onKeyDown={onKeyDown}
-              onBlur={onBlur}
-              autoFocus
-            />
-          </div>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
-              <Button size="icon_sm" variant="ghost">
-                <Ellipsis className="text-muted-foreground" size={15} />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-36">
-              <DropdownMenuItem onClick={onRename}>Rename</DropdownMenuItem>
-              <DropdownMenuItem onClick={onChangeColor}>
-                Change Color
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-      ) : (
-        <>
-          <div className="flex items-center flex-1 border-1 border-transparent">
-            <div {...dragonProps} onClick={(e) => e.stopPropagation()}>
-              <GripVertical
-                size={14}
-                className="text-muted-foreground mx-1 cursor-grab"
-              />
-            </div>
-            <div
-              className="w-3 h-3 rounded-full mr-2"
-              style={{ backgroundColor: status.color }}
-            />
-            <span className="text-base text-primary font-normal">
-              {statusName.toUpperCase()}
-            </span>
-          </div>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
-              <Button size="icon_sm" variant="ghost">
-                <Ellipsis className="text-muted-foreground" size={15} />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-36">
-              <DropdownMenuItem onClick={onRename}>Rename</DropdownMenuItem>
-              <DropdownMenuItem onClick={onChangeColor}>
-                Change Color
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </>
-      )}
-    </div>
-  );
-}
-
-// Renders the Template's category item
-function TemplateCategory({ category }: { category: Category }) {
-  return (
-    <div key={category.id} className="mt-4">
-      <div className="flex items-center gap-2">
-        <h3 className="text-sm text-muted-foreground font-medium">
-          {category.id}
-        </h3>
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <span className="rounded-full p-1 bg-accent text-xs flex items-center justify-center w-5 h-5">
-                <Info size={12} />
-              </span>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p className="max-w-xs text-xs">{category.description}</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-      </div>
-    </div>
-  );
-}
+};

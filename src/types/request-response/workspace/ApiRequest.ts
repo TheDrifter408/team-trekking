@@ -9,6 +9,7 @@ export interface CreateWorkSpace {
   interestedFeatureIds?: number[];
   planId?: number;
   members?: Member[];
+  color?: string;
 }
 
 export interface Member {
