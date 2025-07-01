@@ -65,6 +65,7 @@ import { useSidebar } from '@/components/shadcn-ui/sidebar.tsx';
 import { $getRoot, EditorState } from 'lexical';
 import { TabActionBar } from '@/components/common/table-floating-actoin-bar.tsx';
 import { SelectUsers } from '@/components/common/select-users.tsx';
+import TaskCheckList from '@/components/common/task-check-list.tsx';
 
 export const Task: FC = () => {
   const [enterDates, setEnterDates] = useState<boolean>(false);
@@ -105,7 +106,7 @@ export const Task: FC = () => {
     return [hours, minutes].filter(Boolean).join(' ');
   };
 
-  const [task, setTask] = useState<TaskType>({
+  /*const [task, setTask] = useState<TaskType>({
     id: '1',
     name: 'Implement new feature',
     description:
@@ -138,7 +139,7 @@ export const Task: FC = () => {
     subTask: mockSubtasks,
     checklist: mockChecklist,
   });
-
+*/
   const [selectedAssignees, setSelectedAssignees] = useState<Assignee[]>([]);
 
   const store = createDataTableStore({});
@@ -209,7 +210,7 @@ export const Task: FC = () => {
             <div className="space-y-1">
               {/* Column 1 */}
               {/* STATUSES */}
-              <TaskMetaRow
+              {/* <TaskMetaRow
                 icon={
                   <IconCircleDot
                     className="text-base font-semibold"
@@ -244,7 +245,7 @@ export const Task: FC = () => {
                 >
                   <IconCheck size={15} />
                 </Button>
-              </TaskMetaRow>
+              </TaskMetaRow>*/}
               {/* START AND END DATES */}
               <TaskMetaRow
                 icon={
@@ -312,7 +313,7 @@ export const Task: FC = () => {
                 hover={enterAssignee}
                 onHoverChange={setEnterAssignee}
               >
-                <SelectUsers
+                {/*<SelectUsers
                   value={selectedAssignees}
                   displayName={true}
                   onRemove={() => {}}
@@ -321,7 +322,7 @@ export const Task: FC = () => {
                   users={task.assignees!}
                   placeholder="No Assignees"
                   userListTitle="Select an Assignee"
-                />
+                />*/}
               </TaskMetaRow>
               {/* PRIORITY */}
               <TaskMetaRow
@@ -448,83 +449,7 @@ export const Task: FC = () => {
         </div>
         {/* Checklist table container */}
         <div className="group mt-4">
-          <div className="flex justify-between py-2 px-2">
-            <h3 className="text-xl font-bold text-gray-900">Checklists</h3>
-            <div className="invisible group-hover:visible flex items-center gap-1">
-              {/* Maximize Button */}
-              <Tooltip>
-                <TooltipTrigger>
-                  <Button
-                    variant="ghost"
-                    className="bg-transparent text-lg text-muted-foreground"
-                  >
-                    <Maximize2 size={18} />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>{LABEL.FULL_SCREEN}</TooltipContent>
-              </Tooltip>
-              {/* Plus button for Checklists */}
-              <Tooltip>
-                <TooltipTrigger>
-                  <Button
-                    variant="ghost"
-                    className="bg-transparent text-lg text-muted-foreground"
-                  >
-                    <PlusIcon size={18} />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>{LABEL.CHECKLISTS}</TooltipContent>
-              </Tooltip>
-            </div>
-          </div>
-          {/* Checklist Table */}
-          <div>
-            <div className="flex items-center justify-between rounded-lg bg-slate-100 p-2">
-              <div className="flex items-center gap-2 p-2">
-                <h3 className="font-bold">Checklist</h3>
-                <span className="text-muted-foreground text-sm">{`( 0/5 )`}</span>
-              </div>
-              <DropdownMenu>
-                <DropdownMenuTrigger>
-                  <Button
-                    variant="ghost"
-                    className="border invisible group-hover:visible"
-                  >
-                    <Ellipsis />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                  <DropdownMenuItem>
-                    <Button
-                      variant="ghost"
-                      className="h-min w-full flex items-center justify-start gap-2"
-                    >
-                      <Plus />
-                      {LABEL.ADD}
-                    </Button>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <Button
-                      variant="ghost"
-                      className="h-min w-full flex items-center justify-start gap-2"
-                    >
-                      <Edit />
-                      {LABEL.EDIT_CHECKLIST}
-                    </Button>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <Button
-                      variant="ghost"
-                      className="h-min w-full flex items-center justify-start gap-2"
-                    >
-                      <Delete />
-                      {LABEL.DELETE_CHECKLIST}
-                    </Button>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
-          </div>
+          <TaskCheckList />
         </div>
         {/* Attachments Container */}
         <div className="mt-4">
