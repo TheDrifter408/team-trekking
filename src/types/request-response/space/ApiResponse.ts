@@ -76,3 +76,35 @@ export interface Space {
   priority: number;
   status: StatusItem;
 }
+
+export interface ViewStatusResponse {
+  name: string;
+  type: string;
+  identifier: string;
+  isActive: boolean;
+  workspace: Workspace;
+  identifierId: any;
+  id: number;
+  createdAt: string;
+}
+
+export interface Workspace {
+  id: number;
+  name: string;
+  customManageType: any;
+  customDiscoverySource: any;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+  plan: any;
+  createdBy: CreatedBy;
+}
+
+export interface CreatedBy {
+  id: number;
+  fullName: string;
+  email: string;
+  image: any;
+  forcePasswordChange: boolean;
+  isActive: boolean;
+}

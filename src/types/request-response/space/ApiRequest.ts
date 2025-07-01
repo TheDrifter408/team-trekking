@@ -15,3 +15,21 @@ export type CreateSpace = {
   defaultViewIds?: number[] | null;
   clickAppIds?: number[] | null;
 };
+
+export interface StatusItem {
+  name: string;
+  order?: number;
+}
+
+export interface StatusGroup {
+  name: string;
+  order?: number;
+  tooltip?: string;
+  items?: StatusItem[];
+}
+
+export interface StatusViewRequest {
+  name: string;
+  workspaceId: number;
+  groups?: StatusGroup[];
+}

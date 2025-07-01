@@ -25,9 +25,15 @@ interface Props {
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
   onBack: () => void;
+  onDone: (statusView: any) => void;
 }
 
-export const CreateSpaceWorkflow = ({ isOpen, setIsOpen, onBack }: Props) => {
+export const CreateSpaceWorkflow = ({
+  isOpen,
+  setIsOpen,
+  onBack,
+  onDone,
+}: Props) => {
   const { spaceGlobal } = useAppContext(); // contains workflow data
   // Dialog States for default views, task Statuses and ClickApps
   const [isDefaultViewOpen, setIsDefaultViewOpen] = useState(false);
@@ -144,7 +150,7 @@ export const CreateSpaceWorkflow = ({ isOpen, setIsOpen, onBack }: Props) => {
             <Button
               variant="default"
               className="bg-theme-main"
-              onClick={() => setIsOpen(false)}
+              onClick={() => onDone(selectedTemplate?.statusItems.groups)}
             >
               {LABEL.DONE}
             </Button>

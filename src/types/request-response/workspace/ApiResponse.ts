@@ -80,7 +80,7 @@ export interface WorkSpaceResponse {
 export interface Workspace {
   id: number;
   name: string;
-  logo?: string;
+  iconUrl?: string;
   color?: string;
   customManageType: any;
   customDiscoverySource: any;
