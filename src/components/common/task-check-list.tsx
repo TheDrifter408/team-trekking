@@ -210,7 +210,7 @@ const TaskCheckList = () => {
   return (
     <div className="w-full max-w-4xl mx-auto py-4">
       {/* Header */}
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-3">
           <h1 className="text-2xl font-semibold text-gray-900">Checklists</h1>
           <div className="flex items-center gap-2">
@@ -236,8 +236,8 @@ const TaskCheckList = () => {
       </div>
 
       {/* Checklist Card */}
-      <div className=" rounded-lg mb-4 border">
-        <div className="flex items-center justify-between mb-4 bg-gray-100 p-4 ">
+      <div className="rounded-lg mb-4 border">
+        <div className="flex items-center justify-between bg-gray-100 px-4 py-3">
           <h2 className="text-lg font-medium text-gray-900">
             {currentChecklist.name}{' '}
             <span className="text-gray-400 text-sm">
@@ -246,13 +246,13 @@ const TaskCheckList = () => {
           </h2>
         </div>
 
-        <div className="space">
+        <div>
           {visibleItems.map((item, index) => (
             <div
               key={item.id}
-              className={`flex items-center gap-3 group p-2 px-4 transition-all duration-200 relative
+              className={`flex items-center gap-3 group p-2 pr-4 transition-all duration-200 relative
               ${draggedItem?.index === index ? 'opacity-50' : ''}
-              ${dragOverIndex === index ? 'bg-blue-50 border-t-2 border-blue-300' : 'hover:bg-gray-100'}
+              ${dragOverIndex === index ? 'bg-blue-50 border-t-2 border-blue-300' : 'hover:bg-gray-50'}
               ${index !== visibleItems.length - 1 ? 'border-b border-gray-100' : ''}`}
               draggable
               onDragStart={(e) => handleDragStart(e, item, index)}
@@ -392,7 +392,7 @@ const TaskCheckList = () => {
           ) : (
             <button
               onClick={() => setIsAddingItem(true)}
-              className="flex items-center gap-3 group  py-3 pl-4 pr-5 text-gray-400 hover:text-gray-600 transition-colors w-full rounded-md hover:bg-gray-100"
+              className="flex items-center gap-3 group py-3 pl-4 pr-5 text-gray-400 hover:text-gray-600 transition-colors w-full rounded-md hover:bg-gray-100"
             >
               <div className="w-4 h-4 flex-shrink-0"></div>
               <Plus className="w-4 h-4" />
@@ -404,7 +404,7 @@ const TaskCheckList = () => {
         </div>
       </div>
       {/* Toggle completed items */}
-      <div className="mt-4  border-gray-200">
+      <div className="mt-4 border-gray-200">
         <button
           onClick={() => setShowCompleted(!showCompleted)}
           className="px-4 py-1 text-sm text-gray-600 bg-gray-100 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
