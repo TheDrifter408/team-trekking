@@ -15,8 +15,8 @@ export const PriorityPopover = ({
   setIsOpen,
   children,
 }: {
-  isOpen: boolean;
-  setIsOpen: (open: boolean) => void;
+  isOpen?: boolean;
+  setIsOpen?: (open: boolean) => void;
   children: ReactNode;
 }) => {
   return (

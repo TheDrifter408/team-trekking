@@ -265,4 +265,18 @@ export const LABEL = {
     'Also permanently delete all third-party data and do not follow\n' +
     '                recovery of this Workspace',
   USE_SPACE_STATUSES: 'Use Space statuses',
+  ADD_TASK: 'Add Task',
+  COMPLETE: 'Complete',
+  ASSIGNEE: 'Assignee',
+  DUE_DATE: 'Due Date',
+  PRIORITY: 'Priority',
+  TAGS: 'Tags',
+  CREATE_TASK: 'Create Task',
+  CREATE_AND_OPEN: 'Create and open',
+  CREATE_AND_START_ANOTHER: 'Create and start another',
+  CREATE_AND_DUPLICATE: 'Create and duplicate',
+  NEW: 'New',
+  NEW_CHECKLIST_ITEM: 'New checklist item',
+  ASSIGN_TO: 'Assign to',
+  ADD_ITEM: 'Add Item',
 };
