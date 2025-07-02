@@ -12,6 +12,7 @@ import { LABEL } from '@/lib/constants';
 import {
   useCreateCheckListMutation,
   useLazyGetChecklistQuery,
+  useCreateChecklistItemMutation,
 } from '@/service/rtkQueries/taskQuery.ts';
 import { handleMutation } from '@/lib/utils/utils.ts';
 
@@ -49,9 +50,11 @@ interface IsAddingItemState {
 interface TaskCheckListProps {
   taskId?: number;
 }
+
 const TaskCheckList = ({ taskId = 1 }: TaskCheckListProps): JSX.Element => {
   const [getChecklist, { data: checklistsData }] = useLazyGetChecklistQuery();
   const [createCheckList] = useCreateCheckListMutation();
+  const [createChecklistItem] = useCreateChecklistItemMutation();
 
   const [checklists, setChecklists] = useState<CheckList[]>([]);
   const [showCompleted, setShowCompleted] = useState<ShowCompletedState>({});
@@ -132,29 +135,28 @@ const TaskCheckList = ({ taskId = 1 }: TaskCheckListProps): JSX.Element => {
     );
   };
 
-  const onAddNewItem = (checklistId: number): void => {
+  const onAddNewItem = async (checklistId: number): Promise<void> => {
     const text = newItemText[checklistId];
     if (text && text.trim()) {
-      setChecklists(
-        checklists.map((checklist) =>
-          checklist.id === checklistId
-            ? {
-                ...checklist,
-                items: [
-                  ...checklist.items,
-                  {
-                    id: Date.now(),
-                    content: text.trim(),
-                    isDone: false,
-                    isActive: true,
-                  },
-                ],
-              }
-            : checklist
-        )
-      );
-      setNewItemText({ ...newItemText, [checklistId]: '' });
-      setIsAddingItem({ ...isAddingItem, [checklistId]: false });
+      try {
+        const { data } = await handleMutation(createChecklistItem, {
+          content: text.trim(),
+          isDone: false,
+          checklistId: checklistId,
+        });
+
+        if (data) {
+          // Refresh the checklist data to get the updated items
+          getChecklist(taskId);
+
+          // Reset the input state
+          setNewItemText({ ...newItemText, [checklistId]: '' });
+          setIsAddingItem({ ...isAddingItem, [checklistId]: false });
+        }
+      } catch (error) {
+        console.error('Failed to create checklist item:', error);
+        // Handle error - you might want to show a toast or error message
+      }
     }
   };
 
@@ -372,7 +374,7 @@ const TaskCheckList = ({ taskId = 1 }: TaskCheckListProps): JSX.Element => {
                   : checklist
               )
             );
-            getChecklist(1);
+            getChecklist(taskId);
           }
         } else {
           // This is updating an existing checklist title
@@ -643,14 +645,16 @@ const TaskCheckList = ({ taskId = 1 }: TaskCheckListProps): JSX.Element => {
                       })
                     }
                     onKeyDown={(e) => onHandleKeyPress(e, checklist.id)}
-                    onBlur={() =>
-                      newItemText[checklist.id]?.trim()
-                        ? onAddNewItem(checklist.id)
-                        : setIsAddingItem({
-                            ...isAddingItem,
-                            [checklist.id]: false,
-                          })
-                    }
+                    onBlur={() => {
+                      if (newItemText[checklist.id]?.trim()) {
+                        onAddNewItem(checklist.id);
+                      } else {
+                        setIsAddingItem({
+                          ...isAddingItem,
+                          [checklist.id]: false,
+                        });
+                      }
+                    }}
                     placeholder="New checklist item"
                     className="flex-1 bg-transparent border-none outline-none text-gray-700 placeholder-gray-400"
                     autoFocus

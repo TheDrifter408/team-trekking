@@ -44,7 +44,7 @@ export const taskApi = createApi({
     }),
     createChecklistItem: builder.mutation<string, CreateCheckListItemRequest>({
       query: (data: CreateCheckListItemRequest) => ({
-        url: `task/checklist/item}`,
+        url: `task/checklist/item`,
         method: 'POST',
         data,
       }),
