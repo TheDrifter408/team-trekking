@@ -60,7 +60,7 @@ export const SidebarSpaceItems = ({ space, children }: Props) => {
     <>
       <Collapsible open={isOpen}>
         <div
-          className="flex h-[36px] ml-2 items-center justify-between rounded-lg hover:bg-muted transition-colors duration-200 group/space"
+          className="flex h-9 ml-2 items-center justify-between rounded-lg hover:bg-muted transition-colors duration-200 group/space"
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
         >
