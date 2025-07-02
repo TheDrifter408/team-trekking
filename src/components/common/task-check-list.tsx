@@ -13,6 +13,8 @@ import {
   useCreateCheckListMutation,
   useLazyGetChecklistQuery,
   useCreateChecklistItemMutation,
+  useUpdateChecklistItemMutation,
+  useDeleteChecklistItemMutation,
 } from '@/service/rtkQueries/taskQuery.ts';
 import { handleMutation } from '@/lib/utils/utils.ts';
 
@@ -55,6 +57,8 @@ const TaskCheckList = ({ taskId = 1 }: TaskCheckListProps): JSX.Element => {
   const [getChecklist, { data: checklistsData }] = useLazyGetChecklistQuery();
   const [createCheckList] = useCreateCheckListMutation();
   const [createChecklistItem] = useCreateChecklistItemMutation();
+  const [updateChecklistItem] = useUpdateChecklistItemMutation();
+  const [deleteChecklistItem] = useDeleteChecklistItemMutation();
 
   const [checklists, setChecklists] = useState<CheckList[]>([]);
   const [showCompleted, setShowCompleted] = useState<ShowCompletedState>({});
@@ -242,11 +246,11 @@ const TaskCheckList = ({ taskId = 1 }: TaskCheckListProps): JSX.Element => {
     setActiveMenu(activeMenu === itemId ? null : itemId);
   };
 
-  const onHandleMenuAction = (
+  const onHandleMenuAction = async (
     action: string,
     item: CheckListItem,
     checklistId: number
-  ): void => {
+  ): Promise<void> => {
     switch (action) {
       case 'addItem':
         setActiveMenu(null);
@@ -258,17 +262,25 @@ const TaskCheckList = ({ taskId = 1 }: TaskCheckListProps): JSX.Element => {
         setEditText(item.content);
         break;
       case 'delete':
-        setChecklists(
-          checklists.map((checklist) =>
-            checklist.id === checklistId
-              ? {
-                  ...checklist,
-                  items: checklist.items.filter((i) => i.id !== item.id),
-                }
-              : checklist
-          )
-        );
         setActiveMenu(null);
+        try {
+          const { data } = await handleMutation(deleteChecklistItem, item.id);
+          if (data) {
+            // Update local state by removing the item
+            setChecklists(
+              checklists.map((checklist) =>
+                checklist.id === checklistId
+                  ? {
+                      ...checklist,
+                      items: checklist.items.filter((i) => i.id !== item.id),
+                    }
+                  : checklist
+              )
+            );
+          }
+        } catch {
+          // Handle error - you might want to show a toast or error message
+        }
         break;
       case 'assign':
         setActiveMenu(null);
@@ -279,22 +291,40 @@ const TaskCheckList = ({ taskId = 1 }: TaskCheckListProps): JSX.Element => {
     }
   };
 
-  const onHandleEditSave = (itemId: number, checklistId: number): void => {
+  const onHandleEditSave = async (
+    item: CheckListItem,
+    checklistId: number
+  ): Promise<void> => {
     if (editText.trim()) {
-      setChecklists(
-        checklists.map((checklist) =>
-          checklist.id === checklistId
-            ? {
-                ...checklist,
-                items: checklist.items.map((item) =>
-                  item.id === itemId
-                    ? { ...item, content: editText.trim() }
-                    : item
-                ),
-              }
-            : checklist
-        )
-      );
+      try {
+        // Call the API to update the item
+        const { data } = await handleMutation(updateChecklistItem, {
+          id: item.id,
+          content: editText.trim(),
+          isDone: item.isDone,
+        });
+
+        if (data) {
+          // Update local state
+          setChecklists(
+            checklists.map((checklist) =>
+              checklist.id === checklistId
+                ? {
+                    ...checklist,
+                    items: checklist.items.map((item) =>
+                      item.id === item.id
+                        ? { ...item, content: editText.trim() }
+                        : item
+                    ),
+                  }
+                : checklist
+            )
+          );
+        }
+      } catch (error) {
+        console.error('Failed to update checklist item:', error);
+        // Handle error - you might want to show a toast or error message
+      }
     }
     setEditingItem(null);
     setEditText('');
@@ -307,11 +337,11 @@ const TaskCheckList = ({ taskId = 1 }: TaskCheckListProps): JSX.Element => {
 
   const onHandleEditKeyPress = (
     e: React.KeyboardEvent<HTMLInputElement>,
-    itemId: number,
+    item: CheckListItem,
     checklistId: number
   ): void => {
     if (e.key === 'Enter') {
-      onHandleEditSave(itemId, checklistId);
+      onHandleEditSave(item, checklistId);
     } else if (e.key === 'Escape') {
       onHandleEditCancel();
     }
@@ -552,9 +582,9 @@ const TaskCheckList = ({ taskId = 1 }: TaskCheckListProps): JSX.Element => {
                       value={editText}
                       onChange={(e) => setEditText(e.target.value)}
                       onKeyDown={(e) =>
-                        onHandleEditKeyPress(e, item.id, checklist.id)
+                        onHandleEditKeyPress(e, item, checklist.id)
                       }
-                      onBlur={() => onHandleEditSave(item.id, checklist.id)}
+                      onBlur={() => onHandleEditSave(item, checklist.id)}
                       className="flex-1 bg-white border border-gray-300 rounded px-2 py-1 text-gray-700 focus:outline-none focus:border-blue-500"
                       autoFocus
                     />

@@ -5,6 +5,7 @@ import { API_URLS } from '@/lib/constants';
 import {
   CreateCheckListItemRequest,
   CreateCheckListRequest,
+  UpdateCheckListItemRequest,
 } from '@/types/request-response/task/ApiRequest.ts';
 import { CheckList } from '@/types/request-response/task/ApiResponse.ts';
 
@@ -50,10 +51,11 @@ export const taskApi = createApi({
       }),
       transformResponse: (response: ApiResponse<string>) => response.data,
     }),
-    updateChecklistItem: builder.mutation<string, number>({
-      query: (checklistItemId: number) => ({
-        url: `task/checklist/item/${checklistItemId}`,
+    updateChecklistItem: builder.mutation<string, UpdateCheckListItemRequest>({
+      query: (data: UpdateCheckListItemRequest) => ({
+        url: `task/checklist/item/${data.id}`,
         method: 'PATCH',
+        data,
       }),
       transformResponse: (response: ApiResponse<string>) => response.data,
     }),
