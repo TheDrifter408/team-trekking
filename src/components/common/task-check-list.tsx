@@ -124,19 +124,31 @@ const TaskCheckList = ({ taskId = 1 }: TaskCheckListProps): JSX.Element => {
     };
   }, []);
 
-  const onToggleItem = (itemId: number, checklistId: number): void => {
-    setChecklists(
-      checklists.map((checklist) =>
-        checklist.id === checklistId
-          ? {
-              ...checklist,
-              items: checklist.items.map((item) =>
-                item.id === itemId ? { ...item, isDone: !item.isDone } : item
-              ),
-            }
-          : checklist
-      )
-    );
+  const onToggleItem = async (
+    checkListItem: CheckListItem,
+    checklistId: number
+  ): Promise<void> => {
+    const { data } = await handleMutation(updateChecklistItem, {
+      id: checkListItem.id,
+      content: checkListItem.content,
+      isDone: !checkListItem.isDone,
+    });
+    if (data) {
+      setChecklists(
+        checklists.map((checklist) =>
+          checklist.id === checklistId
+            ? {
+                ...checklist,
+                items: checklist.items.map((item) =>
+                  item.id === checkListItem.id
+                    ? { ...item, isDone: !item.isDone }
+                    : item
+                ),
+              }
+            : checklist
+        )
+      );
+    }
   };
 
   const onAddNewItem = async (checklistId: number): Promise<void> => {
@@ -292,16 +304,16 @@ const TaskCheckList = ({ taskId = 1 }: TaskCheckListProps): JSX.Element => {
   };
 
   const onHandleEditSave = async (
-    item: CheckListItem,
+    checkListItem: CheckListItem,
     checklistId: number
   ): Promise<void> => {
     if (editText.trim()) {
       try {
         // Call the API to update the item
         const { data } = await handleMutation(updateChecklistItem, {
-          id: item.id,
+          id: checkListItem.id,
           content: editText.trim(),
-          isDone: item.isDone,
+          isDone: checkListItem.isDone,
         });
 
         if (data) {
@@ -312,7 +324,7 @@ const TaskCheckList = ({ taskId = 1 }: TaskCheckListProps): JSX.Element => {
                 ? {
                     ...checklist,
                     items: checklist.items.map((item) =>
-                      item.id === item.id
+                      item.id === checkListItem.id
                         ? { ...item, content: editText.trim() }
                         : item
                     ),
@@ -550,7 +562,7 @@ const TaskCheckList = ({ taskId = 1 }: TaskCheckListProps): JSX.Element => {
                   </button>
 
                   <button
-                    onClick={() => onToggleItem(item.id, checklist.id)}
+                    onClick={() => onToggleItem(item, checklist.id)}
                     className="flex-shrink-0"
                   >
                     <div
