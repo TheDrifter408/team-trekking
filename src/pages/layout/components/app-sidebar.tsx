@@ -207,6 +207,7 @@ export const AppSidebar = (props: ComponentProps<typeof Sidebar>) => {
       <CreateSpace
         createSpaceOpen={isCreateSpaceOpen}
         setCreateSpaceOpen={setIsCreateSpaceOpen}
+        onCreatedSpace={refetchSpace}
       />
       <InviteUser
         inviteUserOpen={inviteUserOpen}
