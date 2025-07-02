@@ -9,12 +9,8 @@ import {
   DataTableProvider,
 } from '@/stores/zustand/data-table-store.ts';
 import { FilterSection } from './components/filter-section.tsx';
-import { CreateTask } from '@/components/features/create-task.tsx';
 import { useComponentStore } from '@/stores/zustand/component-state-store.ts';
 import { TabActionBar } from '@/components/common/table-floating-actoin-bar.tsx';
-import { Icon } from '@/assets/icon-path.tsx';
-import { Button } from '@/components/shadcn-ui/button.tsx';
-
 export const List = () => {
   const currentPage = useMemo(
     () => ({

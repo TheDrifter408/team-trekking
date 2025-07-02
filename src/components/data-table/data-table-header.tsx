@@ -53,11 +53,13 @@ export const DataTableHeader = forwardRef<
   DataTableHeaderProps<any>
 >(({ table }, ref) => {
   return (
-    <div className="border-b mt-4 bg-background sticky top-0 z-10">
+    <div
+      className="border-b mt-4 bg-background sticky top-0 z-10"
+      style={{ width: table.getTotalSize() }}
+    >
       <div
         className="flex items-center ml-[28px]" // Add overflow-hidden to prevent scrollbar
         ref={ref}
-        style={{ width: table.getTotalSize() }} // Match the body width
       >
         {table.getLeftHeaderGroups().map((group) => (
           <DataTableHeaderSection
