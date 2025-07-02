@@ -48,12 +48,14 @@ interface Props {
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
   onOpenDialog: () => void;
+  onCreatedWorkspace: () => void;
 }
 
 export const CreateWorkspace: React.FC<Props> = ({
   isOpen,
   onOpenDialog,
   setIsOpen,
+  onCreatedWorkspace,
 }) => {
   const { isFirstTimeLogin, setIsFirstTimeLogin } = useAuthStore();
   const { setCurrentWorkspace } = useWorkspaceStore();
@@ -158,6 +160,7 @@ export const CreateWorkspace: React.FC<Props> = ({
     };
     const { data } = await createWorkSpaceApi(requestParams);
     if (data) {
+      onCreatedWorkspace();
       setCurrentWorkspace({
         name: data.name,
         id: data.id,

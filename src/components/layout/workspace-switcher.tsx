@@ -29,8 +29,10 @@ import { useWorkspaceStore } from '@/stores/zustand/workspace-store.ts';
 
 export function WorkspaceSwitcher({
   workspaces,
+  onCreatedWorkspace,
 }: {
   workspaces: WorkSpaceResponse[];
+  onCreatedWorkspace: () => void;
 }) {
   const { setCurrentWorkspace } = useWorkspaceStore();
   const { isMobile } = useSidebar();
@@ -221,7 +223,7 @@ export function WorkspaceSwitcher({
                   (workspace) =>
                     workspace.id !== activeWorkspace?.id && (
                       <DropdownMenuItem
-                        key={workspace.workspace?.name}
+                        key={workspace.workspace?.id}
                         onClick={() => {
                           setActiveWorkspace(workspace);
                           setCurrentWorkspace({
@@ -308,6 +310,7 @@ export function WorkspaceSwitcher({
           isOpen={isOpen}
           setIsOpen={setIsOpen}
           onOpenDialog={onOpenDialog}
+          onCreatedWorkspace={onCreatedWorkspace}
         />
       </SidebarMenuItem>
     </SidebarMenu>

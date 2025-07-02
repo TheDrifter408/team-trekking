@@ -50,19 +50,23 @@ export const AppSidebar = (props: ComponentProps<typeof Sidebar>) => {
   const { state } = useSidebar();
   const [inviteUserOpen, setInviteUserOpen] = useState(false);
   const [isCreateSpaceOpen, setIsCreateSpaceOpen] = useState(false);
-  const { data: workSpaces } = useGetAllWorkSpacesQuery();
+  const { data: workSpaces, refetch: refetchWorkspaces } =
+    useGetAllWorkSpacesQuery();
   const workspaceId =
     workSpaces && workSpaces.length > 0
       ? workSpaces[0].workspace.id
       : undefined;
   // The query for all the spaces, folders and list in a given workspace
-  const { data: spacesFolderList, isLoading } =
-    useGetWorkspaceSpaceFolderListQuery(
-      { id: workspaceId },
-      {
-        skip: !workspaceId, // wait for workspaceId to change from being undefined
-      }
-    );
+  const {
+    data: spacesFolderList,
+    isLoading,
+    refetch: refetchSpace,
+  } = useGetWorkspaceSpaceFolderListQuery(
+    { id: workspaceId },
+    {
+      skip: !workspaceId, // wait for workspaceId to change from being undefined
+    }
+  );
   const isOpen = state !== 'collapsed';
   useEffect(() => {
     if (workSpaces && workSpaces?.length > 0) {
@@ -82,7 +86,10 @@ export const AppSidebar = (props: ComponentProps<typeof Sidebar>) => {
       {...props}
     >
       <SidebarHeader className="border-b py-0">
-        <WorkspaceSwitcher workspaces={workSpaces ?? []} />
+        <WorkspaceSwitcher
+          workspaces={workSpaces ?? []}
+          onCreatedWorkspace={refetchWorkspaces}
+        />
       </SidebarHeader>
       <SidebarContent>
         {sidebarData.navGroups.map((props) => (
@@ -148,13 +155,18 @@ export const AppSidebar = (props: ComponentProps<typeof Sidebar>) => {
                 <SidebarSpaceSkeleton />
               ) : (
                 spacesFolderList?.spaces.map((space: Space) => (
-                  <SidebarSpaceItems key={space.id} space={space}>
+                  <SidebarSpaceItems
+                    key={space.id}
+                    space={space}
+                    onCreatedChildren={refetchSpace}
+                  >
                     {space.folders.map((folder: Folder) => (
                       <SidebarFolderItems
                         key={folder.id}
                         name={folder.name}
                         folder={folder}
                         onItemClick={() => {}}
+                        onCreatedChildren={refetchSpace}
                       />
                     ))}
                     {space.lists.map((list: List) => (
