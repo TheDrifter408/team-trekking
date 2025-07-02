@@ -134,13 +134,13 @@ export const DocEditor: FC<Props> = ({
               <ContentEditable
                 contentEditable={editable}
                 className={cn(
-                  'px-4 py-2 text-base leading-relaxed overflow-auto outline-none rounded-lg',
+                  'px-2 py-2 text-base leading-relaxed overflow-auto outline-none rounded-lg',
                   showBorder ? 'border' : ''
                 )}
               />
             }
             placeholder={
-              <div className="absolute top-3 left-5  text-base leading-relaxed text-muted-foreground">
+              <div className="absolute top-3 left-2  text-base leading-relaxed text-muted-foreground">
                 {placeholder || "Type '/' for commands..."}
               </div>
             }

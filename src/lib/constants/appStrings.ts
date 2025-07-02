@@ -181,6 +181,7 @@ export const LABEL = {
   MANAGE_CARDS: 'Manage cards',
   ADD_CARDS: 'Add Cards',
   DESCRIPTION: 'Description',
+  ADD_DESCRIPTION: 'Add Description',
   WATCH: 'Watch',
   SUGGEST_SUBTASKS: 'Suggest subtasks',
   ACTIVITIES: 'Activities',
