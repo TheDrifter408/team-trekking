@@ -59,6 +59,7 @@ export const DataTableRow = ({
           zIndex: isDragging ? 10 : 1,
           opacity: isDragging ? 0 : 1,
           pointerEvents: isDragging ? 'none' : 'auto',
+          willChange: isDragging ? 'transform' : 'auto', // Add this for GPU acceleration
         }}
         {...attributes}
         {...listeners}
@@ -75,18 +76,9 @@ export const DataTableRow = ({
           { 'cursor-grabbing': isDragging }
         )}
       >
-        {/* Table cells */}
-        <DataTableCellSection
-          cells={row.getLeftVisibleCells()}
-          position="left"
-        />
         <DataTableCellSection
           cells={row.getCenterVisibleCells()}
           position="center"
-        />
-        <DataTableCellSection
-          cells={row.getRightVisibleCells()}
-          position="right"
         />
       </div>
     </>

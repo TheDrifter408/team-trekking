@@ -4,8 +4,8 @@ export interface CreateListRequest {
   avatarKey: string;
   visibility: string;
   color: string;
-  folderId: number;
-  spaceId: number;
+  folderId?: number;
+  spaceId?: number;
   focusColorId?: number;
   statusViewGroupId?: number;
   priorityId: number;

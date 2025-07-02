@@ -1,3 +1,10 @@
+import { Fragment, useEffect } from 'react';
+import { useForm, Controller } from 'react-hook-form';
+import { createListSchema } from '@/lib/validation/validationSchema';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useCreateListMutation } from '@/service/rtkQueries/listQuery';
+import { Folder, Space } from '@/types/request-response/workspace/ApiResponse';
 import {
   Dialog,
   DialogContent,
@@ -5,26 +12,18 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '@/components/shadcn-ui/dialog.tsx';
-import { Label } from '@/components/shadcn-ui/label.tsx';
-import { Input } from '@/components/shadcn-ui/input.tsx';
-import { Button } from '@/components/shadcn-ui/button.tsx';
+} from '@/components/shadcn-ui/dialog';
+import { Label } from '@/components/shadcn-ui/label';
+import { Input } from '@/components/shadcn-ui/input';
 import { Switch } from '@/components/shadcn-ui/switch';
+import { Button } from '@/components/shadcn-ui/button';
+import { toast } from 'sonner';
 import { LABEL } from '@/lib/constants';
-import { useForm, Controller } from 'react-hook-form';
-import { createListSchema } from '@/lib/validation/validationSchema';
-import { z } from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Fragment } from 'react';
-import { useCreateListMutation } from '@/service/rtkQueries/listQuery';
-import { useAppContext } from '@/lib/context/app-layout-context';
-import { Folder, Space } from '@/types/request-response/workspace/ApiResponse';
-
-type FormValues = z.infer<typeof createListSchema>;
 
 interface BaseProps {
   createListOpen: boolean;
   setCreateListOpen: (open: boolean) => void;
+  onCreatedList: () => void;
 }
 
 interface CreateListInFolder extends BaseProps {
@@ -39,13 +38,16 @@ interface CreateListInSpace extends BaseProps {
 
 type CreateListProps = CreateListInFolder | CreateListInSpace;
 
+type FormValues = z.infer<typeof createListSchema>;
+
 export const CreateList = ({
   createListOpen,
   setCreateListOpen,
+  onCreatedList,
   folder,
   space,
 }: CreateListProps) => {
-  const [createList, { isLoading }] = useCreateListMutation();
+  const [createList] = useCreateListMutation();
   const {
     register,
     handleSubmit,
@@ -56,11 +58,12 @@ export const CreateList = ({
   } = useForm<FormValues>({
     resolver: zodResolver(createListSchema),
     defaultValues: {
-      name: '',
-      iconUrl: '',
-      avatarKey: '',
-      color: '',
+      iconUrl: 'https://example.com/icon.png',
+      avatarKey: 'avatar123',
+      color: '#FF5733',
       priorityId: 1,
+      folderId: 0,
+      spaceId: 0,
       visibility: 'public',
       isInheritStatus: true,
       taskType: 1,
@@ -72,20 +75,21 @@ export const CreateList = ({
 
   const name = watch('name');
 
-  const onSubmit = (data: FormValues) => {
-    // TODO:
-    // 1. integrate the create List API when it is avaible
-    if (space) {
-      const listData = {
-        ...data,
-        spaceId: space.id,
-      };
-      console.log(listData);
-    } else if (folder) {
-      return {
-        parentId: folder.id,
-        ...data,
-      };
+  const onSubmit = async (data: FormValues) => {
+    const listFormValues = folder
+      ? { ...data, folderId: folder.id }
+      : space
+        ? { ...data, spaceId: space.id }
+        : (() => {
+            throw new Error('Either folder or space must be defined');
+          })();
+    try {
+      await createList(listFormValues).unwrap();
+      onCreatedList();
+      toast.success(`Successfully created ${listFormValues.name}`);
+      setCreateListOpen(false);
+    } catch (error: unknown) {
+      toast.error(`Could not create List, ${error.message}`);
     }
   };
 
@@ -135,7 +139,7 @@ export const CreateList = ({
               </div>
               <div className="relative">
                 <Label
-                  htmlFor="isPrivateMode"
+                  htmlFor="visibilty"
                   className="text-muted-foreground text-right mb-1"
                 >
                   Make Private

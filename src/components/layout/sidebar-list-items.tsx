@@ -7,7 +7,6 @@ import { Icon } from '@/assets/icon-path.tsx';
 import { listMenuConfig } from '@/lib/constants/staticData.ts';
 import { List } from '@/types/request-response/workspace/ApiResponse';
 
-
 interface Props {
   listItem: List;
 }

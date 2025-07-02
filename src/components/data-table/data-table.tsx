@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 import {
   getCoreRowModel,
   useReactTable,
@@ -7,22 +7,25 @@ import {
 } from '@tanstack/react-table';
 import { useDataTableStore } from '@/stores/zustand/data-table-store';
 import { Columns } from '@/components/data-table/columns';
-import { mockTasks } from '@/mock/task.ts';
+import { flatTasks } from '@/mock/task.ts';
 import { DataTableHeader } from './data-table-header';
 import { DataTableBody } from './data-table-body.tsx';
 import { DataTableProps } from '@/types/props/DataTableProps.ts';
 import { Task } from '@/types/props/Common.ts';
+import { buildTaskTree } from '@/lib/utils/data-table-utils.ts';
 
 export const DataTable = ({ className = '' }: DataTableProps) => {
   const parentRef = useRef<HTMLDivElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
   const [colSizing, setColSizing] = useState<ColumnSizingState>({});
-  const [tasks, setTasks] = useState<Task[]>(mockTasks);
+  const [tasks, setTasks] = useState<Task[]>(flatTasks);
+
+  const taskTree = useMemo(() => buildTaskTree(tasks), [tasks]);
 
   const setTable = useDataTableStore((state) => state.setTable);
 
   const table = useReactTable({
-    data: tasks,
+    data: taskTree,
     columns: Columns,
     getCoreRowModel: getCoreRowModel(),
     getExpandedRowModel: getExpandedRowModel(),

@@ -26,12 +26,13 @@ import {
 import { LABEL } from '@/lib/constants';
 import { WorkSpaceResponse } from '@/types/request-response/workspace/ApiResponse.ts';
 import { useWorkspaceStore } from '@/stores/zustand/workspace-store.ts';
-import { PlaceholderAvatar } from '@/components/common/avatar-generator.tsx';
 
 export function WorkspaceSwitcher({
   workspaces,
+  onCreatedWorkspace,
 }: {
   workspaces: WorkSpaceResponse[];
+  onCreatedWorkspace: () => void;
 }) {
   const { setCurrentWorkspace } = useWorkspaceStore();
   const { isMobile } = useSidebar();
@@ -62,34 +63,34 @@ export function WorkspaceSwitcher({
 
   return (
     <SidebarMenu>
-      <SidebarMenuItem className={'h-[47px] items-center flex'}>
+      <SidebarMenuItem className={'h-12 items-center flex'}>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton
               size="lg"
-              className="h-10 w-full data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground "
+              className="h-10 w-full data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground data-[state=open]:ml-0 data-[state=closed]:ml-1"
             >
               <div
                 className="flex aspect-square size-6 items-center justify-center rounded-md text-sidebar-primary-foreground"
                 style={{
-                  backgroundColor:
-                    activeWorkspace?.workspace?.logo === undefined
-                      ? activeWorkspace?.workspace?.color
-                      : undefined,
+                  backgroundColor: activeWorkspace?.workspace?.color
+                    ? activeWorkspace?.workspace?.color
+                    : undefined,
                 }}
               >
-                {activeWorkspace?.workspace?.logo} ? (
-                <PlaceholderAvatar
-                  seed={activeWorkspace?.workspace?.name ?? ''}
-                  variant={'botttsNeutral'}
-                />
+                {activeWorkspace?.workspace.iconUrl ? (
+                  <img
+                    src={activeWorkspace?.workspace?.iconUrl}
+                    alt={activeWorkspace?.workspace?.name}
+                    className="size-4 shrink-0 object-cover w-full h-full rounded-md"
+                  />
                 ) : (
-                <div>
-                  {activeWorkspace?.workspace?.name?.charAt(0).toUpperCase()}
-                </div>
-                )
+                  <div className="text-center">
+                    {activeWorkspace?.workspace?.name?.charAt(0).toUpperCase()}
+                  </div>
+                )}
               </div>
-              <div className="grid flex-1 text-left text-lg leading-tight">
+              <div className="grid flex-1 text-sm text-left leading-tight">
                 <span className="truncate font-semibold">
                   {activeWorkspace?.workspace?.name}
                 </span>
@@ -98,7 +99,7 @@ export function WorkspaceSwitcher({
             </SidebarMenuButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent
-            className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg h-[calc(100dvh-160px)] no-scrollbar"
+            className="rounded-lg h-min no-scrollbar"
             align="start"
             side={isMobile ? 'bottom' : 'bottom'}
             sideOffset={4}
@@ -107,23 +108,22 @@ export function WorkspaceSwitcher({
               <div
                 className="flex aspect-square size-8 items-center justify-center rounded-md text-sidebar-primary-foreground"
                 style={{
-                  backgroundColor:
-                    activeWorkspace?.workspace?.logo === undefined
-                      ? activeWorkspace?.workspace?.color
-                      : undefined,
+                  backgroundColor: activeWorkspace?.workspace?.color
+                    ? activeWorkspace?.workspace?.color
+                    : undefined,
                 }}
               >
-                {activeWorkspace?.workspace?.logo} ? (
-                <img
-                  src={activeWorkspace?.workspace?.logo}
-                  alt={activeWorkspace?.workspace?.name}
-                  className="size-4 shrink-0 object-cover w-full h-full rounded-md"
-                />
+                {activeWorkspace?.workspace?.iconUrl ? (
+                  <img
+                    src={activeWorkspace?.workspace?.iconUrl}
+                    alt={activeWorkspace?.workspace?.name}
+                    className="size-4 shrink-0 object-cover w-full h-full rounded-md"
+                  />
                 ) : (
-                <div>
-                  {activeWorkspace?.workspace?.name?.charAt(0).toUpperCase()}
-                </div>
-                )
+                  <div>
+                    {activeWorkspace?.workspace?.name?.charAt(0).toUpperCase()}
+                  </div>
+                )}
               </div>
               <div className="grid leading-tight">
                 <span className="truncate text-[14px]">
@@ -220,10 +220,10 @@ export function WorkspaceSwitcher({
                 className={`max-h-[250px] ${workspaces.length >= 5 ? 'overflow-y-auto' : ''}`}
               >
                 {workspaces.map(
-                  (workspace, index) =>
+                  (workspace) =>
                     workspace.id !== activeWorkspace?.id && (
                       <DropdownMenuItem
-                        key={workspace.workspace?.name}
+                        key={workspace.workspace?.id}
                         onClick={() => {
                           setActiveWorkspace(workspace);
                           setCurrentWorkspace({
@@ -237,10 +237,10 @@ export function WorkspaceSwitcher({
                           <Tooltip>
                             <TooltipTrigger asChild>
                               <div className="flex items-center justify-center gap-2 cursor-pointer">
-                                {workspace.workspace?.logo ? (
+                                {workspace.workspace?.iconUrl ? (
                                   <div className="flex size-8 items-center justify-center rounded-sm">
                                     <img
-                                      src={workspace.workspace?.logo}
+                                      src={workspace.workspace?.iconUrl}
                                       alt={workspace.workspace?.name}
                                       className="size-4 shrink-0 object-cover w-full h-full rounded-sm"
                                     />
@@ -310,6 +310,7 @@ export function WorkspaceSwitcher({
           isOpen={isOpen}
           setIsOpen={setIsOpen}
           onOpenDialog={onOpenDialog}
+          onCreatedWorkspace={onCreatedWorkspace}
         />
       </SidebarMenuItem>
     </SidebarMenu>

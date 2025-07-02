@@ -29,9 +29,14 @@ import { Space } from '@/types/request-response/workspace/ApiResponse';
 interface Props {
   space: Space;
   children: ReactNode;
+  onCreatedChildren: () => void;
 }
 
-export const SidebarSpaceItems = ({ space, children }: Props) => {
+export const SidebarSpaceItems = ({
+  space,
+  children,
+  onCreatedChildren,
+}: Props) => {
   const navigate = useNavigate();
 
   const [isOpen, setIsOpen] = useState(false);
@@ -60,7 +65,7 @@ export const SidebarSpaceItems = ({ space, children }: Props) => {
     <>
       <Collapsible open={isOpen}>
         <div
-          className="flex h-[36px] ml-2 items-center justify-between rounded-lg hover:bg-muted transition-colors duration-200 group/space"
+          className="flex h-9 ml-2 items-center justify-between rounded-lg hover:bg-muted transition-colors duration-200 group/space"
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
         >
@@ -137,11 +142,13 @@ export const SidebarSpaceItems = ({ space, children }: Props) => {
           space={space}
           createListOpen={isCreateListOpen}
           setCreateListOpen={setIsCreateListOpen}
+          onCreatedList={onCreatedChildren}
         />
         <CreateFolder
           space={space}
           createFolderOpen={isCreateFolderOpen}
           setCreateFolderOpen={setIsCreateFolderOpen}
+          onCreatedFolder={onCreatedChildren}
         />
         <UpdateSpace
           isActive={isEditingSpace}

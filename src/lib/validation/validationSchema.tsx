@@ -91,32 +91,22 @@ export const addTaskSchema = z.object({
   priority: z.string(),
 });
 
-const folderListSchema = z.object({
-  folderId: z.number(),
-  spaceId: z.undefined(),
+export const createListSchema = z.object({
+  name: z.string().min(1, 'List Name is required'),
+  iconUrl: z.string(),
+  avatarKey: z.string(),
+  visibility: z.enum(['public', 'private']),
+  color: z.string(),
+  focusColorId: z.number().optional(),
+  statusViewGroupId: z.number().optional(),
+  priorityId: z.number(),
+  startDate: z.string(),
+  dueDate: z.string(),
+  isInheritStatus: z.boolean(),
+  taskType: z.number(),
+  folderId: z.number().optional(),
+  spaceId: z.number().optional(),
 });
-
-const spaceListSchema = z.object({
-  folderId: z.undefined(),
-  spaceId: z.number(),
-});
-
-export const createListSchema = z
-  .object({
-    name: z.string().min(1, 'List Name is required'),
-    iconUrl: z.string(),
-    avatarKey: z.string(),
-    visibility: z.enum(['public', 'private']),
-    color: z.string(),
-    focusColorId: z.number().optional(),
-    statusViewGroupId: z.number().optional(),
-    priorityId: z.number(),
-    startDate: z.string(),
-    dueDate: z.string(),
-    isInheritStatus: z.boolean(),
-    taskType: z.number(),
-  })
-  .and(z.union([folderListSchema, spaceListSchema])); // As a list can be created either against a folder or a space
 
 export const createFolderSchema = z.object({
   name: z.string().min(1, 'A Name is required'),
@@ -125,11 +115,11 @@ export const createFolderSchema = z.object({
   visibility: z.enum(['public', 'private']),
   color: z.string(),
   spaceId: z.number(),
-  focusColorId: z.number(),
-  priorityColorId: z.number(),
+  focusColorId: z.number().optional(),
+  priorityColorId: z.number().optional(),
   startDate: z.string().optional(),
   dueDate: z.string().optional(),
-  statusViewGroupId: z.number(),
-  isInheritStatus: z.boolean(),
+  statusViewGroupId: z.number().optional(),
+  isInheritStatus: z.boolean().optional(),
   invitees: z.array(AssigneeObject).optional(),
 });

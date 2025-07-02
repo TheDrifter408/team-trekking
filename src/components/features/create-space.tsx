@@ -31,9 +31,14 @@ import {
 interface Props {
   createSpaceOpen: boolean;
   setCreateSpaceOpen: (open: boolean) => void;
+  onCreatedSpace: () => void;
 }
 
-export const CreateSpace = ({ createSpaceOpen, setCreateSpaceOpen }: Props) => {
+export const CreateSpace = ({
+  createSpaceOpen,
+  setCreateSpaceOpen,
+  onCreatedSpace,
+}: Props) => {
   const { currentWorkspace } = useWorkspaceStore();
   const [selectedIcon, setSelectedIcon] = useState<IconOption | null>(null);
   const [selectedColor, setSelectedColor] = useState<ColorOption>(
@@ -102,6 +107,7 @@ export const CreateSpace = ({ createSpaceOpen, setCreateSpaceOpen }: Props) => {
         visibility: isPrivateMode ? 'private' : 'public',
       });
       if (spaceData) {
+        onCreatedSpace();
         setIsWorkflowOpen(false);
       }
     }
