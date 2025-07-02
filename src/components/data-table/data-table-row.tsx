@@ -75,18 +75,9 @@ export const DataTableRow = ({
           { 'cursor-grabbing': isDragging }
         )}
       >
-        {/* Table cells */}
-        <DataTableCellSection
-          cells={row.getLeftVisibleCells()}
-          position="left"
-        />
         <DataTableCellSection
           cells={row.getCenterVisibleCells()}
           position="center"
-        />
-        <DataTableCellSection
-          cells={row.getRightVisibleCells()}
-          position="right"
         />
       </div>
     </>
