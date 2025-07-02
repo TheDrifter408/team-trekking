@@ -1,7 +1,6 @@
 'use client';
 
-import * as React from 'react';
-import { useState } from 'react';
+import { useState, useEffect, ComponentProps } from 'react';
 import { CompassIcon, Plus, Share2 } from 'lucide-react';
 import { cn } from '@/lib/utils/utils.ts';
 import {
@@ -14,7 +13,7 @@ import {
   SidebarRail,
   useSidebar,
 } from '@/components/shadcn-ui/sidebar';
-import { sidebarData, spaceData } from '@/mock';
+import { sidebarData } from '@/mock';
 import { CreateSpace } from '@/components/features/create-space.tsx';
 import { NavGroup } from '@/components/layout/nav-group.tsx';
 import { Collapsible } from '@/components/shadcn-ui/collapsible.tsx';
@@ -35,15 +34,41 @@ import { LABEL } from '@/lib/constants/appStrings.ts';
 import { ContextMenu } from '@/components/common/context-menu.tsx';
 import { spacesMenuConfig } from '@/lib/constants/staticData.ts';
 import { WorkspaceSwitcher } from '@/components/layout/workspace-switcher.tsx';
-import { useGetAllWorkSpacesQuery } from '@/service/rtkQueries/workspaceQuery.ts';
+import {
+  useGetAllWorkSpacesQuery,
+  useGetWorkspaceSpaceFolderListQuery,
+} from '@/service/rtkQueries/workspaceQuery.ts';
+import { useWorkspaceStore } from '@/stores/zustand/workspace-store';
+import {
+  Folder,
+  List,
+  Space,
+} from '@/types/request-response/workspace/ApiResponse';
 
-export const AppSidebar = (props: React.ComponentProps<typeof Sidebar>) => {
+export const AppSidebar = (props: ComponentProps<typeof Sidebar>) => {
+  const { setCurrentWorkspace } = useWorkspaceStore();
   const { state } = useSidebar();
   const [inviteUserOpen, setInviteUserOpen] = useState(false);
   const [isCreateSpaceOpen, setIsCreateSpaceOpen] = useState(false);
   const { data: workSpaces } = useGetAllWorkSpacesQuery();
-
+  const workspaceId =
+    workSpaces && workSpaces.length > 0
+      ? workSpaces[0].workspace.id
+      : undefined;
+  // The query for all the spaces, folders and list in a given workspace
+  const { data: spacesFolderList, isLoading } =
+    useGetWorkspaceSpaceFolderListQuery(
+      { id: workspaceId },
+      {
+        skip: !workspaceId, // wait for workspaceId to change from being undefined
+      }
+    );
   const isOpen = state !== 'collapsed';
+  useEffect(() => {
+    if (workSpaces && workSpaces?.length > 0) {
+      setCurrentWorkspace(workSpaces[0].workspace);
+    }
+  }, [workSpaces, setCurrentWorkspace]);
 
   return (
     <Sidebar
@@ -119,21 +144,25 @@ export const AppSidebar = (props: React.ComponentProps<typeof Sidebar>) => {
                 {LABEL.SHARED_WITH_ME}
               </Button>
 
-              {spaceData.map((space) => (
-                <SidebarSpaceItems key={space.id} space={space}>
-                  {space.folders.map((folder) => (
-                    <SidebarFolderItems
-                      key={folder.id}
-                      name={folder.name}
-                      folder={folder}
-                      onItemClick={() => {}}
-                    />
-                  ))}
-                  {space.lists.map((listItem) => (
-                    <SidebarListItems key={listItem.id} listItem={listItem} />
-                  ))}
-                </SidebarSpaceItems>
-              ))}
+              {isLoading ? (
+                <SidebarSpaceSkeleton />
+              ) : (
+                spacesFolderList?.spaces.map((space: Space) => (
+                  <SidebarSpaceItems key={space.id} space={space}>
+                    {space.folders.map((folder: Folder) => (
+                      <SidebarFolderItems
+                        key={folder.id}
+                        name={folder.name}
+                        folder={folder}
+                        onItemClick={() => {}}
+                      />
+                    ))}
+                    {space.lists.map((list: List) => (
+                      <SidebarListItems key={list.id} listItem={list} />
+                    ))}
+                  </SidebarSpaceItems>
+                ))
+              )}
               <Button
                 onClick={() => setIsCreateSpaceOpen(true)}
                 variant="ghost"
@@ -174,5 +203,25 @@ export const AppSidebar = (props: React.ComponentProps<typeof Sidebar>) => {
         maxInvites={10}
       />
     </Sidebar>
+  );
+};
+
+const SidebarSpaceSkeleton = () => {
+  return (
+    <div className="animate-pulse space-y-4 px-2">
+      {[...Array(3)].map((_, idx) => (
+        <div key={idx} className="space-y-2">
+          <div className="h-4 w-3/4 bg-gray-300 rounded" />
+          <div className="ml-4 space-y-1">
+            {[...Array(2)].map((_, subIdx) => (
+              <div key={subIdx} className="h-3 w-5/6 bg-gray-200 roudned" />
+            ))}
+            {[...Array(2)].map((_, subIdx) => (
+              <div key={subIdx} className="h-3 w-4/6 bg-gray-200 rounded" />
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
   );
 };

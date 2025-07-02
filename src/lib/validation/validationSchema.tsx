@@ -91,10 +91,32 @@ export const addTaskSchema = z.object({
   priority: z.string(),
 });
 
-export const createListSchema = z.object({
-  name: z.string().min(1, 'List Name is required'),
-  isPrivateMode: z.boolean(),
+const folderListSchema = z.object({
+  folderId: z.number(),
+  spaceId: z.undefined(),
 });
+
+const spaceListSchema = z.object({
+  folderId: z.undefined(),
+  spaceId: z.number(),
+});
+
+export const createListSchema = z
+  .object({
+    name: z.string().min(1, 'List Name is required'),
+    iconUrl: z.string(),
+    avatarKey: z.string(),
+    visibility: z.enum(['public', 'private']),
+    color: z.string(),
+    focusColorId: z.number().optional(),
+    statusViewGroupId: z.number().optional(),
+    priorityId: z.number(),
+    startDate: z.string(),
+    dueDate: z.string(),
+    isInheritStatus: z.boolean(),
+    taskType: z.number(),
+  })
+  .and(z.union([folderListSchema, spaceListSchema])); // As a list can be created either against a folder or a space
 
 export const createFolderSchema = z.object({
   name: z.string().min(1, 'A Name is required'),

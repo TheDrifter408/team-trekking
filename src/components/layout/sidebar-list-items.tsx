@@ -5,14 +5,11 @@ import { useNavigate } from 'react-router-dom';
 import { ContextMenu } from '@/components/common/context-menu.tsx';
 import { Icon } from '@/assets/icon-path.tsx';
 import { listMenuConfig } from '@/lib/constants/staticData.ts';
+import { List } from '@/types/request-response/workspace/ApiResponse';
 
-interface ListItemProps {
-  id: string;
-  name: string;
-}
 
 interface Props {
-  listItem: ListItemProps;
+  listItem: List;
 }
 
 export const SidebarListItems = ({ listItem }: Props) => {

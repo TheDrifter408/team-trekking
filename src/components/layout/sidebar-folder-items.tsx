@@ -15,10 +15,16 @@ import { useNavigate } from 'react-router-dom';
 import { Icon } from '@/assets/icon-path.tsx';
 import { folderMenuConfig } from '@/lib/constants/staticData.ts';
 import { ContextMenu } from '@/components/common/context-menu.tsx';
-import { SidebarFolderItemsProps } from '@/types/props/Common';
 import { CreateList } from '../features/create-list';
 import { MenuItem, SubmenuItem } from '@/types/interfaces/ContextMenu';
 import { ACTION } from '@/lib/constants';
+import { Folder } from '@/types/request-response/workspace/ApiResponse';
+
+interface SidebarFolderItemsProps {
+  name: string;
+  folder: Folder;
+  onItemClick?: (item: MenuItem | SubmenuItem) => void;
+}
 
 export const SidebarFolderItems = ({
   name,

@@ -24,23 +24,10 @@ import { ACTION } from '@/lib/constants';
 import { UpdateSpace } from '../features/update-space';
 import { ShareSpaceDialog } from '@/components/common/share-space-dialog';
 import { CreateFolder } from '../features/create-folder';
+import { Space } from '@/types/request-response/workspace/ApiResponse';
 
 interface Props {
-  space: {
-    id: number;
-    name: string;
-    description: string;
-    shareLink?: string;
-    folders: {
-      id: number;
-      name: string;
-      lists: {
-        id: number;
-        name: string;
-        taskNumber: number;
-      }[];
-    }[];
-  };
+  space: Space;
   children: ReactNode;
 }
 
