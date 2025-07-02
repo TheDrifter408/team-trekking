@@ -23,6 +23,7 @@ import { LABEL } from '@/lib/constants';
 interface BaseProps {
   createListOpen: boolean;
   setCreateListOpen: (open: boolean) => void;
+  onCreatedList: () => void;
 }
 
 interface CreateListInFolder extends BaseProps {
@@ -42,6 +43,7 @@ type FormValues = z.infer<typeof createListSchema>;
 export const CreateList = ({
   createListOpen,
   setCreateListOpen,
+  onCreatedList,
   folder,
   space,
 }: CreateListProps) => {
@@ -83,6 +85,7 @@ export const CreateList = ({
           })();
     try {
       await createList(listFormValues).unwrap();
+      onCreatedList();
       toast.success(`Successfully created ${listFormValues.name}`);
       setCreateListOpen(false);
     } catch (error: unknown) {

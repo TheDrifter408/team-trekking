@@ -123,16 +123,6 @@ export const folderMenuConfig: MenuSection[] = [
             action: ACTION.CREATE_LIST,
             icon: ListPlus,
           },
-          {
-            label: LABEL.FOLDER,
-            action: ACTION.CREATE_FOLDER,
-            icon: FolderPlus,
-          },
-          {
-            label: LABEL.BOARD,
-            action: ACTION.CREATE_DASHBOARD,
-            icon: LayoutDashboard,
-          },
         ],
       },
       {

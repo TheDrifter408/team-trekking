@@ -29,9 +29,14 @@ import { Space } from '@/types/request-response/workspace/ApiResponse';
 interface Props {
   space: Space;
   children: ReactNode;
+  onCreatedChildren: () => void;
 }
 
-export const SidebarSpaceItems = ({ space, children }: Props) => {
+export const SidebarSpaceItems = ({
+  space,
+  children,
+  onCreatedChildren,
+}: Props) => {
   const navigate = useNavigate();
 
   const [isOpen, setIsOpen] = useState(false);
@@ -137,11 +142,13 @@ export const SidebarSpaceItems = ({ space, children }: Props) => {
           space={space}
           createListOpen={isCreateListOpen}
           setCreateListOpen={setIsCreateListOpen}
+          onCreatedList={onCreatedChildren}
         />
         <CreateFolder
           space={space}
           createFolderOpen={isCreateFolderOpen}
           setCreateFolderOpen={setIsCreateFolderOpen}
+          onCreatedFolder={onCreatedChildren}
         />
         <UpdateSpace
           isActive={isEditingSpace}
