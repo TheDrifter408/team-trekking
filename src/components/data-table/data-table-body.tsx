@@ -164,7 +164,7 @@ export const DataTableBody = ({
         <div
           style={{
             height: `${totalHeight}px`,
-            width: table.getTotalSize(),
+            width: table.getTotalSize() + 20,
             contain: 'strict',
             position: 'relative',
           }}
@@ -221,16 +221,8 @@ export const DataTableBody = ({
               className="flex items-center opacity-90"
             >
               <DataTableCellSection
-                cells={draggedRow.getLeftVisibleCells()}
-                position="left"
-              />
-              <DataTableCellSection
                 cells={draggedRow.getCenterVisibleCells()}
                 position="center"
-              />
-              <DataTableCellSection
-                cells={draggedRow.getRightVisibleCells()}
-                position="right"
               />
             </div>
           ) : null}
