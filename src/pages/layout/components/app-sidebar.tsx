@@ -208,7 +208,7 @@ export const AppSidebar = (props: ComponentProps<typeof Sidebar>) => {
 
 const SidebarSpaceSkeleton = () => {
   return (
-    <div className="animate-pulse space-y-4 px-2">
+    <div className="animate-pulse space-y-2 px-2">
       {[...Array(3)].map((_, idx) => (
         <div key={idx} className="space-y-2">
           <div className="h-4 w-3/4 bg-gray-300 rounded" />
