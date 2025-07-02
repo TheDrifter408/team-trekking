@@ -214,10 +214,10 @@ const SidebarSpaceSkeleton = () => {
           <div className="h-4 w-3/4 bg-gray-300 rounded" />
           <div className="ml-4 space-y-1">
             {[...Array(2)].map((_, subIdx) => (
-              <div key={subIdx} className="h-3 w-5/6 bg-gray-200 roudned" />
+              <div key={subIdx} className="h-3 w-2/3 bg-gray-200 roudned" />
             ))}
             {[...Array(2)].map((_, subIdx) => (
-              <div key={subIdx} className="h-3 w-4/6 bg-gray-200 rounded" />
+              <div key={subIdx} className="h-3 w-1/3 bg-gray-200 rounded" />
             ))}
           </div>
         </div>
