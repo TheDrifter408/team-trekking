@@ -88,7 +88,7 @@ const getRandomPriority = (): TaskPriority =>
 
 let taskIdCounter = 1;
 
-const generateTask = (
+export const generateTask = (
   level = 1,
   maxDepth = 3,
   parentId: string | null = null
@@ -141,6 +141,31 @@ export const generateTasks = (count: number, maxDepth = 3): Task[] => {
   return Array.from({ length: count }).map(() => generateTask(1, maxDepth));
 };
 
+export const flattenTasksWithDepth = (
+  tasks: Task[],
+  depth = 0,
+  parentId: string | null = null
+): Task[] => {
+  const result: Task[] = [];
+
+  for (const task of tasks) {
+    const flattenedTask: Task = {
+      ...task,
+      parentId,
+      depth,
+      subTask: [], // prevent duplication
+    };
+
+    result.push(flattenedTask);
+
+    if (task.subTask && task.subTask.length > 0) {
+      result.push(...flattenTasksWithDepth(task.subTask, depth + 1, task.id));
+    }
+  }
+
+  return result;
+};
+
 /**
  * Flattens a hierarchical task tree into a flat array
  * @param tasks - Array of root tasks
@@ -163,4 +188,4 @@ export const flattenTasks = (tasks: Task[]): Task[] => {
 };
 
 export const mockTasks: Task[] = generateTasks(5, 3);
-export const mockTasksFlattened: Task[] = flattenTasks(mockTasks);
+export const flatTasks: Task[] = flattenTasksWithDepth(mockTasks);

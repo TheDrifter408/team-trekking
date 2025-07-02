@@ -59,6 +59,7 @@ export const DataTableRow = ({
           zIndex: isDragging ? 10 : 1,
           opacity: isDragging ? 0 : 1,
           pointerEvents: isDragging ? 'none' : 'auto',
+          willChange: isDragging ? 'transform' : 'auto', // Add this for GPU acceleration
         }}
         {...attributes}
         {...listeners}
