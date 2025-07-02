@@ -15,6 +15,7 @@ import {
   useCreateChecklistItemMutation,
   useUpdateChecklistItemMutation,
   useDeleteChecklistItemMutation,
+  useDeleteChecklistMutation, // Added delete checklist mutation
 } from '@/service/rtkQueries/taskQuery.ts';
 import { handleMutation } from '@/lib/utils/utils.ts';
 
@@ -59,6 +60,7 @@ const TaskCheckList = ({ taskId = 1 }: TaskCheckListProps): JSX.Element => {
   const [createChecklistItem] = useCreateChecklistItemMutation();
   const [updateChecklistItem] = useUpdateChecklistItemMutation();
   const [deleteChecklistItem] = useDeleteChecklistItemMutation();
+  const [deleteChecklist] = useDeleteChecklistMutation(); // Added delete checklist mutation
 
   const [checklists, setChecklists] = useState<CheckList[]>([]);
   const [showCompleted, setShowCompleted] = useState<ShowCompletedState>({});
@@ -70,6 +72,9 @@ const TaskCheckList = ({ taskId = 1 }: TaskCheckListProps): JSX.Element => {
     null
   );
   const [activeMenu, setActiveMenu] = useState<number | null>(null);
+  const [activeChecklistMenu, setActiveChecklistMenu] = useState<number | null>(
+    null
+  ); // Added for checklist menu
   const [editingItem, setEditingItem] = useState<number | null>(null);
   const [editText, setEditText] = useState<string>('');
   const [editingChecklistId, setEditingChecklistId] = useState<number | null>(
@@ -80,6 +85,7 @@ const TaskCheckList = ({ taskId = 1 }: TaskCheckListProps): JSX.Element => {
   const [isCreatingChecklist, setIsCreatingChecklist] =
     useState<boolean>(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const checklistMenuRef = useRef<HTMLDivElement>(null); // Added for checklist menu
 
   useEffect(() => {
     getChecklist(1);
@@ -115,6 +121,12 @@ const TaskCheckList = ({ taskId = 1 }: TaskCheckListProps): JSX.Element => {
     const handleClickOutside = (event: MouseEvent) => {
       if (menuRef.current && !menuRef.current?.contains(event.target as Node)) {
         setActiveMenu(null);
+      }
+      if (
+        checklistMenuRef.current &&
+        !checklistMenuRef.current?.contains(event.target as Node)
+      ) {
+        setActiveChecklistMenu(null);
       }
     };
 
@@ -258,6 +270,13 @@ const TaskCheckList = ({ taskId = 1 }: TaskCheckListProps): JSX.Element => {
     setActiveMenu(activeMenu === itemId ? null : itemId);
   };
 
+  // Added function to toggle checklist menu
+  const toggleChecklistMenu = (checklistId: number): void => {
+    setActiveChecklistMenu(
+      activeChecklistMenu === checklistId ? null : checklistId
+    );
+  };
+
   const onHandleMenuAction = async (
     action: string,
     item: CheckListItem,
@@ -297,6 +316,43 @@ const TaskCheckList = ({ taskId = 1 }: TaskCheckListProps): JSX.Element => {
       case 'assign':
         setActiveMenu(null);
         // Handle assign action
+        break;
+      default:
+        break;
+    }
+  };
+
+  // Added function to handle checklist menu actions
+  const onHandleChecklistMenuAction = async (
+    action: string,
+    checklistId: number
+  ): Promise<void> => {
+    switch (action) {
+      case 'delete':
+        setActiveChecklistMenu(null);
+        try {
+          const { data } = await handleMutation(deleteChecklist, checklistId);
+          if (data) {
+            // Update local state by removing the checklist
+            setChecklists(checklists.filter((c) => c.id !== checklistId));
+
+            // Clean up related state
+            const newShowCompleted = { ...showCompleted };
+            const newNewItemText = { ...newItemText };
+            const newIsAddingItem = { ...isAddingItem };
+
+            delete newShowCompleted[checklistId];
+            delete newNewItemText[checklistId];
+            delete newIsAddingItem[checklistId];
+
+            setShowCompleted(newShowCompleted);
+            setNewItemText(newNewItemText);
+            setIsAddingItem(newIsAddingItem);
+          }
+        } catch (error) {
+          console.error('Failed to delete checklist:', error);
+          // Handle error - you might want to show a toast or error message
+        }
         break;
       default:
         break;
@@ -538,6 +594,35 @@ const TaskCheckList = ({ taskId = 1 }: TaskCheckListProps): JSX.Element => {
                   </span>
                 </h2>
               )}
+
+              {/* Added checklist menu button */}
+              <div
+                className="relative"
+                ref={
+                  activeChecklistMenu === checklist.id ? checklistMenuRef : null
+                }
+              >
+                <button
+                  onClick={() => toggleChecklistMenu(checklist.id)}
+                  className="p-1 hover:bg-gray-200 rounded"
+                >
+                  <MoreHorizontal className="w-4 h-4 text-gray-400" />
+                </button>
+
+                {activeChecklistMenu === checklist.id && (
+                  <div className="absolute right-0 top-8 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-10">
+                    <button
+                      onClick={() =>
+                        onHandleChecklistMenuAction('delete', checklist.id)
+                      }
+                      className="w-full flex items-center gap-3 px-4 py-2 text-sm text-red-600 hover:bg-red-50"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                      {LABEL.DELETE}
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
 
             <div>
@@ -671,7 +756,6 @@ const TaskCheckList = ({ taskId = 1 }: TaskCheckListProps): JSX.Element => {
                   </button>
                 </div>
               ))}
-
               {/* Add new item */}
               {isAddingItem[checklist.id] ? (
                 <div className="flex items-center gap-3 p-2 rounded-md">
