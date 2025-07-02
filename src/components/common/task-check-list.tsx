@@ -12,36 +12,56 @@ import { useLazyGetChecklistQuery } from '@/service/rtkQueries/taskQuery.ts';
 import { LABEL } from '@/lib/constants';
 import { CheckList } from '@/types/request-response/task/ApiResponse.ts';
 
+interface DraggedItem {
+  item: CheckList['items'][0];
+  index: number;
+  checklistId: number;
+}
+
+interface ShowCompletedState {
+  [key: number]: boolean;
+}
+
+interface NewItemTextState {
+  [key: number]: string;
+}
+
+interface IsAddingItemState {
+  [key: number]: boolean;
+}
+
 const TaskCheckList = () => {
   // Replace with your actual hook
   const [getChecklist, { data: checklist, isLoading, error }] =
     useLazyGetChecklistQuery();
 
   const [checklists, setChecklists] = useState<CheckList[]>([]);
-  const [showCompleted, setShowCompleted] = useState({});
-  const [newItemText, setNewItemText] = useState({});
-  const [isAddingItem, setIsAddingItem] = useState({});
-  const [draggedItem, setDraggedItem] = useState(null);
-  const [dragOverIndex, setDragOverIndex] = useState(null);
-  const [dragOverChecklistId, setDragOverChecklistId] = useState(null);
-  const [activeMenu, setActiveMenu] = useState(null);
-  const [editingItem, setEditingItem] = useState(null);
-  const [editText, setEditText] = useState('');
-  const menuRef = useRef(null);
+  const [showCompleted, setShowCompleted] = useState<ShowCompletedState>({});
+  const [newItemText, setNewItemText] = useState<NewItemTextState>({});
+  const [isAddingItem, setIsAddingItem] = useState<IsAddingItemState>({});
+  const [draggedItem, setDraggedItem] = useState<DraggedItem | null>(null);
+  const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
+  const [dragOverChecklistId, setDragOverChecklistId] = useState<number | null>(
+    null
+  );
+  const [activeMenu, setActiveMenu] = useState<number | null>(null);
+  const [editingItem, setEditingItem] = useState<number | null>(null);
+  const [editText, setEditText] = useState<string>('');
+  const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (checklist) {
       setChecklists(checklist);
 
       // Initialize state objects for each checklist
-      const initialShowCompleted = {};
-      const initialNewItemText = {};
-      const initialIsAddingItem = {};
+      const initialShowCompleted: ShowCompletedState = {};
+      const initialNewItemText: NewItemTextState = {};
+      const initialIsAddingItem: IsAddingItemState = {};
 
-      checklist.forEach((checklist) => {
-        initialShowCompleted[checklist.id] = true;
-        initialNewItemText[checklist.id] = '';
-        initialIsAddingItem[checklist.id] = false;
+      checklist.forEach((checklistItem) => {
+        initialShowCompleted[checklistItem.id] = true;
+        initialNewItemText[checklistItem.id] = '';
+        initialIsAddingItem[checklistItem.id] = false;
       });
 
       setShowCompleted(initialShowCompleted);
@@ -53,12 +73,12 @@ const TaskCheckList = () => {
   useEffect(() => {
     // Replace with actual API call
     getChecklist(1);
-  }, []);
+  }, [getChecklist]);
 
   // Close menu when clicking outside
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (menuRef.current && !menuRef.current?.contains(event.target)) {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current?.contains(event.target as Node)) {
         setActiveMenu(null);
       }
     };
@@ -69,7 +89,7 @@ const TaskCheckList = () => {
     };
   }, []);
 
-  const onToggleItem = (itemId, checklistId) => {
+  const onToggleItem = (itemId: number, checklistId: number): void => {
     setChecklists(
       checklists.map((checklist) =>
         checklist.id === checklistId
@@ -84,7 +104,7 @@ const TaskCheckList = () => {
     );
   };
 
-  const onAddNewItem = (checklistId) => {
+  const onAddNewItem = (checklistId: number): void => {
     const text = newItemText[checklistId];
     if (text && text.trim()) {
       setChecklists(
@@ -97,7 +117,8 @@ const TaskCheckList = () => {
                   {
                     id: Date.now(),
                     content: text.trim(),
-                    completed: false,
+                    isDone: false,
+                    isActive: true,
                   },
                 ],
               }
@@ -109,26 +130,39 @@ const TaskCheckList = () => {
     }
   };
 
-  const onHandleDragStart = (e, item, index, checklistId) => {
+  const onHandleDragStart = (
+    e: React.DragEvent<HTMLDivElement>,
+    item: CheckList['items'][0],
+    index: number,
+    checklistId: number
+  ): void => {
     setDraggedItem({ item, index, checklistId });
     e.dataTransfer.effectAllowed = 'move';
   };
 
-  const onHandleDragOver = (e, index, checklistId) => {
+  const onHandleDragOver = (
+    e: React.DragEvent<HTMLDivElement>,
+    index: number,
+    checklistId: number
+  ): void => {
     e.preventDefault();
     e.dataTransfer.dropEffect = 'move';
     setDragOverIndex(index);
     setDragOverChecklistId(checklistId);
   };
 
-  const onHandleDragLeave = (e) => {
-    if (!e.currentTarget.contains(e.relatedTarget)) {
+  const onHandleDragLeave = (e: React.DragEvent<HTMLDivElement>): void => {
+    if (!e.currentTarget.contains(e.relatedTarget as Node)) {
       setDragOverIndex(null);
       setDragOverChecklistId(null);
     }
   };
 
-  const onHandleDrop = (e, dropIndex, dropChecklistId) => {
+  const onHandleDrop = (
+    e: React.DragEvent<HTMLDivElement>,
+    dropIndex: number,
+    dropChecklistId: number
+  ): void => {
     e.preventDefault();
 
     if (
@@ -168,17 +202,21 @@ const TaskCheckList = () => {
     setDragOverChecklistId(null);
   };
 
-  const onHandleDragEnd = () => {
+  const onHandleDragEnd = (): void => {
     setDraggedItem(null);
     setDragOverIndex(null);
     setDragOverChecklistId(null);
   };
 
-  const toggleMenu = (itemId) => {
+  const toggleMenu = (itemId: number): void => {
     setActiveMenu(activeMenu === itemId ? null : itemId);
   };
 
-  const onHandleMenuAction = (action, item, checklistId) => {
+  const onHandleMenuAction = (
+    action: string,
+    item: CheckList['items'][0],
+    checklistId: number
+  ): void => {
     switch (action) {
       case 'addItem':
         setActiveMenu(null);
@@ -187,7 +225,7 @@ const TaskCheckList = () => {
       case 'rename':
         setActiveMenu(null);
         setEditingItem(item.id);
-        setEditText(item.text);
+        setEditText(item.content);
         break;
       case 'delete':
         setChecklists(
@@ -211,7 +249,7 @@ const TaskCheckList = () => {
     }
   };
 
-  const onHandleEditSave = (itemId, checklistId) => {
+  const onHandleEditSave = (itemId: number, checklistId: number): void => {
     if (editText.trim()) {
       setChecklists(
         checklists.map((checklist) =>
@@ -232,12 +270,16 @@ const TaskCheckList = () => {
     setEditText('');
   };
 
-  const onHandleEditCancel = () => {
+  const onHandleEditCancel = (): void => {
     setEditingItem(null);
     setEditText('');
   };
 
-  const onHandleEditKeyPress = (e, itemId, checklistId) => {
+  const onHandleEditKeyPress = (
+    e: React.KeyboardEvent<HTMLInputElement>,
+    itemId: number,
+    checklistId: number
+  ): void => {
     if (e.key === 'Enter') {
       onHandleEditSave(itemId, checklistId);
     } else if (e.key === 'Escape') {
@@ -245,7 +287,10 @@ const TaskCheckList = () => {
     }
   };
 
-  const onHandleKeyPress = (e, checklistId) => {
+  const onHandleKeyPress = (
+    e: React.KeyboardEvent<HTMLInputElement>,
+    checklistId: number
+  ): void => {
     if (e.key === 'Enter') {
       onAddNewItem(checklistId);
     } else if (e.key === 'Escape') {
@@ -254,9 +299,9 @@ const TaskCheckList = () => {
     }
   };
 
-  const getCompletedCount = (items) =>
+  const getCompletedCount = (items: CheckList['items']): number =>
     items.filter((item) => item.isDone).length;
-  const getTotalCount = (items) => items.length;
+  const getTotalCount = (items: CheckList['items']): number => items.length;
 
   // Show loading state
   if (isLoading) {
@@ -274,7 +319,9 @@ const TaskCheckList = () => {
     return (
       <div className="w-full mx-auto py-4">
         <div className="flex items-center justify-center h-64">
-          <div className="text-red-500">Error loading checklists: {error}</div>
+          <div className="text-red-500">
+            Error loading checklists: {String(error)}
+          </div>
         </div>
       </div>
     );
