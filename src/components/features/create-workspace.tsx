@@ -120,9 +120,6 @@ export const CreateWorkspace: React.FC<Props> = ({
   };
 
   const onSubmit = async (): Promise<void> => {
-    if (isFirstTimeLogin) {
-      return;
-    }
     const requestParams = {
       name: workspaceName,
 
