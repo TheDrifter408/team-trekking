@@ -124,3 +124,127 @@ export interface Role {
   id: number;
   title: string;
 }
+
+export interface Priority {
+  id: number;
+  title: string;
+  color: string;
+  isActive: boolean;
+}
+
+export interface Status {
+  id: number;
+  name: string;
+  type: string;
+  identifier: any;
+  identifierId: any;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface Type {
+  id: number;
+  name: string;
+  label: string;
+  icon: any;
+  color: any;
+  isActive: boolean;
+}
+
+export interface FocusColor {
+  id: number;
+  title: string;
+  color: string;
+}
+
+export interface WorkspaceSpaceFolderList {
+  id: number;
+  name: string;
+  color: string;
+  iconUrl: string;
+  customManageType: any;
+  customDiscoverySource: any;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+  members: Member[];
+  spaces: Space[];
+  plan: any;
+  createdBy: CreatedBy;
+}
+
+export interface Space {
+  id: number;
+  name: string;
+  iconUrl?: string;
+  avatarKey?: string;
+  visibility: string;
+  color?: string;
+  description: string;
+  isPrivate: boolean;
+  startDate?: string;
+  dueDate?: string;
+  isActive: boolean;
+  createdAt: string;
+  folders: Folder[];
+  lists: List[];
+  focusColor?: FocusColor;
+  createdBy: CreatedBy;
+  priority?: Priority;
+  status: Status;
+}
+
+export interface Folder {
+  id: number;
+  name: string;
+  iconUrl: string;
+  avatarKey: string;
+  visibility: string;
+  color: string;
+  startDate: string;
+  dueDate: string;
+  isActive: boolean;
+  createdAt: string;
+  isInheritStatus: boolean;
+  isPrivate: boolean;
+  lists: List[];
+  focusColor: FocusColor;
+  createdBy: CreatedBy;
+  priority: Priority;
+  status: Status;
+}
+
+export interface List {
+  id: number;
+  name: string;
+  iconUrl: string;
+  avatarKey: string;
+  visibility: string;
+  color: string;
+  startDate?: string;
+  dueDate?: string;
+  isActive: boolean;
+  createdAt: string;
+  isInheritStatus: boolean;
+  isPrivate: boolean;
+  focusColor: FocusColor;
+  createdBy: CreatedBy;
+  priority?: Priority;
+  status: Status;
+  type: Type;
+}
+
+export interface Member {
+  id: number;
+  status: string;
+  user: User;
+}
+
+export interface User {
+  id: number;
+  fullName: string;
+  email: string;
+  image: string;
+  forcePasswordChange: boolean;
+  isActive: boolean;
+}

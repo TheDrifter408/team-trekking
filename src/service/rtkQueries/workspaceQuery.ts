@@ -9,6 +9,7 @@ import {
   WorkSpaceCreated,
   WorkSpaceResponse,
   ViewGroup,
+  WorkspaceSpaceFolderList,
 } from '@/types/request-response/workspace/ApiResponse';
 import { CreateWorkSpace } from '@/types/request-response/workspace/ApiRequest.ts';
 
@@ -39,6 +40,18 @@ export const workspaceApi = createApi({
       transformResponse: (response: ApiResponse<Array<WorkSpaceResponse>>) =>
         response.data,
     }),
+    getWorkspaceSpaceFolderList: builder.query<
+      WorkspaceSpaceFolderList,
+      {
+        id: number;
+      }
+    >({
+      query: (params) => ({
+        url: `workspace/${params.id}/space-folder-list`,
+      }),
+      transformResponse: (response: ApiResponse<WorkspaceSpaceFolderList>) =>
+        response.data,
+    }),
     createWorkSpace: builder.mutation<WorkSpaceCreated, CreateWorkSpace>({
       query: (body: CreateWorkSpace) => ({
         url: 'workspace',
@@ -64,4 +77,5 @@ export const {
   useGetAllWorkSpacesQuery,
   useCreateWorkSpaceMutation,
   useGetWorkspaceViewGroupByIDQuery,
+  useGetWorkspaceSpaceFolderListQuery,
 } = workspaceApi;

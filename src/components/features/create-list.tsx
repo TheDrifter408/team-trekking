@@ -16,8 +16,9 @@ import { createListSchema } from '@/lib/validation/validationSchema';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Fragment } from 'react';
-import { Folder } from '@/types/props/Layout';
-import { Space } from '@/types/props/Common';
+import { useCreateListMutation } from '@/service/rtkQueries/listQuery';
+import { useAppContext } from '@/lib/context/app-layout-context';
+import { Folder, Space } from '@/types/request-response/workspace/ApiResponse';
 
 type FormValues = z.infer<typeof createListSchema>;
 
@@ -44,6 +45,7 @@ export const CreateList = ({
   folder,
   space,
 }: CreateListProps) => {
+  const [createList, { isLoading }] = useCreateListMutation();
   const {
     register,
     handleSubmit,
@@ -55,7 +57,15 @@ export const CreateList = ({
     resolver: zodResolver(createListSchema),
     defaultValues: {
       name: '',
-      isPrivateMode: false,
+      iconUrl: '',
+      avatarKey: '',
+      color: '',
+      priorityId: 1,
+      visibility: 'public',
+      isInheritStatus: true,
+      taskType: 1,
+      startDate: new Date().toISOString().split('T')[0],
+      dueDate: new Date().toISOString().split('T')[0],
     },
     mode: 'onChange',
   });
@@ -66,10 +76,11 @@ export const CreateList = ({
     // TODO:
     // 1. integrate the create List API when it is avaible
     if (space) {
-      return {
-        parentId: space.id,
+      const listData = {
         ...data,
+        spaceId: space.id,
       };
+      console.log(listData);
     } else if (folder) {
       return {
         parentId: folder.id,
@@ -135,12 +146,16 @@ export const CreateList = ({
                   </span>
                   <Controller
                     control={control}
-                    name="isPrivateMode"
+                    name="visibility"
                     render={({ field }) => (
                       <Switch
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                        className={field.value ? '!bg-theme-main' : ''}
+                        checked={field.value === 'private'}
+                        onCheckedChange={(checked) => {
+                          field.onChange(checked ? 'private' : 'public');
+                        }}
+                        className={
+                          field.value === 'private' ? '!bg-theme-main' : ''
+                        }
                         id=""
                       />
                     )}
