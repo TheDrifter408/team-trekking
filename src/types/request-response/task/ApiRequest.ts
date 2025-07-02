@@ -8,3 +8,9 @@ export interface CreateCheckListItemRequest {
   isDone: boolean;
   checklistId: number;
 }
+
+export interface UpdateCheckListItemRequest {
+  id: number;
+  content: string;
+  isDone: boolean;
+}
