@@ -5,7 +5,7 @@ import { ApiResponse } from '@/types/request-response/auth/ApiResponse';
 import { ListResponse } from '@/types/request-response/list/ApiResponse';
 import { CreateListRequest } from '@/types/request-response/list/ApiRequest';
 
-export const folderApi = createApi({
+export const listApi = createApi({
   reducerPath: 'listApi',
   baseQuery: axiosBaseQuery({ baseUrl: API_URLS.LIST_BASE_URL }),
   endpoints: (builder) => ({
@@ -19,4 +19,4 @@ export const folderApi = createApi({
   }),
 });
 
-export const { useCreateListMutation } = folderApi;
+export const { useCreateListMutation } = listApi;

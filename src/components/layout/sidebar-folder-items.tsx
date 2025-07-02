@@ -24,11 +24,13 @@ interface SidebarFolderItemsProps {
   name: string;
   folder: Folder;
   onItemClick?: (item: MenuItem | SubmenuItem) => void;
+  onCreatedChildren: () => void;
 }
 
 export const SidebarFolderItems = ({
   name,
   folder,
+  onCreatedChildren,
 }: SidebarFolderItemsProps) => {
   const navigate = useNavigate();
   const [isHovered, setIsHovered] = useState(false);
@@ -146,6 +148,7 @@ export const SidebarFolderItems = ({
         folder={folder}
         createListOpen={isCreateListOpen}
         setCreateListOpen={setIsCreateListOpen}
+        onCreatedList={onCreatedChildren}
       />
     </>
   );

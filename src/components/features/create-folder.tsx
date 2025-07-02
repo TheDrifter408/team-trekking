@@ -33,20 +33,21 @@ import { SelectUsers } from '@/components/common/select-users';
 import { Space } from '@/types/props/Common';
 import { toast } from 'sonner';
 import { taskNotificationUsers, taskStatuses } from '@/mock';
-import { CreateFolderRequest } from '@/types/request-response/folder/ApiRequest';
-import { AxiosError } from 'axios';
-type FormValues = z.infer<typeof createFolderSchema>;
 
 interface Props {
   createFolderOpen?: boolean;
   setCreateFolderOpen: (open: boolean) => void;
   space: Space;
+  onCreatedFolder: () => void;
 }
+
+type FormValues = z.infer<typeof createFolderSchema>;
 
 export const CreateFolder = ({
   createFolderOpen,
   setCreateFolderOpen,
   space,
+  onCreatedFolder,
 }: Props) => {
   const [open, setOpen] = useState(false);
 
@@ -66,11 +67,7 @@ export const CreateFolder = ({
       avatarKey: 'avatar123',
       visibility: 'public',
       color: '#FF5733',
-      spaceId: 12,
-      focusColorId: 1,
-      priorityColorId: 1,
-      statusViewGroupId: 0,
-      isInheritStatus: true,
+      spaceId: space.id,
     },
   });
 
@@ -78,15 +75,18 @@ export const CreateFolder = ({
   const isPrivateMode = watch('visibility');
 
   const onSubmit = async (data: z.infer<typeof createFolderSchema>) => {
-    const formattedData: CreateFolderRequest = {
+    const folderFormValues = {
       ...data,
+      spaceId: space.id,
     };
-    const parsed = createFolderSchema.parse(formattedData);
     try {
-      await createFolder(parsed).unwrap();
-      toast.success('Successfully created Folder');
+      await createFolder(folderFormValues).unwrap();
+      onCreatedFolder(); // Call space api again on successfully creating folder
+      toast.success(`Successfully created Folder ${folderFormValues.name}`);
+      setCreateFolderOpen(false);
     } catch (error: unknown) {
-      toast.error(error.data.message);
+      console.error(error);
+      toast.error('Could not create Folder');
     }
   };
 
