@@ -279,4 +279,6 @@ export const LABEL = {
   NEW_CHECKLIST_ITEM: 'New checklist item',
   ASSIGN_TO: 'Assign to',
   ADD_ITEM: 'Add Item',
+  ADD_CHECKLIST: 'Add checklist',
+  USE_TEMPLATE: 'Use Template',
 };
