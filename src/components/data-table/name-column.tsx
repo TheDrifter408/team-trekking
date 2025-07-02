@@ -92,7 +92,7 @@ export const NameColumn = ({ task, row }: Props) => {
               className="text-theme-main-dark text-base bg-transparent font-medium !focus-none !ring-none !outline-none border-none "
             />
           ) : (
-            <TextTooltip message={task.name}>
+            <TextTooltip delayDuration={500} message={task.name}>
               <span
                 className={cn(
                   'text-base text-content-default font-medium cursor-pointer hover:text-theme-main-dark hover:font-medium truncate max-w-[220px]'
@@ -243,7 +243,7 @@ const DescriptionSummary = ({ task }: { task: Task }) => {
   return (
     <>
       {(task.description?.length ?? 0) > 0 && (
-        <Tooltip delayDuration={300}>
+        <Tooltip delayDuration={500}>
           <TooltipTrigger asChild>
             <IconButton>
               <Icon name="description" className="size-4" />

@@ -18,7 +18,7 @@ import {
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import { Task } from '@/types/props/Common.ts';
-import { flattenTasks } from '@/mock/task';
+import { generateTask } from '@/mock/task';
 import { createPortal } from 'react-dom';
 import { DataTableCellSection } from './data-table-cell.tsx';
 import {
@@ -26,6 +26,7 @@ import {
   Projection,
   buildTaskTree,
 } from '@/lib/utils/data-table-utils.ts';
+import { toast } from 'sonner';
 import { Row } from '@tanstack/react-table';
 
 interface DataTableBodyProps {
@@ -71,25 +72,10 @@ export const DataTableBody = ({
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
-        distance: 6,
+        distance: 10, // Reduce distance for more responsive dragging
       },
     })
   );
-
-  useEffect(() => {
-    if (activeId && overId && activeId !== overId) {
-      const projected: Projection = getProjection(
-        table.getRowModel().rows,
-        activeId,
-        overId,
-        horizontalOffset,
-        30
-      );
-      setProjected(projected);
-    } else {
-      setProjected(null);
-    }
-  }, [activeId, overId, horizontalOffset]);
 
   const sensorContext = useRef<{ items: Row<Task>[]; offset: number }>({
     items: rows,
@@ -112,7 +98,7 @@ export const DataTableBody = ({
   };
 
   const onDragMove = ({ delta }: DragMoveEvent) => {
-    setHorizontalOffset(-delta.x);
+    setHorizontalOffset(delta.x);
   };
 
   const onDragOver = ({ over }: DragOverEvent) => {
@@ -120,22 +106,61 @@ export const DataTableBody = ({
   };
 
   const onDragEnd = () => {
-    //  TODO: Calculations
-    if (!activeId || !overId || activeId === overId || !projected) return;
-    // const { parentId } = projected;
-    const nextFlatTasks = flattenTasks(tasks);
-    const activeTaskIndex = nextFlatTasks.findIndex(
-      ({ id }) => id === activeId
-    );
-    const activeTask = nextFlatTasks[activeTaskIndex];
+    if (!activeId || !overId || activeId === overId) {
+      resetState();
+      return;
+    }
 
-    nextFlatTasks[activeTaskIndex] = {
+    const activeRow = rows.find((row: Row<Task>) => row.id === activeId);
+    const overRow = rows.find((row: Row<Task>) => row.id === overId);
+
+    const activeTask = activeRow?.original;
+    const overTask = overRow?.original;
+
+    if (!activeTask || !overTask || !activeRow || !overRow) {
+      resetState();
+      return;
+    }
+
+    // Determine drop type
+    const overOffset = (overTask.depth ?? 1) * 20;
+    const dropType = horizontalOffset >= overOffset ? 'child' : 'sibling';
+
+    // Update task hierarchy
+    const updatedTask: Task = {
       ...activeTask,
-      parentId: overId ?? null,
+      parentId: dropType === 'child' ? overTask.id : overTask.parentId,
+      depth: dropType === 'child' ? (overTask.depth ?? 0) + 1 : overTask.depth,
     };
-    const nextTasks = buildTaskTree(nextFlatTasks);
-    setTasks(nextTasks);
 
+    let newDepth = overTask.depth ?? 1;
+    if (activeTask.subTask.length > 0) {
+      newDepth += 1;
+      if (activeTask.subTask.subTask.length > 0) newDepth += 1;
+    }
+
+    if (newDepth > 2) {
+      toast.error(
+        'Only 3 levels of nested subtasks are possible. Select fewer levels to drop the task.'
+      );
+      resetState();
+      return;
+    }
+
+    // Expand if dropped as child
+    if (dropType === 'child' && !overRow.getIsExpanded()) {
+      overRow.toggleExpanded();
+    }
+
+    const updatedTasks = [...tasks];
+
+    const oldIndex = updatedTasks.findIndex((t) => t.id === activeTask.id);
+    if (oldIndex !== -1) updatedTasks.splice(oldIndex, 1);
+
+    const overIndex = updatedTasks.findIndex((t) => t.id === overTask.id);
+    updatedTasks.splice(overIndex + 1, 0, updatedTask);
+
+    setTasks(updatedTasks);
     resetState();
   };
 
@@ -164,7 +189,7 @@ export const DataTableBody = ({
         <div
           style={{
             height: `${totalHeight}px`,
-            width: table.getTotalSize(),
+            width: table.getTotalSize() + 20,
             contain: 'strict',
             position: 'relative',
           }}
@@ -176,7 +201,12 @@ export const DataTableBody = ({
             {virtualRows.map((virtualRow) => {
               const row = rows[virtualRow.index];
               const isDropTarget = row.id === overId && row.id !== activeId;
-
+              const overOffset = row.depth * 20;
+              let dropType = '';
+              if (horizontalOffset >= overOffset) dropType = 'child';
+              else dropType = 'sibling';
+              const indentation =
+                dropType === 'child' ? overOffset + 30 : overOffset - 10;
               return (
                 <React.Fragment key={row.id}>
                   <DataTableRow
@@ -195,7 +225,7 @@ export const DataTableBody = ({
                   {isDropTarget && (
                     <DropIndicator
                       top={virtualRow.start + virtualRow.size}
-                      indent={(projected?.depth ?? 0) * 30} // or 0 if undefined
+                      indent={indentation}
                     />
                   )}
                 </React.Fragment>
@@ -210,27 +240,14 @@ export const DataTableBody = ({
           {activeId && draggedRow ? (
             <div
               style={{
+                ...DRAG_OVERLAY_STYLE,
                 width: table.getTotalSize(),
-                height: '40px',
-                backgroundColor: 'white',
-                opacity: '0.8',
-                borderRadius: '4px',
-                boxShadow: '0 8px 16px rgba(0, 0, 0, 0.15)',
-                border: '1px solid #e5e7eb',
               }}
               className="flex items-center opacity-90"
             >
               <DataTableCellSection
-                cells={draggedRow.getLeftVisibleCells()}
-                position="left"
-              />
-              <DataTableCellSection
                 cells={draggedRow.getCenterVisibleCells()}
                 position="center"
-              />
-              <DataTableCellSection
-                cells={draggedRow.getRightVisibleCells()}
-                position="right"
               />
             </div>
           ) : null}
@@ -271,4 +288,12 @@ export const DropIndicator = ({ top, indent }: DropIndicatorProps) => {
       />
     </div>
   );
+};
+const DRAG_OVERLAY_STYLE = {
+  height: '40px',
+  backgroundColor: 'white',
+  opacity: '0.8',
+  borderRadius: '4px',
+  boxShadow: '0 8px 16px rgba(0, 0, 0, 0.15)',
+  border: '1px solid #e5e7eb',
 };
