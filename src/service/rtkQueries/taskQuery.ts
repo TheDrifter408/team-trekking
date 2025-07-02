@@ -68,9 +68,9 @@ export const taskApi = createApi({
 });
 
 export const {
+  useLazyGetChecklistQuery,
   useCreateCheckListMutation,
   useUpdateChecklistMutation,
-  useLazyGetChecklistQuery,
   useDeleteChecklistMutation,
   useCreateChecklistItemMutation,
   useUpdateChecklistItemMutation,

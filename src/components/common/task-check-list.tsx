@@ -8,12 +8,28 @@ import {
   Edit3,
   Trash2,
 } from 'lucide-react';
-import { useLazyGetChecklistQuery } from '@/service/rtkQueries/taskQuery.ts';
 import { LABEL } from '@/lib/constants';
-import { CheckList } from '@/types/request-response/task/ApiResponse.ts';
+import {
+  useCreateCheckListMutation,
+  useLazyGetChecklistQuery,
+} from '@/service/rtkQueries/taskQuery.ts';
+import { handleMutation } from '@/lib/utils/utils.ts';
+
+interface CheckListItem {
+  id: number;
+  content: string;
+  isDone: boolean;
+  isActive: boolean;
+}
+
+interface CheckList {
+  id: number;
+  title: string;
+  items: CheckListItem[];
+}
 
 interface DraggedItem {
-  item: CheckList['items'][0];
+  item: CheckListItem;
   index: number;
   checklistId: number;
 }
@@ -30,10 +46,12 @@ interface IsAddingItemState {
   [key: number]: boolean;
 }
 
-const TaskCheckList = () => {
-  // Replace with your actual hook
-  const [getChecklist, { data: checklist, isLoading, error }] =
-    useLazyGetChecklistQuery();
+interface TaskCheckListProps {
+  taskId?: number;
+}
+const TaskCheckList = ({ taskId = 1 }: TaskCheckListProps): JSX.Element => {
+  const [getChecklist, { data: checklistsData }] = useLazyGetChecklistQuery();
+  const [createCheckList] = useCreateCheckListMutation();
 
   const [checklists, setChecklists] = useState<CheckList[]>([]);
   const [showCompleted, setShowCompleted] = useState<ShowCompletedState>({});
@@ -47,33 +65,43 @@ const TaskCheckList = () => {
   const [activeMenu, setActiveMenu] = useState<number | null>(null);
   const [editingItem, setEditingItem] = useState<number | null>(null);
   const [editText, setEditText] = useState<string>('');
+  const [editingChecklistId, setEditingChecklistId] = useState<number | null>(
+    null
+  );
+  const [editingChecklistTitle, setEditingChecklistTitle] =
+    useState<string>('');
+  const [isCreatingChecklist, setIsCreatingChecklist] =
+    useState<boolean>(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (checklist) {
-      setChecklists(checklist);
-
-      // Initialize state objects for each checklist
-      const initialShowCompleted: ShowCompletedState = {};
-      const initialNewItemText: NewItemTextState = {};
-      const initialIsAddingItem: IsAddingItemState = {};
-
-      checklist.forEach((checklistItem) => {
-        initialShowCompleted[checklistItem.id] = true;
-        initialNewItemText[checklistItem.id] = '';
-        initialIsAddingItem[checklistItem.id] = false;
-      });
-
-      setShowCompleted(initialShowCompleted);
-      setNewItemText(initialNewItemText);
-      setIsAddingItem(initialIsAddingItem);
-    }
-  }, [checklist]);
-
-  useEffect(() => {
-    // Replace with actual API call
     getChecklist(1);
   }, [getChecklist]);
+
+  // Update checklists when data is fetched
+  useEffect(() => {
+    // Replace with actual RTK Query data
+    if (checklistsData) {
+      setChecklists(checklistsData);
+    }
+  }, [checklistsData]);
+
+  useEffect(() => {
+    // Initialize state objects for each checklist
+    const initialShowCompleted: ShowCompletedState = {};
+    const initialNewItemText: NewItemTextState = {};
+    const initialIsAddingItem: IsAddingItemState = {};
+
+    checklists.forEach((checklistItem) => {
+      initialShowCompleted[checklistItem.id] = true;
+      initialNewItemText[checklistItem.id] = '';
+      initialIsAddingItem[checklistItem.id] = false;
+    });
+
+    setShowCompleted(initialShowCompleted);
+    setNewItemText(initialNewItemText);
+    setIsAddingItem(initialIsAddingItem);
+  }, [checklists]);
 
   // Close menu when clicking outside
   useEffect(() => {
@@ -132,7 +160,7 @@ const TaskCheckList = () => {
 
   const onHandleDragStart = (
     e: React.DragEvent<HTMLDivElement>,
-    item: CheckList['items'][0],
+    item: CheckListItem,
     index: number,
     checklistId: number
   ): void => {
@@ -214,7 +242,7 @@ const TaskCheckList = () => {
 
   const onHandleMenuAction = (
     action: string,
-    item: CheckList['items'][0],
+    item: CheckListItem,
     checklistId: number
   ): void => {
     switch (action) {
@@ -299,44 +327,89 @@ const TaskCheckList = () => {
     }
   };
 
-  const getCompletedCount = (items: CheckList['items']): number =>
+  const getCompletedCount = (items: CheckListItem[]): number =>
     items.filter((item) => item.isDone).length;
-  const getTotalCount = (items: CheckList['items']): number => items.length;
+  const getTotalCount = (items: CheckListItem[]): number => items.length;
 
-  // Show loading state
-  if (isLoading) {
-    return (
-      <div className="w-full mx-auto py-4">
-        <div className="flex items-center justify-center h-64">
-          <div className="text-gray-500">Loading checklists...</div>
-        </div>
-      </div>
-    );
-  }
+  const onCreateNewChecklist = async (): Promise<void> => {
+    setIsCreatingChecklist(true);
+    try {
+      // For demo purposes, creating locally
+      const newId = Date.now();
+      const newChecklist: CheckList = {
+        id: newId,
+        title: '',
+        items: [],
+      };
 
-  // Show error state
-  if (error) {
-    return (
-      <div className="w-full mx-auto py-4">
-        <div className="flex items-center justify-center h-64">
-          <div className="text-red-500">
-            Error loading checklists: {String(error)}
-          </div>
-        </div>
-      </div>
-    );
-  }
+      setChecklists([...checklists, newChecklist]);
+      setEditingChecklistId(newId);
+      setEditingChecklistTitle('');
+    } catch (error) {
+      console.error('Failed to create checklist:', error);
+    } finally {
+      setIsCreatingChecklist(false);
+    }
+  };
 
-  // Show empty state
-  if (!checklists || checklists.length === 0) {
-    return (
-      <div className="w-full mx-auto py-4">
-        <div className="flex items-center justify-center h-64">
-          <div className="text-gray-500">No checklists found</div>
-        </div>
-      </div>
-    );
-  }
+  const onSaveChecklistTitle = async (checklistId: number): Promise<void> => {
+    if (editingChecklistTitle.trim()) {
+      try {
+        // If this is a new checklist (no existing title), create it via API
+        const existingChecklist = checklists.find((c) => c.id === checklistId);
+
+        if (!existingChecklist?.title) {
+          const { data } = await handleMutation(createCheckList, {
+            title: editingChecklistTitle.trim(),
+            taskId: taskId,
+          });
+
+          if (data) {
+            setChecklists(
+              checklists.map((checklist) =>
+                checklist.id === checklistId
+                  ? { ...checklist, title: editingChecklistTitle.trim() }
+                  : checklist
+              )
+            );
+            getChecklist(1);
+          }
+        } else {
+          // This is updating an existing checklist title
+          // You might need a separate update mutation for this
+          setChecklists(
+            checklists.map((checklist) =>
+              checklist.id === checklistId
+                ? { ...checklist, title: editingChecklistTitle.trim() }
+                : checklist
+            )
+          );
+        }
+      } catch (error) {
+        console.error('Failed to save checklist title:', error);
+        // Handle error
+      }
+    } else {
+      // If title is empty, remove the checklist
+      setChecklists(checklists.filter((c) => c.id !== checklistId));
+    }
+    setEditingChecklistId(null);
+    setEditingChecklistTitle('');
+  };
+
+  const onHandleChecklistTitleKeyPress = (
+    e: React.KeyboardEvent<HTMLInputElement>,
+    checklistId: number
+  ): void => {
+    if (e.key === 'Enter') {
+      onSaveChecklistTitle(checklistId);
+    } else if (e.key === 'Escape') {
+      // Remove the checklist if escape is pressed
+      setChecklists(checklists.filter((c) => c.id !== checklistId));
+      setEditingChecklistId(null);
+      setEditingChecklistTitle('');
+    }
+  };
 
   const totalCompletedItems = checklists.reduce(
     (acc, checklist) => acc + getCompletedCount(checklist.items),
@@ -373,7 +446,11 @@ const TaskCheckList = () => {
           <button className="p-2 hover:bg-gray-100 rounded-md transition-colors">
             <Maximize2 className="w-4 h-4 text-gray-400" />
           </button>
-          <button className="p-2 hover:bg-gray-100 rounded-md transition-colors">
+          <button
+            onClick={onCreateNewChecklist}
+            disabled={isCreatingChecklist}
+            className="p-2 hover:bg-gray-100 rounded-md transition-colors disabled:opacity-50"
+          >
             <Plus className="w-4 h-4 text-gray-400" />
           </button>
         </div>
@@ -389,13 +466,34 @@ const TaskCheckList = () => {
 
         return (
           <div key={checklist.id} className="rounded-lg mb-4 border">
-            <div className="flex items-center justify-between bg-gray-100 px-4 py-3">
-              <h2 className="text-lg font-medium text-gray-900">
-                {checklist.title}{' '}
-                <span className="text-gray-400 text-sm">
-                  ({completedCount}/{totalCount})
-                </span>
-              </h2>
+            <div className="flex items-center justify-between bg-gray-50 px-4 py-3 border-b">
+              {editingChecklistId === checklist.id ? (
+                <input
+                  type="text"
+                  value={editingChecklistTitle}
+                  onChange={(e) => setEditingChecklistTitle(e.target.value)}
+                  onKeyDown={(e) =>
+                    onHandleChecklistTitleKeyPress(e, checklist.id)
+                  }
+                  onBlur={() => onSaveChecklistTitle(checklist.id)}
+                  placeholder="Checklist title"
+                  className="text-lg font-medium bg-white border border-gray-300 rounded px-2 py-1 focus:outline-none focus:border-blue-500"
+                  autoFocus
+                />
+              ) : (
+                <h2
+                  className="text-lg font-medium text-gray-900 cursor-pointer hover:text-blue-600"
+                  onClick={() => {
+                    setEditingChecklistId(checklist.id);
+                    setEditingChecklistTitle(checklist.title);
+                  }}
+                >
+                  {checklist.title || 'Untitled Checklist'}{' '}
+                  <span className="text-gray-400 text-sm">
+                    ({completedCount}/{totalCount})
+                  </span>
+                </h2>
+              )}
             </div>
 
             <div>
@@ -568,7 +666,7 @@ const TaskCheckList = () => {
                   onClick={() =>
                     setIsAddingItem({ ...isAddingItem, [checklist.id]: true })
                   }
-                  className="flex items-center gap-3 group py-3 pl-4 pr-5 text-gray-400 hover:text-gray-600 transition-colors w-full rounded-md hover:bg-gray-100"
+                  className="flex items-center gap-3 group py-3 pl-4 pr-5 text-gray-400 hover:text-gray-600 transition-colors w-full rounded-md hover:bg-gray-50"
                 >
                   <div className="w-4 h-4 flex-shrink-0"></div>
                   <Plus className="w-4 h-4" />
@@ -580,30 +678,38 @@ const TaskCheckList = () => {
             </div>
 
             {/* Toggle completed items for this checklist */}
-            <div className="p-4 border-t border-gray-200">
-              <button
-                onClick={() =>
-                  setShowCompleted({
-                    ...showCompleted,
-                    [checklist.id]: !showCompleted[checklist.id],
-                  })
-                }
-                className="px-4 py-1 text-sm text-gray-600 bg-gray-100 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
-              >
-                {showCompleted[checklist.id]
-                  ? 'Hide completed'
-                  : `${completedCount} Completed`}
-              </button>
-            </div>
+            {checklist.items.length > 0 && (
+              <div className="p-4 border-t border-gray-200">
+                <button
+                  onClick={() =>
+                    setShowCompleted({
+                      ...showCompleted,
+                      [checklist.id]: !showCompleted[checklist.id],
+                    })
+                  }
+                  className="px-4 py-1 text-sm text-gray-600 bg-gray-100 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+                >
+                  {showCompleted[checklist.id]
+                    ? 'Hide completed'
+                    : `${completedCount} Completed`}
+                </button>
+              </div>
+            )}
           </div>
         );
       })}
 
-      {/* Add new checklist button */}
+      {/* Bottom buttons for additional actions */}
       <div className="mt-6 flex items-center gap-4">
-        <button className="flex items-center gap-2 px-4 py-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-md transition-colors">
+        <button
+          onClick={onCreateNewChecklist}
+          disabled={isCreatingChecklist}
+          className="flex items-center gap-2 px-4 py-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-md transition-colors disabled:opacity-50"
+        >
           <Plus className="w-4 h-4" />
-          <span>{LABEL.ADD_CHECKLIST}</span>
+          <span>
+            {isCreatingChecklist ? 'Creating...' : LABEL.ADD_CHECKLIST}
+          </span>
         </button>
         <button className="flex items-center gap-2 px-4 py-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-md transition-colors">
           <svg
