@@ -4,7 +4,7 @@ import { Form } from '@/components/shadcn-ui/form';
 import { LockKeyhole, Mail, MailCheck, User } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useNavigate } from '@tanstack/react-router';
+import { useNavigate, createFileRoute } from '@tanstack/react-router';
 import { AuthCard } from '@/pages/login/components/auth-card.tsx';
 import { FormInputField } from '@/pages/login/components/form-input.tsx';
 import { signUpSchema } from '@/lib/validation/validationSchema.tsx';
@@ -23,7 +23,7 @@ import { z } from 'zod';
 import { OtpType, RegistrationType, UserRole } from '@/lib/constants/enum.ts';
 import { toast } from 'sonner';
 
-export const SignUp = () => {
+const SignUp = () => {
   const navigate = useNavigate();
   const [
     sendOtp,
@@ -212,4 +212,7 @@ export const SignUp = () => {
     </AuthCard>
   );
 };
-export default SignUp;
+
+export const Route = createFileRoute('/_unauth/signup')({
+  component: SignUp,
+});

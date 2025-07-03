@@ -4,7 +4,7 @@ import { Form } from '@/components/shadcn-ui/form';
 import { LockKeyhole, Mail } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useNavigate } from '@tanstack/react-router';
+import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import { AuthCard } from '@/pages/login/components/auth-card';
 import { FormInputField } from '@/pages/login/components/form-input.tsx';
 import { loginSchema } from '@/lib/validation/validationSchema.tsx';
@@ -15,7 +15,8 @@ import { z } from 'zod';
 import { UserRole } from '@/lib/constants/enum.ts';
 import { handleMutation } from '@/lib/utils/utils.ts';
 
-export const Login = () => {
+
+const Login = () => {
   const navigate = useNavigate();
   const [signIn, { isLoading }] = usePostSignInMutation();
   const { saveUser } = useTMTStore();
@@ -95,4 +96,7 @@ export const Login = () => {
     </AuthCard>
   );
 };
-export default Login;
+
+export const Route = createFileRoute('/_unauth/login')({
+  component: Login,
+});

@@ -19,6 +19,7 @@ export default defineConfig({
     tanstackRouter({
       target: 'react',
       autoCodeSplitting: true,
+      routesDirectory: '/routes',
     }),
     react(),
     svgr(),

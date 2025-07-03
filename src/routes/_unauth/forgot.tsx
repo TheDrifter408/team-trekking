@@ -4,7 +4,7 @@ import { Form } from '@/components/shadcn-ui/form';
 import { Eye, Mail } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useNavigate } from '@tanstack/react-router';
+import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import { AuthCard } from '@/pages/login/components/auth-card';
 import { FormInputField } from '@/pages/login/components/form-input.tsx';
 import {
@@ -26,7 +26,7 @@ import { LABEL } from '@/lib/constants/appStrings.ts';
 import { toast } from 'sonner';
 import { OtpType, RegistrationType, UserRole } from '@/lib/constants/enum.ts';
 
-export const ForgotPassword = () => {
+const ForgotPassword = () => {
   const navigate = useNavigate();
   const [sendOtp, { isLoading: isSendOtpLoading }] = usePostSendOtpMutation();
 
@@ -111,7 +111,7 @@ export const ForgotPassword = () => {
     try {
       await passwordReset(resetPasswordForm);
       toast.success('Password has been reset!');
-      navigate({ to: '.' });
+      navigate({ to: '/login' });
     } catch {
       toast.error('Something went wrong please try again.');
     }
@@ -233,4 +233,7 @@ export const ForgotPassword = () => {
     </AuthCard>
   );
 };
-export default ForgotPassword;
+
+export const Route = createFileRoute('/_unauth/forgot')({
+  component: ForgotPassword,
+})

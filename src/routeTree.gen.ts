@@ -9,27 +9,107 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as UnauthSignupRouteImport } from './routes/_unauth/signup'
+import { Route as UnauthLoginRouteImport } from './routes/_unauth/login'
+import { Route as UnauthForgotRouteImport } from './routes/_unauth/forgot'
+import { Route as UnauthLayoutRouteImport } from './routes/_unauth/_layout'
 
-export interface FileRoutesByFullPath {}
-export interface FileRoutesByTo {}
+const UnauthSignupRoute = UnauthSignupRouteImport.update({
+  id: '/_unauth/signup',
+  path: '/signup',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const UnauthLoginRoute = UnauthLoginRouteImport.update({
+  id: '/_unauth/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const UnauthForgotRoute = UnauthForgotRouteImport.update({
+  id: '/_unauth/forgot',
+  path: '/forgot',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const UnauthLayoutRoute = UnauthLayoutRouteImport.update({
+  id: '/_unauth/_layout',
+  getParentRoute: () => rootRouteImport,
+} as any)
+
+export interface FileRoutesByFullPath {
+  '/forgot': typeof UnauthForgotRoute
+  '/login': typeof UnauthLoginRoute
+  '/signup': typeof UnauthSignupRoute
+}
+export interface FileRoutesByTo {
+  '/forgot': typeof UnauthForgotRoute
+  '/login': typeof UnauthLoginRoute
+  '/signup': typeof UnauthSignupRoute
+}
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
+  '/_unauth/_layout': typeof UnauthLayoutRoute
+  '/_unauth/forgot': typeof UnauthForgotRoute
+  '/_unauth/login': typeof UnauthLoginRoute
+  '/_unauth/signup': typeof UnauthSignupRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: never
+  fullPaths: '/forgot' | '/login' | '/signup'
   fileRoutesByTo: FileRoutesByTo
-  to: never
-  id: '__root__'
+  to: '/forgot' | '/login' | '/signup'
+  id:
+    | '__root__'
+    | '/_unauth/_layout'
+    | '/_unauth/forgot'
+    | '/_unauth/login'
+    | '/_unauth/signup'
   fileRoutesById: FileRoutesById
 }
-export interface RootRouteChildren {}
-
-declare module '@tanstack/react-router' {
-  interface FileRoutesByPath {}
+export interface RootRouteChildren {
+  UnauthLayoutRoute: typeof UnauthLayoutRoute
+  UnauthForgotRoute: typeof UnauthForgotRoute
+  UnauthLoginRoute: typeof UnauthLoginRoute
+  UnauthSignupRoute: typeof UnauthSignupRoute
 }
 
-const rootRouteChildren: RootRouteChildren = {}
+declare module '@tanstack/react-router' {
+  interface FileRoutesByPath {
+    '/_unauth/signup': {
+      id: '/_unauth/signup'
+      path: '/signup'
+      fullPath: '/signup'
+      preLoaderRoute: typeof UnauthSignupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_unauth/login': {
+      id: '/_unauth/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof UnauthLoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_unauth/forgot': {
+      id: '/_unauth/forgot'
+      path: '/forgot'
+      fullPath: '/forgot'
+      preLoaderRoute: typeof UnauthForgotRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_unauth/_layout': {
+      id: '/_unauth/_layout'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof UnauthLayoutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+  }
+}
+
+const rootRouteChildren: RootRouteChildren = {
+  UnauthLayoutRoute: UnauthLayoutRoute,
+  UnauthForgotRoute: UnauthForgotRoute,
+  UnauthLoginRoute: UnauthLoginRoute,
+  UnauthSignupRoute: UnauthSignupRoute,
+}
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
