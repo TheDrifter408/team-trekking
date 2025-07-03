@@ -63,15 +63,15 @@ export const AssigneeAvatar = ({
       <div className="flex items-center gap-2 w-min">
         <Avatar className="h-5 w-5 border-2 border-white transition-all overflow-visible">
           <AvatarImage
-            src={`https://api.dicebear.com/6.x/avataaars/svg?seed=${getSeed(assignee.user.fullName)}`}
-            alt={assignee.user.fullName}
+            src={`https://api.dicebear.com/6.x/avataaars/svg?seed=${getSeed(assignee.user?.fullName ?? '')}`}
+            alt={assignee.user?.fullName}
             className={cn(
               'ring-2 rounded-full',
               showAvatarRing ? 'ring-purple-400' : 'ring-white'
             )}
           />
           <AvatarFallback className="bg-red-200 text-xs mx-auto p-1">
-            {getInitials(assignee.user.fullName)}
+            {assignee.user && getInitials(assignee.user?.fullName ?? '')}
           </AvatarFallback>
           <Button
             size="icon"
@@ -97,7 +97,7 @@ export const AssigneeAvatar = ({
             displayName ? 'block' : 'hidden'
           )}
         >
-          {assignee.user.fullName}
+          {assignee.user?.fullName}
         </p>
       </div>
       <div

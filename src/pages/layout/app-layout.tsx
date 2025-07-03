@@ -20,6 +20,7 @@ const AppLayout = () => {
     setSpaces,
     setMembers,
     clearWorkspace,
+    setCurrentWorkspace,
   } = useWorkspaceStore();
 
   const { data: spaceGlobalData } = useSpaceGlobalApiQuery();
@@ -40,13 +41,16 @@ const AppLayout = () => {
   );
 
   useEffect(() => {
-    clearWorkspace();
     if (spacesFolderList) {
       setSpaceFolderList(spacesFolderList);
       setSpaces(spacesFolderList.spaces);
       setMembers(spacesFolderList.members);
     }
-  }, [spacesFolderList]);
+    if (!currentWorkspace && workSpaces && workSpaces.length > 0) {
+      clearWorkspace();
+      setCurrentWorkspace(workSpaces[0].workspace);
+    }
+  }, [spacesFolderList, workSpaces]);
 
   return (
     <AppContextProvider spaceGlobal={spaceGlobalData ?? null}>
