@@ -690,7 +690,7 @@ const TaskCheckList = ({ taskId = 1 }: TaskCheckListProps) => {
                         onHandleEditKeyPress(e, item, checklist.id)
                       }
                       onBlur={() => onHandleEditSave(item, checklist.id)}
-                      className="flex-1 bg-white border border-gray-300 rounded px-2 py-1 text-gray-700 focus:outline-none focus:border-blue-500"
+                      className="flex-1 text-sm bg-white border border-gray-300 rounded px-2 py-1 text-gray-700 focus:outline-none focus:border-blue-500"
                       autoFocus
                     />
                   ) : (

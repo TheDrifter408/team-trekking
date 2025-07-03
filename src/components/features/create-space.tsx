@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -11,8 +11,8 @@ import { Button } from '@/components/shadcn-ui/button.tsx';
 import { Textarea } from '@/components/shadcn-ui/textarea.tsx';
 import { Switch } from '@/components/shadcn-ui/switch.tsx';
 import { useState } from 'react';
-import { Assignee, ColorOption, IconOption } from '@/types/props/Common';
-import { colorOptions, iconOptions, taskNotificationUsers } from '@/mock';
+import { ColorOption, IconOption } from '@/types/props/Common';
+import { colorOptions, iconOptions } from '@/mock';
 import { getInitials, handleMutation } from '@/lib/utils/utils.ts';
 import { DropDownContent } from '@/components/common/space-icon-name-dropdown';
 import { SelectUsers } from '@/components/common/select-users';
@@ -27,6 +27,8 @@ import {
   Group,
   ViewStatusResponse,
 } from '@/types/request-response/space/ApiResponse.ts';
+import { useGetWorkspaceMemberQuery } from '@/service/rtkQueries/workspaceQuery.ts';
+import { Member } from '@/types/request-response/workspace/ApiResponse.ts';
 
 interface Props {
   createSpaceOpen: boolean;
@@ -46,13 +48,16 @@ export const CreateSpace = ({
   );
   const [description, setDescription] = useState<string>('');
   const [isPrivateMode, setIsPrivateMode] = useState<boolean>(false);
-  const [invitedUsers, setInvitedUsers] = useState<Assignee[]>([]);
+  const [invitedUsers, setInvitedUsers] = useState<Member[]>([]);
   const [spaceName, setSpaceName] = useState<string>('');
   const [searchAvatar, setSearchAvatar] = useState<string>('');
   const [isWorkflowOpen, setIsWorkflowOpen] = useState(false);
   const initials = getInitials(spaceName)[0] ?? 'P';
   const [createSpace] = useCreateSpaceMutation();
   const [createStatusView] = useCreateStatusMutation();
+  const { data: members } = useGetWorkspaceMemberQuery(currentWorkspace?.id!, {
+    skip: !currentWorkspace?.id,
+  });
 
   const resetForm = () => {
     setSpaceName('');
@@ -61,7 +66,7 @@ export const CreateSpace = ({
     setCreateSpaceOpen(false);
   };
 
-  const onToggleInvitedUsers = (assignees: Assignee[]) => {
+  const onToggleInvitedUsers = (assignees: Member[]) => {
     setInvitedUsers(assignees);
   };
 
@@ -105,12 +110,23 @@ export const CreateSpace = ({
         workspaceId: Number(currentWorkspace?.id),
         statusViewGroupId: statusViewData.id,
         visibility: isPrivateMode ? 'private' : 'public',
+        ...(invitedUsers.length > 0 && {
+          members: invitedUsers.map((user) => user.user.email),
+        }),
       });
       if (spaceData) {
         onCreatedSpace();
         setIsWorkflowOpen(false);
+        clearSpaceData();
       }
     }
+  };
+  const clearSpaceData = () => {
+    setSpaceName('');
+    setDescription('');
+    setSelectedIcon(null);
+    setIsPrivateMode(false);
+    setInvitedUsers([]);
   };
 
   return (
@@ -121,6 +137,7 @@ export const CreateSpace = ({
           if (!open) resetForm();
           setCreateSpaceOpen(open);
         }}
+        modal={false}
       >
         <DialogContent className="!max-w-[600px] overflow-auto flex flex-col">
           <DialogHeader>
@@ -200,7 +217,7 @@ export const CreateSpace = ({
                 onRemove={() => {}}
                 displayOnly={true}
                 value={invitedUsers}
-                users={taskNotificationUsers}
+                users={members ?? []}
                 onChange={(assignees) => onToggleInvitedUsers(assignees)}
                 placeholder={LABEL.NO_INVITED_USERS}
                 userListTitle={LABEL.SELECT_USERS}

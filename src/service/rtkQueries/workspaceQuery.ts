@@ -10,6 +10,7 @@ import {
   WorkSpaceResponse,
   ViewGroup,
   WorkspaceSpaceFolderList,
+  Member,
 } from '@/types/request-response/workspace/ApiResponse';
 import { CreateWorkSpace } from '@/types/request-response/workspace/ApiRequest.ts';
 
@@ -68,6 +69,13 @@ export const workspaceApi = createApi({
       transformResponse: (response: ApiResponse<Array<ViewGroup>>) =>
         response.data,
     }),
+    getWorkspaceMember: builder.query<Array<Member>, number>({
+      query: (workSpaceId: number) => ({
+        url: `workspace/${workSpaceId}/members`,
+      }),
+      transformResponse: (response: ApiResponse<Array<Member>>) =>
+        response.data,
+    }),
   }),
 });
 
@@ -78,4 +86,6 @@ export const {
   useCreateWorkSpaceMutation,
   useGetWorkspaceViewGroupByIDQuery,
   useGetWorkspaceSpaceFolderListQuery,
+  useGetWorkspaceMemberQuery,
+  useLazyGetWorkspaceMemberQuery,
 } = workspaceApi;

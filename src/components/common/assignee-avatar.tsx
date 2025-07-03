@@ -11,11 +11,11 @@ import {
 } from '@/components/shadcn-ui/tooltip';
 import { IconX } from '@tabler/icons-react';
 import { cn } from '@/lib/utils/utils.ts';
-import { Assignee } from '@/types/props/Common';
 import { RefreshCw } from 'lucide-react';
+import { Member } from '@/types/request-response/workspace/ApiResponse.ts';
 
 export interface AssigneeProps {
-  assignee: Assignee;
+  assignee: Member;
   enterAssignee?: boolean;
   displayName: boolean;
   onRemove: () => void;
@@ -63,15 +63,15 @@ export const AssigneeAvatar = ({
       <div className="flex items-center gap-2 w-min">
         <Avatar className="h-5 w-5 border-2 border-white transition-all overflow-visible">
           <AvatarImage
-            src={`https://api.dicebear.com/6.x/avataaars/svg?seed=${getSeed(assignee.name)}`}
-            alt={assignee.name}
+            src={`https://api.dicebear.com/6.x/avataaars/svg?seed=${getSeed(assignee.user?.fullName ?? '')}`}
+            alt={assignee.user?.fullName}
             className={cn(
               'ring-2 rounded-full',
               showAvatarRing ? 'ring-purple-400' : 'ring-white'
             )}
           />
           <AvatarFallback className="bg-red-200 text-xs mx-auto p-1">
-            {getInitials(assignee.name)}
+            {assignee.user && getInitials(assignee.user?.fullName ?? '')}
           </AvatarFallback>
           <Button
             size="icon"
@@ -97,7 +97,7 @@ export const AssigneeAvatar = ({
             displayName ? 'block' : 'hidden'
           )}
         >
-          {assignee.name}
+          {assignee.user?.fullName}
         </p>
       </div>
       <div
@@ -109,12 +109,12 @@ export const AssigneeAvatar = ({
         <Tooltip>
           <TooltipTrigger>
             <Button
-              asChild className={cn(
+              asChild
+              className={cn(
                 'bg-white h-min p-1 rounded-sm text-muted-foreground invisible group-hover:visible'
               )}
             >
-              <a>Profile
-            </a>
+              <a>Profile</a>
             </Button>
           </TooltipTrigger>
           <TooltipContent>Profile</TooltipContent>
