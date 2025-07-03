@@ -81,7 +81,6 @@ const LoadEditorContent = ({ value }: { value: string }) => {
       const editorState = editor.parseEditorState(value);
       editor.setEditorState(editorState);
     } catch (e) {
-      console.warn('Doc loading failed, falling to plain text: ', e);
       editor.update(() => {
         const root = $getRoot();
         root.clear();

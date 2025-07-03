@@ -7,7 +7,7 @@ export const LABEL = {
   SHARED_WITH_ME: 'Shared with me',
   CREATE_SPACE: 'Create space',
   SPACES: 'Spaces',
-  NO_ASSIGNEES_SELECTED: 'No Assignees selected',
+  NO_ASSIGNEES_SELECTED: 'No assignees.',
   DESTRUCTIVE: 'destructive',
   LOW: 'Low',
   NORMAL: 'Normal',
@@ -292,4 +292,7 @@ export const LABEL = {
   CREATE: 'Create',
   SUCCESS_CREATE_FOLDER: 'Successfully created Folder',
   ERROR_CREATE_FOLDER: 'Could not create Folder',
+  TASK_COULD_NOT_BE_FOUND: 'Task could not be found',
+  EMPTY: 'Empty',
+  ADD_TIME: 'Add Time',
 };
