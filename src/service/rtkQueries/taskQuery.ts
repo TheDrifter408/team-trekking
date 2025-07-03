@@ -6,6 +6,7 @@ import {
   CreateCheckListItemRequest,
   CreateCheckListRequest,
   UpdateCheckListItemRequest,
+  updateChecklistRequest,
 } from '@/types/request-response/task/ApiRequest.ts';
 import { CheckList } from '@/types/request-response/task/ApiResponse.ts';
 
@@ -28,14 +29,17 @@ export const taskApi = createApi({
       transformResponse: (response: ApiResponse<Array<CheckList>>) =>
         response.data,
     }),
-    updateChecklist: builder.mutation<ApiResponse<any>, number>({
-      query: (checklistId: number) => ({
-        url: `task/checklist/${checklistId}`,
-        method: 'PATCH',
-      }),
-      transformResponse: (response: ApiResponse<ApiResponse<any>>) =>
-        response.data,
-    }),
+    updateChecklist: builder.mutation<ApiResponse<any>, updateChecklistRequest>(
+      {
+        query: (data: updateChecklistRequest) => ({
+          url: `task/checklist/${data.id}`,
+          method: 'PATCH',
+          data,
+        }),
+        transformResponse: (response: ApiResponse<ApiResponse<any>>) =>
+          response.data,
+      }
+    ),
     deleteChecklist: builder.mutation<string, number>({
       query: (checklistId: number) => ({
         url: `task/checklist/${checklistId}`,
