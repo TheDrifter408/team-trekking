@@ -21,11 +21,12 @@ import {
 import { cn } from '@/lib/utils/utils.ts';
 import { UserRoundPlus } from 'lucide-react';
 import { UsersArray } from '@/components/common/users-array';
+import { Member } from '@/types/request-response/workspace/ApiResponse.ts';
 
 interface SelectUsersProps extends Omit<AssigneeProps, 'assignee'> {
-  users: Assignee[];
-  value: Assignee[];
-  onChange: (assignees: Assignee[]) => void;
+  users: Member[];
+  value: Member[];
+  onChange: (assignees: Member[]) => void;
   multipleSelect?: boolean;
   placeholder: string;
   userListTitle: string;
@@ -55,7 +56,7 @@ export const SelectUsers: FC<SelectUsersProps> = ({
     setIsMouseEnter(false);
   };
 
-  const toggleAssignee = (assignee: Assignee) => {
+  const toggleAssignee = (assignee: Member) => {
     const alreadySelected = value.some((a) => a.id === assignee.id);
 
     let newSelection: Assignee[] = [];
@@ -110,7 +111,7 @@ export const SelectUsers: FC<SelectUsersProps> = ({
                 <CommandItem
                   className=""
                   key={assignee.id}
-                  value={assignee.name}
+                  value={assignee.user.fullName}
                   onSelect={() => toggleAssignee(assignee)}
                 >
                   <AssigneeAvatar

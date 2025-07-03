@@ -238,6 +238,8 @@ export interface Member {
   id: number;
   status: string;
   user: User;
+  role: Role;
+  permission: Permission;
 }
 
 export interface User {
@@ -247,4 +249,15 @@ export interface User {
   image: string;
   forcePasswordChange: boolean;
   isActive: boolean;
+}
+
+export interface Role {
+  id: number;
+  title: string;
+  name: string;
+}
+
+export interface Permission {
+  id: number;
+  name: string;
 }
