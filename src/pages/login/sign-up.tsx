@@ -4,7 +4,7 @@ import { Form } from '@/components/shadcn-ui/form';
 import { LockKeyhole, Mail, MailCheck, User } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from '@tanstack/react-router';
 import { AuthLayout } from './components/auth-layout.tsx';
 import { AuthCard } from './components/auth-card.tsx';
 import { FormInputField } from './components/form-input.tsx';
@@ -85,12 +85,11 @@ export const SignUp = () => {
       try {
         const createResponse = await createUser(createUserForm).unwrap();
         if (createResponse) {
-          navigate('/home');
+          navigate({ to: '/home' });
         }
       } catch (e) {
-        toast.error(e?.data?.message)
+        toast.error(e?.data?.message);
       }
-      
     }
   };
   const onResendOtp = async () => {
