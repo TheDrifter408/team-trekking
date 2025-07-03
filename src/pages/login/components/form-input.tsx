@@ -41,7 +41,7 @@ export const FormInputField = ({
               <Input
                 type={type}
                 placeholder={placeholder}
-                className="pl-10 py-5 placeholder:text-base placeholder:text-gray-400"
+                className="pl-10 !text-lg py-5 placeholder:text-lg placeholder:text-gray-400"
                 {...field}
               />
             </FormControl>
