@@ -55,7 +55,7 @@ export const SpaceDefaults = ({
                     className={cn('w-3 h-3 rounded-full border-[1.5px]')}
                     style={{ backgroundColor: status.color }}
                   />
-                  {status.name}
+                  {status.name.toUpperCase()}
                   <ArrowRight size={14} />
                 </span>
               ))
