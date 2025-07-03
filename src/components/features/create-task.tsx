@@ -67,21 +67,20 @@ export const CreateTask = ({ isOpen, setIsOpen, children }: Props) => {
               <DialogTitle className="text-xl px-2 flex items-center w-full justify-between font-semibold text-primary">
                 <TabsList variant="underline" width="fit" className="w-full">
                   <TabsTrigger
-                    className="text-lg font-medium text-content-tertiary"
+                    className="text-base font-medium text-content-tertiary"
                     variant="underline"
                     value="task"
                   >
                     {LABEL.TASK}
                   </TabsTrigger>
                 </TabsList>
-
-                <button
-                  onClick={() => setIsOpen(false)}
-                  className="absolute top-0 right-0 p-1 hover:bg-gray-100 rounded-md transition-colors"
-                >
-                  <XIcon className="size-5 m-2" />
-                </button>
               </DialogTitle>
+              <button
+                onClick={() => setIsOpen(false)}
+                className="absolute top-0 right-0 mr-2 hover:bg-gray-100 rounded-md transition-colors"
+              >
+                <XIcon className="size-4 m-2" />
+              </button>
             </DialogHeader>
             <div className="px-6 pb-6">
               <TabsContent value="task">
@@ -89,17 +88,17 @@ export const CreateTask = ({ isOpen, setIsOpen, children }: Props) => {
               </TabsContent>
             </div>
           </Tabs>
-          <div className="flex items-center rounded-b-lg h-[70px] px-3 border-t">
+          <div className="flex items-center rounded-b-lg p-4 border-t">
             <div className="inline-flex rounded-md justify-end w-full">
               <Button
                 onClick={() => {}}
-                className="!rounded-r-none text-base bg-theme-main-dark border-r-border/30 border-r-[1px]"
+                className="!rounded-r-none h-[32px] text-base bg-theme-main-dark border-r-border/30 border-r-[1px]"
               >
                 {LABEL.CREATE_TASK}
               </Button>
               <Button
                 onClick={() => setIsDropdownOpen(true)}
-                className="!rounded-l-none border-l-0 bg-theme-main-dark"
+                className="!rounded-l-none h-[32px] border-l-0 bg-theme-main-dark"
               >
                 <Icon name="dropdownarrow" className={'text-base'} />
               </Button>
@@ -161,28 +160,27 @@ const TaskAttributes = () => {
           <Button
             variant={'ghost'}
             className={
-              'bg-green-700 hover:bg-green-800 hover:text-white text-white uppercase text-base'
+              'bg-green-700 hover:bg-green-800 hover:text-white text-white uppercase text-base h-[24px]'
             }
           >
             {LABEL.COMPLETE}
           </Button>
         </TaskStatusDialog>
-        <Button variant={'outline'}>
+        <Button variant={'outline'} className={'h-[24px]'}>
           <Icon name={'users'} /> {LABEL.ASSIGNEE}
         </Button>
-        <Button variant={'outline'}>
+        <Button variant={'outline'} className={'h-[24px]'}>
           <Icon name={'calendar'} /> {LABEL.DUE_DATE}
         </Button>
         <PriorityPopover>
-          <Button variant={'outline'}>
+          <Button variant={'outline'} className={'h-[24px]'}>
             <Icon name={'priority02'} /> {LABEL.PRIORITY}
           </Button>
         </PriorityPopover>
-
-        <Button variant={'outline'}>
+        <Button variant={'outline'} className={'h-[24px]'}>
           <Icon name={'tag'} /> {LABEL.TAGS}
         </Button>
-        <Button variant={'outline'} size={'auto'} className={'!size-[34px]'}>
+        <Button variant={'outline'} size={'auto'} className={'!size-[24px]'}>
           <Icon name={'menu03'} />
         </Button>
       </div>
@@ -190,34 +188,39 @@ const TaskAttributes = () => {
   );
 };
 const Description = () => {
-  const [description] = useState('');
+  const [description, setDescription] = useState('');
   const [isEditing, setIsEditing] = useState(false);
   const editorRef = useRef(null);
 
   const onChangeDescription = (editorState: EditorState) => {
     editorState.read(() => {
       const root = $getRoot();
-      text = root.getTextContent().toString();
+      const text = root.getTextContent().toString();
+      setDescription(text);
     });
   };
   // Close editor on click outside
   useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (editorRef.current && !editorRef.current.contains(e.target as Node)) {
+    const onClickOutside = (e: MouseEvent) => {
+      if (
+        editorRef.current &&
+        !editorRef.current.contains(e.target as Node) &&
+        description.trim().length === 0
+      ) {
         setIsEditing(false);
       }
     };
 
     if (isEditing) {
-      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener('mousedown', onClickOutside);
     } else {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('mousedown', onClickOutside);
     }
 
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('mousedown', onClickOutside);
     };
-  }, [isEditing]);
+  }, [isEditing, description]);
 
   return (
     <div className="mt-2" ref={editorRef}>
@@ -228,14 +231,16 @@ const Description = () => {
           className="w-full font-normal !pl-0 text-base hover:bg-secondary !justify-start"
         >
           <Icon name="doc" className="size-5 text-content-tertiary" />
-          <span className={'text-content-tertiary'}> {LABEL.DESCRIPTION}</span>
+          <span className={'text-content-tertiary'}>
+            {LABEL.ADD_DESCRIPTION}
+          </span>
         </Button>
       ) : (
         <div className="mt-4">
           <div className="space-y-2">
             <DocEditor
+              value={''}
               placeholder={"Start writing or type '/' for commands"}
-              value={description}
               name={'task Description'}
               onChange={onChangeDescription}
               setIsEditing={() => {}}
@@ -257,10 +262,10 @@ const SmartInput = () => {
         if (e.target.value === '') setIsFocused(false);
       }}
       className={`
-        w-full h-[40px] mt-2 bg-transparent rounded-lgv outline-none text-2xl font-medium placeholder-content-tertiary placeholder:text-2xl placeholder:font-medium
+        w-full h-[34px] mt-2 bg-transparent rounded-lgv outline-none text-xl font-medium placeholder-content-tertiary placeholder:text-xl placeholder:font-medium
         hover:bg-secondary
         ${isFocused ? 'border border-border cursor-text' : 'border-b border-transparent'}
-        transition-all duration-150 ease-in-out
+        transition-all duration-150 ease-in-out rounded-md pl-2
         focus:border-border
         hover:cursor-text
       `}
@@ -272,8 +277,9 @@ const PopoverSection = () => {
     <div className="space-x-2">
       <Popover modal={true}>
         <PopoverTrigger asChild>
-          <Button variant="outline" size="auto" className="text-base h-[26px]">
-            <ListIcon className="text-content-default" /> {LABEL.LIST}
+          <Button variant="outline" size="auto" className="text-sm h-[24px]">
+            <ListIcon className={'text-content-default !size-[14px]'} />{' '}
+            {LABEL.LIST}
             <ChevronDownIcon />
           </Button>
         </PopoverTrigger>
@@ -293,8 +299,12 @@ const PopoverSection = () => {
         </PopoverContent>
       </Popover>
       <TaskTypeDropdown>
-        <Button variant={'outline'} size={'auto'} className={'text-base'}>
-          <CircleIcon className={'text-content-default'} />
+        <Button
+          variant={'outline'}
+          size={'auto'}
+          className={'text-sm h-[24px]'}
+        >
+          <CircleIcon className={'text-content-default !size-[14px]'} />
           {LABEL.TASK}
           <ChevronDownIcon />
         </Button>
