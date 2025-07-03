@@ -86,6 +86,9 @@ export const CreateFolder = ({
     const folderFormValues = {
       ...data,
       spaceId: space.id,
+      ...(invitedUsers.length > 0 && {
+        members: invitedUsers.map((user) => user.user.email),
+      }),
     };
     try {
       await createFolder(folderFormValues).unwrap();
