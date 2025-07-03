@@ -1,31 +1,24 @@
 import { FC, useState } from 'react';
-import { mockChecklist, mockSubtasks, mockUsers, sampleTask } from '@/mock';
+import { sampleTask } from '@/mock';
 import { cn } from '@/lib/utils/utils.ts';
 import {
   ArrowDownUp,
   ChevronDown,
-  ChevronRight,
   CornerLeftUp,
-  Delete,
-  Edit,
-  Ellipsis,
   Flower,
   Maximize2,
   PlayCircle,
-  Plus,
   PlusIcon,
 } from 'lucide-react';
 import {
   IconCalendar,
-  IconCheck,
-  IconCircleDot,
+  IconCircleLetterT,
   IconFlagFilled,
   IconHourglassEmpty,
   IconListCheck,
   IconTagsFilled,
   IconUserFilled,
   IconVectorSpline,
-  IconCircleLetterT,
 } from '@tabler/icons-react';
 import { DatePickerWithRange } from '@/components/common/date-picker.tsx';
 import {
@@ -37,10 +30,9 @@ import { Button } from '@/components/shadcn-ui/button';
 import { TaskMetaRow } from './components/task-meta-row';
 import { Input } from '@/components/shadcn-ui/input.tsx';
 import { DocEditor } from './components/doc-editor.tsx';
-import TaskStatusDialog from '@/components/common/task-status-dialog.tsx';
 import TimeEstimateDropDown from '@/components/common/estimate-time-dropdown.tsx';
 import { Link } from 'react-router-dom';
-import { Assignee, Task as TaskType } from '@/types/props/Common.ts';
+import { Assignee } from '@/types/props/Common.ts';
 import { TagOption } from '@/types/interfaces/TagDropDown.ts';
 import TagDropdownWithSelection from '@/components/common/tag-dropdown.tsx';
 import TaskTypeDropdown from '@/components/common/task-type-dropdown.tsx';
@@ -55,16 +47,9 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@/components/shadcn-ui/tooltip.tsx';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/shadcn-ui/dropdown-menu.tsx';
 import { useSidebar } from '@/components/shadcn-ui/sidebar.tsx';
 import { $getRoot, EditorState } from 'lexical';
 import { TabActionBar } from '@/components/common/table-floating-actoin-bar.tsx';
-import { SelectUsers } from '@/components/common/select-users.tsx';
 import TaskCheckList from '@/components/common/task-check-list.tsx';
 
 export const Task: FC = () => {
@@ -74,7 +59,7 @@ export const Task: FC = () => {
   const [enterEstimatedTime, setEnterEstimatedTime] = useState<boolean>(false);
   const [enterTrackTime, setEnterTrackTime] = useState<boolean>(false);
   const [enterTags, setEnterTags] = useState<boolean>(false);
-  const [description, setDescription] = useState(sampleTask.description);
+  const [description] = useState(sampleTask.description);
   const [selectedTags, setSelectedTags] = useState<string[]>(['backend']);
 
   const { open: isSidebarOpen } = useSidebar();

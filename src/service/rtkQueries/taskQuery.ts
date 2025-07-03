@@ -11,7 +11,8 @@ import {
 } from '@/types/request-response/task/ApiRequest.ts';
 import {
   CheckList,
-  TaskResponse,
+  CreateTaskResponse,
+  Task,
 } from '@/types/request-response/task/ApiResponse.ts';
 
 export const taskApi = createApi({
@@ -74,13 +75,20 @@ export const taskApi = createApi({
       }),
       transformResponse: (response: ApiResponse<string>) => response.data,
     }),
-    createTask: builder.mutation<TaskResponse, CreateTaskRequest>({
+    createTask: builder.mutation<CreateTaskResponse, CreateTaskRequest>({
       query: (data: CreateTaskRequest) => ({
         url: 'task',
         method: 'POST',
         data,
       }),
-      transformResponse: (response: ApiResponse<TaskResponse>) => response.data,
+      transformResponse: (response: ApiResponse<CreateTaskResponse>) =>
+        response.data,
+    }),
+    getTask: builder.query<Task, number>({
+      query: (taskId: number) => ({
+        url: `task/${taskId}`,
+      }),
+      transformResponse: (response: ApiResponse<Task>) => response.data,
     }),
   }),
 });
@@ -94,4 +102,5 @@ export const {
   useUpdateChecklistItemMutation,
   useDeleteChecklistItemMutation,
   useCreateTaskMutation,
+  useLazyGetTaskQuery,
 } = taskApi;
