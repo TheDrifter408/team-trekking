@@ -1,5 +1,6 @@
 import React, { useState, createContext, useContext, useEffect } from 'react';
 import { X, Plus, Search } from 'lucide-react';
+import { Tag } from '@/types/request-response/task/ApiResponse';
 import {
   TagDropdownContextType,
   TagOption,
@@ -180,7 +181,7 @@ const TagDropdownTrigger: React.FC<TagDropdownTriggerProps> = ({
         <div className="flex items-center gap-1 min-w-0 flex-1">
           {/* Show only tags that fit, with intelligent truncation */}
           {selectedTags.length === 0 ? (
-            <span className="text-gray-500 text-sm truncate">
+            <span className="text-gray-500 text-base truncate">
               {placeholder}
             </span>
           ) : (
@@ -383,7 +384,7 @@ const TagDropdownContent: React.FC<TagDropdownContentProps> = ({
 interface TagDropdownWrapperProps {
   placeholder?: string;
   availableTags: TagOption[];
-  selectedTags: string[];
+  selectedTags: Tag[];
   setSelectedTags: (tags: string[]) => void;
 }
 

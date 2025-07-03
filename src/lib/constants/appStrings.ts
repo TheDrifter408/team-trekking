@@ -7,7 +7,7 @@ export const LABEL = {
   SHARED_WITH_ME: 'Shared with me',
   CREATE_SPACE: 'Create space',
   SPACES: 'Spaces',
-  NO_ASSIGNEES_SELECTED: 'No Assignees selected',
+  NO_ASSIGNEES_SELECTED: 'No assignees.',
   DESTRUCTIVE: 'destructive',
   LOW: 'Low',
   NORMAL: 'Normal',
@@ -283,4 +283,7 @@ export const LABEL = {
   ADD_CHECKLIST: 'Add checklist',
   USE_TEMPLATE: 'Use Template',
   HIDE_COMPLETED: 'Hide completed',
+  TASK_COULD_NOT_BE_FOUND: 'Task could not be found',
+  EMPTY: 'Empty',
+  ADD_TIME: 'Add Time',
 };
