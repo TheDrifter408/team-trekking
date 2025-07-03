@@ -109,10 +109,11 @@ type IconName = keyof typeof iconPaths;
 type IconProps = {
   name: IconName;
   className?: string;
+  style?: React.CSSProperties;
 };
 
-export const Icon = ({ name, className = '' }: IconProps) => {
+export const Icon = ({ name, className = '', style }: IconProps) => {
   const SvgIcon = iconPaths[name];
   if (!SvgIcon) return null;
-  return <SvgIcon className={className} />;
+  return <SvgIcon className={className} style={style} />;
 };

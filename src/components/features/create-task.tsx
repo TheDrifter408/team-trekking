@@ -176,7 +176,10 @@ const PopoverSection = ({
       <Popover modal={true}>
         <PopoverTrigger asChild>
           <Button variant="outline" size="auto" className="text-sm h-[24px]">
-            <ListIcon className={'text-content-default !size-[14px]'} />
+            <ListIcon
+              style={{ color: selectedList ? selectedList.color : '' }}
+              className={'text-content-default !size-[14px]'}
+            />
             {listName}
             <ChevronDownIcon />
           </Button>
@@ -184,12 +187,12 @@ const PopoverSection = ({
         <PopoverContent
           side="bottom"
           align="start"
-          className="max-h-[400px] w-[300px] p-2 overflow-auto"
+          className="!max-w-[290px] p-2 overflow-auto"
         >
           <span className="font-bold text-gray-600 text-sm">
             {LABEL.SPACES}
           </span>
-          <div className="flex flex-col mt-2 max-h-[400px] overflow-auto">
+          <div className="flex flex-col max-h-64 mt-2 overflow-scroll">
             {spaces.length > 0 &&
               spaces.map((item: Space, i: number) => (
                 <SpaceList onSelectList={onSelectList} space={item} key={i} />
@@ -229,16 +232,16 @@ const SpaceList = ({
         onClick={() => setIsFolderListOpen(!isFolderListOpen)}
         className="cursor-pointer"
       >
-        <div className="flex gap-2 w-[90%] rounded-lg py-[4px] px-1 truncate text-overflow-ellipsis items-center hover:bg-secondary/80">
+        <div className="flex gap-2 text-base w-[90%] rounded-lg py-[4px] px-1 truncate text-overflow-ellipsis items-center hover:bg-secondary/80">
           {hasMouseEntered ? (
             <div>
-              <Icon name={'expandsubtask'} className={'-rotate-90 size-6'} />
+              <Icon name={'expandsubtask'} className={'-rotate-90 size-5'} />
             </div>
           ) : (
             <PlaceholderAvatar
               seed={space.name}
               variant={'initials'}
-              className={'size-6 rounded-lg'}
+              className={'size-5 rounded-lg'}
             />
           )}
           {space.name}
@@ -279,15 +282,18 @@ const FolderItem = ({
         onMouseEnter={() => setHasMouseEntered(true)}
         onMouseLeave={() => setHasMouseEntered(false)}
         onClick={() => setIsListOpen(!isListOpen)}
-        className="flex items-center cursor-pointer gap-2 ml-[30px] hover:bg-secondary/80 p-[4px] rounded-lg"
+        className="flex text-base items-center cursor-pointer gap-2 ml-[30px] hover:bg-secondary/80 p-[4px] rounded-lg"
       >
         <div className="shrink-0">
           {hasMouseEntered ? (
-            <Icon name="expandsubtask" className="-rotate-90 size-6" />
+            <Icon name="expandsubtask" className="-rotate-90 size-5" />
           ) : isListOpen ? (
-            <FolderOpenIcon className="size-5" />
+            <FolderOpenIcon
+              className="size-4"
+              style={{ color: folder.color }}
+            />
           ) : (
-            <FolderIcon className="size-5" />
+            <FolderIcon className="size-4" style={{ color: folder.color }} />
           )}
         </div>
         <div className="truncate text-foreground max-w-[180px] overflow-hidden whitespace-nowrap">
@@ -315,10 +321,14 @@ const ListItem = ({
   return (
     <div
       onClick={() => onSelectList(list)}
-      className="flex items-center cursor-pointer gap-2 hover:bg-secondary/80 p-[4px] rounded-lg"
+      className="flex text-base h-[28px] items-center cursor-pointer gap-2 hover:bg-secondary/80 p-[4px] rounded-lg"
     >
       <div className="shrink-0">
-        <Icon name="list" className="size-5 text-content-default" />
+        <Icon
+          name="list"
+          className={`size-4 text-content-tertiary`}
+          style={{ color: list.color }}
+        />
       </div>
       <div className="truncate text-base max-w-[180px] overflow-hidden whitespace-nowrap">
         {list.name}
