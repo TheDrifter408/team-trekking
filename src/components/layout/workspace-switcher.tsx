@@ -30,17 +30,15 @@ import { useWorkspaceStore } from '@/stores/zustand/workspace-store.ts';
 export function WorkspaceSwitcher({
   workspaces,
   onCreatedWorkspace,
+  onWorkspaceChange,
 }: {
   workspaces: WorkSpaceResponse[];
   onCreatedWorkspace: () => void;
+  onWorkspaceChange: () => void;
 }) {
-  const { setCurrentWorkspace } = useWorkspaceStore();
+  const { currentWorkspace, setCurrentWorkspace } = useWorkspaceStore();
   const { isMobile } = useSidebar();
   const [isOpen, setIsOpen] = useState(false);
-  const [activeWorkspace, setActiveWorkspace] =
-    useState<WorkSpaceResponse | null>(
-      workspaces.length > 0 ? workspaces[0] : null
-    );
   const [showSearch, setShowSearch] = useState(false);
   const [searchWorkspace, setSearchWorkspace] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
@@ -50,10 +48,6 @@ export function WorkspaceSwitcher({
       inputRef.current.focus();
     }
   }, [showSearch]);
-
-  useEffect(() => {
-    setActiveWorkspace(workspaces[0]);
-  }, [workspaces]);
 
   const onOpenDialog = () => {
     setTimeout(() => {
@@ -68,31 +62,24 @@ export function WorkspaceSwitcher({
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton
               size="lg"
-              className="h-10 w-full data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground data-[state=open]:ml-0 data-[state=closed]:ml-1"
+              className="h-10 ml-1 data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
-              <div
-                className="flex aspect-square size-6 items-center justify-center rounded-md text-sidebar-primary-foreground"
-                style={{
-                  backgroundColor: activeWorkspace?.workspace?.color
-                    ? activeWorkspace?.workspace?.color
-                    : undefined,
-                }}
-              >
-                {activeWorkspace?.workspace.iconUrl ? (
+              <div className="flex aspect-square size-6 items-center justify-center rounded-md text-sidebar-primary-foreground">
+                {currentWorkspace?.iconUrl ? (
                   <img
-                    src={activeWorkspace?.workspace?.iconUrl}
-                    alt={activeWorkspace?.workspace?.name}
+                    src={currentWorkspace?.iconUrl}
+                    alt={currentWorkspace?.name}
                     className="size-4 shrink-0 object-cover w-full h-full rounded-md"
                   />
                 ) : (
                   <div className="text-center">
-                    {activeWorkspace?.workspace?.name?.charAt(0).toUpperCase()}
+                    {currentWorkspace?.name?.charAt(0).toUpperCase()}
                   </div>
                 )}
               </div>
               <div className="grid flex-1 text-sm text-left leading-tight">
                 <span className="truncate font-semibold">
-                  {activeWorkspace?.workspace?.name}
+                  {currentWorkspace?.name}
                 </span>
               </div>
               <ChevronDown className="ml-auto" />
@@ -108,30 +95,28 @@ export function WorkspaceSwitcher({
               <div
                 className="flex aspect-square size-8 items-center justify-center rounded-md text-sidebar-primary-foreground"
                 style={{
-                  backgroundColor: activeWorkspace?.workspace?.color
-                    ? activeWorkspace?.workspace?.color
+                  backgroundColor: currentWorkspace?.color
+                    ? currentWorkspace.color
                     : undefined,
                 }}
               >
-                {activeWorkspace?.workspace?.iconUrl ? (
+                {currentWorkspace?.iconUrl ? (
                   <img
-                    src={activeWorkspace?.workspace?.iconUrl}
-                    alt={activeWorkspace?.workspace?.name}
+                    src={currentWorkspace.iconUrl}
+                    alt={currentWorkspace.name}
                     className="size-4 shrink-0 object-cover w-full h-full rounded-md"
                   />
                 ) : (
-                  <div>
-                    {activeWorkspace?.workspace?.name?.charAt(0).toUpperCase()}
-                  </div>
+                  <div>{currentWorkspace?.name?.charAt(0).toUpperCase()}</div>
                 )}
               </div>
               <div className="grid leading-tight">
                 <span className="truncate text-[14px]">
-                  {activeWorkspace?.workspace?.name}
+                  {currentWorkspace?.name}
                 </span>
                 <span className="truncate font-normal text-sm text-gray-500">
-                  {activeWorkspace?.workspace?.plan} .{' '}
-                  {activeWorkspace?.workspace?.members} {LABEL.MEMBERS}
+                  {currentWorkspace?.plan} . {currentWorkspace?.members}{' '}
+                  {LABEL.MEMBERS}
                 </span>
               </div>
             </div>
@@ -221,15 +206,12 @@ export function WorkspaceSwitcher({
               >
                 {workspaces.map(
                   (workspace) =>
-                    workspace.id !== activeWorkspace?.id && (
+                    workspace.id !== currentWorkspace?.id && (
                       <DropdownMenuItem
                         key={workspace.workspace?.id}
                         onClick={() => {
-                          setActiveWorkspace(workspace);
-                          setCurrentWorkspace({
-                            id: workspace.workspace.id,
-                            name: workspace.workspace.name,
-                          });
+                          setCurrentWorkspace(workspace.workspace);
+                          onWorkspaceChange(); // refetch spaces on workspace change
                         }}
                         className="gap-2 p-2 hover:!bg-gray-200 focus:!outline-none"
                       >

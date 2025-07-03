@@ -1,11 +1,6 @@
+import { Workspace } from '@/types/request-response/workspace/ApiResponse';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-
-export interface Workspace {
-  id: number;
-  name: string;
-  // Add other properties if needed, like `type`, `members`, etc.
-}
 
 interface WorkspaceState {
   currentWorkspace: Workspace | null;
