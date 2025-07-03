@@ -26,6 +26,7 @@ import {
 import { LABEL } from '@/lib/constants';
 import { WorkSpaceResponse } from '@/types/request-response/workspace/ApiResponse.ts';
 import { useWorkspaceStore } from '@/stores/zustand/workspace-store.ts';
+import { PlaceholderAvatar } from '@/components/common/avatar-generator';
 
 export function WorkspaceSwitcher({
   workspaces,
@@ -72,9 +73,13 @@ export function WorkspaceSwitcher({
                     className="size-4 shrink-0 object-cover w-full h-full rounded-md"
                   />
                 ) : (
-                  <div className="text-center">
-                    {currentWorkspace?.name?.charAt(0).toUpperCase()}
-                  </div>
+                  <PlaceholderAvatar
+                    className={
+                      'w-[20px] h-[20px] font-medium text-xl rounded-sm'
+                    }
+                    variant={'initials'}
+                    seed={currentWorkspace ? currentWorkspace.name : 'W'}
+                  />
                 )}
               </div>
               <div className="grid flex-1 text-sm text-left leading-tight">
