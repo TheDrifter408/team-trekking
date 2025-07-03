@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 import { AppSidebar } from '@/pages/layout/components/app-sidebar.tsx';
 import { AppHeader } from '@/pages/layout/components/app-header';
@@ -13,12 +14,20 @@ import { useWorkspaceStore } from '@/stores/zustand/workspace-store';
 
 const AppLayout = () => {
   const { user } = useTMTStore();
-  const { currentWorkspace } = useWorkspaceStore();
+  const {
+    currentWorkspace,
+    setSpaceFolderList,
+    setSpaces,
+    setMembers,
+    clearWorkspace,
+  } = useWorkspaceStore();
+
   const { data: spaceGlobalData } = useSpaceGlobalApiQuery();
   const { data: workSpaces, refetch: refetchWorkspaces } =
     useGetAllWorkSpacesQuery();
+
   const workspaceId = currentWorkspace?.id;
-  // The query for all the spaces, folders and list in a given workspace
+
   const {
     data: spacesFolderList,
     isFetching,
@@ -26,9 +35,19 @@ const AppLayout = () => {
   } = useGetWorkspaceSpaceFolderListQuery(
     { id: workspaceId },
     {
-      enabled: !workspaceId, // wait for workspaceId to change from being undefined
+      skip: !workspaceId, // Correct: skip query until workspaceId is ready
     }
   );
+
+  useEffect(() => {
+    clearWorkspace();
+    if (spacesFolderList) {
+      setSpaceFolderList(spacesFolderList);
+      setSpaces(spacesFolderList.spaces);
+      setMembers(spacesFolderList.members);
+    }
+  }, [spacesFolderList]);
+
   return (
     <AppContextProvider spaceGlobal={spaceGlobalData ?? null}>
       <div className="flex flex-col h-screen">
@@ -51,4 +70,5 @@ const AppLayout = () => {
     </AppContextProvider>
   );
 };
+
 export default AppLayout;

@@ -39,7 +39,7 @@ const AppRoutes = () => {
             <Route path="inbox" element={<Inbox />} />
           </Route>
           <Route element={<HeaderLayout />}>
-            <Route path="task" element={<Task />} />
+            <Route path="task/:taskId" element={<Task />} />
           </Route>
           <Route path="settings" element={<SettingsLayout />}>
             <Route path="general" element={<Settings />} />

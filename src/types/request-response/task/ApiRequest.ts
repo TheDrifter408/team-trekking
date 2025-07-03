@@ -18,3 +18,8 @@ export interface UpdateCheckListItemRequest {
   content: string;
   isDone: boolean;
 }
+export interface CreateTaskRequest {
+  name: string;
+  listId: number;
+  typeId: number;
+}
