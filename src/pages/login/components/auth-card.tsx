@@ -23,7 +23,7 @@ export const AuthCard = ({
 }: AuthCardProps) => {
   return (
     <div className="flex justify-center z-10">
-      <Card className="lg:w-[480px] w-[360px] border-none">
+      <Card className="md:w-[520px] w-[90%] border-none">
         <CardHeader className={'justify-center'}>
           <CardTitle className="text-4xl font-bold">{title}</CardTitle>
         </CardHeader>
