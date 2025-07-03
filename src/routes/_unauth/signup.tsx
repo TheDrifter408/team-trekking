@@ -214,5 +214,5 @@ const SignUp = () => {
 };
 
 export const Route = createFileRoute('/_unauth/signup')({
-  component: SignUp,
+  component: () => <SignUp />,
 });

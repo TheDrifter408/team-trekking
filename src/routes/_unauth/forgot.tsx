@@ -235,5 +235,5 @@ const ForgotPassword = () => {
 };
 
 export const Route = createFileRoute('/_unauth/forgot')({
-  component: ForgotPassword,
+  component: () => <ForgotPassword />,
 })

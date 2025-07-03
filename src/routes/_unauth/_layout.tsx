@@ -1,10 +1,14 @@
-import { Outlet, useRouterState, useNavigate, createFileRoute } from '@tanstack/react-router';
+import {
+  Outlet,
+  useRouterState,
+  useNavigate,
+  createFileRoute,
+} from '@tanstack/react-router';
 import { Button } from '@/components/shadcn-ui/button';
 import { LABEL } from '@/lib/constants/appStrings.ts';
 import { Icon } from '@/assets/icon-path';
-import { createRootRoute } from '@tanstack/react-router';
 
-const AuthLayout = () => {
+const AuthLayout = ({ children }: { children: React.ReactNode }) => {
   const navigate = useNavigate();
   const location = useRouterState({ select: (s) => s.location.pathname });
 
@@ -62,6 +66,10 @@ const AuthLayout = () => {
   );
 };
 
-export const Route = createRootRoute({
-  component: AuthLayout,
+export const Route = createFileRoute('/_unauth/_layout')({
+  component: () => (
+    <AuthLayout>
+      <Outlet />
+    </AuthLayout>
+  ),
 });
