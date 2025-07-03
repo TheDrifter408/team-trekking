@@ -283,4 +283,13 @@ export const LABEL = {
   ADD_CHECKLIST: 'Add checklist',
   USE_TEMPLATE: 'Use Template',
   HIDE_COMPLETED: 'Hide completed',
+  CREATE_NEW_FOLDER: 'Create New Folder',
+  ENTER_FOLDER_NAME: 'Enter a name for your new folder.',
+  NAME: 'Name',
+  MY_NEW_FOLDER: 'My New Folder',
+  COLOR_OPTIONS: 'Color Options',
+  CREATING: 'Creating...',
+  CREATE: 'Create',
+  SUCCESS_CREATE_FOLDER: 'Successfully created Folder',
+  ERROR_CREATE_FOLDER: 'Could not create Folder',
 };
