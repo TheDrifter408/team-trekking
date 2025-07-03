@@ -15,7 +15,8 @@ import {
   useCreateChecklistItemMutation,
   useUpdateChecklistItemMutation,
   useDeleteChecklistItemMutation,
-  useDeleteChecklistMutation, // Added delete checklist mutation
+  useDeleteChecklistMutation,
+  useUpdateChecklistMutation, // Added update checklist mutation
 } from '@/service/rtkQueries/taskQuery.ts';
 import { handleMutation } from '@/lib/utils/utils.ts';
 
@@ -54,13 +55,14 @@ interface TaskCheckListProps {
   taskId?: number;
 }
 
-const TaskCheckList = ({ taskId = 1 }: TaskCheckListProps): JSX.Element => {
+const TaskCheckList = ({ taskId = 1 }: TaskCheckListProps) => {
   const [getChecklist, { data: checklistsData }] = useLazyGetChecklistQuery();
   const [createCheckList] = useCreateCheckListMutation();
+  const [deleteChecklist] = useDeleteChecklistMutation();
+  const [updateChecklist] = useUpdateChecklistMutation();
   const [createChecklistItem] = useCreateChecklistItemMutation();
   const [updateChecklistItem] = useUpdateChecklistItemMutation();
   const [deleteChecklistItem] = useDeleteChecklistItemMutation();
-  const [deleteChecklist] = useDeleteChecklistMutation(); // Added delete checklist mutation
 
   const [checklists, setChecklists] = useState<CheckList[]>([]);
   const [showCompleted, setShowCompleted] = useState<ShowCompletedState>({});
@@ -74,7 +76,7 @@ const TaskCheckList = ({ taskId = 1 }: TaskCheckListProps): JSX.Element => {
   const [activeMenu, setActiveMenu] = useState<number | null>(null);
   const [activeChecklistMenu, setActiveChecklistMenu] = useState<number | null>(
     null
-  ); // Added for checklist menu
+  );
   const [editingItem, setEditingItem] = useState<number | null>(null);
   const [editText, setEditText] = useState<string>('');
   const [editingChecklistId, setEditingChecklistId] = useState<number | null>(
@@ -85,7 +87,7 @@ const TaskCheckList = ({ taskId = 1 }: TaskCheckListProps): JSX.Element => {
   const [isCreatingChecklist, setIsCreatingChecklist] =
     useState<boolean>(false);
   const menuRef = useRef<HTMLDivElement>(null);
-  const checklistMenuRef = useRef<HTMLDivElement>(null); // Added for checklist menu
+  const checklistMenuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     getChecklist(1);
@@ -270,7 +272,6 @@ const TaskCheckList = ({ taskId = 1 }: TaskCheckListProps): JSX.Element => {
     setActiveMenu(activeMenu === itemId ? null : itemId);
   };
 
-  // Added function to toggle checklist menu
   const toggleChecklistMenu = (checklistId: number): void => {
     setActiveChecklistMenu(
       activeChecklistMenu === checklistId ? null : checklistId
@@ -322,7 +323,6 @@ const TaskCheckList = ({ taskId = 1 }: TaskCheckListProps): JSX.Element => {
     }
   };
 
-  // Added function to handle checklist menu actions
   const onHandleChecklistMenuAction = async (
     action: string,
     checklistId: number
@@ -459,12 +459,14 @@ const TaskCheckList = ({ taskId = 1 }: TaskCheckListProps): JSX.Element => {
         const existingChecklist = checklists.find((c) => c.id === checklistId);
 
         if (!existingChecklist?.title) {
+          // This is a new checklist, create it
           const { data } = await handleMutation(createCheckList, {
             title: editingChecklistTitle.trim(),
             taskId: taskId,
           });
 
           if (data) {
+            // Update local state with the new checklist data from API
             setChecklists(
               checklists.map((checklist) =>
                 checklist.id === checklistId
@@ -476,14 +478,21 @@ const TaskCheckList = ({ taskId = 1 }: TaskCheckListProps): JSX.Element => {
           }
         } else {
           // This is updating an existing checklist title
-          // You might need a separate update mutation for this
-          setChecklists(
-            checklists.map((checklist) =>
-              checklist.id === checklistId
-                ? { ...checklist, title: editingChecklistTitle.trim() }
-                : checklist
-            )
-          );
+          const { data } = await handleMutation(updateChecklist, {
+            id: checklistId,
+            title: editingChecklistTitle.trim(),
+          });
+
+          if (data) {
+            // Update local state
+            setChecklists(
+              checklists.map((checklist) =>
+                checklist.id === checklistId
+                  ? { ...checklist, title: editingChecklistTitle.trim() }
+                  : checklist
+              )
+            );
+          }
         }
       } catch (error) {
         console.error('Failed to save checklist title:', error);
@@ -595,7 +604,6 @@ const TaskCheckList = ({ taskId = 1 }: TaskCheckListProps): JSX.Element => {
                 </h2>
               )}
 
-              {/* Added checklist menu button */}
               <div
                 className="relative"
                 ref={
@@ -651,7 +659,7 @@ const TaskCheckList = ({ taskId = 1 }: TaskCheckListProps): JSX.Element => {
                     className="flex-shrink-0"
                   >
                     <div
-                      className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all ${
+                      className={`w-4 h-4 rounded-full border-2 flex items-center justify-center transition-all ${
                         item.isDone
                           ? 'bg-gray-900 border-gray-900'
                           : 'border-gray-300 hover:border-gray-400'
@@ -687,7 +695,7 @@ const TaskCheckList = ({ taskId = 1 }: TaskCheckListProps): JSX.Element => {
                     />
                   ) : (
                     <span
-                      className={`flex-1 transition-all select-none ${
+                      className={`flex-1 text-sm transition-all select-none ${
                         item.isDone
                           ? 'text-gray-400 line-through'
                           : 'text-gray-700'
@@ -782,7 +790,7 @@ const TaskCheckList = ({ taskId = 1 }: TaskCheckListProps): JSX.Element => {
                       }
                     }}
                     placeholder="New checklist item"
-                    className="flex-1 bg-transparent border-none outline-none text-gray-700 placeholder-gray-400"
+                    className="flex-1 text-sm bg-transparent border-none outline-none text-gray-700 placeholder-gray-400"
                     autoFocus
                   />
                   <div className="flex items-center gap-2">
@@ -796,11 +804,11 @@ const TaskCheckList = ({ taskId = 1 }: TaskCheckListProps): JSX.Element => {
                   onClick={() =>
                     setIsAddingItem({ ...isAddingItem, [checklist.id]: true })
                   }
-                  className="flex items-center gap-3 group py-3 pl-4 pr-5 text-gray-400 hover:text-gray-600 transition-colors w-full rounded-md hover:bg-gray-50"
+                  className="flex items-center gap-3 group py-3 pl-2 pr-5 text-gray-400 hover:text-gray-600 transition-colors w-full rounded-md hover:bg-gray-50"
                 >
                   <div className="w-4 h-4 flex-shrink-0"></div>
                   <Plus className="w-4 h-4" />
-                  <span className="text-sm">New checklist item</span>
+                  <span className="text-sm">{LABEL.NEW_CHECKLIST_ITEM}</span>
                   <div className="flex-1"></div>
                   <User className="w-4 h-4" />
                 </button>
@@ -820,8 +828,8 @@ const TaskCheckList = ({ taskId = 1 }: TaskCheckListProps): JSX.Element => {
                   className="px-4 py-1 text-sm text-gray-600 bg-gray-100 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
                 >
                   {showCompleted[checklist.id]
-                    ? 'Hide completed'
-                    : `${completedCount} Completed`}
+                    ? `${LABEL.HIDE_COMPLETED}`
+                    : `${completedCount} ${LABEL.COMPLETED}`}
                 </button>
               </div>
             )}

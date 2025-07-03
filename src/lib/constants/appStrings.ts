@@ -282,4 +282,5 @@ export const LABEL = {
   ADD_ITEM: 'Add Item',
   ADD_CHECKLIST: 'Add checklist',
   USE_TEMPLATE: 'Use Template',
+  HIDE_COMPLETED: 'Hide completed',
 };

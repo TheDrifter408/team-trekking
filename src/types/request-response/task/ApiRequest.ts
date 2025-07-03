@@ -3,6 +3,10 @@ export interface CreateCheckListRequest {
   taskId: number;
 }
 
+export interface updateChecklistRequest {
+  title: string;
+  id: number;
+}
 export interface CreateCheckListItemRequest {
   content: string;
   isDone: boolean;
