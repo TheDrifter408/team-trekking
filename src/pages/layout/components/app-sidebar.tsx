@@ -114,12 +114,12 @@ export const AppSidebar = ({
                     className="h-5 w-5"
                     onClick={() => setInviteUserOpen(true)}
                   >
-                    <Icon name="search" />
+                    <Icon name="useradd" />
                   </Button>
                   <Button
                     size="icon_sm"
                     className="h-6 w-6 bg-theme-main"
-                    onClick={() => {}} // optionally handle create space
+                    onClick={() => setIsCreateSpaceOpen(true)}
                   >
                     <Plus size={14} />
                   </Button>

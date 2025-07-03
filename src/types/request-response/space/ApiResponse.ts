@@ -46,7 +46,6 @@ export interface Item {
   name: string;
   color: string;
   order: number;
-
 }
 
 export interface Space {

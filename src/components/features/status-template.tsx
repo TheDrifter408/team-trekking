@@ -1,4 +1,10 @@
-import React, { Dispatch, SetStateAction, useState } from 'react';
+import React, {
+  ChangeEventHandler,
+  Dispatch,
+  SetStateAction,
+  KeyboardEvent,
+  useState,
+} from 'react';
 import {
   Dialog,
   DialogContent,
@@ -313,7 +319,10 @@ export const StatusTemplate = ({
                     >
                       <div className="">
                         <div className="space-y-1">
-                          <StatusGroup group={group} />
+                          <StatusGroup
+                            group={group}
+                            setTemplates={setSpaceTemplates}
+                          />
                         </div>
                       </div>
                     </SortableContext>
@@ -349,7 +358,10 @@ export const StatusTemplate = ({
         </div>
         <DialogFooter className="border-t-theme-main pt-3">
           <div className="flex justify-end w-full">
-            <Button className={'bg-theme-main text-base'}>
+            <Button
+              className={'bg-theme-main text-base'}
+              onClick={() => setIsOpen(false)}
+            >
               {LABEL.SAVE_TEMPLATE}
             </Button>
           </div>
@@ -360,10 +372,41 @@ export const StatusTemplate = ({
 };
 
 // Component to on the list of statuses in a category
-const StatusGroup = ({ group }: { group: Group }) => {
+const StatusGroup = ({
+  group,
+  setTemplates,
+}: {
+  group: Group;
+  setTemplates: Dispatch<SetStateAction<Group[]>>;
+}) => {
   const { setNodeRef, isOver } = useDroppable({
     id: `group-${group.id}`,
   });
+
+  const [name, setName] = useState('');
+  const [editing, setIsEditing] = useState(false);
+
+  const onChangeName = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setName(e.target.value);
+  };
+
+  const onAddItem = (event: KeyboardEvent) => {
+    if (event.key === 'Enter' && name.trim()) {
+      const newItem: Item = {
+        id: group.items[group.items.length - 1].id + 1,
+        name: name.trim(),
+        color: 'blue',
+        order: group.items[group.items.length - 1].order + 1,
+      };
+      setTemplates((prevTemplates) =>
+        prevTemplates.map((g) =>
+          g.id === group.id ? { ...g, items: [...g.items, newItem] } : g
+        )
+      );
+      setName('');
+      setIsEditing(false);
+    }
+  };
 
   return (
     <div
@@ -379,7 +422,12 @@ const StatusGroup = ({ group }: { group: Group }) => {
       ) : (
         <div key={group.id} className="min-h-[1px]" />
       )}
-      <AddStatusItem />
+      <AddStatusItem
+        name={name}
+        onChangeName={onChangeName}
+        editing={editing}
+        onAddItem={onAddItem}
+      />
     </div>
   );
 };
@@ -513,14 +561,17 @@ function StatusItem({ item }: { item: Item }) {
   );
 }
 
-const AddStatusItem = () => {
-  const [name, setName] = useState('');
-  const [editing, setEditing] = useState(false);
-
-  const onChangeName = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setName(e.target.value);
-  };
-
+const AddStatusItem = ({
+  name,
+  onChangeName,
+  editing,
+  onAddItem,
+}: {
+  name: string;
+  onChangeName: ChangeEventHandler<HTMLInputElement>;
+  editing: boolean;
+  onAddItem: (event: KeyboardEvent) => void;
+}) => {
   return (
     <div
       className={cn(
@@ -532,11 +583,10 @@ const AddStatusItem = () => {
     >
       <Input
         className="!border-none !ring-0 placeholder:text-base placeholder:pl-4"
-        value={name}
+        value={name.toUpperCase()}
         placeholder={'Add Status'}
         onChange={onChangeName}
-        onFocus={() => setEditing(true)}
-        onBlur={() => setEditing(false)}
+        onKeyDown={(e) => onAddItem(e)}
       />
     </div>
   );
