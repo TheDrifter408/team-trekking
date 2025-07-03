@@ -49,6 +49,7 @@ import {
   Space,
   Folder,
 } from '@/types/request-response/workspace/ApiResponse';
+import { useAppNavigation } from '@/lib/hooks/useAppNavigation.ts';
 import { CreateTaskRequest } from '@/types/request-response/task/ApiRequest.ts';
 
 interface Props {
@@ -58,13 +59,13 @@ interface Props {
 }
 
 export const CreateTask = ({ isOpen, setIsOpen, children }: Props) => {
-  const navigate = useNavigate();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [selectedList, setSelectedList] = useState<List | null>(null);
   const [name, setName] = useState('');
   const taskType = 1;
   const { spaces } = useWorkspaceStore();
   const [createTask] = useCreateTaskMutation();
+  const { navigate, routes } = useAppNavigation();
 
   const onSelectList = (list: List) => {
     setSelectedList(list);
@@ -82,7 +83,7 @@ export const CreateTask = ({ isOpen, setIsOpen, children }: Props) => {
     try {
       const response = await createTask(payload).unwrap();
       if (!response.id) toast.error('Task creation failed');
-      navigate('task/' + response.id.toString());
+      navigate(routes.task, response.id);
     } catch (error: any) {
       toast.error('Task creation failed');
     }
