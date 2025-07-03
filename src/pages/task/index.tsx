@@ -172,42 +172,6 @@ export const Task: FC = () => {
             <div className="space-y-1">
               {/* Column 1 */}
               {/* STATUSES */}
-              {/* <TaskMetaRow
-                icon={
-                  <IconCircleDot
-                    className="text-base font-semibold"
-                    size={15}
-                  />
-                }
-                label="Status"
-              >
-                <TaskStatusDialog>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className={cn(
-                      'rounded text-white hover:text-white h-6 px-2 text-xs tracking-wide font-bold flex items-center',
-                      sampleTask.status.color,
-                      `hover:${sampleTask.status.color}`
-                    )}
-                  >
-                    {sampleTask.status.name.toUpperCase()}
-                    <span className="ml-2 pl-2 border-l border-white/40 flex items-center">
-                      <ChevronRight className="w-4 h-4" />
-                    </span>
-                  </Button>
-                </TaskStatusDialog>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className={cn(
-                    'h-6 px-2 rounded-[6px] border',
-                    `hover:${sampleTask.status.color}`
-                  )}
-                >
-                  <IconCheck size={15} />
-                </Button>
-              </TaskMetaRow>*/}
               {/* START AND END DATES */}
               <TaskMetaRow
                 icon={
@@ -265,7 +229,6 @@ export const Task: FC = () => {
               </TaskMetaRow>
             </div>
             <div className="space-y-1">
-              {' '}
               {/* Column 2 */}
               {/* ASSIGNEES */}
               <TaskMetaRow
@@ -283,16 +246,6 @@ export const Task: FC = () => {
                 {taskData && taskData?.assignees.length > 0
                   ? LABEL.NO_ASSIGNEES_SELECTED
                   : LABEL.NO_ASSIGNEES_SELECTED}
-                {/*<SelectUsers
-                  value={selectedAssignees}
-                  displayName={true}
-                  onRemove={() => {}}
-                  multipleSelect={true}
-                  onChange={(assignees) => setSelectedAssignees(assignees)}
-                  users={task.assignees!}
-                  placeholder="No Assignees"
-                  userListTitle="Select an Assignee"
-                />*/}
               </TaskMetaRow>
               {/* PRIORITY */}
               <TaskMetaRow
