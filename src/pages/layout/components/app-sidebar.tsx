@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, ComponentProps } from 'react';
+import { useState, ComponentProps } from 'react';
 import { CompassIcon, Plus, Share2 } from 'lucide-react';
 import { cn } from '@/lib/utils/utils.ts';
 import {
@@ -35,44 +35,33 @@ import { ContextMenu } from '@/components/common/context-menu.tsx';
 import { spacesMenuConfig } from '@/lib/constants/staticData.ts';
 import { WorkspaceSwitcher } from '@/components/layout/workspace-switcher.tsx';
 import {
-  useGetAllWorkSpacesQuery,
-  useGetWorkspaceSpaceFolderListQuery,
-} from '@/service/rtkQueries/workspaceQuery.ts';
-import { useWorkspaceStore } from '@/stores/zustand/workspace-store';
-import {
   Folder,
   List,
   Space,
+  WorkSpaceResponse,
+  WorkspaceSpaceFolderList,
 } from '@/types/request-response/workspace/ApiResponse';
 
-export const AppSidebar = (props: ComponentProps<typeof Sidebar>) => {
-  const { setCurrentWorkspace } = useWorkspaceStore();
+interface AppSidebarProps extends ComponentProps<typeof Sidebar> {
+  workSpaces: WorkSpaceResponse[] | undefined;
+  refetchWorkspaces: () => void;
+  isFetching: boolean;
+  spacesFolderList: WorkspaceSpaceFolderList | undefined;
+  refetchSpaces: () => void;
+}
+
+export const AppSidebar = ({
+  workSpaces,
+  refetchWorkspaces,
+  refetchSpaces,
+  isFetching,
+  spacesFolderList,
+  ...props
+}: AppSidebarProps) => {
   const { state } = useSidebar();
   const [inviteUserOpen, setInviteUserOpen] = useState(false);
   const [isCreateSpaceOpen, setIsCreateSpaceOpen] = useState(false);
-  const { data: workSpaces, refetch: refetchWorkspaces } =
-    useGetAllWorkSpacesQuery();
-  const workspaceId =
-    workSpaces && workSpaces.length > 0
-      ? workSpaces[0].workspace.id
-      : undefined;
-  // The query for all the spaces, folders and list in a given workspace
-  const {
-    data: spacesFolderList,
-    isLoading,
-    refetch: refetchSpace,
-  } = useGetWorkspaceSpaceFolderListQuery(
-    { id: workspaceId },
-    {
-      skip: !workspaceId, // wait for workspaceId to change from being undefined
-    }
-  );
   const isOpen = state !== 'collapsed';
-  useEffect(() => {
-    if (workSpaces && workSpaces?.length > 0) {
-      setCurrentWorkspace(workSpaces[0].workspace);
-    }
-  }, [workSpaces, setCurrentWorkspace]);
 
   return (
     <Sidebar
@@ -89,6 +78,7 @@ export const AppSidebar = (props: ComponentProps<typeof Sidebar>) => {
         <WorkspaceSwitcher
           workspaces={workSpaces ?? []}
           onCreatedWorkspace={refetchWorkspaces}
+          onWorkspaceChange={refetchSpaces}
         />
       </SidebarHeader>
       <SidebarContent>
@@ -151,14 +141,14 @@ export const AppSidebar = (props: ComponentProps<typeof Sidebar>) => {
                 {LABEL.SHARED_WITH_ME}
               </Button>
 
-              {isLoading ? (
+              {isFetching || spacesFolderList === undefined ? (
                 <SidebarSpaceSkeleton />
               ) : (
                 spacesFolderList?.spaces.map((space: Space) => (
                   <SidebarSpaceItems
                     key={space.id}
                     space={space}
-                    onCreatedChildren={refetchSpace}
+                    onCreatedChildren={refetchSpaces}
                   >
                     {space.folders.map((folder: Folder) => (
                       <SidebarFolderItems
@@ -166,7 +156,7 @@ export const AppSidebar = (props: ComponentProps<typeof Sidebar>) => {
                         name={folder.name}
                         folder={folder}
                         onItemClick={() => {}}
-                        onCreatedChildren={refetchSpace}
+                        onCreatedChildren={refetchSpaces}
                       />
                     ))}
                     {space.lists.map((list: List) => (
@@ -207,7 +197,7 @@ export const AppSidebar = (props: ComponentProps<typeof Sidebar>) => {
       <CreateSpace
         createSpaceOpen={isCreateSpaceOpen}
         setCreateSpaceOpen={setIsCreateSpaceOpen}
-        onCreatedSpace={refetchSpace}
+        onCreatedSpace={refetchSpaces}
       />
       <InviteUser
         inviteUserOpen={inviteUserOpen}
