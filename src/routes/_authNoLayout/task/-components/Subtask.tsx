@@ -5,7 +5,7 @@ import {
   SortableContext,
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
-import { SortableTaskRow } from '@/pages/task/components/sortable-task-row.tsx';
+import { SortableTaskRow } from '@/routes/_authNoLayout/task/-components/sortable-task-row.tsx';
 import { ChangeEvent } from 'react';
 import { Task } from '@/types/props/Common';
 

@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router';
 
 import { useState, useMemo, useCallback } from 'react';
 import { HeaderType } from '@/types/props/Common.ts';
@@ -13,7 +13,6 @@ import {
 import { FilterSection } from './-components/filter-section.tsx';
 import { useComponentStore } from '@/stores/zustand/component-state-store.ts';
 import { TabActionBar } from '@/components/common/table-floating-actoin-bar.tsx';
-
 
 const List = () => {
   const currentPage = useMemo(

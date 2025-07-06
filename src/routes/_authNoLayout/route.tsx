@@ -1,6 +1,6 @@
 import { useTMTStore } from '@/stores/zustand';
 import { createFileRoute, Navigate } from '@tanstack/react-router';
-import TaskLayout from '@/pages/layout/task-layout';
+import TaskLayout from '@/components/layout/task-layout'; 
 const RouteComponent = () => {
   const { getUser } = useTMTStore();
   const user = getUser(); // returns the user information from when the user signs up or logs in.

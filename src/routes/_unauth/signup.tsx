@@ -5,8 +5,8 @@ import { LockKeyhole, Mail, MailCheck, User } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useNavigate, createFileRoute } from '@tanstack/react-router';
-import { AuthCard } from '@/pages/login/components/auth-card.tsx';
-import { FormInputField } from '@/pages/login/components/form-input.tsx';
+import { AuthCard } from './-components/auth-card.tsx';
+import { FormInputField } from './-components/form-input.tsx';
 import { signUpSchema } from '@/lib/validation/validationSchema.tsx';
 import {
   usePostSendOtpMutation,
@@ -84,7 +84,7 @@ const SignUp = () => {
       try {
         const createResponse = await createUser(createUserForm).unwrap();
         if (createResponse) {
-          navigate({ to: '/auth/home' });
+          navigate({ to: '/overview' });
         }
       } catch (e) {
         toast.error(e?.data?.message);

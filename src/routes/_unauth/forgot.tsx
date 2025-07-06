@@ -5,8 +5,8 @@ import { Eye, Mail } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
-import { AuthCard } from '@/pages/login/components/auth-card';
-import { FormInputField } from '@/pages/login/components/form-input.tsx';
+import { AuthCard } from './-components/auth-card';
+import { FormInputField } from './-components/form-input.tsx';
 import {
   emailInputSchema,
   passwordResetSchema,

@@ -23,16 +23,16 @@ import {
 import { Textarea } from '@/components/shadcn-ui/textarea.tsx';
 import { Button } from '@/components/shadcn-ui/button.tsx';
 import { cn } from '@/lib/utils/utils.ts';
-import { TaskActivityNotifications } from '@/pages/task/components/task-activity-notifications.tsx';
+import { TaskActivityNotifications } from '@/routes/_authNoLayout/task/-components/task-activity-notifications';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from '@/components/shadcn-ui/dropdown-menu.tsx';
 import { filterOptions, taskNotificationUsers } from '@/mock';
-import { TaskActivityFilters } from '@/pages/task/components/task-activity-filters.tsx';
+import { TaskActivityFilters } from '@/routes/_authNoLayout/task/-components/task-activity-filters.tsx';
 import { ButtonProps } from '@headlessui/react';
-import TaskActivitySearch from '@/pages/task/components/task-activity-search.tsx';
+import TaskActivitySearch from '@/routes/_authNoLayout/task/-components/task-activity-search.tsx';
 
 type SidebarTriggerProps = PropsWithChildren<ButtonProps>;
 
