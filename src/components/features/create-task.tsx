@@ -1,3 +1,4 @@
+import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -11,21 +12,12 @@ import {
   TabsTrigger,
   TabsContent,
 } from '@/components/shadcn-ui/tabs';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-} from '@/components/shadcn-ui/dropdown-menu';
 import { Button } from '@/components/shadcn-ui/button.tsx';
-import { cn } from '@/lib/utils/utils.ts';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from '@/components/shadcn-ui/popover';
-import { PlaceholderAvatar } from '@/components/common/avatar-generator';
-import { LABEL } from '@/lib/constants';
-import { toast } from 'sonner';
 import {
   ListIcon,
   XIcon,
@@ -35,7 +27,7 @@ import {
   FolderIcon,
 } from 'lucide-react';
 import { Icon } from '@/assets/icon-path';
-import { useEffect, useRef, useState } from 'react';
+import { PlaceholderAvatar } from '@/components/common/avatar-generator';
 import TaskTypeDropdown from '@/components/common/task-type-dropdown.tsx';
 import { DocEditor } from '@/routes/_authNoLayout/task/-components/doc-editor';
 import { $getRoot, EditorState } from 'lexical';
@@ -48,16 +40,20 @@ import {
   Space,
   Folder,
 } from '@/types/request-response/workspace/ApiResponse';
-import { useAppNavigation } from '@/lib/hooks/useAppNavigation.ts';
 import { CreateTaskRequest } from '@/types/request-response/task/ApiRequest.ts';
+import { useAppNavigation } from '@/lib/hooks/use-app-navigation.ts';
+import { cn } from '@/lib/utils/utils.ts';
+import { LABEL } from '@/lib/constants';
+import { toast } from 'sonner';
 
 interface Props {
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
   children: React.ReactNode;
+  listId: number;
 }
 
-export const CreateTask = ({ isOpen, setIsOpen, children }: Props) => {
+export const CreateTask = ({ isOpen, setIsOpen, children, listId }: Props) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [selectedList, setSelectedList] = useState<List | null>(null);
   const [name, setName] = useState('');
@@ -65,6 +61,20 @@ export const CreateTask = ({ isOpen, setIsOpen, children }: Props) => {
   const { spaces } = useWorkspaceStore();
   const [createTask] = useCreateTaskMutation();
   const { navigate, routes } = useAppNavigation();
+
+  useEffect(() => {
+    if (!spaces || !listId) return;
+
+    const allLists = spaces.flatMap((space) => [
+      ...space.lists,
+      ...space.folders.flatMap((folder) => folder.lists),
+    ]);
+
+    const currentList = allLists.find((list) => list.id === listId);
+    if (currentList) {
+      setSelectedList(currentList);
+    }
+  }, [listId, spaces]);
 
   const onSelectList = (list: List) => {
     setSelectedList(list);
@@ -142,20 +152,21 @@ export const CreateTask = ({ isOpen, setIsOpen, children }: Props) => {
               >
                 {LABEL.CREATE_TASK}
               </Button>
-              <Button
-                onClick={() => setIsDropdownOpen(true)}
-                className="!rounded-l-none h-[32px] border-l-0 bg-theme-main-dark"
+              <CreateTaskDropdown
+                isOpen={isDropdownOpen}
+                setIsOpen={setIsDropdownOpen}
               >
-                <Icon name="dropdownarrow" className={'text-base'} />
-              </Button>
+                <Button
+                  onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                  className="!rounded-l-none h-[32px] border-l-0 bg-theme-main-dark"
+                >
+                  <Icon name="dropdownarrow" className={'text-base'} />
+                </Button>
+              </CreateTaskDropdown>
             </div>
           </div>
         </DialogContent>
       </Dialog>
-      <CreateTaskDropdown
-        isOpen={isDropdownOpen}
-        setIsOpen={setIsDropdownOpen}
-      />
     </div>
   );
 };
@@ -175,7 +186,10 @@ const PopoverSection = ({
       <Popover modal={true}>
         <PopoverTrigger asChild>
           <Button variant="outline" size="auto" className="text-sm h-[24px]">
-            <ListIcon className={'text-content-default !size-[14px]'} />
+            <ListIcon
+              style={{ color: selectedList ? selectedList.color : '' }}
+              className={'text-content-default !size-[14px]'}
+            />
             {listName}
             <ChevronDownIcon />
           </Button>
@@ -183,19 +197,25 @@ const PopoverSection = ({
         <PopoverContent
           side="bottom"
           align="start"
-          className="max-h-[400px] w-[300px] p-2 overflow-auto"
+          className="!max-w-[290px] p-2 overflow-y-auto"
         >
           <span className="font-bold text-gray-600 text-sm">
             {LABEL.SPACES}
           </span>
-          <div className="flex flex-col mt-2 max-h-[400px] overflow-auto">
+          <div className="flex flex-col max-h-64 mt-2 overflow-scroll">
             {spaces.length > 0 &&
               spaces.map((item: Space, i: number) => (
-                <SpaceList onSelectList={onSelectList} space={item} key={i} />
+                <SpaceList
+                  selectedList={selectedList}
+                  onSelectList={onSelectList}
+                  space={item}
+                  key={i}
+                />
               ))}
           </div>
         </PopoverContent>
       </Popover>
+      {/* Task Type Popover Component */}
       <TaskTypeDropdown>
         <Button
           variant={'outline'}
@@ -210,8 +230,10 @@ const PopoverSection = ({
     </div>
   );
 };
+
 const SpaceList = ({
   space,
+  selectedList,
   onSelectList,
 }: {
   space: Space;
@@ -228,16 +250,16 @@ const SpaceList = ({
         onClick={() => setIsFolderListOpen(!isFolderListOpen)}
         className="cursor-pointer"
       >
-        <div className="flex gap-2 w-[90%] rounded-lg py-[4px] px-1 truncate text-overflow-ellipsis items-center hover:bg-secondary/80">
+        <div className="flex gap-2 text-base w-[90%] rounded-lg py-[4px] px-1 truncate text-overflow-ellipsis items-center hover:bg-secondary/80">
           {hasMouseEntered ? (
             <div>
-              <Icon name={'expandsubtask'} className={'-rotate-90 size-6'} />
+              <Icon name={'expandsubtask'} className={'-rotate-90 size-5'} />
             </div>
           ) : (
             <PlaceholderAvatar
               seed={space.name}
               variant={'initials'}
-              className={'size-6 rounded-lg'}
+              className={'size-5 rounded-lg'}
             />
           )}
           {space.name}
@@ -247,7 +269,12 @@ const SpaceList = ({
         <div className={'space-y-0'}>
           {space.folders.length > 0 &&
             space.folders.map((folder: Folder, i: number) => (
-              <FolderItem onSelectList={onSelectList} folder={folder} key={i} />
+              <FolderItem
+                selectedList={selectedList}
+                onSelectList={onSelectList}
+                folder={folder}
+                key={i}
+              />
             ))}
         </div>
       )}
@@ -255,7 +282,12 @@ const SpaceList = ({
         <div className={'space-y-0 pt-1 ml-[30px]'}>
           {space.lists.length > 0 &&
             space.lists.map((list: List, i: number) => (
-              <ListItem onSelectList={onSelectList} list={list} key={i} />
+              <ListItem
+                selectedList={selectedList}
+                onSelectList={onSelectList}
+                list={list}
+                key={i}
+              />
             ))}
         </div>
       )}
@@ -265,9 +297,11 @@ const SpaceList = ({
 const FolderItem = ({
   folder,
   onSelectList,
+  selectedList,
 }: {
   folder: Folder;
   onSelectList: (list: List) => void;
+  selectedList: List;
 }) => {
   const [hasMouseEntered, setHasMouseEntered] = useState(false);
   const [isListOpen, setIsListOpen] = useState(false);
@@ -278,15 +312,18 @@ const FolderItem = ({
         onMouseEnter={() => setHasMouseEntered(true)}
         onMouseLeave={() => setHasMouseEntered(false)}
         onClick={() => setIsListOpen(!isListOpen)}
-        className="flex items-center cursor-pointer gap-2 ml-[30px] hover:bg-secondary/80 p-[4px] rounded-lg"
+        className="flex text-base items-center cursor-pointer gap-2 ml-[30px] hover:bg-secondary/80 p-[4px] rounded-lg"
       >
         <div className="shrink-0">
           {hasMouseEntered ? (
-            <Icon name="expandsubtask" className="-rotate-90 size-6" />
+            <Icon name="expandsubtask" className="-rotate-90 size-5" />
           ) : isListOpen ? (
-            <FolderOpenIcon className="size-5" />
+            <FolderOpenIcon
+              className="size-4"
+              style={{ color: folder.color }}
+            />
           ) : (
-            <FolderIcon className="size-5" />
+            <FolderIcon className="size-4" style={{ color: folder.color }} />
           )}
         </div>
         <div className="truncate text-foreground max-w-[180px] overflow-hidden whitespace-nowrap">
@@ -297,7 +334,12 @@ const FolderItem = ({
         <div className="ml-[50px]">
           {folder.lists.length > 0 &&
             folder.lists.map((list: List) => (
-              <ListItem onSelectList={onSelectList} key={list.id} list={list} />
+              <ListItem
+                selectedList={selectedList}
+                onSelectList={onSelectList}
+                key={list.id}
+                list={list}
+              />
             ))}
         </div>
       )}
@@ -307,20 +349,32 @@ const FolderItem = ({
 const ListItem = ({
   list,
   onSelectList,
+  selectedList,
 }: {
   list: List;
+  selectedList: List;
   onSelectList: (list: List) => void;
 }) => {
   return (
     <div
       onClick={() => onSelectList(list)}
-      className="flex items-center cursor-pointer gap-2 hover:bg-secondary/80 p-[4px] rounded-lg"
+      className={cn(
+        'flex text-base h-[28px] items-center cursor-pointer gap-2 hover:bg-secondary/80 p-[4px] rounded-lg',
+        selectedList.id === list.id && 'bg-pink-100'
+      )}
     >
       <div className="shrink-0">
-        <Icon name="list" className="size-5 text-content-default" />
+        <Icon
+          name="list"
+          className={`size-4 text-content-tertiary`}
+          style={{ color: list.color }}
+        />
       </div>
-      <div className="truncate text-base max-w-[180px] overflow-hidden whitespace-nowrap">
-        {list.name}
+      <div className="truncate justify-between flex items-center text-base w-full overflow-hidden whitespace-nowrap">
+        <p className="">{list.name}</p>
+        {selectedList.id === list.id && (
+          <Icon name={'okfill01'} className={'text-theme-main'} />
+        )}
       </div>
     </div>
   );
@@ -429,14 +483,14 @@ const SmartInput = ({
   setName,
 }: {
   name: string;
-  setName: () => void;
+  setName: (input: string) => void;
 }) => {
   const [isFocused, setIsFocused] = useState(false);
   return (
     <input
       type="text"
       value={name}
-      onChange={(e) => setName(e.target.value)}
+      onChange={(e: ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
       placeholder="Task Name"
       onFocus={() => setIsFocused(true)}
       onBlur={(e) => {
@@ -456,34 +510,39 @@ const SmartInput = ({
 const CreateTaskDropdown = ({
   isOpen,
   setIsOpen,
+  children,
 }: {
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
+  children: React.ReactNode;
 }) => {
   return (
-    <div className="inline-flex rounded-md ">
-      <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
-        <DropdownMenuContent align="end" className="w-56 p-1" sideOffset={5}>
-          <DropdownMenuItem
+    <Popover open={isOpen} onOpenChange={() => setIsOpen(!isOpen)}>
+      <PopoverTrigger asChild>{children}</PopoverTrigger>
+      <PopoverContent align="end" sideOffset={8} className="w-56 p-1">
+        <div className="flex flex-col space-y-1">
+          <PopoverItem label={LABEL.CREATE_AND_OPEN} onClick={() => {}} />
+          <PopoverItem
+            label={LABEL.CREATE_AND_START_ANOTHER}
             onClick={() => {}}
-            className="text-sm py-2 px-3 cursor-pointer rounded-sm hover:bg-gray-100 focus:bg-gray-100"
-          >
-            {LABEL.CREATE_AND_OPEN}
-          </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={() => {}}
-            className="text-sm py-2 px-3 cursor-pointer rounded-sm hover:bg-gray-100 focus:bg-gray-100"
-          >
-            {LABEL.CREATE_AND_START_ANOTHER}
-          </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={() => {}}
-            className="text-sm py-2 px-3 cursor-pointer rounded-sm hover:bg-gray-100 focus:bg-gray-100"
-          >
-            {LABEL.CREATE_AND_DUPLICATE}
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    </div>
+          />
+          <PopoverItem label={LABEL.CREATE_AND_DUPLICATE} onClick={() => {}} />
+        </div>
+      </PopoverContent>
+    </Popover>
   );
 };
+const PopoverItem = ({
+  label,
+  onClick,
+}: {
+  label: string;
+  onClick: () => void;
+}) => (
+  <button
+    onClick={onClick}
+    className="text-left text-sm py-2 px-3 cursor-pointer rounded-sm hover:bg-gray-100 w-full transition-colors"
+  >
+    {label}
+  </button>
+);

@@ -7,6 +7,7 @@ export interface WorkSpaceGlobal {
   discoverySource: DiscoverySource[];
   interestedFeature: InterestedFeature[];
   tutorial: Tutorial[];
+  priority: Priority[];
 }
 
 export interface WorkType {
@@ -146,8 +147,8 @@ export interface Type {
   id: number;
   name: string;
   label: string;
-  icon: any;
-  color: any;
+  icon: string;
+  color: string;
   isActive: boolean;
 }
 

@@ -81,6 +81,7 @@ export const workspaceApi = createApi({
 
 export const {
   useWorkspaceGlobalQuery,
+  useLazyWorkspaceGlobalQuery,
   useWorkspaceDashBoardRecentQuery,
   useGetAllWorkSpacesQuery,
   useCreateWorkSpaceMutation,
