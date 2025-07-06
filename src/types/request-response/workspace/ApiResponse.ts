@@ -146,8 +146,8 @@ export interface Type {
   id: number;
   name: string;
   label: string;
-  icon: any;
-  color: any;
+  icon: string;
+  color: string;
   isActive: boolean;
 }
 

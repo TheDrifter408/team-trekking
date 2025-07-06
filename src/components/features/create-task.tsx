@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -12,21 +12,12 @@ import {
   TabsTrigger,
   TabsContent,
 } from '@/components/shadcn-ui/tabs';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-} from '@/components/shadcn-ui/dropdown-menu';
 import { Button } from '@/components/shadcn-ui/button.tsx';
-import { cn } from '@/lib/utils/utils.ts';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from '@/components/shadcn-ui/popover';
-import { PlaceholderAvatar } from '@/components/common/avatar-generator';
-import { LABEL } from '@/lib/constants';
-import { toast } from 'sonner';
 import {
   ListIcon,
   XIcon,
@@ -36,10 +27,10 @@ import {
   FolderIcon,
 } from 'lucide-react';
 import { Icon } from '@/assets/icon-path';
-import { useEffect, useRef, useState } from 'react';
-import TaskTypeDropdown from '@/components/common/task-type-dropdown.tsx';
 import { DocEditor } from '@/pages/task/components/doc-editor.tsx';
-import { $getRoot, EditorState } from 'lexical';
+import { EditorState, $getRoot } from 'lexical';
+import { PlaceholderAvatar } from '@/components/common/avatar-generator';
+import TaskTypeDropdown from '@/components/common/task-type-dropdown.tsx';
 import TaskStatusDialog from '@/components/common/task-status-dialog.tsx';
 import { PriorityPopover } from '@/components/common/priority-popover.tsx';
 import { useWorkspaceStore } from '@/stores/zustand/workspace-store.ts';
@@ -49,8 +40,11 @@ import {
   Space,
   Folder,
 } from '@/types/request-response/workspace/ApiResponse';
-import { useAppNavigation } from '@/lib/hooks/useAppNavigation.ts';
 import { CreateTaskRequest } from '@/types/request-response/task/ApiRequest.ts';
+import { useAppNavigation } from '@/lib/hooks/useAppNavigation.ts';
+import { cn } from '@/lib/utils/utils.ts';
+import { LABEL } from '@/lib/constants';
+import { toast } from 'sonner';
 
 interface Props {
   isOpen: boolean;
@@ -143,20 +137,21 @@ export const CreateTask = ({ isOpen, setIsOpen, children }: Props) => {
               >
                 {LABEL.CREATE_TASK}
               </Button>
-              <Button
-                onClick={() => setIsDropdownOpen(true)}
-                className="!rounded-l-none h-[32px] border-l-0 bg-theme-main-dark"
+              <CreateTaskDropdown
+                isOpen={isDropdownOpen}
+                setIsOpen={setIsDropdownOpen}
               >
-                <Icon name="dropdownarrow" className={'text-base'} />
-              </Button>
+                <Button
+                  onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                  className="!rounded-l-none h-[32px] border-l-0 bg-theme-main-dark"
+                >
+                  <Icon name="dropdownarrow" className={'text-base'} />
+                </Button>
+              </CreateTaskDropdown>
             </div>
           </div>
         </DialogContent>
       </Dialog>
-      <CreateTaskDropdown
-        isOpen={isDropdownOpen}
-        setIsOpen={setIsDropdownOpen}
-      />
     </div>
   );
 };
@@ -187,7 +182,7 @@ const PopoverSection = ({
         <PopoverContent
           side="bottom"
           align="start"
-          className="!max-w-[290px] p-2 overflow-auto"
+          className="!max-w-[290px] p-2 overflow-y-auto"
         >
           <span className="font-bold text-gray-600 text-sm">
             {LABEL.SPACES}
@@ -200,6 +195,7 @@ const PopoverSection = ({
           </div>
         </PopoverContent>
       </Popover>
+      {/* Task Type Popover Component */}
       <TaskTypeDropdown>
         <Button
           variant={'outline'}
@@ -214,6 +210,7 @@ const PopoverSection = ({
     </div>
   );
 };
+
 const SpaceList = ({
   space,
   onSelectList,
@@ -440,14 +437,14 @@ const SmartInput = ({
   setName,
 }: {
   name: string;
-  setName: () => void;
+  setName: (input: string) => void;
 }) => {
   const [isFocused, setIsFocused] = useState(false);
   return (
     <input
       type="text"
       value={name}
-      onChange={(e) => setName(e.target.value)}
+      onChange={(e: ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
       placeholder="Task Name"
       onFocus={() => setIsFocused(true)}
       onBlur={(e) => {
@@ -467,34 +464,39 @@ const SmartInput = ({
 const CreateTaskDropdown = ({
   isOpen,
   setIsOpen,
+  children,
 }: {
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
+  children: React.ReactNode;
 }) => {
   return (
-    <div className="inline-flex rounded-md ">
-      <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
-        <DropdownMenuContent align="end" className="w-56 p-1" sideOffset={5}>
-          <DropdownMenuItem
+    <Popover open={isOpen} onOpenChange={() => setIsOpen(!isOpen)}>
+      <PopoverTrigger asChild>{children}</PopoverTrigger>
+      <PopoverContent align="end" sideOffset={8} className="w-56 p-1">
+        <div className="flex flex-col space-y-1">
+          <PopoverItem label={LABEL.CREATE_AND_OPEN} onClick={() => {}} />
+          <PopoverItem
+            label={LABEL.CREATE_AND_START_ANOTHER}
             onClick={() => {}}
-            className="text-sm py-2 px-3 cursor-pointer rounded-sm hover:bg-gray-100 focus:bg-gray-100"
-          >
-            {LABEL.CREATE_AND_OPEN}
-          </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={() => {}}
-            className="text-sm py-2 px-3 cursor-pointer rounded-sm hover:bg-gray-100 focus:bg-gray-100"
-          >
-            {LABEL.CREATE_AND_START_ANOTHER}
-          </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={() => {}}
-            className="text-sm py-2 px-3 cursor-pointer rounded-sm hover:bg-gray-100 focus:bg-gray-100"
-          >
-            {LABEL.CREATE_AND_DUPLICATE}
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    </div>
+          />
+          <PopoverItem label={LABEL.CREATE_AND_DUPLICATE} onClick={() => {}} />
+        </div>
+      </PopoverContent>
+    </Popover>
   );
 };
+const PopoverItem = ({
+  label,
+  onClick,
+}: {
+  label: string;
+  onClick: () => void;
+}) => (
+  <button
+    onClick={onClick}
+    className="text-left text-sm py-2 px-3 cursor-pointer rounded-sm hover:bg-gray-100 w-full transition-colors"
+  >
+    {label}
+  </button>
+);
