@@ -1,4 +1,3 @@
-import { useNavigate } from 'react-router-dom';
 import {
   Dialog,
   DialogContent,
@@ -38,7 +37,7 @@ import {
 import { Icon } from '@/assets/icon-path';
 import { useEffect, useRef, useState } from 'react';
 import TaskTypeDropdown from '@/components/common/task-type-dropdown.tsx';
-import { DocEditor } from '@/pages/task/components/doc-editor.tsx';
+import { DocEditor } from '@/routes/_authNoLayout/task/-components/doc-editor';
 import { $getRoot, EditorState } from 'lexical';
 import TaskStatusDialog from '@/components/common/task-status-dialog.tsx';
 import { PriorityPopover } from '@/components/common/priority-popover.tsx';
@@ -84,7 +83,7 @@ export const CreateTask = ({ isOpen, setIsOpen, children }: Props) => {
       const response = await createTask(payload).unwrap();
       if (!response.id) toast.error('Task creation failed');
       navigate(routes.task, response.id);
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast.error('Task creation failed');
     }
   };
