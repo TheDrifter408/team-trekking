@@ -6,6 +6,7 @@ team-trekking-front-end/
 ├── src/                   # Source code
 │   ├── assets/            # Static assets like images, icons, fonts
 │   ├── components/        # Reusable UI components (buttons, dialogs, etc.)
+│   │   ├── fallbacks/     # Fallback components (ErrorFallback, LoadingFallback, etc.)
 │   │   ├── layout/        # Layout-related components (e.g., sidebar, header)
 │   │   ├── shadcn-ui/     # Customized shadcn/ui components
 │   │   └── space/         # Feature-specific components for the 'space' module
@@ -17,19 +18,40 @@ team-trekking-front-end/
 │   │   ├── validation/    # Zod validation schemas
 │   │   └── utils.ts       # General utility functions
 │   ├── mock/              # Mock data for testing or prototyping
-│   ├── pages/             # Page-level components (mapped to routes)
-│   │   ├── board/         
-│   │   ├── calendar/
-│   │   ├── dashboard/
-│   │   ├── folder/
-│   │   ├── gantt-chart/
-│   │   ├── inbox/
-│   │   ├── layout/
-│   │   ├── list/
-│   │   ├── login/
-│   │   ├── space/
-│   │   └── task/
-│   ├── routes/            # React Router route definitions
+│   ├── routes/            # TanStack Router file-based routing
+│   │   ├── _auth/         # Auth layout (wraps login, signup, forgot)
+│   │   │   ├── route.tsx  # Auth layout component
+│   │   │   ├── login/
+│   │   │   │   └── route.tsx
+│   │   │   ├── signup/
+│   │   │   │   └── route.tsx
+│   │   │   └── forgot/
+│   │   │       └── route.tsx
+│   │   ├── _authNoLayout/ # Authenticated routes without AppLayout
+│   │   │   ├── route.tsx  # Authentication check only
+│   │   │   └── task/
+│   │   │       └── $taskId/
+│   │   │           └── route.tsx
+│   │   ├── _authenticated/ # Main authenticated section with AppLayout
+│   │   │   ├── route.tsx   # AppLayout wrapper
+│   │   │   ├── board/
+│   │   │   │   └── route.tsx
+│   │   │   ├── calendar/
+│   │   │   │   └── route.tsx
+│   │   │   ├── dashboard/
+│   │   │   │   └── route.tsx
+│   │   │   ├── folder/
+│   │   │   │   └── route.tsx
+│   │   │   ├── gantt-chart/
+│   │   │   │   └── route.tsx
+│   │   │   ├── inbox/
+│   │   │   │   └── route.tsx
+│   │   │   ├── list/
+│   │   │   │   └── route.tsx
+│   │   │   └── space/
+│   │   │       └── route.tsx
+│   │   ├── __root.tsx     # Root layout with global fallbacks
+│   │   └── $.tsx          # Catch-all 404 route
 │   ├── service/           # Axios instance and RTK base query setup
 │   │   ├── axiosInstance.ts
 │   │   ├── baseQuery.ts
@@ -53,7 +75,8 @@ team-trekking-front-end/
 ├── components.json        # Custom component registry (used by shadcn/ui)
 ├── index.html             # Main HTML template for Vite
 ├── package.json           # Project metadata and dependencies
-└── tsconfig.json          # TypeScript configuration
+├── tsconfig.json          # TypeScript configuration
+└── tsr.config.json        # TanStack Router configuration
 ```
 
 # 🧠 Developer Notes
