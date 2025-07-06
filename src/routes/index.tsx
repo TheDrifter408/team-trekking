@@ -34,7 +34,7 @@ const AppRoutes = () => {
             <Route path="board" element={<Board />} />
             <Route path="space" element={<Space />} />
             <Route path="folder" element={<Folder />} />
-            <Route path="list" element={<List />} />
+            <Route path="list/:listId" element={<List />} />
             <Route path="calendar" element={<Calendar />} />
             <Route path="inbox" element={<Inbox />} />
           </Route>

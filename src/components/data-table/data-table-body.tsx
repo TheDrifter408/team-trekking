@@ -64,6 +64,7 @@ export const DataTableBody = ({
     count: rows.length,
     getScrollElement: () => parentRef.current,
     estimateSize: () => 40,
+    overscan: 5,
   });
 
   const virtualRows = rowVirtualizer.getVirtualItems();

@@ -7,7 +7,7 @@ export const routes = {
   board: '/board',
   space: '/space',
   folder: '/folder',
-  list: '/list',
+  list: (listId: number | string) => `/list/${listId}`,
   calendar: '/calendar',
   inbox: '/inbox',
 

@@ -41,7 +41,7 @@ import {
   Folder,
 } from '@/types/request-response/workspace/ApiResponse';
 import { CreateTaskRequest } from '@/types/request-response/task/ApiRequest.ts';
-import { useAppNavigation } from '@/lib/hooks/useAppNavigation.ts';
+import { useAppNavigation } from '@/lib/hooks/use-app-navigation.ts';
 import { cn } from '@/lib/utils/utils.ts';
 import { LABEL } from '@/lib/constants';
 import { toast } from 'sonner';
