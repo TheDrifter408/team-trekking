@@ -11,7 +11,10 @@ import {
 import { FilterSection } from './components/filter-section.tsx';
 import { useComponentStore } from '@/stores/zustand/component-state-store.ts';
 import { TabActionBar } from '@/components/common/table-floating-actoin-bar.tsx';
+import { useParams } from 'react-router-dom';
+
 export const List = () => {
+  const { listId } = useParams();
   const currentPage = useMemo(
     () => ({
       type: 'LIST' as HeaderType,
@@ -45,6 +48,7 @@ export const List = () => {
       <div className="flex flex-col h-screen overflow-hidden relative">
         <PageHeader currentPage={currentPage} parents={parents} />
         <FilterSection
+          id={listId}
           isOpen={isOpenTaskCreate}
           setIsOpen={setIsOpenTaskCreate}
         />

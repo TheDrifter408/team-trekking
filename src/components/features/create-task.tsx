@@ -50,9 +50,10 @@ interface Props {
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
   children: React.ReactNode;
+  listId: number;
 }
 
-export const CreateTask = ({ isOpen, setIsOpen, children }: Props) => {
+export const CreateTask = ({ isOpen, setIsOpen, children, listId }: Props) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [selectedList, setSelectedList] = useState<List | null>(null);
   const [name, setName] = useState('');
@@ -60,6 +61,20 @@ export const CreateTask = ({ isOpen, setIsOpen, children }: Props) => {
   const { spaces } = useWorkspaceStore();
   const [createTask] = useCreateTaskMutation();
   const { navigate, routes } = useAppNavigation();
+
+  useEffect(() => {
+    if (!spaces || !listId) return;
+
+    const allLists = spaces.flatMap((space) => [
+      ...space.lists,
+      ...space.folders.flatMap((folder) => folder.lists),
+    ]);
+
+    const currentList = allLists.find((list) => list.id === listId);
+    if (currentList) {
+      setSelectedList(currentList);
+    }
+  }, [listId, spaces]);
 
   const onSelectList = (list: List) => {
     setSelectedList(list);
@@ -190,7 +205,12 @@ const PopoverSection = ({
           <div className="flex flex-col max-h-64 mt-2 overflow-scroll">
             {spaces.length > 0 &&
               spaces.map((item: Space, i: number) => (
-                <SpaceList onSelectList={onSelectList} space={item} key={i} />
+                <SpaceList
+                  selectedList={selectedList}
+                  onSelectList={onSelectList}
+                  space={item}
+                  key={i}
+                />
               ))}
           </div>
         </PopoverContent>
@@ -213,6 +233,7 @@ const PopoverSection = ({
 
 const SpaceList = ({
   space,
+  selectedList,
   onSelectList,
 }: {
   space: Space;
@@ -248,7 +269,12 @@ const SpaceList = ({
         <div className={'space-y-0'}>
           {space.folders.length > 0 &&
             space.folders.map((folder: Folder, i: number) => (
-              <FolderItem onSelectList={onSelectList} folder={folder} key={i} />
+              <FolderItem
+                selectedList={selectedList}
+                onSelectList={onSelectList}
+                folder={folder}
+                key={i}
+              />
             ))}
         </div>
       )}
@@ -256,7 +282,12 @@ const SpaceList = ({
         <div className={'space-y-0 pt-1 ml-[30px]'}>
           {space.lists.length > 0 &&
             space.lists.map((list: List, i: number) => (
-              <ListItem onSelectList={onSelectList} list={list} key={i} />
+              <ListItem
+                selectedList={selectedList}
+                onSelectList={onSelectList}
+                list={list}
+                key={i}
+              />
             ))}
         </div>
       )}
@@ -266,9 +297,11 @@ const SpaceList = ({
 const FolderItem = ({
   folder,
   onSelectList,
+  selectedList,
 }: {
   folder: Folder;
   onSelectList: (list: List) => void;
+  selectedList: List;
 }) => {
   const [hasMouseEntered, setHasMouseEntered] = useState(false);
   const [isListOpen, setIsListOpen] = useState(false);
@@ -301,7 +334,12 @@ const FolderItem = ({
         <div className="ml-[50px]">
           {folder.lists.length > 0 &&
             folder.lists.map((list: List) => (
-              <ListItem onSelectList={onSelectList} key={list.id} list={list} />
+              <ListItem
+                selectedList={selectedList}
+                onSelectList={onSelectList}
+                key={list.id}
+                list={list}
+              />
             ))}
         </div>
       )}
@@ -311,14 +349,19 @@ const FolderItem = ({
 const ListItem = ({
   list,
   onSelectList,
+  selectedList,
 }: {
   list: List;
+  selectedList: List;
   onSelectList: (list: List) => void;
 }) => {
   return (
     <div
       onClick={() => onSelectList(list)}
-      className="flex text-base h-[28px] items-center cursor-pointer gap-2 hover:bg-secondary/80 p-[4px] rounded-lg"
+      className={cn(
+        'flex text-base h-[28px] items-center cursor-pointer gap-2 hover:bg-secondary/80 p-[4px] rounded-lg',
+        selectedList.id === list.id && 'bg-pink-100'
+      )}
     >
       <div className="shrink-0">
         <Icon
@@ -327,8 +370,11 @@ const ListItem = ({
           style={{ color: list.color }}
         />
       </div>
-      <div className="truncate text-base max-w-[180px] overflow-hidden whitespace-nowrap">
-        {list.name}
+      <div className="truncate justify-between flex items-center text-base w-full overflow-hidden whitespace-nowrap">
+        <p className="">{list.name}</p>
+        {selectedList.id === list.id && (
+          <Icon name={'okfill01'} className={'text-theme-main'} />
+        )}
       </div>
     </div>
   );

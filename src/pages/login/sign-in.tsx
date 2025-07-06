@@ -15,9 +15,13 @@ import { useTMTStore } from '@/stores/zustand/index.tsx';
 import { z } from 'zod';
 import { UserRole } from '@/lib/constants/enum.ts';
 import { handleMutation } from '@/lib/utils/utils.ts';
+import { useWorkspaceStore } from '@/stores/zustand/workspace-store.ts';
+import { useLazyWorkspaceGlobalQuery } from '@/service/rtkQueries/workspaceQuery.ts';
 
 export const Login = () => {
   const navigate = useNavigate();
+  const { setWorkspaceGlobal } = useWorkspaceStore();
+  const [getWorkspaceGlobal] = useLazyWorkspaceGlobalQuery();
   const [signIn, { isLoading }] = usePostSignInMutation();
   const { saveUser } = useTMTStore();
   const [errorMessage, setErrorMessage] = useState(null);
@@ -39,6 +43,8 @@ export const Login = () => {
     const { data, error } = await handleMutation(signIn, loginForm);
     if (data) {
       saveUser(data as UserResponse);
+      const workspaceGlobal = await getWorkspaceGlobal().unwrap();
+      setWorkspaceGlobal(workspaceGlobal);
       navigate('/home');
     } else if (error) {
       setErrorMessage(error.data.message);

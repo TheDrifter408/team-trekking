@@ -7,6 +7,7 @@ export interface WorkSpaceGlobal {
   discoverySource: DiscoverySource[];
   interestedFeature: InterestedFeature[];
   tutorial: Tutorial[];
+  priority: Priority[];
 }
 
 export interface WorkType {

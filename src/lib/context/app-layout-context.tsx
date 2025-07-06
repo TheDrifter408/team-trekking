@@ -1,4 +1,3 @@
-// src/lib/context/app-layout-context.tsx
 import { createContext, useContext, ReactNode } from 'react';
 import { SpaceGlobal } from '@/types/request-response/space/ApiResponse';
 

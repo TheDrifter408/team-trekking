@@ -9,6 +9,7 @@ import { CreateTask } from '@/components/features/create-task.tsx';
 interface Props {
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
+  id?: number | string;
 }
 
 interface FilterButtonConfig {
@@ -17,7 +18,7 @@ interface FilterButtonConfig {
   onClick?: () => void;
 }
 
-export const FilterSection = ({ isOpen, setIsOpen }: Props) => {
+export const FilterSection = ({ isOpen, setIsOpen, id }: Props) => {
   const openDrawer = useComponentStore((s) => s.openDrawer);
   const [searchTerm, setSearchTerm] = useState('');
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -124,15 +125,21 @@ export const FilterSection = ({ isOpen, setIsOpen }: Props) => {
             />
           )}
         </div>
-        <CreateTask isOpen={isOpenTaskCreate} setIsOpen={setIsOpenTaskCreate}>
-          <Button
-            onClick={() => setIsOpen(!isOpen)}
-            className="bg-theme-main-dark hover:bg-theme-main text-base text-white px-3 h-[26px] font-medium rounded-md gap-x-1"
+        {id && (
+          <CreateTask
+            listId={Number(id)}
+            isOpen={isOpenTaskCreate}
+            setIsOpen={setIsOpenTaskCreate}
           >
-            {LABEL.ADD_TASK}
-            <Icon name="dropdownarrow" className="text-white w-3 h-3" />
-          </Button>
-        </CreateTask>
+            <Button
+              onClick={() => setIsOpen(!isOpen)}
+              className="bg-theme-main-dark hover:bg-theme-main text-base text-white px-3 h-[26px] font-medium rounded-md gap-x-1"
+            >
+              {LABEL.ADD_TASK}
+              <Icon name="dropdownarrow" className="text-white w-3 h-3" />
+            </Button>
+          </CreateTask>
+        )}
       </div>
     </div>
   );
