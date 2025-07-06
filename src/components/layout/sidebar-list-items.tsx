@@ -1,18 +1,18 @@
 import { ListIcon } from 'lucide-react';
 import { Button } from '@/components/shadcn-ui/button.tsx';
 import { cn } from '@/lib/utils/utils.ts';
-import { useNavigate } from '@tanstack/react-router';
 import { ContextMenu } from '@/components/common/context-menu.tsx';
 import { Icon } from '@/assets/icon-path.tsx';
 import { listMenuConfig } from '@/lib/constants/staticData.ts';
 import { List } from '@/types/request-response/workspace/ApiResponse';
+import { useAppNavigation } from '@/lib/hooks/use-app-navigation.ts';
 
 interface Props {
   listItem: List;
 }
 
 export const SidebarListItems = ({ listItem }: Props) => {
-  const navigate = useNavigate();
+  const { navigate, routes } = useAppNavigation();
   return (
     <div
       key={listItem.id}
@@ -24,7 +24,7 @@ export const SidebarListItems = ({ listItem }: Props) => {
           <Button
             variant={'link'}
             size={'sm'}
-            onClick={() => navigate({ to: '/list' })}
+            onClick={() => navigate(routes.list, listItem.id)}
             className={
               'hover:text-primary text-base no-underline hover:no-underline decoration-1 transition-colors duration-600'
             }
