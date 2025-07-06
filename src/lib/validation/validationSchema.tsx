@@ -80,6 +80,9 @@ const AssigneeObject = z.object({
   name: z.string(),
   avatar: z.string(),
 });
+const User = z.object({
+  email: z.string().email(),
+});
 
 export const addTaskSchema = z.object({
   name: z.string().min(5).max(30),
@@ -121,5 +124,5 @@ export const createFolderSchema = z.object({
   dueDate: z.string().optional(),
   statusViewGroupId: z.number().optional(),
   isInheritStatus: z.boolean().optional(),
-  invitees: z.array(AssigneeObject).optional(),
+  invitees: z.array(User).optional(),
 });

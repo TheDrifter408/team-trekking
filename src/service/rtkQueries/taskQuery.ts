@@ -5,10 +5,15 @@ import { API_URLS } from '@/lib/constants';
 import {
   CreateCheckListItemRequest,
   CreateCheckListRequest,
+  CreateTaskRequest,
   UpdateCheckListItemRequest,
   updateChecklistRequest,
 } from '@/types/request-response/task/ApiRequest.ts';
-import { CheckList } from '@/types/request-response/task/ApiResponse.ts';
+import {
+  CheckList,
+  CreateTaskResponse,
+  Task,
+} from '@/types/request-response/task/ApiResponse.ts';
 
 export const taskApi = createApi({
   reducerPath: 'taskApi',
@@ -70,6 +75,21 @@ export const taskApi = createApi({
       }),
       transformResponse: (response: ApiResponse<string>) => response.data,
     }),
+    createTask: builder.mutation<CreateTaskResponse, CreateTaskRequest>({
+      query: (data: CreateTaskRequest) => ({
+        url: 'task',
+        method: 'POST',
+        data,
+      }),
+      transformResponse: (response: ApiResponse<CreateTaskResponse>) =>
+        response.data,
+    }),
+    getTask: builder.query<Task, number>({
+      query: (taskId: number) => ({
+        url: `task/${taskId}`,
+      }),
+      transformResponse: (response: ApiResponse<Task>) => response.data,
+    }),
   }),
 });
 
@@ -81,4 +101,6 @@ export const {
   useCreateChecklistItemMutation,
   useUpdateChecklistItemMutation,
   useDeleteChecklistItemMutation,
+  useCreateTaskMutation,
+  useLazyGetTaskQuery,
 } = taskApi;
