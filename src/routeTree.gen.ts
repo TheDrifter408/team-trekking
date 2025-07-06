@@ -19,7 +19,6 @@ import { Route as AuthSpaceIndexRouteImport } from './routes/_auth/space/index'
 import { Route as AuthListIndexRouteImport } from './routes/_auth/list/index'
 import { Route as AuthInboxIndexRouteImport } from './routes/_auth/inbox/index'
 import { Route as AuthHomeIndexRouteImport } from './routes/_auth/home/index'
-import { Route as AuthGanttIndexRouteImport } from './routes/_auth/gantt/index'
 import { Route as AuthFolderIndexRouteImport } from './routes/_auth/folder/index'
 import { Route as AuthCalenderIndexRouteImport } from './routes/_auth/calender/index'
 import { Route as AuthBoardIndexRouteImport } from './routes/_auth/board/index'
@@ -74,11 +73,6 @@ const AuthHomeIndexRoute = AuthHomeIndexRouteImport.update({
   path: '/home/',
   getParentRoute: () => AuthRouteRoute,
 } as any)
-const AuthGanttIndexRoute = AuthGanttIndexRouteImport.update({
-  id: '/gantt/',
-  path: '/gantt/',
-  getParentRoute: () => AuthRouteRoute,
-} as any)
 const AuthFolderIndexRoute = AuthFolderIndexRouteImport.update({
   id: '/folder/',
   path: '/folder/',
@@ -120,7 +114,6 @@ export interface FileRoutesByFullPath {
   '/board': typeof AuthBoardIndexRoute
   '/calender': typeof AuthCalenderIndexRoute
   '/folder': typeof AuthFolderIndexRoute
-  '/gantt': typeof AuthGanttIndexRoute
   '/home': typeof AuthHomeIndexRoute
   '/inbox': typeof AuthInboxIndexRoute
   '/list': typeof AuthListIndexRoute
@@ -136,7 +129,6 @@ export interface FileRoutesByTo {
   '/board': typeof AuthBoardIndexRoute
   '/calender': typeof AuthCalenderIndexRoute
   '/folder': typeof AuthFolderIndexRoute
-  '/gantt': typeof AuthGanttIndexRoute
   '/home': typeof AuthHomeIndexRoute
   '/inbox': typeof AuthInboxIndexRoute
   '/list': typeof AuthListIndexRoute
@@ -156,7 +148,6 @@ export interface FileRoutesById {
   '/_auth/board/': typeof AuthBoardIndexRoute
   '/_auth/calender/': typeof AuthCalenderIndexRoute
   '/_auth/folder/': typeof AuthFolderIndexRoute
-  '/_auth/gantt/': typeof AuthGanttIndexRoute
   '/_auth/home/': typeof AuthHomeIndexRoute
   '/_auth/inbox/': typeof AuthInboxIndexRoute
   '/_auth/list/': typeof AuthListIndexRoute
@@ -174,7 +165,6 @@ export interface FileRouteTypes {
     | '/board'
     | '/calender'
     | '/folder'
-    | '/gantt'
     | '/home'
     | '/inbox'
     | '/list'
@@ -190,7 +180,6 @@ export interface FileRouteTypes {
     | '/board'
     | '/calender'
     | '/folder'
-    | '/gantt'
     | '/home'
     | '/inbox'
     | '/list'
@@ -209,7 +198,6 @@ export interface FileRouteTypes {
     | '/_auth/board/'
     | '/_auth/calender/'
     | '/_auth/folder/'
-    | '/_auth/gantt/'
     | '/_auth/home/'
     | '/_auth/inbox/'
     | '/_auth/list/'
@@ -296,13 +284,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthHomeIndexRouteImport
       parentRoute: typeof AuthRouteRoute
     }
-    '/_auth/gantt/': {
-      id: '/_auth/gantt/'
-      path: '/gantt'
-      fullPath: '/gantt'
-      preLoaderRoute: typeof AuthGanttIndexRouteImport
-      parentRoute: typeof AuthRouteRoute
-    }
     '/_auth/folder/': {
       id: '/_auth/folder/'
       path: '/folder'
@@ -352,7 +333,6 @@ interface AuthRouteRouteChildren {
   AuthBoardIndexRoute: typeof AuthBoardIndexRoute
   AuthCalenderIndexRoute: typeof AuthCalenderIndexRoute
   AuthFolderIndexRoute: typeof AuthFolderIndexRoute
-  AuthGanttIndexRoute: typeof AuthGanttIndexRoute
   AuthHomeIndexRoute: typeof AuthHomeIndexRoute
   AuthInboxIndexRoute: typeof AuthInboxIndexRoute
   AuthListIndexRoute: typeof AuthListIndexRoute
@@ -365,7 +345,6 @@ const AuthRouteRouteChildren: AuthRouteRouteChildren = {
   AuthBoardIndexRoute: AuthBoardIndexRoute,
   AuthCalenderIndexRoute: AuthCalenderIndexRoute,
   AuthFolderIndexRoute: AuthFolderIndexRoute,
-  AuthGanttIndexRoute: AuthGanttIndexRoute,
   AuthHomeIndexRoute: AuthHomeIndexRoute,
   AuthInboxIndexRoute: AuthInboxIndexRoute,
   AuthListIndexRoute: AuthListIndexRoute,
