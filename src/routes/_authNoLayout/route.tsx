@@ -12,5 +12,5 @@ export const Route = createFileRoute('/_authNoLayout')({
   component: RouteComponent,
   notFoundComponent: () => {
     return <p>No task found for this id</p>;
-  }
+  },
 });

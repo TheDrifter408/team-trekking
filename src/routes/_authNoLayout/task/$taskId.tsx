@@ -51,6 +51,9 @@ import { LABEL } from '@/lib/constants';
 import { TabActionBar } from '@/components/common/table-floating-actoin-bar';
 import { useLazyGetTaskQuery } from '@/service/rtkQueries/taskQuery';
 import { Member } from '@/types/request-response/workspace/ApiResponse';
+import { Icon } from '@/assets/icon-path';
+import TimeEstimateDropdown from '@/components/common/estimate-time-dropdown';
+import { TaskSkeleton } from './-components/loading';
 
 const availableTags: TagOption[] = [
   { id: 'initiative', label: 'initiative' },
@@ -74,7 +77,7 @@ const priorityFlags: Record<string, string> = {
 const Task: FC = () => {
   const { taskId } = Route.useParams();
 
-  const [getTaskData, { data: taskData }] = useLazyGetTaskQuery();
+  const [getTaskData, { data: taskData, isFetching }] = useLazyGetTaskQuery();
 
   const [enterDates, setEnterDates] = useState<boolean>(false);
   const [enterAssignee, setEnterAssignee] = useState<boolean>(false);
@@ -111,6 +114,10 @@ const Task: FC = () => {
     getTaskData(Number(taskId));
   }, [taskId]);
 
+  if (isFetching || !taskData) {
+    return <TaskSkeleton />;
+  }
+
   return (
     <DataTableProvider value={store}>
       <div
@@ -122,7 +129,8 @@ const Task: FC = () => {
             <div className="flex items-center gap-1 hover:bg-accent w-fit rounded-xl px-2 py-[2px]">
               <CornerLeftUp className="text-muted-foreground" size={14} />
               <Link
-                to={`/task/${Number(taskData.parentTask.id)}`}
+                to="/task/$taskId"
+                params={{ taskId: taskData.parentTask.id.toString() }}
                 className="text-muted-foreground"
               >
                 {taskData.parentTask.name}
@@ -197,7 +205,7 @@ const Task: FC = () => {
                 onHoverChange={setEnterEstimatedTime}
               >
                 <div className="flex -space-x-2 ">
-                  <TimeEstimateDropDown
+                  <TimeEstimateDropdown
                     children={
                       <span cl-assName="text-sm">
                         {taskData?.timeEstimate ?? LABEL.EMPTY}
