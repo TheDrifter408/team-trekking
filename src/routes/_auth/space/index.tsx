@@ -3,7 +3,7 @@ import { Main } from '@/components/layout/main.tsx';
 import { PageHeader } from '@/components/layout/page-header';
 import { Folder, List } from 'lucide-react';
 import { SpaceOverview } from './-components/space-overview';
-import { OverviewCard } from '@/routes/_auth/overview/-components/overview-card';
+import { OverviewCard } from '@/routes/_auth/home/-components/overview-card';
 import { spaceData } from '@/mock';
 import { HeaderType } from '@/types/props/Common.ts';
 

@@ -3,7 +3,7 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { GripVertical } from 'lucide-react';
 import { statusColors, priorityColors } from '@/mock';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from '@tanstack/react-router';
 import { SortableTaskRowProps } from '@/types/props/Common';
 
 const formatTime = (hours: string): string => {
@@ -57,7 +57,7 @@ export const SortableTaskRow: FC<SortableTaskRowProps> = ({
           </button>
           <span
             className="text-sm font-medium text-gray-900 hover:underline cursor-pointer"
-            onClick={() => navigate('/subtask/1')}
+            onClick={() => navigate({ to: 'subtask/1' })}
           >
             {subtask.name}
           </span>

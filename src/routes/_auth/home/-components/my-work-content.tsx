@@ -9,7 +9,7 @@ import {
   TabsList,
   TabsTrigger,
 } from '@/components/shadcn-ui/tabs';
-import { DragAndDropProvider } from '@/routes/_auth/overview/-components/my-work-dnd.tsx';
+import { DragAndDropProvider } from '@/routes/_auth/home/-components/my-work-dnd';
 import { cn } from '@/lib/utils/utils.ts';
 import { LABEL } from '@/lib/constants/appStrings.ts';
 import { MyWorkTask, WorkData } from '@/types/props/Common.ts';

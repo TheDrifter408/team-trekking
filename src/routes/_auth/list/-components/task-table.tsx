@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from '@tanstack/react-router';
 import { statusColors, priorityColors } from '@/mock';
 
 const getRandomKey = (obj: Record<string, string>) => {
@@ -9,7 +9,7 @@ const getRandomKey = (obj: Record<string, string>) => {
 const TaskTable = ({ tasks }) => {
   const navigate = useNavigate();
   const onHandleTaskClick = (task: Task) => {
-    navigate(`/Task/${task.id}`);
+    navigate({ to: `/task/${task.id}` });
   };
 
   return (

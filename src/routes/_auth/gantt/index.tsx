@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { ViewMode, Task } from '@/types/props/public-types.ts';
 import { Gantt } from '@/components/ganttChart/gantt/gantt.tsx';
-import { ViewSwitcher } from './components/view-switcher';
+import { ViewSwitcher } from './-components/view-switcher';
 import 'gantt-task-react/dist/index.css';
 import { Main } from '@/components/layout/main.tsx';
 import { usePageHeader } from '@/lib/context/page-header-context.tsx';
 import { useBreadcrumbNavigation } from '@/lib/hooks/use-breadcrumb.tsx';
+import { createFileRoute } from '@tanstack/react-router';
 
 function initTasks() {
   const currentDate = new Date();
@@ -109,7 +110,7 @@ function getStartEndDateForProject(tasks: any[], projectId: string) {
   return [start, end];
 }
 
-export const GanttChart = () => {
+const GanttChart = () => {
   const { setCurrentView } = usePageHeader();
   setCurrentView('gantt');
 
@@ -209,3 +210,7 @@ export const GanttChart = () => {
     </Main>
   );
 };
+
+export const Route = createFileRoute('/_auth/gantt/')({
+  component: GanttChart,
+});
