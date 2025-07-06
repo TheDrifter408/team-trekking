@@ -8,7 +8,7 @@ import { Button } from '@/components/shadcn-ui/button';
 import { LABEL } from '@/lib/constants/appStrings.ts';
 import { Icon } from '@/assets/icon-path';
 
-const AuthLayout = ({ children }: { children: React.ReactNode }) => {
+const AuthLayout = () => {
   const navigate = useNavigate();
   const location = useRouterState({ select: (s) => s.location.pathname });
 
@@ -66,10 +66,6 @@ const AuthLayout = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-export const Route = createFileRoute('/_unauth/_layout')({
-  component: () => (
-    <AuthLayout>
-      <Outlet />
-    </AuthLayout>
-  ),
+export const Route = createFileRoute('/_unauth')({
+  component: AuthLayout,
 });

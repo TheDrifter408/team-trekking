@@ -1,7 +1,7 @@
 import { ListIcon } from 'lucide-react';
 import { Button } from '@/components/shadcn-ui/button.tsx';
 import { cn } from '@/lib/utils/utils.ts';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from '@tanstack/react-router';
 import { ContextMenu } from '@/components/common/context-menu.tsx';
 import { Icon } from '@/assets/icon-path.tsx';
 import { listMenuConfig } from '@/lib/constants/staticData.ts';
@@ -24,7 +24,7 @@ export const SidebarListItems = ({ listItem }: Props) => {
           <Button
             variant={'link'}
             size={'sm'}
-            onClick={() => navigate('/list')}
+            onClick={() => navigate({ to: '/list' })}
             className={
               'hover:text-primary text-base no-underline hover:no-underline decoration-1 transition-colors duration-600'
             }

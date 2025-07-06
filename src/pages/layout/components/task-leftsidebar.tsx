@@ -13,7 +13,7 @@ import { mockColumns } from '@/mock';
 import { TextTooltip } from '@/components/shadcn-ui/tooltip';
 import { ChevronRight, Ellipsis, Plus } from 'lucide-react';
 import { Icon } from '@/assets/icon-path';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from '@tanstack/react-router';
 
 type SidebarTriggerProps = PropsWithChildren<ButtonProps>;
 
@@ -133,7 +133,7 @@ const ExpandableSubTasks = ({ subtask }: ExpandableSubtasks) => {
                 className={cn(
                   'text-base text-content-default font-medium cursor-pointer truncate max-w-96'
                 )}
-                onClick={() => navigate(`/task`)}
+                onClick={() => navigate({ to: `/task/${subtask.id}` })}
                 onDoubleClick={() => setIsEditing(true)}
               >
                 {subtask.name}

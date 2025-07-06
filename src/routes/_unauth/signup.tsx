@@ -84,7 +84,7 @@ const SignUp = () => {
       try {
         const createResponse = await createUser(createUserForm).unwrap();
         if (createResponse) {
-          navigate({ to: '/home' });
+          navigate({ to: '/auth/home' });
         }
       } catch (e) {
         toast.error(e?.data?.message);
@@ -214,5 +214,5 @@ const SignUp = () => {
 };
 
 export const Route = createFileRoute('/_unauth/signup')({
-  component: () => <SignUp />,
+  component: SignUp,
 });

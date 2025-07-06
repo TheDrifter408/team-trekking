@@ -6,6 +6,7 @@ import { Toaster } from '@/components/shadcn-ui/sonner';
 import { PersistGate } from 'redux-persist/integration/react';
 import { RouterProvider, createRouter } from '@tanstack/react-router';
 import { routeTree } from './routeTree.gen';
+
 const router = createRouter({ routeTree });
 
 declare module '@tanstack/react-router' {

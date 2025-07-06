@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate, useLocation, Link } from 'react-router-dom';
+import React, { useState, useEffect, useCallback } from 'react';
+import { useNavigate, useLocation, Link } from '@tanstack/react-router';
 import {
   IconHomeFilled,
   IconFolderFilled,
@@ -62,20 +62,20 @@ export const PageHeader = ({
   const breadcrumbs = buildBreadcrumbHierarchy(currentPage, parents);
 
   // Determine current view based on current path
-  const getCurrentView = (): ViewType => {
+  const getCurrentView = useCallback((): ViewType => {
     const path = location.pathname;
     const foundView = Object.entries(viewConfig).find(
       ([_, config]) => config.path === path
     );
     return (foundView?.[0] as ViewType) || 'overview';
-  };
+  }, [location.pathname]);
 
   const [currentView, setCurrentView] = useState<ViewType>(getCurrentView());
 
   // Update the current view when the path changes
   useEffect(() => {
     setCurrentView(getCurrentView());
-  }, [location.pathname]);
+  }, [location.pathname, getCurrentView]);
 
   const onViewChange = (view: ViewType) => {
     const viewPath = viewConfig[view].path;

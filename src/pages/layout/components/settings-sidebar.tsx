@@ -11,7 +11,7 @@ import {
   SidebarRail,
   SidebarSeparator,
 } from '@/components/shadcn-ui/sidebar';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from '@tanstack/react-router';
 import { ArrowLeftIcon } from 'lucide-react';
 import { LABEL } from '@/lib/constants/appStrings.ts';
 import { NavGroup } from '@/components/layout/nav-group';
@@ -33,7 +33,7 @@ export const SettingsSidebar = (
     >
       <SidebarHeader className="border-b !px-0">
         <div
-          onClick={() => navigate('/home')}
+          onClick={() => navigate({ to: '/overview' })}
           className="space-x-3 flex items-center m-1 p-1.5 rounded-lg hover:bg-gray-200/60 cursor-pointer"
         >
           <ArrowLeftIcon className={'size-4'} />{' '}

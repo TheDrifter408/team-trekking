@@ -1,5 +1,5 @@
 import { FC, CSSProperties, useState } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet } from '@tanstack/react-router';
 import Cookies from 'js-cookie';
 import { Icon } from '@/assets/icon-path.tsx';
 import { SidebarProvider, SidebarInset } from '@/components/shadcn-ui/sidebar';

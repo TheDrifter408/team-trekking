@@ -1,4 +1,4 @@
-import { Outlet } from 'react-router-dom';
+import { Outlet } from '@tanstack/react-router';
 import { AppSidebar } from '@/pages/layout/components/app-sidebar.tsx';
 import { AppHeader } from '@/pages/layout/components/app-header';
 import { SidebarInset, SidebarProvider } from '@/components/shadcn-ui/sidebar';
@@ -24,9 +24,9 @@ const AppLayout = () => {
     isFetching,
     refetch: refetchSpaces,
   } = useGetWorkspaceSpaceFolderListQuery(
-    { id: workspaceId },
+    { id: workspaceId! },
     {
-      enabled: !workspaceId, // wait for workspaceId to change from being undefined
+      skip: !workspaceId, // wait for workspaceId to change from being undefined
     }
   );
   return (

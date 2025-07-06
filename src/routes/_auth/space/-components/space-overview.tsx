@@ -5,7 +5,7 @@ import {
   CardTitle,
 } from '@/components/shadcn-ui/card';
 import { FolderClosed } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from '@tanstack/react-router';
 interface FolderProps {
   id: string;
   name: string;
@@ -49,7 +49,7 @@ export const SpaceOverview = ({ foldersData }: Props) => {
                 <Card
                   key={folder.id || folder.name}
                   className="h-10 shadow-sm justify-center"
-                  onClick={() => navigate('/folder')}
+                  onClick={() => navigate({ to: '/folder' })}
                 >
                   <CardContent className="p-2 flex items-center space-x-2 cursor-pointer">
                     <div className="flex-shrink-0">

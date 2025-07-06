@@ -15,7 +15,6 @@ import { z } from 'zod';
 import { UserRole } from '@/lib/constants/enum.ts';
 import { handleMutation } from '@/lib/utils/utils.ts';
 
-
 const Login = () => {
   const navigate = useNavigate();
   const [signIn, { isLoading }] = usePostSignInMutation();
@@ -39,7 +38,7 @@ const Login = () => {
     const { data, error } = await handleMutation(signIn, loginForm);
     if (data) {
       saveUser(data as UserResponse);
-      navigate({ to: '..' });
+      navigate({ to: '/overview' });
     } else if (error) {
       setErrorMessage(error.data.message);
     }
@@ -98,5 +97,5 @@ const Login = () => {
 };
 
 export const Route = createFileRoute('/_unauth/login')({
-  component: () => <Login />,
+  component: Login,
 });

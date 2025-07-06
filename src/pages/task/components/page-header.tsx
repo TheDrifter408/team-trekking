@@ -28,7 +28,7 @@ import {
 } from 'lucide-react';
 import { ShareTask } from '@/components/features/share-task.tsx';
 import MoveTask from '@/components/common/move-task.tsx';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from '@tanstack/react-router';
 import {
   DropdownMenu,
   DropdownMenuItem,
@@ -47,7 +47,7 @@ export const PageHeader = ({
   const navigate = useNavigate();
 
   const onClickClose = () => {
-    navigate('/list');
+    navigate({ to: '/list' });
   };
 
   return (
