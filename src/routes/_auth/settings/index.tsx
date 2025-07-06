@@ -1,3 +1,4 @@
+import { createFileRoute } from '@tanstack/react-router';
 import { LABEL } from '@/lib/constants/appStrings.ts';
 import { Main } from '@/components/layout/main';
 import { useState } from 'react';
@@ -218,4 +219,6 @@ const SettingsPage = () => {
   );
 };
 
-export default SettingsPage;
+export const Route = createFileRoute('/_auth/settings/')({
+  component: SettingsPage,
+});

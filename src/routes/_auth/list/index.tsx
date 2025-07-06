@@ -2,10 +2,10 @@ import { createFileRoute } from '@tanstack/react-router'
 
 import { useState, useMemo, useCallback } from 'react';
 import { HeaderType } from '@/types/props/Common.ts';
-import { ListCard } from '@/pages/list/components/list-card.tsx';
+import { ListCard } from './-components/list-card.tsx';
 import { PageHeader } from '@/components/layout/page-header';
 import { DataTable } from '@/components/data-table/data-table.tsx';
-import { ColumnDrawer } from '@/pages/list/components/column-drawer.tsx';
+import { ColumnDrawer } from './-components/column-drawer.tsx';
 import {
   createDataTableStore,
   DataTableProvider,

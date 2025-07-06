@@ -1,6 +1,6 @@
 import { useTMTStore } from '@/stores/zustand';
 import { createFileRoute, Navigate } from '@tanstack/react-router';
-import AppLayout from '@/pages/layout/app-layout';
+import AppLayout from '@/components/layout/app-layout';
 const RouteComponent = () => {
   const { getUser } = useTMTStore();
   const user = getUser(); // returns the user information from when the user signs up or logs in.
@@ -10,4 +10,7 @@ const RouteComponent = () => {
 
 export const Route = createFileRoute('/_auth')({
   component: RouteComponent,
+  notFoundComponent: () => {
+    return <p>This page doesn't exist</p>;
+  }
 });

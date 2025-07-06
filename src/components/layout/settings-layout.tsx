@@ -1,6 +1,6 @@
-import { Outlet } from 'react-router-dom';
-import { SettingsSidebar } from '@/pages/layout/components/settings-sidebar.tsx';
-import { AppHeader } from '@/pages/layout/components/app-header';
+import { Outlet } from '@tanstack/react-router';
+import { SettingsSidebar } from '@/components/layout/settings-sidebar.tsx';
+import { AppHeader } from '@/components/layout/app-header';
 import { SidebarInset, SidebarProvider } from '@/components/shadcn-ui/sidebar';
 import { useTMTStore } from '@/stores/zustand';
 

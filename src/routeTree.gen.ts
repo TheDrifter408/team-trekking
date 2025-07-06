@@ -16,6 +16,7 @@ import { Route as UnauthSignupRouteImport } from './routes/_unauth/signup'
 import { Route as UnauthLoginRouteImport } from './routes/_unauth/login'
 import { Route as UnauthForgotRouteImport } from './routes/_unauth/forgot'
 import { Route as AuthSpaceIndexRouteImport } from './routes/_auth/space/index'
+import { Route as AuthSettingsIndexRouteImport } from './routes/_auth/settings/index'
 import { Route as AuthOverviewIndexRouteImport } from './routes/_auth/overview/index'
 import { Route as AuthListIndexRouteImport } from './routes/_auth/list/index'
 import { Route as AuthInboxIndexRouteImport } from './routes/_auth/inbox/index'
@@ -54,6 +55,11 @@ const UnauthForgotRoute = UnauthForgotRouteImport.update({
 const AuthSpaceIndexRoute = AuthSpaceIndexRouteImport.update({
   id: '/space/',
   path: '/space/',
+  getParentRoute: () => AuthRouteRoute,
+} as any)
+const AuthSettingsIndexRoute = AuthSettingsIndexRouteImport.update({
+  id: '/settings/',
+  path: '/settings/',
   getParentRoute: () => AuthRouteRoute,
 } as any)
 const AuthOverviewIndexRoute = AuthOverviewIndexRouteImport.update({
@@ -103,6 +109,7 @@ export interface FileRoutesByFullPath {
   '/inbox': typeof AuthInboxIndexRoute
   '/list': typeof AuthListIndexRoute
   '/overview': typeof AuthOverviewIndexRoute
+  '/settings': typeof AuthSettingsIndexRoute
   '/space': typeof AuthSpaceIndexRoute
 }
 export interface FileRoutesByTo {
@@ -116,6 +123,7 @@ export interface FileRoutesByTo {
   '/inbox': typeof AuthInboxIndexRoute
   '/list': typeof AuthListIndexRoute
   '/overview': typeof AuthOverviewIndexRoute
+  '/settings': typeof AuthSettingsIndexRoute
   '/space': typeof AuthSpaceIndexRoute
 }
 export interface FileRoutesById {
@@ -133,6 +141,7 @@ export interface FileRoutesById {
   '/_auth/inbox/': typeof AuthInboxIndexRoute
   '/_auth/list/': typeof AuthListIndexRoute
   '/_auth/overview/': typeof AuthOverviewIndexRoute
+  '/_auth/settings/': typeof AuthSettingsIndexRoute
   '/_auth/space/': typeof AuthSpaceIndexRoute
 }
 export interface FileRouteTypes {
@@ -148,6 +157,7 @@ export interface FileRouteTypes {
     | '/inbox'
     | '/list'
     | '/overview'
+    | '/settings'
     | '/space'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -161,6 +171,7 @@ export interface FileRouteTypes {
     | '/inbox'
     | '/list'
     | '/overview'
+    | '/settings'
     | '/space'
   id:
     | '__root__'
@@ -177,6 +188,7 @@ export interface FileRouteTypes {
     | '/_auth/inbox/'
     | '/_auth/list/'
     | '/_auth/overview/'
+    | '/_auth/settings/'
     | '/_auth/space/'
   fileRoutesById: FileRoutesById
 }
@@ -235,6 +247,13 @@ declare module '@tanstack/react-router' {
       path: '/space'
       fullPath: '/space'
       preLoaderRoute: typeof AuthSpaceIndexRouteImport
+      parentRoute: typeof AuthRouteRoute
+    }
+    '/_auth/settings/': {
+      id: '/_auth/settings/'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof AuthSettingsIndexRouteImport
       parentRoute: typeof AuthRouteRoute
     }
     '/_auth/overview/': {
@@ -296,6 +315,7 @@ interface AuthRouteRouteChildren {
   AuthInboxIndexRoute: typeof AuthInboxIndexRoute
   AuthListIndexRoute: typeof AuthListIndexRoute
   AuthOverviewIndexRoute: typeof AuthOverviewIndexRoute
+  AuthSettingsIndexRoute: typeof AuthSettingsIndexRoute
   AuthSpaceIndexRoute: typeof AuthSpaceIndexRoute
 }
 
@@ -306,6 +326,7 @@ const AuthRouteRouteChildren: AuthRouteRouteChildren = {
   AuthInboxIndexRoute: AuthInboxIndexRoute,
   AuthListIndexRoute: AuthListIndexRoute,
   AuthOverviewIndexRoute: AuthOverviewIndexRoute,
+  AuthSettingsIndexRoute: AuthSettingsIndexRoute,
   AuthSpaceIndexRoute: AuthSpaceIndexRoute,
 }
 

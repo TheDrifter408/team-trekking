@@ -57,9 +57,9 @@ export const CreateFolder = ({
   const [invitedUsers, setInvitedUsers] = useState<Member[]>([]);
 
   const [createFolder, { isLoading }] = useCreateFolderMutation();
-  const { data: members } = useGetWorkspaceMemberQuery(currentWorkspace?.id!, {
-    skip: !currentWorkspace?.id,
-  });
+  // const { data: members } = useGetWorkspaceMemberQuery(currentWorkspace?.id!, {
+  //   skip: !currentWorkspace?.id,
+  // });
 
   const {
     register,

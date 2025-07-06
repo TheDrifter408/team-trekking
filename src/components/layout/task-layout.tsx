@@ -3,12 +3,12 @@ import { Outlet } from '@tanstack/react-router';
 import Cookies from 'js-cookie';
 import { Icon } from '@/assets/icon-path.tsx';
 import { SidebarProvider, SidebarInset } from '@/components/shadcn-ui/sidebar';
-import { TaskSidebar } from './components/task-sidebar.tsx';
-import { AppHeader } from '@/pages/layout/components/app-header.tsx';
-import { PageHeader } from '@/pages/task/components/page-header';
+import { TaskSidebar } from '@/components/layout/task-sidebar.tsx';
+import { AppHeader } from '@/components/layout/app-header.tsx';
+import { PageHeader } from '@/components/layout/page-header';
 import { Sheet, SheetContent } from '@/components/shadcn-ui/sheet.tsx';
 import { LABEL } from '@/lib/constants/appStrings.ts';
-import { TaskList } from '@/pages/layout/components/task-leftsidebar.tsx';
+import { TaskList } from '@/components/layout/task-leftsidebar.tsx';
 
 const TaskLayout: FC = () => {
   const defaultOpenRight = Cookies.get('right-sidebar:state') !== 'false';
