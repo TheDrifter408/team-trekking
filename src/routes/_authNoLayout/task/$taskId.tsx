@@ -30,10 +30,9 @@ import {
   PlayCircle,
   PlusIcon,
 } from 'lucide-react';
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { TaskMetaRow } from './-components/task-meta-row';
 import { DatePickerWithRange } from '@/components/common/date-picker';
-import TimeEstimateDropdown from '@/components/common/estimate-time-dropdown';
 import TagDropdownWithSelection from '@/components/common/tag-dropdown';
 import { DocEditor } from './-components/doc-editor';
 import {
@@ -50,6 +49,27 @@ import { DataTable } from '@/components/data-table/data-table';
 import TaskCheckList from '@/components/common/task-check-list';
 import { LABEL } from '@/lib/constants';
 import { TabActionBar } from '@/components/common/table-floating-actoin-bar';
+import { useLazyGetTaskQuery } from '@/service/rtkQueries/taskQuery';
+import { Member } from '@/types/request-response/workspace/ApiResponse';
+
+const availableTags: TagOption[] = [
+  { id: 'initiative', label: 'initiative' },
+  { id: 'backend', label: 'backend' },
+  { id: 'common-docs', label: 'common docs' },
+  { id: 'complex', label: 'complex' },
+  { id: 'fail1', label: 'fail1' },
+  { id: 'fail2', label: 'fail2' },
+  { id: 'fail3', label: 'fail3' },
+  { id: 'frontend', label: 'frontend' },
+  { id: 'ini', label: 'ini' },
+];
+
+const priorityFlags: Record<string, string> = {
+  low: 'rgb(29, 78, 216)', // blue-700
+  mid: 'rgb(252, 231, 53)', // yellow-700
+  high: 'rgb(185, 28, 28)', // red-700
+  none: '',
+};
 
 const Task: FC = () => {
   const { taskId } = Route.useParams();
@@ -64,27 +84,9 @@ const Task: FC = () => {
   const [enterTags, setEnterTags] = useState<boolean>(false);
   const [description, setDescription] = useState(sampleTask.description);
   const [selectedTags, setSelectedTags] = useState<string[]>(['backend']);
-
+  const [selectedAssignees, setSelectedAssignees] = useState<Member[]>([]);
+  const store = createDataTableStore({});
   const { open: isSidebarOpen } = useSidebar();
-
-  const availableTags: TagOption[] = [
-    { id: 'initiative', label: 'initiative' },
-    { id: 'backend', label: 'backend' },
-    { id: 'common-docs', label: 'common docs' },
-    { id: 'complex', label: 'complex' },
-    { id: 'fail1', label: 'fail1' },
-    { id: 'fail2', label: 'fail2' },
-    { id: 'fail3', label: 'fail3' },
-    { id: 'frontend', label: 'frontend' },
-    { id: 'ini', label: 'ini' },
-  ];
-
-  const priorityFlags: Record<string, string> = {
-    low: 'rgb(29, 78, 216)', // blue-700
-    mid: 'rgb(252, 231, 53)', // yellow-700
-    high: 'rgb(185, 28, 28)', // red-700
-    none: '',
-  };
 
   const formatTrackTime = (time: string) => {
     const hourMatch = time.match(/(\d+)\s*hour/);
@@ -93,10 +95,6 @@ const Task: FC = () => {
     const minutes = minuteMatch ? `${minuteMatch[1]}m` : '';
     return [hours, minutes].filter(Boolean).join(' ');
   };
-
-  const [selectedAssignees, setSelectedAssignees] = useState<Assignee[]>([]);
-
-  const store = createDataTableStore({});
 
   const onPressAddChecklist = () => {
     // setIsAddChecklist(true);
@@ -109,6 +107,10 @@ const Task: FC = () => {
     });
   };
 
+  useEffect(() => {
+    getTaskData(Number(taskId));
+  }, [taskId]);
+
   return (
     <DataTableProvider value={store}>
       <div
@@ -116,14 +118,14 @@ const Task: FC = () => {
       >
         <div className="space-y-4">
           {/* Show the parent task title if this is a subtask */}
-          {sampleTask.parentTask && (
+          {taskData && taskData.parentTask && (
             <div className="flex items-center gap-1 hover:bg-accent w-fit rounded-xl px-2 py-[2px]">
               <CornerLeftUp className="text-muted-foreground" size={14} />
               <Link
-                to={`/task/${Number(sampleTask.parentTask.id)}`}
+                to={`/task/${Number(taskData.parentTask.id)}`}
                 className="text-muted-foreground"
               >
-                {sampleTask.parentTask.name}
+                {taskData.parentTask.name}
               </Link>
             </div>
           )}
@@ -131,7 +133,9 @@ const Task: FC = () => {
           <div className="flex items-center border border-accent rounded-lg w-min text-muted-foreground">
             <div className="flex items-center px-1 border-r border-accent">
               <IconCircleLetterT className="rounded-lg" size={16} />
-              <span className="px-2 capitalize">{sampleTask.type}</span>
+              <span className="px-2 capitalize">
+                {taskData?.type.label ?? ''}
+              </span>
               <div>
                 <TaskTypeDropdown>
                   <Button
@@ -150,11 +154,13 @@ const Task: FC = () => {
           </div>
           {/* HEADER => TITLE */}
           <div className="mb-4 flex items-center gap-2">
-            <IconVectorSpline className="text-black" size={16} />
+            {taskData && taskData.parentTask && (
+              <IconVectorSpline className="text-black" size={16} />
+            )}
             <Input
               type="text"
-              value={sampleTask.name}
-              className="!text-3xl w-full !font-bold tracking-tight bg-transparent border-none focus-visible:ring-0 focus-visible:ring-offset-0 px-0"
+              value={taskData?.name ?? ''}
+              className="!text-3xl w-full !font-bold !h-fit tracking-tight bg-transparent border-none focus-visible:ring-0 focus-visible:ring-offset-0 px-0"
             />
           </div>
           <div
@@ -167,42 +173,6 @@ const Task: FC = () => {
             <div className="space-y-1">
               {/* Column 1 */}
               {/* STATUSES */}
-              {/* <TaskMetaRow
-                icon={
-                  <IconCircleDot
-                    className="text-base font-semibold"
-                    size={15}
-                  />
-                }
-                label="Status"
-              >
-                <TaskStatusDialog>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className={cn(
-                      'rounded text-white hover:text-white h-6 px-2 text-xs tracking-wide font-bold flex items-center',
-                      sampleTask.status.color,
-                      `hover:${sampleTask.status.color}`
-                    )}
-                  >
-                    {sampleTask.status.name.toUpperCase()}
-                    <span className="ml-2 pl-2 border-l border-white/40 flex items-center">
-                      <ChevronRight className="w-4 h-4" />
-                    </span>
-                  </Button>
-                </TaskStatusDialog>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className={cn(
-                    'h-6 px-2 rounded-[6px] border',
-                    `hover:${sampleTask.status.color}`
-                  )}
-                >
-                  <IconCheck size={15} />
-                </Button>
-              </TaskMetaRow>*/}
               {/* START AND END DATES */}
               <TaskMetaRow
                 icon={
@@ -227,8 +197,12 @@ const Task: FC = () => {
                 onHoverChange={setEnterEstimatedTime}
               >
                 <div className="flex -space-x-2 ">
-                  <TimeEstimateDropdown
-                    children={<span cl-assName="text-sm">Empty</span>}
+                  <TimeEstimateDropDown
+                    children={
+                      <span cl-assName="text-sm">
+                        {taskData?.timeEstimate ?? LABEL.EMPTY}
+                      </span>
+                    }
                   />
                 </div>
               </TaskMetaRow>
@@ -244,19 +218,18 @@ const Task: FC = () => {
                 hover={enterTrackTime}
                 onHoverChange={setEnterTrackTime}
               >
-                {sampleTask.trackTime === '' ? (
-                  <span className="text-base flex gap-2 items-center font-medium text-muted-foreground">
-                    <PlayCircle size={15} /> Add Time
+                {taskData && !taskData.timeTracked ? (
+                  <span className="text-base flex gap-2 items-center font-medium text-content-tertiary">
+                    <PlayCircle size={15} /> {LABEL.ADD_TIME}
                   </span>
                 ) : (
                   <span className="text-base font-regular">
-                    {formatTrackTime(sampleTask.trackTime)}
+                    {formatTrackTime(String(taskData?.timeTracked))}
                   </span>
                 )}
               </TaskMetaRow>
             </div>
             <div className="space-y-1">
-              {' '}
               {/* Column 2 */}
               {/* ASSIGNEES */}
               <TaskMetaRow
@@ -270,16 +243,10 @@ const Task: FC = () => {
                 hover={enterAssignee}
                 onHoverChange={setEnterAssignee}
               >
-                {/*<SelectUsers
-                  value={selectedAssignees}
-                  displayName={true}
-                  onRemove={() => {}}
-                  multipleSelect={true}
-                  onChange={(assignees) => setSelectedAssignees(assignees)}
-                  users={task.assignees!}
-                  placeholder="No Assignees"
-                  userListTitle="Select an Assignee"
-                />*/}
+                {/* TODO: Populate with proper assignees */}
+                {taskData && taskData?.assignees.length > 0
+                  ? LABEL.NO_ASSIGNEES_SELECTED
+                  : LABEL.NO_ASSIGNEES_SELECTED}
               </TaskMetaRow>
               {/* PRIORITY */}
               <TaskMetaRow
@@ -294,18 +261,23 @@ const Task: FC = () => {
                 onHoverChange={setEnterPriority}
               >
                 <div className="flex -space-x-2">
-                  {sampleTask.priority.length > 0 ? (
+                  {taskData && taskData?.priority ? (
                     <div className="flex gap-2">
                       <IconFlagFilled
                         size={19}
-                        color={priorityFlags[sampleTask.priority]}
+                        color={priorityFlags[taskData.priority.title]}
                       />
                       <span className="text-sm">
-                        {sampleTask.priority.toUpperCase()}
+                        {taskData.priority.title.toUpperCase()}
                       </span>
                     </div>
                   ) : (
-                    <span className="text-sm text-muted-foreground">Empty</span>
+                    <div className={'flex space-x-2 items-center'}>
+                      <Icon name={'priority'} />
+                      <span className="text-base text-muted-foreground">
+                        {LABEL.EMPTY}
+                      </span>
+                    </div>
                   )}
                 </div>
               </TaskMetaRow>
@@ -321,9 +293,10 @@ const Task: FC = () => {
                 hover={enterTags}
                 onHoverChange={setEnterTags}
               >
+                {/* TODO : Populate with Tags Data */}
                 <TagDropdownWithSelection
                   availableTags={availableTags}
-                  selectedTags={selectedTags}
+                  selectedTags={[]}
                   setSelectedTags={setSelectedTags}
                 />
               </TaskMetaRow>
@@ -334,7 +307,7 @@ const Task: FC = () => {
           <div className="space-y-2">
             <DocEditor
               placeholder={"Start writing or type '/' for commands"}
-              value={description}
+              value={''}
               name={'task Description'}
               onChange={onChangeDescription}
               setIsEditing={() => {}}
