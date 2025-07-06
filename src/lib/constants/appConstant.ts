@@ -18,13 +18,18 @@ import {
   Undo2,
 } from 'lucide-react';
 
+const MODE = {
+  LIVE: '146.190.195.64',
+  DEV: '192.168.0.102',
+}
+
 const API_URLS = {
-  AUTH_BASE_URL: 'http://192.168.0.101:3001/',
-  SPACE_BASE_URL: 'http://192.168.0.101:3006/',
-  WORK_SPACE_BASE_URL: 'http://192.168.0.101:3008/',
-  FOLDER_BASE_URL: 'http://192.168.0.101:3003/',
-  LIST_BASE_URL: 'http://192.168.0.101:3004/',
-  TASK_BASE_URL: 'http://192.168.0.101:3007/',
+  AUTH_BASE_URL: `http://${MODE.LIVE}:3001/`,
+  SPACE_BASE_URL: `http://${MODE.LIVE}:3006/`,
+  WORK_SPACE_BASE_URL: `http://${MODE.LIVE}:3008/`,
+  FOLDER_BASE_URL: `http://${MODE.LIVE}:3003/`,
+  LIST_BASE_URL: `http://${MODE.LIVE}:3004/`,
+  TASK_BASE_URL: `http://${MODE.LIVE}:3007/`,
 };
 const HOME_CARD_TITLE = {
   MY_WORK: 'My Work',

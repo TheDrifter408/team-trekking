@@ -11,7 +11,7 @@ import {
   IconFolder,
   IconFolderOpen,
 } from '@tabler/icons-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from '@tanstack/react-router';
 import { Icon } from '@/assets/icon-path.tsx';
 import { folderMenuConfig } from '@/lib/constants/staticData.ts';
 import { ContextMenu } from '@/components/common/context-menu.tsx';
@@ -83,7 +83,7 @@ export const SidebarFolderItems = ({
             <Button
               variant="link"
               size={'sm'}
-              onClick={() => navigate('/folder')}
+              onClick={() => navigate({ to: '/folder' })}
               className={cn(
                 'no-underline hover:no-underline decoration-1 transition-colors duration-600 flex-1 max-w-32'
               )}

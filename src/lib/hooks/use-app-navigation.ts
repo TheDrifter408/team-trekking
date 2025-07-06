@@ -1,5 +1,5 @@
 // src/hooks/useAppNavigation.ts
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from '@tanstack/react-router';
 import { routes } from '@/lib/constants/appRoutes';
 
 export const useAppNavigation = () => {
@@ -16,7 +16,7 @@ export const useAppNavigation = () => {
     replace = false
   ) => {
     const path = typeof route === 'function' ? route(id!) : route;
-    navigate(path, { replace });
+    navigate({ to: `${path}`, replace });
   };
 
   return {

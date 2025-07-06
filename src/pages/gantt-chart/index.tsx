@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import { useState } from 'react';
 import { ViewMode, Task } from '@/types/props/public-types.ts';
 import { Gantt } from '@/components/ganttChart/gantt/gantt.tsx';
 import { ViewSwitcher } from './components/view-switcher';

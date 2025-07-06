@@ -1,4 +1,4 @@
-import { Link, useNavigate } from 'react-router';
+import { Link, useNavigate } from '@tanstack/react-router';
 import {
   BadgeCheck,
   Bell,
@@ -107,7 +107,7 @@ export function NavUser({
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => navigate('/login')}>
+            <DropdownMenuItem onClick={() => navigate({ to: '/login' })}>
               <LogOut />
               Log out
             </DropdownMenuItem>

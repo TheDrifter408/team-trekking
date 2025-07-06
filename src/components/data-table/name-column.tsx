@@ -12,7 +12,7 @@ import { Task } from '@/types/props/Common.ts';
 import { Icon } from '@/assets/icon-path.tsx';
 import { cn } from '@/lib/utils/utils.ts';
 import { Row } from '@tanstack/react-table';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from '@tanstack/react-router';
 
 interface Props {
   task: Task;
@@ -97,7 +97,7 @@ export const NameColumn = ({ task, row }: Props) => {
                 className={cn(
                   'text-base text-content-default font-medium cursor-pointer hover:text-theme-main-dark hover:font-medium truncate max-w-[220px]'
                 )}
-                onClick={() => navigate(`/task`)}
+                onClick={() => navigate({ to: `/task/${task.id}` })}
                 onDoubleClick={() => setIsEditing(true)}
               >
                 {task.name}
