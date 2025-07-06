@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import {
   Dialog,
   DialogContent,
@@ -55,9 +55,9 @@ export const CreateSpace = ({
   const initials = getInitials(spaceName)[0] ?? 'P';
   const [createSpace] = useCreateSpaceMutation();
   const [createStatusView] = useCreateStatusMutation();
-  // const { data: members } = useGetWorkspaceMemberQuery(currentWorkspace?.id!, {
-  //   skip: !currentWorkspace?.id,
-  // });
+  const { data: members } = useGetWorkspaceMemberQuery(currentWorkspace?.id!, {
+    skip: !currentWorkspace?.id,
+  });
 
   const resetForm = () => {
     setSpaceName('');
