@@ -27,8 +27,6 @@ import {
   FolderIcon,
 } from 'lucide-react';
 import { Icon } from '@/assets/icon-path';
-import { DocEditor } from '@/pages/task/components/doc-editor.tsx';
-import { EditorState, $getRoot } from 'lexical';
 import { PlaceholderAvatar } from '@/components/common/avatar-generator';
 import TaskTypeDropdown from '@/components/common/task-type-dropdown.tsx';
 import { DocEditor } from '@/routes/_authNoLayout/task/-components/doc-editor';
