@@ -21,7 +21,7 @@ import {
 const MODE = {
   LIVE: '146.190.195.64',
   DEV: '192.168.0.102',
-}
+};
 
 const API_URLS = {
   AUTH_BASE_URL: `http://${MODE.LIVE}:3001/`,

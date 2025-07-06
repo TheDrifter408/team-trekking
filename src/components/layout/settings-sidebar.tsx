@@ -33,7 +33,7 @@ export const SettingsSidebar = (
     >
       <SidebarHeader className="border-b !px-0">
         <div
-          onClick={() => navigate({ to: '/overview' })}
+          onClick={() => navigate({ to: '/home' })}
           className="space-x-3 flex items-center m-1 p-1.5 rounded-lg hover:bg-gray-200/60 cursor-pointer"
         >
           <ArrowLeftIcon className={'size-4'} />{' '}

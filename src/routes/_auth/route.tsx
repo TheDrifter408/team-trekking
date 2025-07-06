@@ -1,6 +1,7 @@
 import { useTMTStore } from '@/stores/zustand';
 import { createFileRoute, Navigate } from '@tanstack/react-router';
 import AppLayout from '@/components/layout/app-layout';
+import { Fallback } from '@/components/common/fallback-route';
 const RouteComponent = () => {
   const { getUser } = useTMTStore();
   const user = getUser(); // returns the user information from when the user signs up or logs in.
@@ -10,7 +11,8 @@ const RouteComponent = () => {
 
 export const Route = createFileRoute('/_auth')({
   component: RouteComponent,
+  pendingComponent: Fallback,
   notFoundComponent: () => {
     return <p>This page doesn't exist</p>;
-  }
+  },
 });

@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Outlet } from '@tanstack/react-router';
+import { Outlet, useRouterState } from '@tanstack/react-router';
 import { AppSidebar } from '@/components/layout/app-sidebar.tsx';
 import { AppHeader } from '@/components/layout/app-header';
 import { SidebarInset, SidebarProvider } from '@/components/shadcn-ui/sidebar';
@@ -11,6 +11,7 @@ import {
   useGetWorkspaceSpaceFolderListQuery,
 } from '@/service/rtkQueries/workspaceQuery';
 import { useWorkspaceStore } from '@/stores/zustand/workspace-store';
+import { SettingsSidebar } from './settings-sidebar';
 
 const AppLayout = () => {
   const { user } = useTMTStore();
@@ -40,6 +41,10 @@ const AppLayout = () => {
     }
   );
 
+  const router = useRouterState();
+  const pathname = router.location.pathname;
+  const isSettingsRoute = pathname.startsWith('/settings');
+
   useEffect(() => {
     if (spacesFolderList) {
       setSpaceFolderList(spacesFolderList);
@@ -58,13 +63,17 @@ const AppLayout = () => {
         <SidebarProvider className="flex flex-col h-full">
           <AppHeader user={user} />
           <div className="flex flex-1 overflow-hidden">
-            <AppSidebar
-              workSpaces={workSpaces}
-              refetchWorkspaces={refetchWorkspaces}
-              refetchSpaces={refetchSpaces}
-              isFetching={isFetching}
-              spacesFolderList={spacesFolderList}
-            />
+            {isSettingsRoute ? (
+              <SettingsSidebar />
+            ) : (
+              <AppSidebar
+                workSpaces={workSpaces}
+                refetchWorkspaces={refetchWorkspaces}
+                refetchSpaces={refetchSpaces}
+                isFetching={isFetching}
+                spacesFolderList={spacesFolderList}
+              />
+            )}
             <SidebarInset className="flex-1 overflow-auto">
               <Outlet />
             </SidebarInset>

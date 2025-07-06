@@ -38,7 +38,7 @@ const Login = () => {
     const { data, error } = await handleMutation(signIn, loginForm);
     if (data) {
       saveUser(data as UserResponse);
-      navigate({ to: '/overview' });
+      navigate({ to: '/home' });
     } else if (error) {
       setErrorMessage(error.data.message);
     }

@@ -219,6 +219,6 @@ const SettingsPage = () => {
   );
 };
 
-export const Route = createFileRoute('/_auth/settings/')({
+export const Route = createFileRoute('/_auth/settings/general/')({
   component: SettingsPage,
 });

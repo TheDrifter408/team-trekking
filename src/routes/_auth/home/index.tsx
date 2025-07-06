@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { PageHeader } from '@/routes/_auth/overview/-components/page-header';
+import { PageHeader } from '@/routes/_auth/home/-components/page-header';
 import { useState } from 'react';
 import { useWorkspaceDashBoardRecentQuery } from '@/service/rtkQueries/workspaceQuery';
 import { HARD_CARD_LIST, HOME_CARD_TITLE } from '@/lib/constants';
@@ -141,6 +141,6 @@ const Overview = () => {
   );
 };
 
-export const Route = createFileRoute('/_auth/overview/')({
+export const Route = createFileRoute('/_auth/home/')({
   component: Overview,
 });

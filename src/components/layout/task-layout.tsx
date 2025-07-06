@@ -5,10 +5,10 @@ import { Icon } from '@/assets/icon-path.tsx';
 import { SidebarProvider, SidebarInset } from '@/components/shadcn-ui/sidebar';
 import { TaskSidebar } from '@/components/layout/task-sidebar.tsx';
 import { AppHeader } from '@/components/layout/app-header.tsx';
-import { PageHeader } from '@/components/layout/page-header';
 import { Sheet, SheetContent } from '@/components/shadcn-ui/sheet.tsx';
 import { LABEL } from '@/lib/constants/appStrings.ts';
 import { TaskList } from '@/components/layout/task-leftsidebar.tsx';
+import { PageHeader } from '@/routes/_authNoLayout/task/-components/page-header';
 
 const TaskLayout: FC = () => {
   const defaultOpenRight = Cookies.get('right-sidebar:state') !== 'false';
