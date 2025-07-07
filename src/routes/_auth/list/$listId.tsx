@@ -31,6 +31,7 @@ const List = () => {
     []
   );
 
+  const { listId } = Route.useParams();
   const closeDrawer = useComponentStore((s) => s.closeDrawer);
   const isDrawerOpen = useComponentStore((s) => s.isDrawerOpen('list-drawer'));
 
@@ -48,6 +49,7 @@ const List = () => {
       <div className="flex flex-col h-screen overflow-hidden relative">
         <PageHeader currentPage={currentPage} parents={parents} />
         <FilterSection
+          id={listId}
           isOpen={isOpenTaskCreate}
           setIsOpen={setIsOpenTaskCreate}
         />
@@ -68,6 +70,6 @@ const List = () => {
   );
 };
 
-export const Route = createFileRoute('/_auth/list/')({
+export const Route = createFileRoute('/_auth/list/$listId')({
   component: List,
 });
