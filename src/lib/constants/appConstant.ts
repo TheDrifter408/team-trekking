@@ -23,7 +23,7 @@ const MODE = {
   DEV: import.meta.env.VITE_DEV_IP,
 };
 
-const currentMode = MODE.DEV;
+const currentMode = import.meta.env.VITE_MODE === 'LIVE' ? MODE.LIVE : MODE.DEV;
 
 const API_URLS = {
   AUTH_BASE_URL: `http://${currentMode}:${import.meta.env.VITE_AUTH_PORT}/`,
