@@ -118,8 +118,13 @@ Or
 npm install --legecy-peer-deps
 ```
 ### ✅ 3. Start the Development Server
+#### A. To Run the server with the Local API
 ```
-npm run dev
+npm run dev:local
+```
+#### B. To Run the server with the Live API
+```
+npm run dev:live
 ```
 # Story Book Guide:
 Storybook allows us to showcase and test our Components based on the props we pass to it by writing _Stories_.

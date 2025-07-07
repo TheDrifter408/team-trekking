@@ -25,3 +25,5 @@ dist-ssr
 .tanstack
 *storybook.log
 storybook-static
+.env.development
+.env.production
