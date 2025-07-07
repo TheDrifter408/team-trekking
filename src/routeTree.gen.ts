@@ -10,7 +10,6 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as UnauthRouteRouteImport } from './routes/_unauth/route'
-import { Route as AuthNoLayoutRouteRouteImport } from './routes/_authNoLayout/route'
 import { Route as AuthRouteRouteImport } from './routes/_auth/route'
 import { Route as UnauthSignupRouteImport } from './routes/_unauth/signup'
 import { Route as UnauthLoginRouteImport } from './routes/_unauth/login'
@@ -28,10 +27,6 @@ import { Route as AuthSettingsGeneralIndexRouteImport } from './routes/_auth/set
 
 const UnauthRouteRoute = UnauthRouteRouteImport.update({
   id: '/_unauth',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AuthNoLayoutRouteRoute = AuthNoLayoutRouteRouteImport.update({
-  id: '/_authNoLayout',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRouteRoute = AuthRouteRouteImport.update({
@@ -139,7 +134,6 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_auth': typeof AuthRouteRouteWithChildren
-  '/_authNoLayout': typeof AuthNoLayoutRouteRoute
   '/_unauth': typeof UnauthRouteRouteWithChildren
   '/_unauth/forgot': typeof UnauthForgotRoute
   '/_unauth/login': typeof UnauthLoginRoute
@@ -189,7 +183,6 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/_auth'
-    | '/_authNoLayout'
     | '/_unauth'
     | '/_unauth/forgot'
     | '/_unauth/login'
@@ -208,7 +201,6 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   AuthRouteRoute: typeof AuthRouteRouteWithChildren
-  AuthNoLayoutRouteRoute: typeof AuthNoLayoutRouteRoute
   UnauthRouteRoute: typeof UnauthRouteRouteWithChildren
 }
 
@@ -219,13 +211,6 @@ declare module '@tanstack/react-router' {
       path: ''
       fullPath: ''
       preLoaderRoute: typeof UnauthRouteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_authNoLayout': {
-      id: '/_authNoLayout'
-      path: ''
-      fullPath: ''
-      preLoaderRoute: typeof AuthNoLayoutRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_auth': {
@@ -377,7 +362,6 @@ const UnauthRouteRouteWithChildren = UnauthRouteRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   AuthRouteRoute: AuthRouteRouteWithChildren,
-  AuthNoLayoutRouteRoute: AuthNoLayoutRouteRoute,
   UnauthRouteRoute: UnauthRouteRouteWithChildren,
 }
 export const routeTree = rootRouteImport
