@@ -59,6 +59,7 @@ import TimeEstimateDropdown from '@/components/common/estimate-time-dropdown';
 import { TaskSkeleton } from './-components/loading';
 import { Task } from '@/types/request-response/task/ApiResponse.ts';
 import { DateRange } from 'react-day-picker';
+import { socket } from '@/lib/constants';
 
 const availableTags: TagOption[] = [
   { id: 'initiative', label: 'initiative' },
@@ -97,7 +98,7 @@ const TaskComponent: FC = () => {
   const { open: isSidebarOpen } = useSidebar();
 
   const [getTaskData, { data: taskData, isFetching }] = useLazyGetTaskQuery();
-  const [updateTask, { isLoading: isUpdating }] = useUpdateTaskMutation();
+  const [updateTask] = useUpdateTaskMutation();
 
   const formatTrackTime = (time: string) => {
     const hourMatch = time.match(/(\d+)\s*hour/);
@@ -106,6 +107,28 @@ const TaskComponent: FC = () => {
     const minutes = minuteMatch ? `${minuteMatch[1]}m` : '';
     return [hours, minutes].filter(Boolean).join(' ');
   };
+
+  useEffect(() => {
+    const room = 'task123';
+    // Join the room
+    socket.emit('join_room', { room });
+    // Listen to real-time updates
+    socket.on(room, (socketData) => {
+      const { name, startDate, dueDate, description } = socketData.data;
+      setTaskName(name);
+      setDateRange({
+        from: new Date(startDate),
+        to: new Date(dueDate),
+      });
+      setDescription(description);
+    });
+
+    // Cleanup
+    return () => {
+      socket.emit('leave_room', { room });
+      socket.off(room);
+    };
+  }, []);
 
   const onPressAddChecklist = () => {
     // setIsAddChecklist(true);
@@ -124,7 +147,7 @@ const TaskComponent: FC = () => {
   };
 
   const onHandleTaskNameBlur = async () => {
-    if (taskName !== taskData?.name && taskName.trim() !== '') {
+    if (taskName !== taskData?.name && taskName?.trim() !== '') {
       try {
         await handleMutation(updateTask, {
           id: Number(taskId),
@@ -284,7 +307,6 @@ const TaskComponent: FC = () => {
               value={taskName}
               onChange={onHandleTaskNameChange}
               onBlur={onHandleTaskNameBlur}
-              disabled={isUpdating}
               className="!text-3xl w-full !font-bold !h-fit tracking-tight bg-transparent border-none focus-visible:ring-0 focus-visible:ring-offset-0 px-0"
             />
           </div>
