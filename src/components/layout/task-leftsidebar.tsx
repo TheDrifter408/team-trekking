@@ -1,61 +1,24 @@
 'use client';
-import { forwardRef, PropsWithChildren, useState } from 'react';
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarHeader,
-} from '@/components/shadcn-ui/sidebar.tsx';
+import { FC, useState } from 'react';
 import { Button } from '@/components/shadcn-ui/button.tsx';
 import { cn } from '@/lib/utils/utils.ts';
-import { ButtonProps } from '@headlessui/react';
-import { Task } from '@/types/props/Common';
-import { mockColumns } from '@/mock';
+import { Task } from '@/types/request-response/task/ApiResponse';
 import { TextTooltip } from '@/components/shadcn-ui/tooltip';
 import { ChevronRight, Ellipsis, Plus } from 'lucide-react';
 import { Icon } from '@/assets/icon-path';
 import { useNavigate } from '@tanstack/react-router';
 
-type SidebarTriggerProps = PropsWithChildren<ButtonProps>;
-
-export const LeftSidebarTrigger = forwardRef<
-  HTMLButtonElement,
-  SidebarTriggerProps
->(({ children, className, onClick, ...props }, ref) => {
-  return (
-    <Button
-      ref={ref}
-      data-sidebar="trigger"
-      variant="ghost"
-      size="icon"
-      className={cn(className, 'items-center justify-center h-auto')}
-      onClick={(event) => {
-        onClick?.(event);
-      }}
-      {...props}
-    >
-      {children}
-    </Button>
-  );
-});
-
-LeftSidebarTrigger.displayName = 'LeftSidebarTrigger';
-
-interface LeftSidebarProps {
-  className?: string;
+interface TaskListProps {
+  task?: Task;
 }
 
-interface ExpandableSubtasks {
-  subtask: Task;
-}
-
-export const TaskList = () => {
-  const [task] = useState<Task>(mockColumns[0].tasks[2]);
+export const TaskList: FC<TaskListProps> = ({ task }) => {
   return (
     <>
       <div className="px-2 flex items-center justify-between bg-slate-200 group/right_buttons">
         <div className="flex gap-2 py-2">
           <Icon name="progress2" className="text-green-500" />
-          <span className="text-content-default text-base">{task.name}</span>
+          <span className="text-content-default text-base">{task?.name}</span>
         </div>
         <div className="flex invisible group-hover/right_buttons:visible">
           <Button variant={'ghost'} size="icon_sm">
@@ -66,14 +29,24 @@ export const TaskList = () => {
           </Button>
         </div>
       </div>
-      {task.subTask.length > 0 ? (
-        task.subTask.map((task) => <ExpandableSubTasks subtask={task} />)
+      {task ? (
+        task.subTasks.length > 0 ? (
+          task.subTasks.map((task, idx) => (
+            <ExpandableSubTasks key={idx} subtask={task} />
+          ))
+        ) : (
+          <></>
+        )
       ) : (
-        <></>
+        <LoadingSubtasks />
       )}
     </>
   );
 };
+
+interface ExpandableSubtasks {
+  subtask: Task;
+}
 
 const ExpandableSubTasks = ({ subtask }: ExpandableSubtasks) => {
   const navigate = useNavigate();
@@ -99,7 +72,7 @@ const ExpandableSubTasks = ({ subtask }: ExpandableSubtasks) => {
           size={'icon_sm'}
           className={cn(
             'hover:bg-slate-200 p-1 m-0 ml-1 w-min h-min',
-            subtask.subTask.length > 0 ? 'visible' : 'invisible',
+            subtask.subTasks.length > 0 ? 'visible' : 'invisible',
             isExpanded ? 'rotate-45' : 'rotate-0'
           )}
         >
@@ -153,13 +126,13 @@ const ExpandableSubTasks = ({ subtask }: ExpandableSubtasks) => {
         <div
           className={cn(
             `grid transform`,
-            isExpanded && subtask.subTask.length > 0
-              ? `grid-rows-${subtask.subTask.length}`
+            isExpanded && subtask.subTasks.length > 0
+              ? `grid-rows-${subtask.subTasks.length}`
               : 'grid-rows-0'
           )}
         >
-          {subtask.subTask.length > 0 ? (
-            subtask.subTask.map((subtask: Task) => <div>{subtask.name}</div>)
+          {subtask.subTasks.length > 0 ? (
+            subtask.subTasks.map((subtask: Task) => <div>{subtask.name}</div>)
           ) : (
             <></>
           )}
@@ -169,29 +142,38 @@ const ExpandableSubTasks = ({ subtask }: ExpandableSubtasks) => {
   );
 };
 
-export const LeftSidebar = ({ className, ...props }: LeftSidebarProps) => {
+const LoadingSubtasks = () => {
   return (
-    <Sidebar
-      collapsible="offcanvas"
-      side={'left'}
-      className={cn(
-        'absolute !h-[calc(100svh-110px)] border-r overflow-hidden [&>[data-sidebar=sidebar]]:flex-row-reverse',
-        className
-      )}
-      {...props}
-    >
-      {/* Expanded sidebar content */}
-      <Sidebar collapsible="none" className="w-0 hidden flex-1 md:flex">
-        <SidebarHeader className="gap-3.5 border-b p-3">
-          <div className="flex items-center justify-between mt-2">
-            <div className="text-2xl font-medium text-foreground">Subtasks</div>
+    <div className="flex items-center gap-1 hover:bg-slate-200 py-1 animate-pulse">
+      {/* Expand Icon Placeholder */}
+      <div className="max-w-[40px] flex-shrink-0 flex justify-start items-center">
+        <div className="w-5 h-5 bg-gray-300 rounded-sm ml-2" />
+      </div>
+
+      {/* Icon Placeholder */}
+      <div>
+        <div className="w-5 h-5 bg-gray-300 rounded-full" />
+      </div>
+
+      {/* Content Placeholder */}
+      <div className="flex flex-col overflow-hidden flex-1">
+        <div className="flex items-center overflow-hidden px-2">
+          {/* Task name skeleton */}
+          <div className="h-4 bg-gray-300 rounded w-40" />
+
+          {/* Action buttons */}
+          <div className="flex ml-auto gap-1">
+            <div className="w-5 h-5 bg-gray-300 rounded" />
+            <div className="w-5 h-5 bg-gray-300 rounded" />
           </div>
-        </SidebarHeader>
-        <SidebarContent className="flex flex-col gap-0 flex-1 bg-slate-100 w-full">
-          {/* Activity feed section */}
-          <TaskList task={task} />
-        </SidebarContent>
-      </Sidebar>
-    </Sidebar>
+        </div>
+
+        {/* Subtask rows skeleton */}
+        <div className="grid grid-rows-2 mt-1 gap-1">
+          <div className="h-3 bg-gray-200 rounded w-24" />
+          <div className="h-3 bg-gray-200 rounded w-20" />
+        </div>
+      </div>
+    </div>
   );
 };

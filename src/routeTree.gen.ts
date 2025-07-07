@@ -20,7 +20,7 @@ import { Route as AuthHomeIndexRouteImport } from './routes/_auth/home/index'
 import { Route as AuthFolderIndexRouteImport } from './routes/_auth/folder/index'
 import { Route as AuthCalenderIndexRouteImport } from './routes/_auth/calender/index'
 import { Route as AuthBoardIndexRouteImport } from './routes/_auth/board/index'
-import { Route as AuthNoLayoutTaskTaskIdRouteImport } from './routes/_authNoLayout/task/$taskId'
+import { Route as AuthTaskTaskIdRouteImport } from './routes/_auth/task/$taskId'
 import { Route as AuthSpaceSpaceIdRouteImport } from './routes/_auth/space/$spaceId'
 import { Route as AuthListListIdRouteImport } from './routes/_auth/list/$listId'
 import { Route as AuthSettingsProfileIndexRouteImport } from './routes/_auth/settings/profile/index'
@@ -78,10 +78,10 @@ const AuthBoardIndexRoute = AuthBoardIndexRouteImport.update({
   path: '/board/',
   getParentRoute: () => AuthRouteRoute,
 } as any)
-const AuthNoLayoutTaskTaskIdRoute = AuthNoLayoutTaskTaskIdRouteImport.update({
+const AuthTaskTaskIdRoute = AuthTaskTaskIdRouteImport.update({
   id: '/task/$taskId',
   path: '/task/$taskId',
-  getParentRoute: () => AuthNoLayoutRouteRoute,
+  getParentRoute: () => AuthRouteRoute,
 } as any)
 const AuthSpaceSpaceIdRoute = AuthSpaceSpaceIdRouteImport.update({
   id: '/space/$spaceId',
@@ -112,7 +112,7 @@ export interface FileRoutesByFullPath {
   '/signup': typeof UnauthSignupRoute
   '/list/$listId': typeof AuthListListIdRoute
   '/space/$spaceId': typeof AuthSpaceSpaceIdRoute
-  '/task/$taskId': typeof AuthNoLayoutTaskTaskIdRoute
+  '/task/$taskId': typeof AuthTaskTaskIdRoute
   '/board': typeof AuthBoardIndexRoute
   '/calender': typeof AuthCalenderIndexRoute
   '/folder': typeof AuthFolderIndexRoute
@@ -127,7 +127,7 @@ export interface FileRoutesByTo {
   '/signup': typeof UnauthSignupRoute
   '/list/$listId': typeof AuthListListIdRoute
   '/space/$spaceId': typeof AuthSpaceSpaceIdRoute
-  '/task/$taskId': typeof AuthNoLayoutTaskTaskIdRoute
+  '/task/$taskId': typeof AuthTaskTaskIdRoute
   '/board': typeof AuthBoardIndexRoute
   '/calender': typeof AuthCalenderIndexRoute
   '/folder': typeof AuthFolderIndexRoute
@@ -139,14 +139,14 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_auth': typeof AuthRouteRouteWithChildren
-  '/_authNoLayout': typeof AuthNoLayoutRouteRouteWithChildren
+  '/_authNoLayout': typeof AuthNoLayoutRouteRoute
   '/_unauth': typeof UnauthRouteRouteWithChildren
   '/_unauth/forgot': typeof UnauthForgotRoute
   '/_unauth/login': typeof UnauthLoginRoute
   '/_unauth/signup': typeof UnauthSignupRoute
   '/_auth/list/$listId': typeof AuthListListIdRoute
   '/_auth/space/$spaceId': typeof AuthSpaceSpaceIdRoute
-  '/_authNoLayout/task/$taskId': typeof AuthNoLayoutTaskTaskIdRoute
+  '/_auth/task/$taskId': typeof AuthTaskTaskIdRoute
   '/_auth/board/': typeof AuthBoardIndexRoute
   '/_auth/calender/': typeof AuthCalenderIndexRoute
   '/_auth/folder/': typeof AuthFolderIndexRoute
@@ -196,7 +196,7 @@ export interface FileRouteTypes {
     | '/_unauth/signup'
     | '/_auth/list/$listId'
     | '/_auth/space/$spaceId'
-    | '/_authNoLayout/task/$taskId'
+    | '/_auth/task/$taskId'
     | '/_auth/board/'
     | '/_auth/calender/'
     | '/_auth/folder/'
@@ -208,7 +208,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   AuthRouteRoute: typeof AuthRouteRouteWithChildren
-  AuthNoLayoutRouteRoute: typeof AuthNoLayoutRouteRouteWithChildren
+  AuthNoLayoutRouteRoute: typeof AuthNoLayoutRouteRoute
   UnauthRouteRoute: typeof UnauthRouteRouteWithChildren
 }
 
@@ -291,12 +291,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthBoardIndexRouteImport
       parentRoute: typeof AuthRouteRoute
     }
-    '/_authNoLayout/task/$taskId': {
-      id: '/_authNoLayout/task/$taskId'
+    '/_auth/task/$taskId': {
+      id: '/_auth/task/$taskId'
       path: '/task/$taskId'
       fullPath: '/task/$taskId'
-      preLoaderRoute: typeof AuthNoLayoutTaskTaskIdRouteImport
-      parentRoute: typeof AuthNoLayoutRouteRoute
+      preLoaderRoute: typeof AuthTaskTaskIdRouteImport
+      parentRoute: typeof AuthRouteRoute
     }
     '/_auth/space/$spaceId': {
       id: '/_auth/space/$spaceId'
@@ -332,6 +332,7 @@ declare module '@tanstack/react-router' {
 interface AuthRouteRouteChildren {
   AuthListListIdRoute: typeof AuthListListIdRoute
   AuthSpaceSpaceIdRoute: typeof AuthSpaceSpaceIdRoute
+  AuthTaskTaskIdRoute: typeof AuthTaskTaskIdRoute
   AuthBoardIndexRoute: typeof AuthBoardIndexRoute
   AuthCalenderIndexRoute: typeof AuthCalenderIndexRoute
   AuthFolderIndexRoute: typeof AuthFolderIndexRoute
@@ -344,6 +345,7 @@ interface AuthRouteRouteChildren {
 const AuthRouteRouteChildren: AuthRouteRouteChildren = {
   AuthListListIdRoute: AuthListListIdRoute,
   AuthSpaceSpaceIdRoute: AuthSpaceSpaceIdRoute,
+  AuthTaskTaskIdRoute: AuthTaskTaskIdRoute,
   AuthBoardIndexRoute: AuthBoardIndexRoute,
   AuthCalenderIndexRoute: AuthCalenderIndexRoute,
   AuthFolderIndexRoute: AuthFolderIndexRoute,
@@ -356,17 +358,6 @@ const AuthRouteRouteChildren: AuthRouteRouteChildren = {
 const AuthRouteRouteWithChildren = AuthRouteRoute._addFileChildren(
   AuthRouteRouteChildren,
 )
-
-interface AuthNoLayoutRouteRouteChildren {
-  AuthNoLayoutTaskTaskIdRoute: typeof AuthNoLayoutTaskTaskIdRoute
-}
-
-const AuthNoLayoutRouteRouteChildren: AuthNoLayoutRouteRouteChildren = {
-  AuthNoLayoutTaskTaskIdRoute: AuthNoLayoutTaskTaskIdRoute,
-}
-
-const AuthNoLayoutRouteRouteWithChildren =
-  AuthNoLayoutRouteRoute._addFileChildren(AuthNoLayoutRouteRouteChildren)
 
 interface UnauthRouteRouteChildren {
   UnauthForgotRoute: typeof UnauthForgotRoute
@@ -386,7 +377,7 @@ const UnauthRouteRouteWithChildren = UnauthRouteRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   AuthRouteRoute: AuthRouteRouteWithChildren,
-  AuthNoLayoutRouteRoute: AuthNoLayoutRouteRouteWithChildren,
+  AuthNoLayoutRouteRoute: AuthNoLayoutRouteRoute,
   UnauthRouteRoute: UnauthRouteRouteWithChildren,
 }
 export const routeTree = rootRouteImport
