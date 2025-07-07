@@ -17,6 +17,7 @@ import {
   Underline,
   Undo2,
 } from 'lucide-react';
+import { io } from 'socket.io-client';
 
 const MODE = {
   LIVE: import.meta.env.VITE_LIVE_IP,
@@ -33,6 +34,9 @@ const API_URLS = {
   LIST_BASE_URL: `http://${currentMode}:${import.meta.env.VITE_LIST_PORT}/`,
   TASK_BASE_URL: `http://${currentMode}:${import.meta.env.VITE_TASK_PORT}/`,
 };
+
+const socket = io(`${currentMode}:3011`);
+
 const HOME_CARD_TITLE = {
   MY_WORK: 'My Work',
   ASSIGNED_COMMENTS: 'Assigned Comments',
@@ -200,19 +204,7 @@ const TEXT_OPTIONS = [
 const TUTORIAL_TIMER = 3600000; // Equates to 1 Hour ( 60 * 60 * 100 ms )
 const LOW_PRIORITY = 1;
 
-export {
-  API_URLS,
-  HARD_CARD_LIST,
-  HEADINGS,
-  COLUMN_META,
-  TEXT_OPTIONS,
-  TEXT_ACTIONS,
-  HOME_CARD_TITLE,
-  TUTORIAL_TIMER,
-  LOW_PRIORITY,
-};
-
-export const ACTION = {
+const ACTION = {
   CREATE_SPACE: 'create_space',
   MANAGE_SPACES: 'manage_spaces',
   EXPAND_FOLDERS: 'expand_folders',
@@ -269,4 +261,18 @@ export const ACTION = {
   CREATE_FOLDER: 'create_folder',
   CREATE_DASHBOARD: 'create_dashboard',
   EDIT_SPACE: 'edit_space',
+};
+
+export {
+  API_URLS,
+  HARD_CARD_LIST,
+  HEADINGS,
+  COLUMN_META,
+  TEXT_OPTIONS,
+  TEXT_ACTIONS,
+  HOME_CARD_TITLE,
+  TUTORIAL_TIMER,
+  LOW_PRIORITY,
+  ACTION,
+  socket,
 };
