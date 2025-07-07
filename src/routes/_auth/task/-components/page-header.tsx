@@ -40,18 +40,18 @@ import {
 export const PageHeader = ({
   onToggleSidebarOpen,
 }: {
-  onToggleSidebarOpen: (open: boolean) => void;
+  onToggleSidebarOpen: () => void;
 }) => {
   const [openShareTask, setOpenShareTask] = useState<boolean>(false);
 
   const navigate = useNavigate();
 
   const onClickClose = () => {
-    navigate({ to: '/list' });
+    navigate({ to: '/home' });
   };
 
   return (
-    <div className="py-2 bg-sidebar/80 border w-full flex items-center justify-between px-4">
+    <div className="py-2 bg-sidebar/80 w-full flex items-center justify-between px-4">
       <TooltipProvider>
         <div className="relative flex items-center justify-between">
           <Button onClick={onToggleSidebarOpen} variant={'ghost'}>

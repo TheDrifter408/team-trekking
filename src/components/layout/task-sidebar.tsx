@@ -23,16 +23,16 @@ import {
 import { Textarea } from '@/components/shadcn-ui/textarea.tsx';
 import { Button } from '@/components/shadcn-ui/button.tsx';
 import { cn } from '@/lib/utils/utils.ts';
-import { TaskActivityNotifications } from '@/routes/_authNoLayout/task/-components/task-activity-notifications';
+import { TaskActivityNotifications } from '@/routes/_auth/task/-components/task-activity-notifications';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from '@/components/shadcn-ui/dropdown-menu.tsx';
 import { filterOptions, taskNotificationUsers } from '@/mock';
-import { TaskActivityFilters } from '@/routes/_authNoLayout/task/-components/task-activity-filters.tsx';
+import { TaskActivityFilters } from '@/routes/_auth/task/-components/task-activity-filters.tsx';
 import { ButtonProps } from '@headlessui/react';
-import TaskActivitySearch from '@/routes/_authNoLayout/task/-components/task-activity-search.tsx';
+import TaskActivitySearch from '@/routes/_auth/task/-components/task-activity-search.tsx';
 
 type SidebarTriggerProps = PropsWithChildren<ButtonProps>;
 
@@ -119,7 +119,7 @@ export const TaskSidebar = ({ ...props }) => {
     <Sidebar
       collapsible="icon"
       side={'right'}
-      className="top-[99px] !z-30 !h-[calc(100svh-110px)] border-l overflow-hidden [&>[data-sidebar=sidebar]]:flex-row-reverse"
+      className="top-[52px] !z-30 !h-[calc(100svh-110px)] border-l overflow-hidden [&>[data-sidebar=sidebar]]:flex-row-reverse"
       {...props}
     >
       {/* Mini sidebar with icons */}

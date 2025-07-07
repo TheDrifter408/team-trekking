@@ -27,7 +27,7 @@ export const TaskMetaRow = ({
     }
   };
   return (
-    <div className="w-full flex md:w-full lg:w-4/5 items-center gap-2">
+    <div className="w-full flex md:w-full lg:w-2/3 items-center gap-2">
       <div className="w-1/2 flex items-center justify-between">
         <span className="text-base flex items-center gap-2 flex-nowrap text-nowrap">
           {icon}

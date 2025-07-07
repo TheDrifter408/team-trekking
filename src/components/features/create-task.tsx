@@ -29,7 +29,7 @@ import {
 import { Icon } from '@/assets/icon-path';
 import { PlaceholderAvatar } from '@/components/common/avatar-generator';
 import TaskTypeDropdown from '@/components/common/task-type-dropdown.tsx';
-import { DocEditor } from '@/routes/_authNoLayout/task/-components/doc-editor';
+import { DocEditor } from '@/routes/_auth/task/-components/doc-editor';
 import { $getRoot, EditorState } from 'lexical';
 import TaskStatusDialog from '@/components/common/task-status-dialog.tsx';
 import { PriorityPopover } from '@/components/common/priority-popover.tsx';
@@ -432,7 +432,7 @@ const CollapsibleSection = <T,>({
 const Description = () => {
   const [description, setDescription] = useState('');
   const [isEditing, setIsEditing] = useState(false);
-  const editorRef = useRef(null);
+  const editorRef = useRef<HTMLDivElement>(null);
 
   const onChangeDescription = (editorState: EditorState) => {
     editorState.read(() => {

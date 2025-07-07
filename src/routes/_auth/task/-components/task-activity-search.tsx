@@ -8,7 +8,7 @@ import {
 } from '@/types/interfaces/activitySearch';
 import { activitySearchData } from '@/mock/activitySearchData.ts';
 import { LABEL } from '@/lib/constants';
-import { Comment } from '@/routes/_authNoLayout/task/-components/Comment';
+import { Comment } from '@/routes/_auth/task/-components/Comment';
 
 const StatusBadge: React.FC<StatusBadgeProps> = ({ status }) => {
   const getStatusColor = (status: string): string => {
