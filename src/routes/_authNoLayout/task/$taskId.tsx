@@ -88,10 +88,10 @@ const TaskComponent: FC = () => {
   const [enterTrackTime, setEnterTrackTime] = useState<boolean>(false);
   const [enterTags, setEnterTags] = useState<boolean>(false);
   const [description, setDescription] = useState(sampleTask.description);
-  const [selectedTags, setSelectedTags] = useState<string[]>(['backend']);
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [selectedAssignees, setSelectedAssignees] = useState<Member[]>([]);
   const [taskName, setTaskName] = useState<string>('');
-  const [estimatedTime, setEstimatedTime] = useState<string>(null);
+  const [estimatedTime, setEstimatedTime] = useState<string | null>(null);
   const [dateRange, setDateRange] = useState<DateRange | undefined>();
   const store = createDataTableStore({});
   const { open: isSidebarOpen } = useSidebar();
@@ -442,6 +442,9 @@ const TaskComponent: FC = () => {
               name={'task Description'}
               onChange={onChangeDescription}
               setIsEditing={() => {}}
+              onBlur={() => {
+                onHandleUpdateTask({ description: description });
+              }}
             />
           </div>
         </div>
