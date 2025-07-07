@@ -58,6 +58,7 @@ import { Icon } from '@/assets/icon-path';
 import TimeEstimateDropdown from '@/components/common/estimate-time-dropdown';
 import { TaskSkeleton } from './-components/loading';
 import { Task } from '@/types/request-response/task/ApiResponse.ts';
+import { DateRange } from 'react-day-picker';
 
 const availableTags: TagOption[] = [
   { id: 'initiative', label: 'initiative' },
@@ -90,7 +91,8 @@ const TaskComponent: FC = () => {
   const [selectedTags, setSelectedTags] = useState<string[]>(['backend']);
   const [selectedAssignees, setSelectedAssignees] = useState<Member[]>([]);
   const [taskName, setTaskName] = useState<string>('');
-  const [estimatedTime, setEstimatedTime] = useState<string>('');
+  const [estimatedTime, setEstimatedTime] = useState<string>(null);
+  const [dateRange, setDateRange] = useState<DateRange | undefined>();
   const store = createDataTableStore({});
   const { open: isSidebarOpen } = useSidebar();
 
@@ -117,11 +119,11 @@ const TaskComponent: FC = () => {
     });
   };
 
-  const handleTaskNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onHandleTaskNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTaskName(e.target.value);
   };
 
-  const handleTaskNameBlur = async () => {
+  const onHandleTaskNameBlur = async () => {
     if (taskName !== taskData?.name && taskName.trim() !== '') {
       try {
         await handleMutation(updateTask, {
@@ -134,7 +136,8 @@ const TaskComponent: FC = () => {
       }
     }
   };
-  const handleUpdateTask = async (updates: Partial<any>) => {
+
+  const onHandleUpdateTask = async (updates: Partial<any>) => {
     try {
       const { data } = await handleMutation<Task>(updateTask, {
         id: Number(taskId),
@@ -145,6 +148,61 @@ const TaskComponent: FC = () => {
       }
     } catch (error) {
       console.error('Failed to update task:', error);
+    }
+  };
+
+  const onHandleDateRangeChange = async (
+    newDateRange: DateRange | undefined
+  ) => {
+    setDateRange(newDateRange);
+
+    if (newDateRange?.from && newDateRange?.to) {
+      try {
+        // Format dates to match your API format: "2024-07-01T00:00:00Z"
+        const startDate = new Date(newDateRange.from);
+        const dueDate = new Date(newDateRange.to);
+
+        // Set time to start of day for startDate and end of day for dueDate
+        startDate.setHours(0, 0, 0, 0);
+        dueDate.setHours(23, 59, 59, 999);
+
+        const updates = {
+          startDate: startDate.toISOString(),
+          dueDate: dueDate.toISOString(),
+        };
+
+        await handleMutation(updateTask, {
+          id: Number(taskId),
+          ...updates,
+        });
+      } catch (error) {
+        console.error('Failed to update task dates:', error);
+        // Revert to previous state on error
+        if (taskData?.startDate && taskData?.dueDate) {
+          setDateRange({
+            from: new Date(taskData.startDate),
+            to: new Date(taskData.dueDate),
+          });
+        }
+      }
+    } else if (newDateRange?.from && !newDateRange?.to) {
+      // Handle single date selection (only start date)
+      try {
+        const startDate = new Date(newDateRange.from);
+        startDate.setHours(0, 0, 0, 0);
+
+        const updates = {
+          startDate: startDate.toISOString(),
+          dueDate: null, // Clear due date if only start date is selected
+        };
+
+        await handleMutation(updateTask, {
+          id: Number(taskId),
+          ...updates,
+        });
+      } catch (error) {
+        console.error('Failed to update task start date:', error);
+      }
     }
   };
 
@@ -159,6 +217,14 @@ const TaskComponent: FC = () => {
       setSelectedTags(taskData.tags?.map((tag) => tag.id) || []);
       setSelectedAssignees(taskData?.assignees || []);
       setEstimatedTime(taskData?.timeEstimate?.toString() || '');
+
+      // Set date range from task data
+      if (taskData.startDate || taskData.dueDate) {
+        setDateRange({
+          from: taskData.startDate ? new Date(taskData.startDate) : undefined,
+          to: taskData.dueDate ? new Date(taskData.dueDate) : undefined,
+        });
+      }
     }
   }, [taskData]);
 
@@ -216,8 +282,8 @@ const TaskComponent: FC = () => {
             <Input
               type="text"
               value={taskName}
-              onChange={handleTaskNameChange}
-              onBlur={handleTaskNameBlur}
+              onChange={onHandleTaskNameChange}
+              onBlur={onHandleTaskNameBlur}
               disabled={isUpdating}
               className="!text-3xl w-full !font-bold !h-fit tracking-tight bg-transparent border-none focus-visible:ring-0 focus-visible:ring-offset-0 px-0"
             />
@@ -241,7 +307,11 @@ const TaskComponent: FC = () => {
                 hover={enterDates}
                 onHoverChange={setEnterDates}
               >
-                <DatePickerWithRange />
+                <DatePickerWithRange
+                  value={dateRange}
+                  onChange={onHandleDateRangeChange}
+                  placeholder="Set dates"
+                />
               </TaskMetaRow>
               {/* TIME ESTIMATE */}
               <TaskMetaRow
@@ -259,7 +329,7 @@ const TaskComponent: FC = () => {
                   <TimeEstimateDropdown
                     time={estimatedTime}
                     onTimeEstimateChange={(minutes) => {
-                      handleUpdateTask({ timeEstimate: minutes });
+                      onHandleUpdateTask({ timeEstimate: minutes });
                     }}
                   >
                     <span className="text-sm cursor-pointer hover:text-foreground">

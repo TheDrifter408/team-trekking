@@ -26,13 +26,31 @@ import {
   TooltipTrigger,
 } from '@/components/shadcn-ui/tooltip.tsx';
 
+interface DatePickerWithRangeProps
+  extends React.HTMLAttributes<HTMLDivElement> {
+  value?: DateRange;
+  onChange?: (dateRange: DateRange | undefined) => void;
+  placeholder?: string;
+}
+
 export function DatePickerWithRange({
   className,
-}: React.HTMLAttributes<HTMLDivElement>) {
-  const [date, setDate] = React.useState<DateRange | undefined>({
-    from: new Date(),
-    to: addDays(new Date(), 7),
-  });
+  value,
+  onChange,
+  placeholder = 'Pick a date',
+}: DatePickerWithRangeProps) {
+  const [date, setDate] = React.useState<DateRange | undefined>(value);
+
+  // Update local state when value prop changes
+  React.useEffect(() => {
+    setDate(value);
+  }, [value]);
+
+  // Handle date selection
+  const handleDateSelect = (newDate: DateRange | undefined) => {
+    setDate(newDate);
+    onChange?.(newDate);
+  };
 
   // Function to smartly format dates based on proximity
   const formatSmartDate = (date: Date): string => {
@@ -109,7 +127,7 @@ export function DatePickerWithRange({
                 </TooltipProvider>
               )
             ) : (
-              <span>Pick a date</span>
+              <span>{placeholder}</span>
             )}
           </div>
         </PopoverTrigger>
@@ -119,7 +137,7 @@ export function DatePickerWithRange({
             mode="range"
             defaultMonth={date?.from}
             selected={date}
-            onSelect={setDate}
+            onSelect={handleDateSelect}
             numberOfMonths={2}
           />
         </PopoverContent>
