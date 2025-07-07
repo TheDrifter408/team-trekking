@@ -1,3 +1,4 @@
+import React, { ReactNode } from 'react';
 import {
   Popover,
   PopoverTrigger,
@@ -8,31 +9,36 @@ import { Separator } from '@/components/shadcn-ui/separator';
 import { Icon } from '@/assets/icon-path';
 import { Ban } from 'lucide-react';
 import { LABEL } from '@/lib/constants/appStrings';
-import { ReactNode } from 'react';
+import { Priority } from '@/types/request-response/workspace/ApiResponse';
 
 export const PriorityPopover = ({
   isOpen,
   setIsOpen,
   children,
+  priorityList,
 }: {
   isOpen?: boolean;
   setIsOpen?: (open: boolean) => void;
   children: ReactNode;
+  priorityList: Priority[];
 }) => {
   return (
-    <Popover open={isOpen} onOpenChange={setIsOpen}>
+    <Popover modal={true} open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger asChild>{children}</PopoverTrigger>
-      <PopoverContent className="w-[178px] flex flex-col px-[6px] min-h-[70px]">
-        <PriorityButton
-          title={LABEL.URGENT}
-          className={'text-content-danger'}
-        />
-        <PriorityButton title={LABEL.HIGH} className={'text-content-warning'} />
-        <PriorityButton
-          title={LABEL.NORMAL}
-          className={'text-content-normal'}
-        />
-        <PriorityButton title={LABEL.LOW} className={'text-content-tertiary'} />
+      <PopoverContent
+        side={'bottom'}
+        align={'start'}
+        className="w-[178px] flex flex-col p-0 min-h-[70px]"
+      >
+        {priorityList &&
+          priorityList.length > 0 &&
+          priorityList.map((priority) => (
+            <PriorityButton
+              title={priority.title}
+              style={{ color: priority.color }}
+            />
+          ))}
+
         <Separator className={'!h-[1px] my-1'} />
         <Button
           variant="ghost"
@@ -51,17 +57,19 @@ export const PriorityPopover = ({
 export const PriorityButton = ({
   title,
   className = '',
+  style,
 }: {
   title: string;
   className?: string;
+  style?: React.CSSProperties;
 }) => {
   return (
     <Button
       variant="ghost"
-      className="h-[32px] text-base flex justify-start items-center px-3"
+      className="h-[32px] !cursor-pointer hover:bg-secondary text-base flex justify-start items-center px-3"
     >
       <div className="w-6 flex justify-center items-center shrink-0">
-        <Icon name={'priority02'} className={className} />
+        <Icon name={'priority02'} style={style} className={className} />
       </div>
       <span className="ml-2 font-normal text-lg">{title}</span>
     </Button>

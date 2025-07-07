@@ -9,15 +9,19 @@ import { AuthCard } from './-components/auth-card';
 import { FormInputField } from './-components/form-input.tsx';
 import { loginSchema } from '@/lib/validation/validationSchema.tsx';
 import { usePostSignInMutation } from '@/service/rtkQueries/authQuery.ts';
+import { useLazyWorkspaceGlobalQuery } from '@/service/rtkQueries/workspaceQuery.ts';
 import { UserResponse } from '@/types/request-response/auth/ApiResponse.ts';
 import { useTMTStore } from '@/stores/zustand/index.tsx';
 import { z } from 'zod';
 import { UserRole } from '@/lib/constants/enum.ts';
 import { handleMutation } from '@/lib/utils/utils.ts';
+import { useWorkspaceStore } from '@/stores/zustand/workspace-store.ts';
 
 const Login = () => {
   const navigate = useNavigate();
+  const { setWorkspaceGlobal } = useWorkspaceStore();
   const [signIn, { isLoading }] = usePostSignInMutation();
+  const [fetchWorkspaceGlobal] = useLazyWorkspaceGlobalQuery();
   const { saveUser } = useTMTStore();
   const [errorMessage, setErrorMessage] = useState(null);
 
@@ -38,6 +42,8 @@ const Login = () => {
     const { data, error } = await handleMutation(signIn, loginForm);
     if (data) {
       saveUser(data as UserResponse);
+      const response = await fetchWorkspaceGlobal().unwrap();
+      setWorkspaceGlobal(response);
       navigate({ to: '/home' });
     } else if (error) {
       setErrorMessage(error.data.message);

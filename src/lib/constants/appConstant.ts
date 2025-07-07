@@ -23,16 +23,17 @@ const MODE = {
   DEV: import.meta.env.VITE_DEV_IP,
 };
 
-const currentMode = import.meta.env.VITE_MODE === 'LIVE' ? MODE.LIVE : MODE.DEV;
+const currentMode = MODE.DEV;
 
 const API_URLS = {
-  AUTH_BASE_URL: `http://${currentMode}:${import.meta.env.VITE_AUTH_PORT}`,
-  SPACE_BASE_URL: `http://${currentMode}:${import.meta.env.VITE_SPACE_PORT}`,
-  WORK_SPACE_BASE_URL: `http://${currentMode}:${import.meta.env.VITE_WORK_SPACE_PORT}`,
-  FOLDER_BASE_URL: `http://${currentMode}:${import.meta.env.VITE_FOLDER_PORT}`,
-  LIST_BASE_URL: `http://${currentMode}:${import.meta.env.VITE_LIST_PORT}`,
-  TASK_BASE_URL: `http://${currentMode}:${import.meta.env.VITE_TASK_PORT}`,
+  AUTH_BASE_URL: `http://${currentMode}:${import.meta.env.VITE_AUTH_PORT}/`,
+  SPACE_BASE_URL: `http://${currentMode}:${import.meta.env.VITE_SPACE_PORT}/`,
+  WORK_SPACE_BASE_URL: `http://${currentMode}:${import.meta.env.VITE_WORK_SPACE_PORT}/`,
+  FOLDER_BASE_URL: `http://${currentMode}:${import.meta.env.VITE_FOLDER_PORT}/`,
+  LIST_BASE_URL: `http://${currentMode}:${import.meta.env.VITE_LIST_PORT}/`,
+  TASK_BASE_URL: `http://${currentMode}:${import.meta.env.VITE_TASK_PORT}/`,
 };
+
 const HOME_CARD_TITLE = {
   MY_WORK: 'My Work',
   ASSIGNED_COMMENTS: 'Assigned Comments',

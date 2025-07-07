@@ -45,6 +45,7 @@ import { useAppNavigation } from '@/lib/hooks/use-app-navigation.ts';
 import { cn } from '@/lib/utils/utils.ts';
 import { LABEL } from '@/lib/constants';
 import { toast } from 'sonner';
+import { Priority } from '@/types/request-response/workspace/ApiResponse';
 
 interface Props {
   isOpen: boolean;
@@ -58,9 +59,11 @@ export const CreateTask = ({ isOpen, setIsOpen, children, listId }: Props) => {
   const [selectedList, setSelectedList] = useState<List | null>(null);
   const [name, setName] = useState('');
   const taskType = 1;
-  const { spaces } = useWorkspaceStore();
+  const { spaces, workspaceGlobal } = useWorkspaceStore();
   const [createTask] = useCreateTaskMutation();
   const { navigate, routes } = useAppNavigation();
+
+  const priorityList = workspaceGlobal?.priority;
 
   useEffect(() => {
     if (!spaces || !listId) return;
@@ -139,7 +142,7 @@ export const CreateTask = ({ isOpen, setIsOpen, children, listId }: Props) => {
                   />
                   <SmartInput name={name} setName={setName} />
                   <Description />
-                  <TaskAttributes />
+                  <TaskAttributes priorityList={priorityList} />
                 </div>
               </TabsContent>
             </div>
@@ -237,6 +240,7 @@ const SpaceList = ({
   onSelectList,
 }: {
   space: Space;
+  selectedList: List | null;
   onSelectList: (list: List) => void;
 }) => {
   const [hasMouseEntered, setHasMouseEntered] = useState(false);
@@ -281,6 +285,7 @@ const SpaceList = ({
       {isFolderListOpen && (
         <div className={'space-y-0 pt-1 ml-[30px]'}>
           {space.lists.length > 0 &&
+            selectedList &&
             space.lists.map((list: List, i: number) => (
               <ListItem
                 selectedList={selectedList}
@@ -301,7 +306,7 @@ const FolderItem = ({
 }: {
   folder: Folder;
   onSelectList: (list: List) => void;
-  selectedList: List;
+  selectedList: List | null;
 }) => {
   const [hasMouseEntered, setHasMouseEntered] = useState(false);
   const [isListOpen, setIsListOpen] = useState(false);
@@ -333,6 +338,7 @@ const FolderItem = ({
       {isListOpen && (
         <div className="ml-[50px]">
           {folder.lists.length > 0 &&
+            selectedList &&
             folder.lists.map((list: List) => (
               <ListItem
                 selectedList={selectedList}
@@ -379,7 +385,7 @@ const ListItem = ({
     </div>
   );
 };
-const TaskAttributes = () => {
+const TaskAttributes = ({ priorityList }: { priorityList: Priority[] }) => {
   return (
     <div className={'mt-4'}>
       <div className="space-x-2 w-full flex items-center">
@@ -399,7 +405,7 @@ const TaskAttributes = () => {
         <Button variant={'outline'} className={'h-[24px]'}>
           <Icon name={'calendar'} /> {LABEL.DUE_DATE}
         </Button>
-        <PriorityPopover>
+        <PriorityPopover priorityList={priorityList}>
           <Button variant={'outline'} className={'h-[24px]'}>
             <Icon name={'priority02'} /> {LABEL.PRIORITY}
           </Button>
