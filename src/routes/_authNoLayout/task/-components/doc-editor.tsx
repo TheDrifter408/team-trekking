@@ -34,6 +34,7 @@ import { cn } from '@/lib/utils/utils.ts';
 import { Button } from '@/components/shadcn-ui/button.tsx';
 import { $setBlocksType } from '@lexical/selection';
 import { AtSign, Ellipsis, FileUser, SmilePlus } from 'lucide-react';
+
 interface Props {
   value: string;
   onChange: (
@@ -41,6 +42,7 @@ interface Props {
     editor: LexicalEditor,
     tags: Set<string>
   ) => void;
+  onBlur?: () => void; // Add onBlur prop
   placeholder?: string;
   name: string;
   showBorder?: boolean;
@@ -95,9 +97,34 @@ const LoadEditorContent = ({ value }: { value: string }) => {
   return null;
 };
 
+// Add BlurPlugin to handle blur events
+const BlurPlugin = ({ onBlur }: { onBlur?: () => void }) => {
+  const [editor] = useLexicalComposerContext();
+
+  useEffect(() => {
+    if (!onBlur) return;
+
+    const handleBlur = () => {
+      onBlur();
+    };
+
+    return editor.registerRootListener((rootElement, prevElement) => {
+      if (prevElement !== null) {
+        prevElement.removeEventListener('blur', handleBlur);
+      }
+      if (rootElement !== null) {
+        rootElement.addEventListener('blur', handleBlur);
+      }
+    });
+  }, [editor, onBlur]);
+
+  return null;
+};
+
 export const DocEditor: FC<Props> = ({
   value,
   onChange,
+  onBlur, // Add onBlur prop
   placeholder,
   name,
   showBorder = true,
@@ -124,6 +151,7 @@ export const DocEditor: FC<Props> = ({
     }),
     [name]
   );
+
   return (
     <div className={''}>
       <div className={'relative mt-[5px]'}>
@@ -152,6 +180,7 @@ export const DocEditor: FC<Props> = ({
           <HistoryPlugin />
           <SlashCommandPlugin />
           <OnChangePlugin onChange={onChange} />
+          <BlurPlugin onBlur={onBlur} />
           <div className={cn('px-2', showToolbar ? 'block' : 'hidden')}>
             {editable && <Toolbar onClickCancel={() => setIsEditing(false)} />}
           </div>
