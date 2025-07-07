@@ -46,6 +46,7 @@ import { cn } from '@/lib/utils/utils.ts';
 import { LABEL } from '@/lib/constants';
 import { toast } from 'sonner';
 import { Priority } from '@/types/request-response/workspace/ApiResponse';
+import { AssigneePopover } from '@/components/common/assignee-popover.tsx';
 
 interface Props {
   isOpen: boolean;
@@ -107,9 +108,11 @@ export const CreateTask = ({ isOpen, setIsOpen, children, listId }: Props) => {
     }
   };
 
+  const [isAssigneeOpen, setIsAssigneeOpen] = useState(false);
+
   return (
     <div>
-      <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <Dialog modal={true} open={isOpen} onOpenChange={setIsOpen}>
         <DialogTrigger asChild>{children}</DialogTrigger>
         <DialogContent
           hideCloseButton
@@ -156,9 +159,17 @@ export const CreateTask = ({ isOpen, setIsOpen, children, listId }: Props) => {
                         {LABEL.COMPLETE}
                       </Button>
                     </TaskStatusDialog>
-                    <Button variant={'outline'} className={'h-[24px]'}>
-                      <Icon name={'users'} /> {LABEL.ASSIGNEE}
+                    <Button
+                      onClick={() => setIsAssigneeOpen(true)}
+                      variant="outline"
+                      className="h-[24px]"
+                    >
+                      <Icon name="users" /> {LABEL.ASSIGNEE}
                     </Button>
+                    <AssigneePopover
+                      open={isAssigneeOpen}
+                      onOpenChange={setIsAssigneeOpen}
+                    />
                     <Button variant={'outline'} className={'h-[24px]'}>
                       <Icon name={'calendar'} /> {LABEL.DUE_DATE}
                     </Button>
