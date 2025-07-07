@@ -20,7 +20,7 @@ import {
 
 const MODE = {
   LIVE: import.meta.env.VITE_LIVE_IP,
-  DEV: '192.168.0.101', // DEV NOT WORKING FROM ENV UPON CHANGE.
+  DEV: import.meta.env.VITE_DEV_IP, // DEV NOT WORKING FROM ENV UPON CHANGE.
 };
 
 const currentMode = import.meta.env.VITE_MODE === 'LIVE' ? MODE.LIVE : MODE.DEV;
