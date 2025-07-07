@@ -295,4 +295,5 @@ export const LABEL = {
   TASK_COULD_NOT_BE_FOUND: 'Task could not be found',
   EMPTY: 'Empty',
   ADD_TIME: 'Add Time',
+  RECENTS: 'Recents',
 };

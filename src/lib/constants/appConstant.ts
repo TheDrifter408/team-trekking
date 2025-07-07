@@ -20,7 +20,7 @@ import {
 
 const MODE = {
   LIVE: import.meta.env.VITE_LIVE_IP,
-  DEV: import.meta.env.VITE_DEV_IP,
+  DEV: '192.168.0.101', // DEV NOT WORKING FROM ENV UPON CHANGE.
 };
 
 const currentMode = import.meta.env.VITE_MODE === 'LIVE' ? MODE.LIVE : MODE.DEV;
@@ -33,7 +33,6 @@ const API_URLS = {
   LIST_BASE_URL: `http://${currentMode}:${import.meta.env.VITE_LIST_PORT}/`,
   TASK_BASE_URL: `http://${currentMode}:${import.meta.env.VITE_TASK_PORT}/`,
 };
-
 const HOME_CARD_TITLE = {
   MY_WORK: 'My Work',
   ASSIGNED_COMMENTS: 'Assigned Comments',

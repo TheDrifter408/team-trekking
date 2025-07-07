@@ -11,41 +11,55 @@ import { Ban } from 'lucide-react';
 import { LABEL } from '@/lib/constants/appStrings';
 import { Priority } from '@/types/request-response/workspace/ApiResponse';
 
+type PriorityPopoverProps = {
+  isOpen?: boolean;
+  setIsOpen?: (open: boolean) => void;
+  children: ReactNode;
+  priorityList: Priority[];
+  onSelect?: (priority: Priority | null) => void; // TODO: Make this required once usage is finalized
+};
+
 export const PriorityPopover = ({
   isOpen,
   setIsOpen,
   children,
   priorityList,
-}: {
-  isOpen?: boolean;
-  setIsOpen?: (open: boolean) => void;
-  children: ReactNode;
-  priorityList: Priority[];
-}) => {
+  onSelect,
+}: PriorityPopoverProps) => {
+  const onSelectPriority = (priority: Priority) => {
+    // TODO: Remove fallback once `onSelect` is always passed
+    if (onSelect) onSelect(priority);
+  };
+  const onClear = () => {
+    if (onSelect) onSelect(null);
+  };
+  const hasPriorityList = priorityList && priorityList.length > 0;
+
   return (
     <Popover modal={true} open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger asChild>{children}</PopoverTrigger>
       <PopoverContent
-        side={'bottom'}
-        align={'start'}
+        side="bottom"
+        align="start"
         className="w-[178px] flex flex-col p-0 min-h-[70px]"
       >
-        {priorityList &&
-          priorityList.length > 0 &&
+        {hasPriorityList &&
           priorityList.map((priority) => (
             <PriorityButton
+              key={priority.id} // TODO: Ensure priority objects have unique IDs
+              onSelectPriority={() => onSelectPriority(priority)}
               title={priority.title}
               style={{ color: priority.color }}
             />
           ))}
-
-        <Separator className={'!h-[1px] my-1'} />
+        <Separator className="!h-[1px] my-1" />
         <Button
+          onClick={onClear}
           variant="ghost"
           className="h-[32px] text-base flex justify-start items-center px-3"
         >
           <div className="w-6 flex justify-center items-center shrink-0">
-            <Ban className={'text-content-tertiary'} />
+            <Ban className="text-content-tertiary" />
           </div>
           <span className="ml-2 font-normal text-lg">{LABEL.CLEAR}</span>
         </Button>
@@ -54,22 +68,27 @@ export const PriorityPopover = ({
   );
 };
 
+type PriorityButtonProps = {
+  title: string;
+  className?: string;
+  style?: React.CSSProperties;
+  onSelectPriority?: () => void; // TODO: Make required when used in command context
+};
+
 export const PriorityButton = ({
   title,
   className = '',
   style,
-}: {
-  title: string;
-  className?: string;
-  style?: React.CSSProperties;
-}) => {
+  onSelectPriority,
+}: PriorityButtonProps) => {
   return (
     <Button
+      onClick={onSelectPriority} // no-op is fine if undefined
       variant="ghost"
       className="h-[32px] !cursor-pointer hover:bg-secondary text-base flex justify-start items-center px-3"
     >
       <div className="w-6 flex justify-center items-center shrink-0">
-        <Icon name={'priority02'} style={style} className={className} />
+        <Icon name="priority02" style={style} className={className} />
       </div>
       <span className="ml-2 font-normal text-lg">{title}</span>
     </Button>
