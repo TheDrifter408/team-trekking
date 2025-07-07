@@ -47,7 +47,7 @@ export function DatePickerWithRange({
   }, [value]);
 
   // Handle date selection
-  const handleDateSelect = (newDate: DateRange | undefined) => {
+  const onHandleDateSelect = (newDate: DateRange | undefined) => {
     setDate(newDate);
     onChange?.(newDate);
   };
@@ -137,7 +137,7 @@ export function DatePickerWithRange({
             mode="range"
             defaultMonth={date?.from}
             selected={date}
-            onSelect={handleDateSelect}
+            onSelect={onHandleDateSelect}
             numberOfMonths={2}
           />
         </PopoverContent>
