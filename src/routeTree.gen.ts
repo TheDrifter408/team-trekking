@@ -15,13 +15,13 @@ import { Route as AuthRouteRouteImport } from './routes/_auth/route'
 import { Route as UnauthSignupRouteImport } from './routes/_unauth/signup'
 import { Route as UnauthLoginRouteImport } from './routes/_unauth/login'
 import { Route as UnauthForgotRouteImport } from './routes/_unauth/forgot'
-import { Route as AuthSpaceIndexRouteImport } from './routes/_auth/space/index'
 import { Route as AuthInboxIndexRouteImport } from './routes/_auth/inbox/index'
 import { Route as AuthHomeIndexRouteImport } from './routes/_auth/home/index'
 import { Route as AuthFolderIndexRouteImport } from './routes/_auth/folder/index'
 import { Route as AuthCalenderIndexRouteImport } from './routes/_auth/calender/index'
 import { Route as AuthBoardIndexRouteImport } from './routes/_auth/board/index'
 import { Route as AuthNoLayoutTaskTaskIdRouteImport } from './routes/_authNoLayout/task/$taskId'
+import { Route as AuthSpaceSpaceIdRouteImport } from './routes/_auth/space/$spaceId'
 import { Route as AuthListListIdRouteImport } from './routes/_auth/list/$listId'
 import { Route as AuthSettingsProfileIndexRouteImport } from './routes/_auth/settings/profile/index'
 import { Route as AuthSettingsGeneralIndexRouteImport } from './routes/_auth/settings/general/index'
@@ -53,11 +53,6 @@ const UnauthForgotRoute = UnauthForgotRouteImport.update({
   path: '/forgot',
   getParentRoute: () => UnauthRouteRoute,
 } as any)
-const AuthSpaceIndexRoute = AuthSpaceIndexRouteImport.update({
-  id: '/space/',
-  path: '/space/',
-  getParentRoute: () => AuthRouteRoute,
-} as any)
 const AuthInboxIndexRoute = AuthInboxIndexRouteImport.update({
   id: '/inbox/',
   path: '/inbox/',
@@ -88,6 +83,11 @@ const AuthNoLayoutTaskTaskIdRoute = AuthNoLayoutTaskTaskIdRouteImport.update({
   path: '/task/$taskId',
   getParentRoute: () => AuthNoLayoutRouteRoute,
 } as any)
+const AuthSpaceSpaceIdRoute = AuthSpaceSpaceIdRouteImport.update({
+  id: '/space/$spaceId',
+  path: '/space/$spaceId',
+  getParentRoute: () => AuthRouteRoute,
+} as any)
 const AuthListListIdRoute = AuthListListIdRouteImport.update({
   id: '/list/$listId',
   path: '/list/$listId',
@@ -111,13 +111,13 @@ export interface FileRoutesByFullPath {
   '/login': typeof UnauthLoginRoute
   '/signup': typeof UnauthSignupRoute
   '/list/$listId': typeof AuthListListIdRoute
+  '/space/$spaceId': typeof AuthSpaceSpaceIdRoute
   '/task/$taskId': typeof AuthNoLayoutTaskTaskIdRoute
   '/board': typeof AuthBoardIndexRoute
   '/calender': typeof AuthCalenderIndexRoute
   '/folder': typeof AuthFolderIndexRoute
   '/home': typeof AuthHomeIndexRoute
   '/inbox': typeof AuthInboxIndexRoute
-  '/space': typeof AuthSpaceIndexRoute
   '/settings/general': typeof AuthSettingsGeneralIndexRoute
   '/settings/profile': typeof AuthSettingsProfileIndexRoute
 }
@@ -126,13 +126,13 @@ export interface FileRoutesByTo {
   '/login': typeof UnauthLoginRoute
   '/signup': typeof UnauthSignupRoute
   '/list/$listId': typeof AuthListListIdRoute
+  '/space/$spaceId': typeof AuthSpaceSpaceIdRoute
   '/task/$taskId': typeof AuthNoLayoutTaskTaskIdRoute
   '/board': typeof AuthBoardIndexRoute
   '/calender': typeof AuthCalenderIndexRoute
   '/folder': typeof AuthFolderIndexRoute
   '/home': typeof AuthHomeIndexRoute
   '/inbox': typeof AuthInboxIndexRoute
-  '/space': typeof AuthSpaceIndexRoute
   '/settings/general': typeof AuthSettingsGeneralIndexRoute
   '/settings/profile': typeof AuthSettingsProfileIndexRoute
 }
@@ -145,13 +145,13 @@ export interface FileRoutesById {
   '/_unauth/login': typeof UnauthLoginRoute
   '/_unauth/signup': typeof UnauthSignupRoute
   '/_auth/list/$listId': typeof AuthListListIdRoute
+  '/_auth/space/$spaceId': typeof AuthSpaceSpaceIdRoute
   '/_authNoLayout/task/$taskId': typeof AuthNoLayoutTaskTaskIdRoute
   '/_auth/board/': typeof AuthBoardIndexRoute
   '/_auth/calender/': typeof AuthCalenderIndexRoute
   '/_auth/folder/': typeof AuthFolderIndexRoute
   '/_auth/home/': typeof AuthHomeIndexRoute
   '/_auth/inbox/': typeof AuthInboxIndexRoute
-  '/_auth/space/': typeof AuthSpaceIndexRoute
   '/_auth/settings/general/': typeof AuthSettingsGeneralIndexRoute
   '/_auth/settings/profile/': typeof AuthSettingsProfileIndexRoute
 }
@@ -162,13 +162,13 @@ export interface FileRouteTypes {
     | '/login'
     | '/signup'
     | '/list/$listId'
+    | '/space/$spaceId'
     | '/task/$taskId'
     | '/board'
     | '/calender'
     | '/folder'
     | '/home'
     | '/inbox'
-    | '/space'
     | '/settings/general'
     | '/settings/profile'
   fileRoutesByTo: FileRoutesByTo
@@ -177,13 +177,13 @@ export interface FileRouteTypes {
     | '/login'
     | '/signup'
     | '/list/$listId'
+    | '/space/$spaceId'
     | '/task/$taskId'
     | '/board'
     | '/calender'
     | '/folder'
     | '/home'
     | '/inbox'
-    | '/space'
     | '/settings/general'
     | '/settings/profile'
   id:
@@ -195,13 +195,13 @@ export interface FileRouteTypes {
     | '/_unauth/login'
     | '/_unauth/signup'
     | '/_auth/list/$listId'
+    | '/_auth/space/$spaceId'
     | '/_authNoLayout/task/$taskId'
     | '/_auth/board/'
     | '/_auth/calender/'
     | '/_auth/folder/'
     | '/_auth/home/'
     | '/_auth/inbox/'
-    | '/_auth/space/'
     | '/_auth/settings/general/'
     | '/_auth/settings/profile/'
   fileRoutesById: FileRoutesById
@@ -256,13 +256,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof UnauthForgotRouteImport
       parentRoute: typeof UnauthRouteRoute
     }
-    '/_auth/space/': {
-      id: '/_auth/space/'
-      path: '/space'
-      fullPath: '/space'
-      preLoaderRoute: typeof AuthSpaceIndexRouteImport
-      parentRoute: typeof AuthRouteRoute
-    }
     '/_auth/inbox/': {
       id: '/_auth/inbox/'
       path: '/inbox'
@@ -305,6 +298,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthNoLayoutTaskTaskIdRouteImport
       parentRoute: typeof AuthNoLayoutRouteRoute
     }
+    '/_auth/space/$spaceId': {
+      id: '/_auth/space/$spaceId'
+      path: '/space/$spaceId'
+      fullPath: '/space/$spaceId'
+      preLoaderRoute: typeof AuthSpaceSpaceIdRouteImport
+      parentRoute: typeof AuthRouteRoute
+    }
     '/_auth/list/$listId': {
       id: '/_auth/list/$listId'
       path: '/list/$listId'
@@ -331,24 +331,24 @@ declare module '@tanstack/react-router' {
 
 interface AuthRouteRouteChildren {
   AuthListListIdRoute: typeof AuthListListIdRoute
+  AuthSpaceSpaceIdRoute: typeof AuthSpaceSpaceIdRoute
   AuthBoardIndexRoute: typeof AuthBoardIndexRoute
   AuthCalenderIndexRoute: typeof AuthCalenderIndexRoute
   AuthFolderIndexRoute: typeof AuthFolderIndexRoute
   AuthHomeIndexRoute: typeof AuthHomeIndexRoute
   AuthInboxIndexRoute: typeof AuthInboxIndexRoute
-  AuthSpaceIndexRoute: typeof AuthSpaceIndexRoute
   AuthSettingsGeneralIndexRoute: typeof AuthSettingsGeneralIndexRoute
   AuthSettingsProfileIndexRoute: typeof AuthSettingsProfileIndexRoute
 }
 
 const AuthRouteRouteChildren: AuthRouteRouteChildren = {
   AuthListListIdRoute: AuthListListIdRoute,
+  AuthSpaceSpaceIdRoute: AuthSpaceSpaceIdRoute,
   AuthBoardIndexRoute: AuthBoardIndexRoute,
   AuthCalenderIndexRoute: AuthCalenderIndexRoute,
   AuthFolderIndexRoute: AuthFolderIndexRoute,
   AuthHomeIndexRoute: AuthHomeIndexRoute,
   AuthInboxIndexRoute: AuthInboxIndexRoute,
-  AuthSpaceIndexRoute: AuthSpaceIndexRoute,
   AuthSettingsGeneralIndexRoute: AuthSettingsGeneralIndexRoute,
   AuthSettingsProfileIndexRoute: AuthSettingsProfileIndexRoute,
 }

@@ -6,7 +6,7 @@ import {
 import { Button } from '@/components/shadcn-ui/button.tsx';
 import { IconCaretRightFilled } from '@tabler/icons-react';
 import { motion } from 'framer-motion';
-import { useNavigate } from '@tanstack/react-router';
+import { Link, useNavigate } from '@tanstack/react-router';
 import {
   Tooltip,
   TooltipContent,
@@ -98,12 +98,15 @@ export const SidebarSpaceItems = ({
                     <Button
                       variant="ghost"
                       size="sm"
-                      onClick={() => navigate({ to: '/space' })}
                       className="hover:text-primary transition-colors duration-600"
                     >
-                      <span className="text-base truncate max-w-[120px]">
+                      <Link
+                        to="/space/$spaceId"
+                        params={{ spaceId: space.id.toString() }}
+                        className="text-base truncate max-w-[120px]"
+                      >
                         {space.name}
-                      </span>
+                      </Link>
                     </Button>
                   </TooltipTrigger>
                   <TooltipContent>
