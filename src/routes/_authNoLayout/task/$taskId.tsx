@@ -57,6 +57,7 @@ import { Member } from '@/types/request-response/workspace/ApiResponse';
 import { Icon } from '@/assets/icon-path';
 import TimeEstimateDropdown from '@/components/common/estimate-time-dropdown';
 import { TaskSkeleton } from './-components/loading';
+import { Task } from '@/types/request-response/task/ApiResponse.ts';
 
 const availableTags: TagOption[] = [
   { id: 'initiative', label: 'initiative' },
@@ -77,7 +78,7 @@ const priorityFlags: Record<string, string> = {
   none: '',
 };
 
-const Task: FC = () => {
+const TaskComponent: FC = () => {
   const { taskId } = Route.useParams();
   const [enterDates, setEnterDates] = useState<boolean>(false);
   const [enterAssignee, setEnterAssignee] = useState<boolean>(false);
@@ -89,6 +90,7 @@ const Task: FC = () => {
   const [selectedTags, setSelectedTags] = useState<string[]>(['backend']);
   const [selectedAssignees, setSelectedAssignees] = useState<Member[]>([]);
   const [taskName, setTaskName] = useState<string>('');
+  const [estimatedTime, setEstimatedTime] = useState<string>('');
   const store = createDataTableStore({});
   const { open: isSidebarOpen } = useSidebar();
 
@@ -132,6 +134,19 @@ const Task: FC = () => {
       }
     }
   };
+  const handleUpdateTask = async (updates: Partial<any>) => {
+    try {
+      const { data } = await handleMutation<Task>(updateTask, {
+        id: Number(taskId),
+        ...updates,
+      });
+      if (data) {
+        setEstimatedTime(data?.timeEstimate?.toString() ?? '');
+      }
+    } catch (error) {
+      console.error('Failed to update task:', error);
+    }
+  };
 
   useEffect(() => {
     getTaskData(Number(taskId));
@@ -142,7 +157,8 @@ const Task: FC = () => {
       setTaskName(taskData.name || '');
       setDescription(taskData.description || '');
       setSelectedTags(taskData.tags?.map((tag) => tag.id) || []);
-      setSelectedAssignees(taskData.assignees || []);
+      setSelectedAssignees(taskData?.assignees || []);
+      setEstimatedTime(taskData?.timeEstimate?.toString() || '');
     }
   }, [taskData]);
 
@@ -241,12 +257,15 @@ const Task: FC = () => {
               >
                 <div className="flex -space-x-2 ">
                   <TimeEstimateDropdown
-                    children={
-                      <span cl-assName="text-sm">
-                        {taskData?.timeEstimate ?? LABEL.EMPTY}
-                      </span>
-                    }
-                  />
+                    time={estimatedTime}
+                    onTimeEstimateChange={(minutes) => {
+                      handleUpdateTask({ timeEstimate: minutes });
+                    }}
+                  >
+                    <span className="text-sm cursor-pointer hover:text-foreground">
+                      {estimatedTime ?? LABEL.EMPTY}
+                    </span>
+                  </TimeEstimateDropdown>
                 </div>
               </TaskMetaRow>
               {/* TRACK TIME */}
@@ -454,5 +473,5 @@ const Task: FC = () => {
 };
 
 export const Route = createFileRoute('/_authNoLayout/task/$taskId')({
-  component: Task,
+  component: TaskComponent,
 });

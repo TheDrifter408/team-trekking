@@ -17,6 +17,7 @@ import { LABEL } from '@/lib/constants';
 interface TimeEstimateComponentProps {
   children: ReactNode;
   time?: string;
+  onTimeEstimateChange?: (estimate: number) => void;
 }
 
 const parseTimeString = (input: string): string => {
@@ -44,9 +45,34 @@ const parseTimeString = (input: string): string => {
   return '';
 };
 
+// Helper function to convert time string to minutes
+const parseTimeToMinutes = (input: string): number => {
+  const parts = input.trim().toLowerCase().split(/[\s]+/);
+  let hours = 0;
+  let minutes = 0;
+
+  parts.forEach((part) => {
+    if (part.includes('h')) {
+      hours += parseInt(part.replace('h', ''), 10) || 0;
+    } else if (part.includes('m')) {
+      minutes += parseInt(part.replace('m', ''), 10) || 0;
+    } else if (!isNaN(Number(part))) {
+      // If it's just a number without suffix, treat as hours if no hours set yet, otherwise minutes
+      if (hours === 0) {
+        hours = Number(part);
+      } else {
+        minutes = Number(part);
+      }
+    }
+  });
+
+  return hours * 60 + minutes;
+};
+
 export const TimeEstimateDropdown: React.FC<TimeEstimateComponentProps> = ({
   children,
   time,
+  onTimeEstimateChange,
 }) => {
   const [inputValue, setInputValue] = useState<string>(time ?? '');
   const [savedTimeEstimate, setSavedTimeEstimate] = useState<string>(
@@ -54,16 +80,47 @@ export const TimeEstimateDropdown: React.FC<TimeEstimateComponentProps> = ({
   );
   const [suggestion, setSuggestion] = useState<string>('');
   const [showSuggestion, setShowSuggestion] = useState<boolean>(false);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
   const ref = useRef<HTMLInputElement>(null);
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
-    setInputValue(val);
 
-    const parsed = parseTimeString(val);
+    // Allow numbers, 'h', 'm', and spaces
+    const filteredVal = val.replace(/[^0-9hm\s]/gi, '');
+
+    setInputValue(filteredVal);
+
+    const parsed = parseTimeString(filteredVal);
     setSuggestion(parsed);
     // Only show suggestion if there's a meaningful difference and input is not empty
-    setShowSuggestion(!!parsed && parsed !== val && val.trim() !== '');
+    setShowSuggestion(
+      !!parsed && parsed !== filteredVal && filteredVal.trim() !== ''
+    );
+  };
+
+  const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      const parsed = parseTimeString(inputValue);
+      if (parsed) {
+        setInputValue(parsed);
+        setSavedTimeEstimate(parsed);
+        // Trigger callback with time in minutes
+        const minutes = parseTimeToMinutes(parsed);
+        onTimeEstimateChange?.(minutes);
+      } else {
+        setSavedTimeEstimate(inputValue);
+        // Try to parse raw input value
+        const minutes = parseTimeToMinutes(inputValue);
+        if (minutes > 0) {
+          onTimeEstimateChange?.(minutes);
+        }
+      }
+      setShowSuggestion(false);
+      setIsOpen(false); // Close the dropdown
+      ref.current?.blur();
+    }
   };
 
   const onClear = () => {
@@ -104,12 +161,12 @@ export const TimeEstimateDropdown: React.FC<TimeEstimateComponentProps> = ({
 
   return (
     <div className="w-full max-w-md mx-auto py-2">
-      <DropdownMenu>
+      <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
         <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
         <DropdownMenuContent
           className="w-[340px] p-1 shadow-lg"
           align="start"
-          onOpeAutoFocus={(e) => {
+          onOpenAutoFocus={(e) => {
             e.preventDefault();
             setTimeout(() => {
               ref.current?.focus();
@@ -133,8 +190,9 @@ export const TimeEstimateDropdown: React.FC<TimeEstimateComponentProps> = ({
                       className="w-[135px] !h-[35px] !text-base pr-8"
                       value={inputValue}
                       onChange={onChange}
+                      onKeyDown={onKeyDown}
                       onBlur={onBlur}
-                      placeholder="e.g. 3h 20m"
+                      placeholder="e.g. 3h 20m or 180"
                       onFocus={onFocus}
                       ref={ref}
                     />
