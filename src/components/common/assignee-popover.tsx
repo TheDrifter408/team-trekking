@@ -22,7 +22,11 @@ export const AssigneePopover = ({
   onOpenChange: (open: boolean) => void;
 }) => {
   return (
-    <CommandDialog open={open} onOpenChange={onOpenChange}>
+    <CommandDialog
+      open={open}
+      onOpenChange={onOpenChange}
+      className="min-h-[280px] w-[287px]"
+    >
       <CommandInput placeholder="Search or enter email..." />
       <CommandList>
         <CommandEmpty>No users found.</CommandEmpty>

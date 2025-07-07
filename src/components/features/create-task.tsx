@@ -58,7 +58,7 @@ interface Props {
 export const CreateTask = ({ isOpen, setIsOpen, children, listId }: Props) => {
   const { navigate, routes } = useAppNavigation();
   const [createTask] = useCreateTaskMutation();
-  const { spaces, workspaceGlobal } = useWorkspaceStore();
+  const { spaces, workspaceGlobal, members } = useWorkspaceStore();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [selectedList, setSelectedList] = useState<List | null>(null);
   const [selectedPriority, setSelectedPriority] = useState<Priority | null>(
@@ -109,7 +109,6 @@ export const CreateTask = ({ isOpen, setIsOpen, children, listId }: Props) => {
   };
 
   const [isAssigneeOpen, setIsAssigneeOpen] = useState(false);
-
   return (
     <div>
       <Dialog modal={true} open={isOpen} onOpenChange={setIsOpen}>
@@ -166,10 +165,7 @@ export const CreateTask = ({ isOpen, setIsOpen, children, listId }: Props) => {
                     >
                       <Icon name="users" /> {LABEL.ASSIGNEE}
                     </Button>
-                    <AssigneePopover
-                      open={isAssigneeOpen}
-                      onOpenChange={setIsAssigneeOpen}
-                    />
+
                     <Button variant={'outline'} className={'h-[24px]'}>
                       <Icon name={'calendar'} /> {LABEL.DUE_DATE}
                     </Button>
@@ -213,6 +209,7 @@ export const CreateTask = ({ isOpen, setIsOpen, children, listId }: Props) => {
           />
         </DialogContent>
       </Dialog>
+      <AssigneePopover open={isAssigneeOpen} onOpenChange={setIsAssigneeOpen} />
     </div>
   );
 };

@@ -9,6 +9,7 @@ import { useSpaceGlobalApiQuery } from '@/service/rtkQueries/spaceQuery.ts';
 import {
   useGetAllWorkSpacesQuery,
   useGetWorkspaceSpaceFolderListQuery,
+  useLazyGetWorkspaceMemberQuery,
 } from '@/service/rtkQueries/workspaceQuery';
 import { useWorkspaceStore } from '@/stores/zustand/workspace-store';
 import { SettingsSidebar } from './settings-sidebar';
@@ -21,9 +22,11 @@ const AppLayout = () => {
     setSpaces,
     clearWorkspace,
     setCurrentWorkspace,
+    setMembers,
   } = useWorkspaceStore();
 
   const { data: spaceGlobalData } = useSpaceGlobalApiQuery();
+  const [fetchWorkspaceMembers] = useLazyGetWorkspaceMemberQuery();
   const { data: workSpaces, refetch: refetchWorkspaces } =
     useGetAllWorkSpacesQuery();
 
@@ -55,6 +58,23 @@ const AppLayout = () => {
     }
   }, [spacesFolderList, workSpaces]);
 
+  useEffect(() => {
+    const fetchMembers = async () => {
+      if (currentWorkspace?.id) {
+        try {
+          const response = await fetchWorkspaceMembers(
+            Number(currentWorkspace.id)
+          ).unwrap();
+          if (response) {
+            setMembers(response);
+          }
+        } catch (error) {
+          console.error('Failed to fetch workspace members:', error);
+        }
+      }
+    };
+    fetchMembers();
+  }, [currentWorkspace]);
   return (
     <AppContextProvider spaceGlobal={spaceGlobalData ?? null}>
       <div className="flex flex-col h-screen">
