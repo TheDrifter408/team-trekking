@@ -55,13 +55,16 @@ interface Props {
 }
 
 export const CreateTask = ({ isOpen, setIsOpen, children, listId }: Props) => {
+  const { navigate, routes } = useAppNavigation();
+  const [createTask] = useCreateTaskMutation();
+  const { spaces, workspaceGlobal } = useWorkspaceStore();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [selectedList, setSelectedList] = useState<List | null>(null);
+  const [selectedPriority, setSelectedPriority] = useState<Priority | null>(
+    null
+  );
   const [name, setName] = useState('');
   const taskType = 1;
-  const { spaces, workspaceGlobal } = useWorkspaceStore();
-  const [createTask] = useCreateTaskMutation();
-  const { navigate, routes } = useAppNavigation();
 
   const priorityList = workspaceGlobal?.priority;
 
@@ -81,6 +84,9 @@ export const CreateTask = ({ isOpen, setIsOpen, children, listId }: Props) => {
 
   const onSelectList = (list: List) => {
     setSelectedList(list);
+  };
+  const onSelectPriority = (priority: Priority | null) => {
+    setSelectedPriority(priority);
   };
 
   const onCreateTask = async () => {
@@ -114,312 +120,315 @@ export const CreateTask = ({ isOpen, setIsOpen, children, listId }: Props) => {
         >
           <Tabs defaultValue="task" className="w-full">
             <DialogHeader className="relative">
-              <DialogTitle className="text-xl px-2 flex items-center w-full justify-between font-semibold text-primary">
-                <TabsList variant="underline" width="fit" className="w-full">
-                  <TabsTrigger
-                    className="text-base font-medium text-content-tertiary"
-                    variant="underline"
-                    value="task"
-                  >
-                    {LABEL.TASK}
-                  </TabsTrigger>
-                </TabsList>
-              </DialogTitle>
-              <button
-                onClick={() => setIsOpen(false)}
-                className="absolute top-0 right-0 mr-2 hover:bg-gray-100 rounded-md transition-colors"
-              >
-                <XIcon className="size-4 m-2" />
-              </button>
+              <Header setIsOpen={setIsOpen} />
             </DialogHeader>
-            <div className="px-6 pb-6">
-              <TabsContent value="task">
-                <div className={'mt-6'}>
-                  <PopoverSection
-                    spaces={spaces ?? []}
-                    onSelectList={onSelectList}
-                    selectedList={selectedList}
-                  />
-                  <SmartInput name={name} setName={setName} />
-                  <Description />
-                  <TaskAttributes priorityList={priorityList} />
+            <TabsContent className="px-6 pb-6" value="task">
+              <div className={'mt-6 space-x-2'}>
+                <ListItems
+                  selectedList={selectedList}
+                  spaces={spaces ?? []}
+                  onSelectList={onSelectList}
+                />
+                <TaskTypeDropdown>
+                  <Button
+                    variant={'outline'}
+                    size={'auto'}
+                    className={'text-sm h-[24px]'}
+                  >
+                    <CircleIcon
+                      className={'text-content-default !size-[14px]'}
+                    />
+                    {LABEL.TASK}
+                    <ChevronDownIcon />
+                  </Button>
+                </TaskTypeDropdown>
+                <SmartInput name={name} setName={setName} />
+                <Description />
+                <div className={'mt-4'}>
+                  <div className="space-x-2 w-full flex items-center">
+                    <TaskStatusDialog>
+                      <Button
+                        variant={'ghost'}
+                        className={
+                          'bg-green-700 hover:bg-green-800 hover:text-white text-white uppercase text-base h-[24px]'
+                        }
+                      >
+                        {LABEL.COMPLETE}
+                      </Button>
+                    </TaskStatusDialog>
+                    <Button variant={'outline'} className={'h-[24px]'}>
+                      <Icon name={'users'} /> {LABEL.ASSIGNEE}
+                    </Button>
+                    <Button variant={'outline'} className={'h-[24px]'}>
+                      <Icon name={'calendar'} /> {LABEL.DUE_DATE}
+                    </Button>
+                    <PriorityPopover
+                      onSelect={onSelectPriority}
+                      priorityList={priorityList ?? []}
+                    >
+                      {selectedPriority ? (
+                        <Button variant={'outline'} className={'h-[24px]'}>
+                          <Icon
+                            name={'priority02'}
+                            style={{ color: selectedPriority.color }}
+                          />
+                          {selectedPriority.title}
+                        </Button>
+                      ) : (
+                        <Button variant={'outline'} className={'h-[24px]'}>
+                          <Icon name={'priority'} /> {LABEL.PRIORITY}
+                        </Button>
+                      )}
+                    </PriorityPopover>
+                    <Button variant={'outline'} className={'h-[24px]'}>
+                      <Icon name={'tag'} /> {LABEL.TAGS}
+                    </Button>
+                    <Button
+                      variant={'outline'}
+                      size={'auto'}
+                      className={'!size-[24px]'}
+                    >
+                      <Icon name={'menu03'} />
+                    </Button>
+                  </div>
                 </div>
-              </TabsContent>
-            </div>
+              </div>
+            </TabsContent>
           </Tabs>
-          <div className="flex items-center rounded-b-lg p-4 border-t">
-            <div className="inline-flex rounded-md justify-end w-full">
-              <Button
-                onClick={onCreateTask}
-                className="!rounded-r-none h-[32px] text-base bg-theme-main-dark border-r-border/30 border-r-[1px]"
-              >
-                {LABEL.CREATE_TASK}
-              </Button>
-              <CreateTaskDropdown
-                isOpen={isDropdownOpen}
-                setIsOpen={setIsDropdownOpen}
-              >
-                <Button
-                  onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                  className="!rounded-l-none h-[32px] border-l-0 bg-theme-main-dark"
-                >
-                  <Icon name="dropdownarrow" className={'text-base'} />
-                </Button>
-              </CreateTaskDropdown>
-            </div>
-          </div>
+          <Footer
+            onCreateTask={onCreateTask}
+            isDropdownOpen={isDropdownOpen}
+            setIsDropdownOpen={setIsDropdownOpen}
+          />
         </DialogContent>
       </Dialog>
     </div>
   );
 };
 
-const PopoverSection = ({
-  spaces,
-  onSelectList,
-  selectedList,
-}: {
+interface ListItemsProps {
+  selectedList: List | null;
   spaces: Space[];
   onSelectList: (list: List) => void;
-  selectedList: List | null;
-}) => {
+}
+
+const ListItems = ({ selectedList, spaces, onSelectList }: ListItemsProps) => {
+  const [open, setOpen] = useState(false);
   const listName = selectedList?.name ?? LABEL.LIST;
+
+  const onToggle = () => setOpen((prev) => !prev);
+
   return (
-    <div className="space-x-2">
-      <Popover modal={true}>
-        <PopoverTrigger asChild>
-          <Button variant="outline" size="auto" className="text-sm h-[24px]">
-            <ListIcon
-              style={{ color: selectedList ? selectedList.color : '' }}
-              className={'text-content-default !size-[14px]'}
-            />
-            {listName}
-            <ChevronDownIcon />
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent
-          side="bottom"
-          align="start"
-          className="!max-w-[290px] p-2 overflow-y-auto"
-        >
-          <span className="font-bold text-gray-600 text-sm">
-            {LABEL.SPACES}
-          </span>
-          <div className="flex flex-col max-h-64 mt-2 overflow-scroll">
-            {spaces.length > 0 &&
-              spaces.map((item: Space, i: number) => (
-                <SpaceList
-                  selectedList={selectedList}
-                  onSelectList={onSelectList}
-                  space={item}
-                  key={i}
-                />
-              ))}
-          </div>
-        </PopoverContent>
-      </Popover>
-      {/* Task Type Popover Component */}
-      <TaskTypeDropdown>
+    <Popover open={open} onOpenChange={setOpen} modal={true}>
+      <PopoverTrigger asChild>
         <Button
-          variant={'outline'}
-          size={'auto'}
-          className={'text-sm h-[24px]'}
+          variant="outline"
+          size="auto"
+          className="text-sm h-[24px]"
+          onClick={onToggle}
         >
-          <CircleIcon className={'text-content-default !size-[14px]'} />
-          {LABEL.TASK}
+          <ListIcon
+            style={{ color: selectedList?.color ?? '' }}
+            className="text-content-default !size-[14px]"
+          />
+          {listName}
           <ChevronDownIcon />
         </Button>
-      </TaskTypeDropdown>
-    </div>
+      </PopoverTrigger>
+      <PopoverContent
+        side="bottom"
+        align="start"
+        className="!max-w-[290px] p-2 overflow-y-auto"
+      >
+        {selectedList && (
+          <div className="mb-2">
+            <span className="font-bold mb-1 text-gray-600 text-sm">
+              {LABEL.RECENTS}
+            </span>
+            <ListItem
+              selectedList={selectedList}
+              onSelectList={() => {}}
+              list={selectedList}
+            />
+            <div className={'w-full border border-gray-300/40 h-[1px] mt-4'} />
+          </div>
+        )}
+        <span className="font-bold text-gray-600 text-sm">{LABEL.SPACES}</span>
+        <div className="flex flex-col max-h-64 mt-2 overflow-scroll">
+          {spaces.length > 0 &&
+            spaces.map((item: Space, i: number) => (
+              <SpaceList
+                selectedList={selectedList}
+                onSelectList={onSelectList}
+                space={item}
+                key={i}
+              />
+            ))}
+        </div>
+      </PopoverContent>
+    </Popover>
   );
 };
 
-const SpaceList = ({
-  space,
-  selectedList,
-  onSelectList,
-}: {
+interface ItemProps {
   space: Space;
   selectedList: List | null;
   onSelectList: (list: List) => void;
-}) => {
-  const [hasMouseEntered, setHasMouseEntered] = useState(false);
-  const [isFolderListOpen, setIsFolderListOpen] = useState(false);
+}
+const SpaceList = ({ space, selectedList, onSelectList }: ItemProps) => {
+  const { isHovered, ...hoverProps } = useHoverState();
+  const [isOpen, toggle] = useToggleState();
+  const isCollapsible = selectedList ? Number(selectedList.id) > 0 : false;
 
   return (
     <>
-      <div
-        onMouseEnter={() => setHasMouseEntered(true)}
-        onMouseLeave={() => setHasMouseEntered(false)}
-        onClick={() => setIsFolderListOpen(!isFolderListOpen)}
-        className="cursor-pointer"
-      >
-        <div className="flex gap-2 text-base w-[90%] rounded-lg py-[4px] px-1 truncate text-overflow-ellipsis items-center hover:bg-secondary/80">
-          {hasMouseEntered ? (
-            <div>
-              <Icon name={'expandsubtask'} className={'-rotate-90 size-5'} />
-            </div>
+      <div {...hoverProps} onClick={toggle} className="cursor-pointer">
+        <div className="flex gap-2 text-base w-[90%] rounded-lg py-[4px] px-1 truncate items-center hover:bg-secondary/80">
+          {isHovered ? (
+            <Icon name="expandsubtask" className="-rotate-90 size-5" />
           ) : (
             <PlaceholderAvatar
               seed={space.name}
-              variant={'initials'}
-              className={'size-5 rounded-lg'}
+              variant="initials"
+              className="size-5 rounded-lg"
             />
           )}
           {space.name}
         </div>
       </div>
-      {isFolderListOpen && (
-        <div className={'space-y-0'}>
-          {space.folders.length > 0 &&
-            space.folders.map((folder: Folder, i: number) => (
+
+      {isOpen && (
+        <>
+          <CollapsibleSection items={space.folders} className="space-y-0">
+            {(folder: Folder) => (
               <FolderItem
-                selectedList={selectedList}
-                onSelectList={onSelectList}
+                key={folder.id}
                 folder={folder}
-                key={i}
-              />
-            ))}
-        </div>
-      )}
-      {isFolderListOpen && (
-        <div className={'space-y-0 pt-1 ml-[30px]'}>
-          {space.lists.length > 0 &&
-            selectedList &&
-            space.lists.map((list: List, i: number) => (
-              <ListItem
                 selectedList={selectedList}
                 onSelectList={onSelectList}
-                list={list}
-                key={i}
               />
-            ))}
-        </div>
+            )}
+          </CollapsibleSection>
+
+          <CollapsibleSection
+            items={space.lists}
+            className="space-y-0 pt-1 ml-[30px]"
+            condition={isCollapsible}
+          >
+            {(list: List) => (
+              <ListItem
+                key={list.id}
+                list={list}
+                selectedList={selectedList}
+                onSelectList={onSelectList}
+              />
+            )}
+          </CollapsibleSection>
+        </>
       )}
     </>
   );
 };
+
+interface FolderItemProps {
+  folder: Folder;
+  selectedList: List | null;
+  onSelectList: (list: List) => void;
+}
 const FolderItem = ({
   folder,
-  onSelectList,
   selectedList,
-}: {
-  folder: Folder;
-  onSelectList: (list: List) => void;
-  selectedList: List | null;
-}) => {
-  const [hasMouseEntered, setHasMouseEntered] = useState(false);
-  const [isListOpen, setIsListOpen] = useState(false);
+  onSelectList,
+}: FolderItemProps) => {
+  const { isHovered, ...hoverProps } = useHoverState();
+  const [isOpen, toggle] = useToggleState();
 
+  const getFolderIcon = () => {
+    if (isHovered)
+      return <Icon name="expandsubtask" className="-rotate-90 size-5" />;
+
+    const IconComponent = isOpen ? FolderOpenIcon : FolderIcon;
+    return <IconComponent className="size-4" style={{ color: folder.color }} />;
+  };
   return (
     <>
       <div
-        onMouseEnter={() => setHasMouseEntered(true)}
-        onMouseLeave={() => setHasMouseEntered(false)}
-        onClick={() => setIsListOpen(!isListOpen)}
+        {...hoverProps}
+        onClick={toggle}
         className="flex text-base items-center cursor-pointer gap-2 ml-[30px] hover:bg-secondary/80 p-[4px] rounded-lg"
       >
-        <div className="shrink-0">
-          {hasMouseEntered ? (
-            <Icon name="expandsubtask" className="-rotate-90 size-5" />
-          ) : isListOpen ? (
-            <FolderOpenIcon
-              className="size-4"
-              style={{ color: folder.color }}
-            />
-          ) : (
-            <FolderIcon className="size-4" style={{ color: folder.color }} />
-          )}
-        </div>
-        <div className="truncate text-foreground max-w-[180px] overflow-hidden whitespace-nowrap">
+        <div className="shrink-0">{getFolderIcon()}</div>
+        <div className="truncate text-foreground max-w-[180px]">
           {folder.name}
         </div>
       </div>
-      {isListOpen && (
-        <div className="ml-[50px]">
-          {folder.lists.length > 0 &&
-            selectedList &&
-            folder.lists.map((list: List) => (
-              <ListItem
-                selectedList={selectedList}
-                onSelectList={onSelectList}
-                key={list.id}
-                list={list}
-              />
-            ))}
-        </div>
+
+      {isOpen && (
+        <CollapsibleSection
+          items={folder.lists}
+          className="ml-[50px]"
+          condition={selectedList ? selectedList.id > 0 : false}
+        >
+          {(list: List) => (
+            <ListItem
+              key={list.id}
+              list={list}
+              selectedList={selectedList}
+              onSelectList={onSelectList}
+            />
+          )}
+        </CollapsibleSection>
       )}
     </>
   );
 };
-const ListItem = ({
-  list,
-  onSelectList,
-  selectedList,
-}: {
+
+interface ListItemProps {
   list: List;
-  selectedList: List;
+  selectedList: List | null;
   onSelectList: (list: List) => void;
-}) => {
+}
+const ListItem = ({ list, selectedList, onSelectList }: ListItemProps) => {
+  const isSelected = selectedList?.id === list.id;
   return (
     <div
       onClick={() => onSelectList(list)}
       className={cn(
-        'flex text-base h-[28px] items-center cursor-pointer gap-2 hover:bg-secondary/80 p-[4px] rounded-lg',
-        selectedList.id === list.id && 'bg-pink-100'
+        'flex text-base h-[28px] items-center cursor-pointer gap-2 hover:bg-secondary/80 rounded-lg',
+        isSelected && 'bg-pink-100'
       )}
     >
-      <div className="shrink-0">
-        <Icon
-          name="list"
-          className={`size-4 text-content-tertiary`}
-          style={{ color: list.color }}
-        />
-      </div>
-      <div className="truncate justify-between flex items-center text-base w-full overflow-hidden whitespace-nowrap">
-        <p className="">{list.name}</p>
-        {selectedList.id === list.id && (
-          <Icon name={'okfill01'} className={'text-theme-main'} />
-        )}
+      <Icon
+        name="list"
+        className="size-4 text-content-tertiary shrink-0"
+        style={{ color: list.color }}
+      />
+      <div className="truncate justify-between flex items-center text-base w-full">
+        <p>{list.name}</p>
+        {isSelected && <Icon name="okfill01" className="text-theme-main" />}
       </div>
     </div>
   );
 };
-const TaskAttributes = ({ priorityList }: { priorityList: Priority[] }) => {
-  return (
-    <div className={'mt-4'}>
-      <div className="space-x-2 w-full flex items-center">
-        <TaskStatusDialog>
-          <Button
-            variant={'ghost'}
-            className={
-              'bg-green-700 hover:bg-green-800 hover:text-white text-white uppercase text-base h-[24px]'
-            }
-          >
-            {LABEL.COMPLETE}
-          </Button>
-        </TaskStatusDialog>
-        <Button variant={'outline'} className={'h-[24px]'}>
-          <Icon name={'users'} /> {LABEL.ASSIGNEE}
-        </Button>
-        <Button variant={'outline'} className={'h-[24px]'}>
-          <Icon name={'calendar'} /> {LABEL.DUE_DATE}
-        </Button>
-        <PriorityPopover priorityList={priorityList}>
-          <Button variant={'outline'} className={'h-[24px]'}>
-            <Icon name={'priority02'} /> {LABEL.PRIORITY}
-          </Button>
-        </PriorityPopover>
-        <Button variant={'outline'} className={'h-[24px]'}>
-          <Icon name={'tag'} /> {LABEL.TAGS}
-        </Button>
-        <Button variant={'outline'} size={'auto'} className={'!size-[24px]'}>
-          <Icon name={'menu03'} />
-        </Button>
-      </div>
-    </div>
-  );
+
+interface CollapsibleSectionProps<T> {
+  items: T[] | undefined;
+  children: (item: T) => React.ReactNode;
+  className?: string;
+  condition?: boolean;
+}
+
+const CollapsibleSection = <T,>({
+  items,
+  children,
+  className = '',
+  condition = true,
+}: CollapsibleSectionProps<T>) => {
+  if (!items?.length || !condition) return null;
+
+  return <div className={className}>{items.map(children)}</div>;
 };
+
 const Description = () => {
   const [description, setDescription] = useState('');
   const [isEditing, setIsEditing] = useState(false);
@@ -513,6 +522,69 @@ const SmartInput = ({
     />
   );
 };
+
+interface HeaderProps {
+  setIsOpen: (open: boolean) => void;
+}
+const Header = ({ setIsOpen }: HeaderProps) => {
+  return (
+    <>
+      <DialogTitle className="text-xl px-2 flex items-center w-full justify-between font-semibold text-primary">
+        <TabsList variant="underline" width="fit" className="w-full">
+          <TabsTrigger
+            className="text-base font-medium text-content-tertiary"
+            variant="underline"
+            value="task"
+          >
+            {LABEL.TASK}
+          </TabsTrigger>
+        </TabsList>
+      </DialogTitle>
+      <button
+        onClick={() => setIsOpen(false)}
+        className="absolute top-0 right-0 mr-2 hover:bg-gray-100 rounded-md transition-colors"
+      >
+        <XIcon className="size-4 m-2" />
+      </button>
+    </>
+  );
+};
+
+interface FooterProps {
+  onCreateTask: () => void;
+  isDropdownOpen: boolean;
+  setIsDropdownOpen: (open: boolean) => void;
+}
+const Footer = ({
+  onCreateTask,
+  isDropdownOpen,
+  setIsDropdownOpen,
+}: FooterProps) => {
+  return (
+    <div className="flex items-center rounded-b-lg p-4 border-t">
+      <div className="inline-flex rounded-md justify-end w-full">
+        <Button
+          onClick={onCreateTask}
+          className="!rounded-r-none h-[32px] text-base bg-theme-main-dark border-r-border/30 border-r-[1px]"
+        >
+          {LABEL.CREATE_TASK}
+        </Button>
+        <CreateTaskDropdown
+          isOpen={isDropdownOpen}
+          setIsOpen={setIsDropdownOpen}
+        >
+          <Button
+            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+            className="!rounded-l-none h-[32px] border-l-0 bg-theme-main-dark"
+          >
+            <Icon name="dropdownarrow" className={'text-base'} />
+          </Button>
+        </CreateTaskDropdown>
+      </div>
+    </div>
+  );
+};
+
 const CreateTaskDropdown = ({
   isOpen,
   setIsOpen,
@@ -552,3 +624,16 @@ const PopoverItem = ({
     {label}
   </button>
 );
+
+const useHoverState = () => {
+  const [isHovered, setIsHovered] = useState(false);
+  return {
+    isHovered,
+    onMouseEnter: () => setIsHovered(true),
+    onMouseLeave: () => setIsHovered(false),
+  };
+};
+const useToggleState = (initialState = false) => {
+  const [isOpen, setIsOpen] = useState(initialState);
+  return [isOpen, () => setIsOpen((prev) => !prev)] as const;
+};
