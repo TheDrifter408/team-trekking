@@ -19,7 +19,6 @@ const AppLayout = () => {
     currentWorkspace,
     setSpaceFolderList,
     setSpaces,
-    setMembers,
     clearWorkspace,
     setCurrentWorkspace,
   } = useWorkspaceStore();
@@ -49,7 +48,6 @@ const AppLayout = () => {
     if (spacesFolderList) {
       setSpaceFolderList(spacesFolderList);
       setSpaces(spacesFolderList.spaces);
-      setMembers(spacesFolderList.members);
     }
     if (!currentWorkspace && workSpaces && workSpaces.length > 0) {
       clearWorkspace();
