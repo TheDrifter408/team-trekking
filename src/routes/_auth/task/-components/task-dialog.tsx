@@ -68,6 +68,7 @@ import { Sheet, SheetContent } from '@/components/shadcn-ui/sheet';
 import { TaskList } from '@/components/layout/task-leftsidebar';
 import { TaskSidebar } from '@/components/layout/task-sidebar';
 import { PageHeader } from './page-header';
+import { socket } from '@/lib/constants';
 
 const availableTags: TagOption[] = [
   { id: 'initiative', label: 'initiative' },
@@ -110,14 +111,16 @@ export const TaskDialog: FC<TaskDialogProps> = ({ taskId }) => {
   const { open: isSidebarOpen } = useSidebar();
 
   const [getTaskData, { data: taskData, isFetching }] = useLazyGetTaskQuery();
-  const [updateTask, { isLoading: isUpdating }] = useUpdateTaskMutation();
+  const [updateTask] = useUpdateTaskMutation();
 
   // States and properties for the left sidebar of task dialog
   const [isLeftSidebarOpen, setIsLeftSidebarOpen] = useState(false);
   const defaultOpenRight = Cookies.get('right-sidebar:state') !== 'false';
+  // Sidebar properties
   const sidebarStyle = {
     '--sidebar-width': '480px',
   } as CSSProperties & { [key: string]: string };
+  // Sidebar onClick toggling
   const onToggleLeftSidebar = () => {
     console.error('Its firing');
     setIsLeftSidebarOpen(!isLeftSidebarOpen);
@@ -148,7 +151,7 @@ export const TaskDialog: FC<TaskDialogProps> = ({ taskId }) => {
   };
 
   const onHandleTaskNameBlur = async () => {
-    if (taskName !== taskData?.name && taskName.trim() !== '') {
+    if (taskName !== taskData?.name && taskName?.trim() !== '') {
       try {
         await handleMutation(updateTask, {
           id: Number(taskId),
@@ -229,6 +232,28 @@ export const TaskDialog: FC<TaskDialogProps> = ({ taskId }) => {
       }
     }
   };
+  // useEffect to handle web socket operations and its side effects
+  useEffect(() => {
+    const room = 'task123';
+    // Join the room
+    socket.emit('join_room', { room });
+    // Listen to real-time updates
+    socket.on(room, (socketData) => {
+      const { name, startDate, dueDate, description } = socketData.data;
+      setTaskName(name);
+      setDateRange({
+        from: new Date(startDate),
+        to: new Date(dueDate),
+      });
+      setDescription(description);
+    });
+
+    // Cleanup
+    return () => {
+      socket.emit('leave_room', { room });
+      socket.off(room);
+    };
+  }, []);
 
   useEffect(() => {
     getTaskData(Number(taskId));
@@ -331,7 +356,6 @@ export const TaskDialog: FC<TaskDialogProps> = ({ taskId }) => {
                 value={taskName}
                 onChange={onHandleTaskNameChange}
                 onBlur={onHandleTaskNameBlur}
-                disabled={isUpdating}
                 className="!text-3xl w-full !font-bold !h-fit tracking-tight bg-transparent border-none focus-visible:ring-0 focus-visible:ring-offset-0 px-0"
               />
             </div>
