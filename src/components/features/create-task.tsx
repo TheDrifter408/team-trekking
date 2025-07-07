@@ -45,7 +45,10 @@ import { useAppNavigation } from '@/lib/hooks/use-app-navigation.ts';
 import { cn } from '@/lib/utils/utils.ts';
 import { LABEL } from '@/lib/constants';
 import { toast } from 'sonner';
-import { Priority } from '@/types/request-response/workspace/ApiResponse';
+import {
+  Priority,
+  Member,
+} from '@/types/request-response/workspace/ApiResponse';
 import { AssigneePopover } from '@/components/common/assignee-popover.tsx';
 
 interface Props {
@@ -64,6 +67,8 @@ export const CreateTask = ({ isOpen, setIsOpen, children, listId }: Props) => {
   const [selectedPriority, setSelectedPriority] = useState<Priority | null>(
     null
   );
+  const [assignees, setAssignees] = useState<Member[]>([]);
+  const [isAssigneeOpen, setIsAssigneeOpen] = useState(false);
   const [name, setName] = useState('');
   const taskType = 1;
 
@@ -89,6 +94,19 @@ export const CreateTask = ({ isOpen, setIsOpen, children, listId }: Props) => {
   const onSelectPriority = (priority: Priority | null) => {
     setSelectedPriority(priority);
   };
+  const onSelectAssignee = (assignee: Member) => {
+    setAssignees((prev) => {
+      const isAlreadySelected = prev.some((m) => m.id === assignee.id);
+      if (isAlreadySelected) {
+        return prev.filter((m) => m.id !== assignee.id);
+      } else {
+        return [...prev, assignee];
+      }
+    });
+  };
+  const onRemoveAssignee = (assigneeId: number) => {
+    setAssignees((prev) => prev.filter((m) => m.id !== assigneeId));
+  };
 
   const onCreateTask = async () => {
     if (!selectedList) return;
@@ -108,7 +126,6 @@ export const CreateTask = ({ isOpen, setIsOpen, children, listId }: Props) => {
     }
   };
 
-  const [isAssigneeOpen, setIsAssigneeOpen] = useState(false);
   return (
     <div>
       <Dialog modal={true} open={isOpen} onOpenChange={setIsOpen}>
@@ -209,7 +226,11 @@ export const CreateTask = ({ isOpen, setIsOpen, children, listId }: Props) => {
           />
         </DialogContent>
       </Dialog>
-      <AssigneePopover open={isAssigneeOpen} onOpenChange={setIsAssigneeOpen} />
+      <AssigneePopover
+        members={members ?? []}
+        open={isAssigneeOpen}
+        onOpenChange={setIsAssigneeOpen}
+      />
     </div>
   );
 };

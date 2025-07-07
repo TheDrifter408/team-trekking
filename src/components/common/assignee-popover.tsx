@@ -3,113 +3,56 @@ import {
   CommandInput,
   CommandList,
   CommandItem,
-  CommandEmpty,
   CommandGroup,
 } from '@/components/shadcn-ui/command';
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from '@/components/shadcn-ui/avatar';
-import { Badge } from '@/components/shadcn-ui/badge';
-import { Check } from 'lucide-react';
+import { Member } from '@/types/request-response/workspace/ApiResponse.ts';
+import { PlaceholderAvatar } from '@/components/common/avatar-generator.tsx';
 
-export const AssigneePopover = ({
-  open,
-  onOpenChange,
-}: {
+interface Props {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-}) => {
+  members: Member[];
+  assignees?: Member[];
+  onSelectAssignee?: (assigneeId: number) => void;
+}
+
+export const AssigneePopover = ({ open, onOpenChange, members }: Props) => {
   return (
     <CommandDialog
       open={open}
       onOpenChange={onOpenChange}
       className="min-h-[280px] w-[287px]"
     >
-      <CommandInput placeholder="Search or enter email..." />
+      <CommandInput placeholder="Search by name or email..." />
       <CommandList>
-        <CommandEmpty>No users found.</CommandEmpty>
-        <CommandGroup heading="People">
-          {users.map((user) => (
-            <CommandItem key={user.id} className="flex items-center gap-3 p-3">
-              <div className="relative">
-                <Avatar className="h-10 w-10">
-                  <AvatarImage src="" />
-                  <AvatarFallback className="text-sm font-medium">
-                    {user.initials}
-                  </AvatarFallback>
-                </Avatar>
-                {user.online && (
-                  <div className="absolute -bottom-1 -right-1 h-3 w-3 rounded-full bg-green-500 border-2 border-background" />
+        <CommandGroup heading="People" className="flex flex-col !space-y-[4px]">
+          {members.length > 0 &&
+            members.map((member) => (
+              <CommandItem
+                key={member.id}
+                value={`${member.user.fullName} ${member.user.email}`}
+                className="h-[32px] hover:bg-secondary !p-[4px] cursor-pointer text-base flex items-center gap-2"
+              >
+                {member.user.image && member.user.image.length > 0 ? (
+                  <img
+                    src={member.user.image}
+                    alt={member.user.fullName}
+                    className="h-6 w-6 rounded-full object-cover"
+                  />
+                ) : (
+                  <PlaceholderAvatar
+                    variant="initials"
+                    seed={member.user.fullName}
+                    className="h-6 w-6"
+                  />
                 )}
-              </div>
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium truncate">
-                    {user.name}
-                  </span>
-                  {user.verified && (
-                    <Badge
-                      variant="secondary"
-                      className="h-4 w-4 p-0 rounded-full bg-blue-500"
-                    >
-                      <Check className="h-2.5 w-2.5 text-white" />
-                    </Badge>
-                  )}
-                </div>
-              </div>
-            </CommandItem>
-          ))}
+                <span className="truncate text-base">
+                  {member.user.fullName}
+                </span>
+              </CommandItem>
+            ))}
         </CommandGroup>
       </CommandList>
     </CommandDialog>
   );
 };
-
-const users = [
-  { id: 1, name: 'Me', initials: 'ME', verified: true, online: true },
-  {
-    id: 2,
-    name: 'Noor Ullah Al Noor',
-    initials: 'NU',
-    verified: false,
-    online: true,
-  },
-  {
-    id: 3,
-    name: 'Mehedi Hassan',
-    initials: 'MH',
-    verified: false,
-    online: false,
-  },
-  {
-    id: 4,
-    name: 'Khairul Hasan',
-    initials: 'KH',
-    verified: false,
-    online: false,
-  },
-  {
-    id: 5,
-    name: 'Samrat Biswas',
-    initials: 'SB',
-    verified: false,
-    online: true,
-  },
-  {
-    id: 6,
-    name: 'Rahad Kabir',
-    initials: 'RK',
-    verified: true,
-    online: true,
-  },
-  { id: 7, name: 'Tarun', initials: 'T', verified: false, online: true },
-  {
-    id: 8,
-    name: 'Yiafee Khan',
-    initials: 'YK',
-    verified: true,
-    online: false,
-  },
-];
