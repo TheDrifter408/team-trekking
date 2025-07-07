@@ -23,3 +23,16 @@ export interface CreateTaskRequest {
   listId: number;
   typeId: number;
 }
+
+export interface UpdateTask {
+  id: number;
+  name: string;
+  description: string;
+  typeId: number;
+  priorityId: number;
+  statusItemId: number;
+  startDate: string;
+  dueDate: string;
+  timeEstimate: number;
+  sprintPoints: number;
+}

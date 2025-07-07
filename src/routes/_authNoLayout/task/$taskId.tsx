@@ -2,7 +2,7 @@ import TaskTypeDropdown from '@/components/common/task-type-dropdown';
 import { Button } from '@/components/shadcn-ui/button';
 import { Input } from '@/components/shadcn-ui/input';
 import { useSidebar } from '@/components/shadcn-ui/sidebar';
-import { cn } from '@/lib/utils/utils';
+import { cn, handleMutation } from '@/lib/utils/utils';
 import { sampleTask } from '@/mock';
 import {
   createDataTableStore,
@@ -49,7 +49,10 @@ import { DataTable } from '@/components/data-table/data-table';
 import TaskCheckList from '@/components/common/task-check-list';
 import { LABEL } from '@/lib/constants';
 import { TabActionBar } from '@/components/common/table-floating-actoin-bar';
-import { useLazyGetTaskQuery } from '@/service/rtkQueries/taskQuery';
+import {
+  useLazyGetTaskQuery,
+  useUpdateTaskMutation,
+} from '@/service/rtkQueries/taskQuery';
 import { Member } from '@/types/request-response/workspace/ApiResponse';
 import { Icon } from '@/assets/icon-path';
 import TimeEstimateDropdown from '@/components/common/estimate-time-dropdown';
@@ -76,9 +79,6 @@ const priorityFlags: Record<string, string> = {
 
 const Task: FC = () => {
   const { taskId } = Route.useParams();
-
-  const [getTaskData, { data: taskData, isFetching }] = useLazyGetTaskQuery();
-
   const [enterDates, setEnterDates] = useState<boolean>(false);
   const [enterAssignee, setEnterAssignee] = useState<boolean>(false);
   const [enterPriority, setEnterPriority] = useState<boolean>(false);
@@ -88,8 +88,12 @@ const Task: FC = () => {
   const [description, setDescription] = useState(sampleTask.description);
   const [selectedTags, setSelectedTags] = useState<string[]>(['backend']);
   const [selectedAssignees, setSelectedAssignees] = useState<Member[]>([]);
+  const [taskName, setTaskName] = useState<string>('');
   const store = createDataTableStore({});
   const { open: isSidebarOpen } = useSidebar();
+
+  const [getTaskData, { data: taskData, isFetching }] = useLazyGetTaskQuery();
+  const [updateTask, { isLoading: isUpdating }] = useUpdateTaskMutation();
 
   const formatTrackTime = (time: string) => {
     const hourMatch = time.match(/(\d+)\s*hour/);
@@ -107,12 +111,40 @@ const Task: FC = () => {
     editorState.read(() => {
       const root = $getRoot();
       const text = root.getTextContent();
+      setDescription(text);
     });
+  };
+
+  const handleTaskNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTaskName(e.target.value);
+  };
+
+  const handleTaskNameBlur = async () => {
+    if (taskName !== taskData?.name && taskName.trim() !== '') {
+      try {
+        await handleMutation(updateTask, {
+          id: Number(taskId),
+          name: taskName,
+        });
+      } catch (error) {
+        console.error('Failed to update task name:', error);
+        setTaskName(taskData?.name || '');
+      }
+    }
   };
 
   useEffect(() => {
     getTaskData(Number(taskId));
   }, [taskId]);
+
+  useEffect(() => {
+    if (taskData) {
+      setTaskName(taskData.name || '');
+      setDescription(taskData.description || '');
+      setSelectedTags(taskData.tags?.map((tag) => tag.id) || []);
+      setSelectedAssignees(taskData.assignees || []);
+    }
+  }, [taskData]);
 
   if (isFetching || !taskData) {
     return <TaskSkeleton />;
@@ -131,7 +163,7 @@ const Task: FC = () => {
               <Link
                 to="/task/$taskId"
                 params={{ taskId: taskData.parentTask.id.toString() }}
-                className="text-muted-foreground"
+                className="text-muted-foreground hover:text-foreground transition-colors"
               >
                 {taskData.parentTask.name}
               </Link>
@@ -157,7 +189,7 @@ const Task: FC = () => {
               </div>
             </div>
             <div>
-              <span className="px-2">{sampleTask.id}</span>
+              <span className="px-2">{taskData.id}</span>
             </div>
           </div>
           {/* HEADER => TITLE */}
@@ -167,7 +199,10 @@ const Task: FC = () => {
             )}
             <Input
               type="text"
-              value={taskData?.name ?? ''}
+              value={taskName}
+              onChange={handleTaskNameChange}
+              onBlur={handleTaskNameBlur}
+              disabled={isUpdating}
               className="!text-3xl w-full !font-bold !h-fit tracking-tight bg-transparent border-none focus-visible:ring-0 focus-visible:ring-offset-0 px-0"
             />
           </div>
@@ -301,7 +336,6 @@ const Task: FC = () => {
                 hover={enterTags}
                 onHoverChange={setEnterTags}
               >
-                {/* TODO : Populate with Tags Data */}
                 <TagDropdownWithSelection
                   availableTags={availableTags}
                   selectedTags={[]}
