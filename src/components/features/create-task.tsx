@@ -112,7 +112,6 @@ export const CreateTask = ({ isOpen, setIsOpen, children, listId }: Props) => {
 
   const onCreateTask = async () => {
     if (!selectedList) return;
-
     const payload: CreateTaskRequest = {
       name,
       listId: selectedList.id,
@@ -120,16 +119,15 @@ export const CreateTask = ({ isOpen, setIsOpen, children, listId }: Props) => {
       priorityId: selectedPriority?.id,
       assigneeIds: assignees.map((assignee) => assignee.user.id),
     };
-
     try {
       const { data } = await handleMutation<CreateTaskResponse>(
         createTask,
         payload
       );
       if (data) navigate(routes.task, data.id);
-      else toast.error('Task creation failed');
+      else toast.error(LABEL.TASK_CREATION_FAILED);
     } catch (error: unknown) {
-      toast.error('Task creation failed');
+      toast.error(LABEL.TASK_CREATION_FAILED);
     }
   };
 
