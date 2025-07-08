@@ -30,6 +30,9 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
+  server: {
+    open: 'http://localhost:5173/login',
+  },
   preview: {
     port: 5173,
   },
