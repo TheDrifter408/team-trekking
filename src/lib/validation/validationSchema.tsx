@@ -126,3 +126,16 @@ export const createFolderSchema = z.object({
   isInheritStatus: z.boolean().optional(),
   invitees: z.array(User).optional(),
 });
+
+export const updateTaskSchema = z.object({
+  id: z.number(),
+  name: z.string(),
+  description: z.string(),
+  typeId: z.number(),
+  priorityId: z.number(),
+  statusItemId: z.number(),
+  startDate: z.string(),
+  dueDate: z.string(),
+  timeEstimate: z.number(),
+  sprintPoints: z.number(),
+});
