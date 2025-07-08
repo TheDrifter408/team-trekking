@@ -110,8 +110,6 @@ export const CreateTask = ({ isOpen, setIsOpen, children, listId }: Props) => {
     setAssignees((prev) => prev.filter((m) => m.id !== assigneeId));
   };
 
-  console.log(assignees, 'assignees');
-
   const onCreateTask = async () => {
     if (!selectedList) return;
 
