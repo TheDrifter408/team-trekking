@@ -48,9 +48,11 @@ import DocIcon from '@/assets/icons/doc-icon.svg?react';
 import FilterIcon from '@/assets/icons/filter-icon.svg?react';
 import EmailIcon from '@/assets/icons/email.svg?react';
 import LockIcon from '@/assets/icons/lock.svg?react';
+import StatusItemIcon01 from '@/assets/icons/status-item-01.svg?react';
 import DeleteBackground from '@/assets/backgrounds/delete-background.svg?react';
 
 const iconPaths = {
+  status01: StatusItemIcon01,
   deletebg: DeleteBackground,
   lock: LockIcon,
   email: EmailIcon,

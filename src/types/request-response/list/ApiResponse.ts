@@ -28,7 +28,7 @@ export interface Status {
   identifierId: string | null;
   isActive: boolean;
   createdAt: string;
-  groups?: StatusGroup[];
+  groups: StatusGroup[];
 }
 
 export interface StatusGroup {
@@ -98,7 +98,7 @@ export interface ListTasksResponse {
   status: Status;
   focusColor: string;
   createdBy: CreatedBy;
-  priority: Priority2;
+  priority: Priority;
   type: Type;
 }
 
@@ -147,23 +147,9 @@ export interface Type {
   isActive: boolean;
 }
 
-export interface Group {
-  id: number;
-  name: string;
-  order: number;
-  items: Item[];
-}
-
 export interface Item {
   id: number;
   name: string;
   color: string;
   order: number;
-}
-
-export interface Priority2 {
-  id: number;
-  title: string;
-  color: string;
-  isActive: boolean;
 }
