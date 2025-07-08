@@ -73,7 +73,6 @@ const AppLayout = () => {
         }
       }
     };
-
     fetchMembers();
   }, [workspaceId]);
   return (

@@ -42,7 +42,7 @@ import {
 } from '@/types/request-response/workspace/ApiResponse';
 import { CreateTaskRequest } from '@/types/request-response/task/ApiRequest.ts';
 import { useAppNavigation } from '@/lib/hooks/use-app-navigation.ts';
-import { cn } from '@/lib/utils/utils.ts';
+import { cn, handleMutation } from '@/lib/utils/utils.ts';
 import { LABEL } from '@/lib/constants';
 import { toast } from 'sonner';
 import {
@@ -51,6 +51,7 @@ import {
 } from '@/types/request-response/workspace/ApiResponse';
 import { AssigneePopover } from '@/components/common/assignee-popover.tsx';
 import { useTMTStore } from '@/stores/zustand';
+import { CreateTaskResponse } from '@/types/request-response/task/ApiResponse.ts';
 
 interface Props {
   isOpen: boolean;
@@ -111,19 +112,22 @@ export const CreateTask = ({ isOpen, setIsOpen, children, listId }: Props) => {
 
   const onCreateTask = async () => {
     if (!selectedList) return;
-
     const payload: CreateTaskRequest = {
       name,
       listId: selectedList.id,
       typeId: taskType,
+      priorityId: selectedPriority?.id,
+      assigneeIds: assignees.map((assignee) => assignee.user.id),
     };
-
     try {
-      const response = await createTask(payload).unwrap();
-      if (!response.id) toast.error('Task creation failed');
-      navigate(routes.task, response.id);
+      const { data } = await handleMutation<CreateTaskResponse>(
+        createTask,
+        payload
+      );
+      if (data) navigate(routes.task, data.id);
+      else toast.error(LABEL.TASK_CREATION_FAILED);
     } catch (error: unknown) {
-      toast.error('Task creation failed');
+      toast.error(LABEL.TASK_CREATION_FAILED);
     }
   };
 

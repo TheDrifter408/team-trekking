@@ -22,6 +22,8 @@ export interface CreateTaskRequest {
   name: string;
   listId: number;
   typeId: number;
+  priorityId?: number;
+  assigneeIds?: number[];
 }
 
 export interface UpdateTask {
