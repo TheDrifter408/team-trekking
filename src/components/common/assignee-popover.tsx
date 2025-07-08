@@ -38,31 +38,32 @@ export const AssigneePopover = ({
       <CommandInput placeholder="Search by name or email..." />
       <CommandList>
         <CommandGroup heading="People" className="flex flex-col pb-2">
-          {members.map((member) => {
-            const selected = isAssigneeSelected(member.id);
-            return (
-              <CommandItem
-                key={member.id}
-                value={`${member.user.fullName} ${member.user.email}`}
-                onSelect={() => onSelectAssignee(member)}
-                className="group my-[1px] h-[34px] hover:bg-secondary cursor-pointer text-base flex items-center gap-2"
-              >
-                <AssigneeAvatar
-                  member={member}
-                  selected={selected}
-                  onRemove={onRemoveAssignee}
-                />
-                <span
-                  className={cn(
-                    'truncate text-base',
-                    selected && 'font-medium'
-                  )}
+          {members.length > 0 &&
+            members.map((member) => {
+              const selected = isAssigneeSelected(member.id);
+              return (
+                <CommandItem
+                  key={member.id}
+                  value={`${member.user.fullName} ${member.user.email}`}
+                  onSelect={() => onSelectAssignee(member)}
+                  className="group my-[1px] h-[34px] hover:bg-secondary cursor-pointer text-base flex items-center gap-2"
                 >
-                  {member.user.fullName}
-                </span>
-              </CommandItem>
-            );
-          })}
+                  <AssigneeAvatar
+                    member={member}
+                    selected={selected}
+                    onRemove={onRemoveAssignee}
+                  />
+                  <span
+                    className={cn(
+                      'truncate text-base',
+                      selected && 'font-medium'
+                    )}
+                  >
+                    {member.user.fullName}
+                  </span>
+                </CommandItem>
+              );
+            })}
         </CommandGroup>
       </CommandList>
     </CommandDialog>

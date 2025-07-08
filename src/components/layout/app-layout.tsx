@@ -14,6 +14,8 @@ import {
 import { useWorkspaceStore } from '@/stores/zustand/workspace-store';
 import { SettingsSidebar } from './settings-sidebar';
 import { TaskDialogOverlay } from '@/routes/_auth/task/-components/task-dialog-overlay';
+import { handleMutation } from '@/lib/utils/utils.ts';
+import { Member } from '@/types/request-response/workspace/ApiResponse';
 
 const AppLayout = () => {
   const { user } = useTMTStore();
@@ -61,21 +63,19 @@ const AppLayout = () => {
 
   useEffect(() => {
     const fetchMembers = async () => {
-      if (currentWorkspace?.id) {
-        try {
-          const response = await fetchWorkspaceMembers(
-            Number(currentWorkspace.id)
-          ).unwrap();
-          if (response) {
-            setMembers(response);
-          }
-        } catch (error) {
-          console.error('Failed to fetch workspace members:', error);
+      if (workspaceId) {
+        const { data } = await handleMutation<Array<Member>>(
+          fetchWorkspaceMembers,
+          workspaceId
+        );
+        if (data) {
+          setMembers(data);
         }
       }
     };
+
     fetchMembers();
-  }, [currentWorkspace]);
+  }, [workspaceId]);
   return (
     <AppContextProvider spaceGlobal={spaceGlobalData ?? null}>
       <div className="flex flex-col h-screen">
