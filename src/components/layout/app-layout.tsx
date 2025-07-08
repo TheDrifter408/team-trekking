@@ -13,6 +13,7 @@ import {
 } from '@/service/rtkQueries/workspaceQuery';
 import { useWorkspaceStore } from '@/stores/zustand/workspace-store';
 import { SettingsSidebar } from './settings-sidebar';
+import { TaskDialogOverlay } from '@/routes/_auth/task/-components/task-dialog-overlay';
 
 const AppLayout = () => {
   const { user } = useTMTStore();
@@ -96,6 +97,7 @@ const AppLayout = () => {
               <Outlet />
             </SidebarInset>
           </div>
+          <TaskDialogOverlay />
         </SidebarProvider>
       </div>
     </AppContextProvider>

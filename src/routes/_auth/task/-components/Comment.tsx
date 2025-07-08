@@ -10,7 +10,7 @@ import {
   ThumbsUp,
 } from 'lucide-react';
 import { FC, useState } from 'react';
-import { DocEditor } from '@/routes/_authNoLayout/task/-components/doc-editor';
+import { DocEditor } from '@/routes/_auth/task/-components/doc-editor';
 import {
   Tooltip,
   TooltipContent,
