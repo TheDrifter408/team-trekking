@@ -9,10 +9,13 @@ import { useSpaceGlobalApiQuery } from '@/service/rtkQueries/spaceQuery.ts';
 import {
   useGetAllWorkSpacesQuery,
   useGetWorkspaceSpaceFolderListQuery,
+  useLazyGetWorkspaceMemberQuery,
 } from '@/service/rtkQueries/workspaceQuery';
 import { useWorkspaceStore } from '@/stores/zustand/workspace-store';
 import { SettingsSidebar } from './settings-sidebar';
 import { TaskDialogOverlay } from '@/routes/_auth/task/-components/task-dialog-overlay';
+import { handleMutation } from '@/lib/utils/utils.ts';
+import { Member } from '@/types/request-response/workspace/ApiResponse';
 
 const AppLayout = () => {
   const { user } = useTMTStore();
@@ -20,12 +23,13 @@ const AppLayout = () => {
     currentWorkspace,
     setSpaceFolderList,
     setSpaces,
-    setMembers,
     clearWorkspace,
     setCurrentWorkspace,
+    setMembers,
   } = useWorkspaceStore();
 
   const { data: spaceGlobalData } = useSpaceGlobalApiQuery();
+  const [fetchWorkspaceMembers] = useLazyGetWorkspaceMemberQuery();
   const { data: workSpaces, refetch: refetchWorkspaces } =
     useGetAllWorkSpacesQuery();
 
@@ -50,7 +54,6 @@ const AppLayout = () => {
     if (spacesFolderList) {
       setSpaceFolderList(spacesFolderList);
       setSpaces(spacesFolderList.spaces);
-      setMembers(spacesFolderList.members);
     }
     if (!currentWorkspace && workSpaces && workSpaces.length > 0) {
       clearWorkspace();
@@ -58,6 +61,21 @@ const AppLayout = () => {
     }
   }, [spacesFolderList, workSpaces]);
 
+  useEffect(() => {
+    const fetchMembers = async () => {
+      if (workspaceId) {
+        const { data } = await handleMutation<Array<Member>>(
+          fetchWorkspaceMembers,
+          workspaceId
+        );
+        if (data) {
+          setMembers(data);
+        }
+      }
+    };
+
+    fetchMembers();
+  }, [workspaceId]);
   return (
     <AppContextProvider spaceGlobal={spaceGlobalData ?? null}>
       <div className="flex flex-col h-screen">

@@ -45,7 +45,12 @@ import { useAppNavigation } from '@/lib/hooks/use-app-navigation.ts';
 import { cn } from '@/lib/utils/utils.ts';
 import { LABEL } from '@/lib/constants';
 import { toast } from 'sonner';
-import { Priority } from '@/types/request-response/workspace/ApiResponse';
+import {
+  Priority,
+  Member,
+} from '@/types/request-response/workspace/ApiResponse';
+import { AssigneePopover } from '@/components/common/assignee-popover.tsx';
+import { useTMTStore } from '@/stores/zustand';
 
 interface Props {
   isOpen: boolean;
@@ -56,16 +61,19 @@ interface Props {
 
 export const CreateTask = ({ isOpen, setIsOpen, children, listId }: Props) => {
   const { navigate, routes } = useAppNavigation();
+  const { user } = useTMTStore();
   const [createTask] = useCreateTaskMutation();
-  const { spaces, workspaceGlobal } = useWorkspaceStore();
+  const { spaces, workspaceGlobal, members } = useWorkspaceStore();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [selectedList, setSelectedList] = useState<List | null>(null);
   const [selectedPriority, setSelectedPriority] = useState<Priority | null>(
     null
   );
+  const [assignees, setAssignees] = useState<Member[]>([]);
+  const [isAssigneeOpen, setIsAssigneeOpen] = useState(false);
   const [name, setName] = useState('');
   const taskType = 1;
-
+  const currentUserId = user?.userData.id ?? 0;
   const priorityList = workspaceGlobal?.priority;
 
   useEffect(() => {
@@ -88,6 +96,18 @@ export const CreateTask = ({ isOpen, setIsOpen, children, listId }: Props) => {
   const onSelectPriority = (priority: Priority | null) => {
     setSelectedPriority(priority);
   };
+  const onSelectAssignee = (member: Member) => {
+    if (member.user.id === currentUserId) {
+      return;
+    }
+    setAssignees((prev) => {
+      const isAlreadySelected = prev.some((a) => a.id === member.id);
+      return isAlreadySelected ? prev : [...prev, member];
+    });
+  };
+  const onRemoveAssignee = (assigneeId: number) => {
+    setAssignees((prev) => prev.filter((m) => m.id !== assigneeId));
+  };
 
   const onCreateTask = async () => {
     if (!selectedList) return;
@@ -109,7 +129,7 @@ export const CreateTask = ({ isOpen, setIsOpen, children, listId }: Props) => {
 
   return (
     <div>
-      <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <Dialog modal={true} open={isOpen} onOpenChange={setIsOpen}>
         <DialogTrigger asChild>{children}</DialogTrigger>
         <DialogContent
           hideCloseButton
@@ -156,9 +176,46 @@ export const CreateTask = ({ isOpen, setIsOpen, children, listId }: Props) => {
                         {LABEL.COMPLETE}
                       </Button>
                     </TaskStatusDialog>
-                    <Button variant={'outline'} className={'h-[24px]'}>
-                      <Icon name={'users'} /> {LABEL.ASSIGNEE}
+                    <Button
+                      onClick={() => setIsAssigneeOpen(true)}
+                      variant="outline"
+                      className="h-[24px] pl-2 pr-2 flex items-center gap-1"
+                    >
+                      {assignees.length > 0 ? (
+                        <>
+                          {assignees.slice(0, 3).map((assignee) => (
+                            <div
+                              key={assignee.id}
+                              className="flex items-center rounded-full overflow-hidden relative"
+                            >
+                              {assignee.user.image ? (
+                                <img
+                                  src={assignee.user.image}
+                                  alt={assignee.user.fullName}
+                                  className="size-[18px] object-cover rounded-full"
+                                />
+                              ) : (
+                                <PlaceholderAvatar
+                                  variant="initials"
+                                  seed={assignee.user.fullName}
+                                  className="size-[18px] text-[10px]"
+                                />
+                              )}
+                            </div>
+                          ))}
+                          {assignees.length > 3 && (
+                            <span className="text-xs text-muted-foreground ml-1">
+                              +{assignees.length - 3}
+                            </span>
+                          )}
+                        </>
+                      ) : (
+                        <>
+                          <Icon name="users" /> {LABEL.ASSIGNEE}
+                        </>
+                      )}
                     </Button>
+
                     <Button variant={'outline'} className={'h-[24px]'}>
                       <Icon name={'calendar'} /> {LABEL.DUE_DATE}
                     </Button>
@@ -202,6 +259,14 @@ export const CreateTask = ({ isOpen, setIsOpen, children, listId }: Props) => {
           />
         </DialogContent>
       </Dialog>
+      <AssigneePopover
+        members={members ?? []}
+        assignees={assignees}
+        open={isAssigneeOpen}
+        onOpenChange={setIsAssigneeOpen}
+        onSelectAssignee={onSelectAssignee}
+        onRemoveAssignee={onRemoveAssignee}
+      />
     </div>
   );
 };
