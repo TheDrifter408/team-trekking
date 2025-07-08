@@ -296,4 +296,5 @@ export const LABEL = {
   EMPTY: 'Empty',
   ADD_TIME: 'Add Time',
   RECENTS: 'Recents',
+  TASK_CREATION_FAILED: 'Task creation failed',
 };
