@@ -56,11 +56,11 @@ import {
   useLazyGetTaskQuery,
   useUpdateTaskMutation,
 } from '@/service/rtkQueries/taskQuery';
-import { Member } from '@/types/request-response/workspace/ApiResponse';
+import { Priority } from '@/types/request-response/workspace/ApiResponse';
 import { Icon } from '@/assets/icon-path';
 import TimeEstimateDropdown from '@/components/common/estimate-time-dropdown';
 import { TaskSkeleton } from './loading';
-import { Task } from '@/types/request-response/task/ApiResponse.ts';
+import { Assignee, Task } from '@/types/request-response/task/ApiResponse.ts';
 import { DateRange } from 'react-day-picker';
 import Cookies from 'js-cookie';
 import { Sheet, SheetContent } from '@/components/shadcn-ui/sheet';
@@ -70,6 +70,16 @@ import { PageHeader } from './page-header';
 import { socket } from '@/lib/constants';
 import { $convertToMarkdownString, TRANSFORMERS } from '@lexical/markdown';
 import { useDebounceCallback } from '@/lib/hooks/use-debounceCallback';
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/shadcn-ui/select';
+import { useWorkspaceStore } from '@/stores/zustand/workspace-store';
+import { TaskPrioritySelect } from './task-priority-select';
 
 const availableTags: TagOption[] = [
   { id: 'initiative', label: 'initiative' },
@@ -95,18 +105,25 @@ interface TaskDialogProps {
 }
 
 export const TaskDialog: FC<TaskDialogProps> = ({ taskId }) => {
+  const { workspaceGlobal } = useWorkspaceStore();
+
+  const priority = workspaceGlobal?.priority ?? [];
+  // Hover states
   const [enterDates, setEnterDates] = useState<boolean>(false);
   const [enterAssignee, setEnterAssignee] = useState<boolean>(false);
   const [enterPriority, setEnterPriority] = useState<boolean>(false);
   const [enterEstimatedTime, setEnterEstimatedTime] = useState<boolean>(false);
   const [enterTrackTime, setEnterTrackTime] = useState<boolean>(false);
   const [enterTags, setEnterTags] = useState<boolean>(false);
+
+  // Task states
+  const [taskName, setTaskName] = useState<string>('');
   const [description, setDescription] = useState('');
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
-  const [selectedAssignees, setSelectedAssignees] = useState<Member[]>([]);
-  const [taskName, setTaskName] = useState<string>('');
+  const [selectedAssignees, setSelectedAssignees] = useState<Assignee[]>([]);
   const [estimatedTime, setEstimatedTime] = useState<string | null>(null);
   const [dateRange, setDateRange] = useState<DateRange | undefined>();
+  const [taskPriority, setTaskPriority] = useState<Priority | null>(null);
 
   const store = createDataTableStore({});
   const { open: isSidebarOpen } = useSidebar();
@@ -137,6 +154,17 @@ export const TaskDialog: FC<TaskDialogProps> = ({ taskId }) => {
 
   const onPressAddChecklist = () => {
     // setIsAddChecklist(true);
+  };
+
+  const onPriorityChange = (id: string) => {
+    const found = priority.find((p) => p.id.toString() === id);
+    if (found) {
+      setTaskPriority(found);
+    }
+  };
+
+  const onPriorityRemove = () => {
+    setTaskPriority(undefined);
   };
 
   const onChangeDescription = useDebounceCallback(
@@ -269,7 +297,7 @@ export const TaskDialog: FC<TaskDialogProps> = ({ taskId }) => {
       setSelectedTags(taskData.tags?.map((tag) => tag.id) || []);
       setSelectedAssignees(taskData?.assignees || []);
       setEstimatedTime(taskData?.timeEstimate?.toString() || '');
-
+      setTaskPriority(taskData.priority);
       // Set date range from task data
       if (taskData.startDate || taskData.dueDate) {
         setDateRange({
@@ -469,27 +497,16 @@ export const TaskDialog: FC<TaskDialogProps> = ({ taskId }) => {
                     label="Priority"
                     hover={enterPriority}
                     onHoverChange={setEnterPriority}
+                    onRemove={onPriorityRemove}
                   >
-                    <div className="flex -space-x-2">
-                      {taskData && taskData?.priority ? (
-                        <div className="flex gap-2">
-                          <IconFlagFilled
-                            size={19}
-                            color={priorityFlags[taskData.priority.title]}
-                          />
-                          <span className="text-sm">
-                            {taskData.priority.title.toUpperCase()}
-                          </span>
-                        </div>
-                      ) : (
-                        <div className={'flex space-x-2 items-center'}>
-                          <Icon name={'priority'} />
-                          <span className="text-base text-muted-foreground">
-                            {LABEL.EMPTY}
-                          </span>
-                        </div>
-                      )}
-                    </div>
+                    <TaskPrioritySelect
+                      selectedValue={taskPriority}
+                      onSelectChange={(id) => {
+                        onPriorityChange(id);
+                        onHandleUpdateTask({ priorityId: Number(id) });
+                      }}
+                      priorities={priority}
+                    />
                   </TaskMetaRow>
                   {/* TAGS */}
                   <TaskMetaRow

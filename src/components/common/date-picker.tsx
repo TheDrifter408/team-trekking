@@ -1,14 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import {
-  addDays,
-  format,
-  isThisYear,
-  isToday,
-  isTomorrow,
-  isThisWeek,
-} from 'date-fns';
+import { format, isThisYear, isToday, isTomorrow, isThisWeek } from 'date-fns';
 import { CalendarIcon, MoveRight } from 'lucide-react';
 import { type DateRange } from 'react-day-picker';
 
@@ -63,7 +56,7 @@ export function DatePickerWithRange({
     } else if (isThisYear(date)) {
       return format(date, 'd MMM'); // 14 Apr
     } else {
-      return format(date, 'd MMM yyyy'); // 14 Apr 2026
+      return format(date, 'd/M/yy'); // 14 Apr 2026
     }
   };
 

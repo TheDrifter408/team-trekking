@@ -52,7 +52,7 @@ export const TaskMetaRow = ({
             onClick={onHandleRemove}
             className={cn(
               'ml-auto my-0 p-0 rounded-lg hover:bg-gray-200 transition-colors invisible',
-              hover ? 'visible' : 'invisible'
+              hover && onRemove ? 'visible' : 'invisible'
             )}
             aria-label="Remove"
           >
