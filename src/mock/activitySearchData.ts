@@ -97,7 +97,7 @@ export const activitySearchData: Activity[] = [
     isComment: false,
   },
   {
-    id: 5,
+    id: 8,
     type: 'status_changed',
     user: 'You',
     action: 'changed status from',
@@ -108,7 +108,7 @@ export const activitySearchData: Activity[] = [
     isComment: false,
   },
   {
-    id: 6,
+    id: 9,
     type: 'status_changed',
     user: 'You',
     action: 'changed status from',
@@ -119,7 +119,7 @@ export const activitySearchData: Activity[] = [
     isComment: false,
   },
   {
-    id: 7,
+    id: 10,
     type: 'files_uploaded',
     user: 'Noor Ullah Al Noor',
     action: 'uploaded 2 files',
@@ -135,7 +135,7 @@ export const activitySearchData: Activity[] = [
     },
   },
   {
-    id: 5,
+    id: 11,
     type: 'status_changed',
     user: 'You',
     action: 'changed status from',
@@ -146,7 +146,7 @@ export const activitySearchData: Activity[] = [
     isComment: false,
   },
   {
-    id: 6,
+    id: 12,
     type: 'status_changed',
     user: 'You',
     action: 'changed status from',
@@ -157,7 +157,7 @@ export const activitySearchData: Activity[] = [
     isComment: false,
   },
   {
-    id: 7,
+    id: 13,
     type: 'files_uploaded',
     user: 'Noor Ullah Al Noor',
     action: 'uploaded 2 files',
@@ -168,7 +168,7 @@ export const activitySearchData: Activity[] = [
     isComment: false,
   },
   {
-    id: 5,
+    id: 14,
     type: 'status_changed',
     user: 'You',
     action: 'changed status from',
@@ -179,7 +179,7 @@ export const activitySearchData: Activity[] = [
     isComment: false,
   },
   {
-    id: 6,
+    id: 15,
     type: 'status_changed',
     user: 'You',
     action: 'changed status from',
@@ -190,7 +190,7 @@ export const activitySearchData: Activity[] = [
     isComment: false,
   },
   {
-    id: 7,
+    id: 16,
     type: 'files_uploaded',
     user: 'Noor Ullah Al Noor',
     action: 'uploaded 2 files',

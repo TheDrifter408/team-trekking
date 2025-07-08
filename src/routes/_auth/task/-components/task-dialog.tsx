@@ -7,7 +7,6 @@ import {
   useSidebar,
 } from '@/components/shadcn-ui/sidebar';
 import { cn, handleMutation } from '@/lib/utils/utils';
-import { sampleTask } from '@/mock';
 import {
   createDataTableStore,
   DataTableProvider,
@@ -24,7 +23,7 @@ import {
   IconVectorSpline,
 } from '@tabler/icons-react';
 import { Link, Navigate } from '@tanstack/react-router';
-import { $getRoot, EditorState } from 'lexical';
+import { EditorState } from 'lexical';
 import {
   ArrowDownUp,
   ChevronDown,
@@ -69,6 +68,8 @@ import { TaskList } from '@/components/layout/task-leftsidebar';
 import { TaskSidebar } from '@/components/layout/task-sidebar';
 import { PageHeader } from './page-header';
 import { socket } from '@/lib/constants';
+import { $convertToMarkdownString, TRANSFORMERS } from '@lexical/markdown';
+import { useDebounceCallback } from '@/lib/hooks/use-debounceCallback';
 
 const availableTags: TagOption[] = [
   { id: 'initiative', label: 'initiative' },
@@ -100,7 +101,7 @@ export const TaskDialog: FC<TaskDialogProps> = ({ taskId }) => {
   const [enterEstimatedTime, setEnterEstimatedTime] = useState<boolean>(false);
   const [enterTrackTime, setEnterTrackTime] = useState<boolean>(false);
   const [enterTags, setEnterTags] = useState<boolean>(false);
-  const [description, setDescription] = useState(sampleTask.description);
+  const [description, setDescription] = useState('');
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [selectedAssignees, setSelectedAssignees] = useState<Member[]>([]);
   const [taskName, setTaskName] = useState<string>('');
@@ -138,13 +139,15 @@ export const TaskDialog: FC<TaskDialogProps> = ({ taskId }) => {
     // setIsAddChecklist(true);
   };
 
-  const onChangeDescription = (editorState: EditorState) => {
-    editorState.read(() => {
-      const root = $getRoot();
-      const text = root.getTextContent();
-      setDescription(text);
-    });
-  };
+  const onChangeDescription = useDebounceCallback(
+    (editorState: EditorState) => {
+      editorState.read(() => {
+        const markdown = $convertToMarkdownString(TRANSFORMERS);
+        setDescription(markdown);
+      });
+    },
+    500 // update after a 500ms delay
+  );
 
   const onHandleTaskNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTaskName(e.target.value);
@@ -513,7 +516,7 @@ export const TaskDialog: FC<TaskDialogProps> = ({ taskId }) => {
               <div className="space-y-2">
                 <DocEditor
                   placeholder={"Start writing or type '/' for commands"}
-                  value={''}
+                  value={description}
                   name={'task Description'}
                   onChange={onChangeDescription}
                   setIsEditing={() => {}}
