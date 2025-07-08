@@ -6,10 +6,7 @@ import {
   ListResponse,
   ListTasksResponse,
 } from '@/types/request-response/list/ApiResponse';
-import {
-  CreateListRequest,
-  ListTasksRequest,
-} from '@/types/request-response/list/ApiRequest';
+import { CreateListRequest } from '@/types/request-response/list/ApiRequest';
 
 export const listApi = createApi({
   reducerPath: 'listApi',
@@ -22,14 +19,14 @@ export const listApi = createApi({
         data: body,
       }),
     }),
-    getListTasks: builder.query<ListTasksResponse, number>({
+    getListTasks: builder.query<Array<ListTasksResponse>, number>({
       query: (listId: number) => ({
         url: `list/${listId}/tasks`,
       }),
-      transformResponse: (response: ApiResponse<ListTasksResponse>) =>
+      transformResponse: (response: ApiResponse<Array<ListTasksResponse>>) =>
         response.data,
     }),
   }),
 });
 
-export const { useCreateListMutation, useGetListTasksQuery } = listApi;
+export const { useCreateListMutation, useLazyGetListTasksQuery } = listApi;
