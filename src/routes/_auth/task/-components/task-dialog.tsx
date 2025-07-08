@@ -14,6 +14,8 @@ import {
 import { TagOption } from '@/types/interfaces/TagDropDown';
 import {
   IconCalendar,
+  IconCheck,
+  IconCircleDot,
   IconCircleLetterT,
   IconFlagFilled,
   IconHourglassEmpty,
@@ -27,6 +29,7 @@ import { EditorState } from 'lexical';
 import {
   ArrowDownUp,
   ChevronDown,
+  ChevronRight,
   CornerLeftUp,
   Flower,
   Maximize2,
@@ -80,6 +83,7 @@ import {
 } from '@/components/shadcn-ui/select';
 import { useWorkspaceStore } from '@/stores/zustand/workspace-store';
 import { TaskPrioritySelect } from './task-priority-select';
+import TaskStatusDialog from '@/components/common/task-status-dialog';
 
 const availableTags: TagOption[] = [
   { id: 'initiative', label: 'initiative' },
@@ -164,7 +168,7 @@ export const TaskDialog: FC<TaskDialogProps> = ({ taskId }) => {
   };
 
   const onPriorityRemove = () => {
-    setTaskPriority(undefined);
+    setTaskPriority(null);
   };
 
   const onChangeDescription = useDebounceCallback(
@@ -401,6 +405,43 @@ export const TaskDialog: FC<TaskDialogProps> = ({ taskId }) => {
                 <div className="space-y-1">
                   {/* Column 1 */}
                   {/* STATUSES */}
+                  <TaskMetaRow
+                    icon={
+                      <IconCircleDot
+                        className="text-base font-semibold"
+                        size={15}
+                      />
+                    }
+                    label="Status"
+                  >
+                    <TaskStatusDialog>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className={cn(
+                          'rounded text-white h-6 pt-0.5 px-2 text-xs tracking-wide font-bold flex items-center',
+                          taskData?.statusItem?.color
+                            ? taskData.statusItem.color
+                            : 'bg-gray-500'
+                        )}
+                      >
+                        {taskData.statusItem?.name.toUpperCase()}
+                        <span className="ml-2 pl-2 border-l border-white/40 flex items-center">
+                          <ChevronRight className="w-4 h-4" />
+                        </span>
+                      </Button>
+                    </TaskStatusDialog>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className={cn(
+                        'h-6 px-2 rounded-[6px] border',
+                        `hover:${taskData.statusItem?.color}`
+                      )}
+                    >
+                      <IconCheck size={15} />
+                    </Button>
+                  </TaskMetaRow>
                   {/* START AND END DATES */}
                   <TaskMetaRow
                     icon={

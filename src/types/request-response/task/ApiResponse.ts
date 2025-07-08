@@ -58,11 +58,19 @@ export interface Task {
   links: Link[];
   activities: Activity[];
   owner: Omit<CreatedBy, 'role' | 'userPermissions'>;
-  statusItem: Status | null;
+  statusItem: StatusItem | null;
   priority: Priority | null;
   tags: Tag[];
   type: Type;
 }
+
+export interface StatusItem {
+  id: number;
+  name: string;
+  color: string;
+  order: number;
+}
+
 export interface Assignee {
   id: number;
   fullName: string;
