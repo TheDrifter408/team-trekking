@@ -1,4 +1,4 @@
-import { useMemo, FC, useEffect, SetStateAction, Dispatch } from 'react';
+import { FC, useEffect, SetStateAction, Dispatch, useRef } from 'react';
 import { LexicalComposer } from '@lexical/react/LexicalComposer';
 import { $createHeadingNode, HeadingNode, QuoteNode } from '@lexical/rich-text';
 import { CodeHighlightNode, CodeNode } from '@lexical/code';
@@ -15,12 +15,8 @@ import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin';
 import { ListPlugin } from '@lexical/react/LexicalListPlugin';
 import { OnChangePlugin } from '@lexical/react/LexicalOnChangePlugin';
 import { MarkdownShortcutPlugin } from '@lexical/react/LexicalMarkdownShortcutPlugin';
-import { TRANSFORMERS } from '@lexical/markdown';
-import { LinkNode } from '@lexical/link';
+import { AutoLinkNode, LinkNode } from '@lexical/link';
 import {
-  $createParagraphNode,
-  $createTextNode,
-  $getRoot,
   $getSelection,
   $isRangeSelection,
   EditorState,
@@ -34,6 +30,7 @@ import { cn } from '@/lib/utils/utils.ts';
 import { Button } from '@/components/shadcn-ui/button.tsx';
 import { $setBlocksType } from '@lexical/selection';
 import { AtSign, Ellipsis, FileUser, SmilePlus } from 'lucide-react';
+import { $convertFromMarkdownString, TRANSFORMERS } from '@lexical/markdown';
 
 interface Props {
   value: string;
@@ -70,30 +67,24 @@ const theme: EditorThemeClasses = {
   },
   quote: 'border-l-4 border-gray-300 pl-2 italic ml-4',
   paragraph: 'my-1',
+  list: {
+    ol: 'list-decimal list-inside ml-4 space-y-1',
+    ul: 'list-disc list-inside ml-4 space-y-1',
+    listitem: 'ml-2',
+  },
+  link: 'text-blue-600 underline hover:text-blue-800 cursor-pointer',
 };
 
 const LoadEditorContent = ({ value }: { value: string }) => {
   const [editor] = useLexicalComposerContext();
-
+  const hasInitialized = useRef(false);
   useEffect(() => {
-    if (!value) {
-      return;
-    }
-    try {
-      const editorState = editor.parseEditorState(value);
-      editor.setEditorState(editorState);
-    } catch (e) {
-      console.warn('Doc loading failed, falling to plain text: ', e);
-      editor.update(() => {
-        const root = $getRoot();
-        root.clear();
-        const paragraph = $createParagraphNode();
-        paragraph.append($createTextNode(value));
-        root.append(paragraph);
-      });
-    }
+    if (hasInitialized.current) return;
+    hasInitialized.current = true;
+    editor.update(() => {
+      $convertFromMarkdownString(value, TRANSFORMERS);
+    });
   }, [editor, value]);
-
   return null;
 };
 
@@ -121,6 +112,24 @@ const BlurPlugin = ({ onBlur }: { onBlur?: () => void }) => {
   return null;
 };
 
+const initialConfig = {
+  namespace: 'editor',
+  theme: theme,
+  onError: (error: Error) => {
+    console.error('Lexical error:', error);
+  },
+  nodes: [
+    HeadingNode,
+    CodeNode,
+    CodeHighlightNode,
+    QuoteNode,
+    ListNode,
+    ListItemNode,
+    LinkNode,
+    AutoLinkNode,
+  ],
+};
+
 export const DocEditor: FC<Props> = ({
   value,
   onChange,
@@ -132,58 +141,38 @@ export const DocEditor: FC<Props> = ({
   showToolbar = false,
   setIsEditing,
 }) => {
-  const initialConfig = useMemo(
-    () => ({
-      namespace: name,
-      theme: theme,
-      onError: (error: Error) => {
-        console.error('Lexical error:', error);
-      },
-      nodes: [
-        HeadingNode,
-        CodeNode,
-        CodeHighlightNode,
-        QuoteNode,
-        ListNode,
-        ListItemNode,
-        LinkNode,
-      ],
-    }),
-    [name]
-  );
-
   return (
     <div className={''}>
       <div className={'relative mt-[5px]'}>
         <LexicalComposer initialConfig={initialConfig}>
-          <LoadEditorContent value={value} />
           <RichTextPlugin
             contentEditable={
               <ContentEditable
                 contentEditable={editable}
                 className={cn(
-                  'px-2 py-2 text-base leading-relaxed overflow-auto outline-none rounded-lg',
+                  'p-4 text-base leading-relaxed whitespace-pre-wrap overflow-auto outline-none rounded-lg min-h-[200px]',
                   showBorder ? 'border' : ''
                 )}
               />
             }
             placeholder={
-              <div className="absolute top-3 left-2  text-base leading-relaxed text-muted-foreground">
+              <div className="absolute top-5 left-4 text-base text-muted-foreground">
                 {placeholder || "Type '/' for commands..."}
               </div>
             }
             ErrorBoundary={LexicalErrorBoundary}
           />
+          <LoadEditorContent value={value} />
+          <HistoryPlugin />
           <MarkdownShortcutPlugin transformers={TRANSFORMERS} />
           <AutoFocusPlugin />
           <ListPlugin />
-          <HistoryPlugin />
           <SlashCommandPlugin />
-          <OnChangePlugin onChange={onChange} />
           <BlurPlugin onBlur={onBlur} />
           <div className={cn('px-2', showToolbar ? 'block' : 'hidden')}>
             {editable && <Toolbar onClickCancel={() => setIsEditing(false)} />}
           </div>
+          <OnChangePlugin onChange={onChange} />
         </LexicalComposer>
       </div>
     </div>

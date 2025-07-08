@@ -51,7 +51,7 @@ export const PageHeader = ({
   };
 
   return (
-    <div className="py-2 bg-sidebar/80 w-full flex items-center justify-between px-4">
+    <div className="py-2 bg-sidebar w-full flex items-center sticky top-0 justify-between px-4">
       <TooltipProvider>
         <div className="relative flex items-center justify-between">
           <Button onClick={onToggleSidebarOpen} variant={'ghost'}>
@@ -108,14 +108,16 @@ export const PageHeader = ({
           </ToolTipContainer>
         </div>
         <div className="flex space-x-1 md:space-x-3 items-center justify-between">
-          <span className="text-sm">Created on Mar 2</span>
-          <Button
-            onClick={() => setOpenShareTask(true)}
-            size={'sm'}
-            className="text-base"
-          >
-            Share
-          </Button>
+          <div className="invisible lg:visible">
+            <span className="text-sm text-pretty mr-2">Created on Mar 2</span>
+            <Button
+              onClick={() => setOpenShareTask(true)}
+              size={'sm'}
+              className="text-base"
+            >
+              Share
+            </Button>
+          </div>
           <div className="w-[1px] h-[18px] bg-border" />
           <div className="flex gap-1">
             <ToolTipContainer text="Task settings">
