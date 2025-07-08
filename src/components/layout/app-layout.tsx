@@ -13,9 +13,10 @@ import {
 } from '@/service/rtkQueries/workspaceQuery';
 import { useWorkspaceStore } from '@/stores/zustand/workspace-store';
 import { SettingsSidebar } from './settings-sidebar';
-import { TaskDialogOverlay } from '@/routes/_auth/task/-components/task-dialog-overlay';
 import { handleMutation } from '@/lib/utils/utils.ts';
 import { Member } from '@/types/request-response/workspace/ApiResponse';
+import { useShouldShowSidebar } from '@/lib/hooks/use-should-show-sidebar';
+import { AnimatePresence, motion } from 'framer-motion';
 
 const AppLayout = () => {
   const { user } = useTMTStore();
@@ -78,6 +79,7 @@ const AppLayout = () => {
     };
     fetchMembers();
   }, [workspaceId]);
+
   return (
     <AppContextProvider spaceGlobal={spaceGlobalData ?? null}>
       <div className="flex flex-col h-screen">
