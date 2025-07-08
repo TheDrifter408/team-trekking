@@ -33,6 +33,8 @@ import { DocEditor } from '@/routes/_auth/task/-components/doc-editor';
 import { $getRoot, EditorState } from 'lexical';
 import TaskStatusDialog from '@/components/common/task-status-dialog.tsx';
 import { PriorityPopover } from '@/components/common/priority-popover.tsx';
+import { useTMTStore } from '@/stores/zustand';
+import { useListStore } from '@/stores/zustand/list-store';
 import { useWorkspaceStore } from '@/stores/zustand/workspace-store.ts';
 import { useCreateTaskMutation } from '@/service/rtkQueries/taskQuery.ts';
 import {
@@ -42,16 +44,17 @@ import {
 } from '@/types/request-response/workspace/ApiResponse';
 import { CreateTaskRequest } from '@/types/request-response/task/ApiRequest.ts';
 import { useAppNavigation } from '@/lib/hooks/use-app-navigation.ts';
-import { cn, handleMutation } from '@/lib/utils/utils.ts';
+import { cn, handleMutation, getContrastTextColor } from '@/lib/utils/utils.ts';
 import { LABEL } from '@/lib/constants';
 import { toast } from 'sonner';
 import {
   Priority,
   Member,
 } from '@/types/request-response/workspace/ApiResponse';
-import { AssigneePopover } from '@/components/common/assignee-popover.tsx';
-import { useTMTStore } from '@/stores/zustand';
+import { StatusPopup } from '@/components/common/status-popup..tsx';
+import { AssigneePopup } from '@/components/common/assignee-popover.tsx';
 import { CreateTaskResponse } from '@/types/request-response/task/ApiResponse.ts';
+import { StatusItem } from '@/types/request-response/list/ApiResponse.ts';
 
 interface Props {
   isOpen: boolean;
@@ -63,19 +66,34 @@ interface Props {
 export const CreateTask = ({ isOpen, setIsOpen, children, listId }: Props) => {
   const { navigate, routes } = useAppNavigation();
   const { user } = useTMTStore();
-  const [createTask] = useCreateTaskMutation();
+  const { list } = useListStore();
   const { spaces, workspaceGlobal, members } = useWorkspaceStore();
+  const [createTask] = useCreateTaskMutation();
+
+  const [name, setName] = useState('');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [selectedList, setSelectedList] = useState<List | null>(null);
+  const [status, setStatus] = useState<StatusItem | null>(null);
+  const [assignees, setAssignees] = useState<Member[]>([]);
+  const [isAssigneeOpen, setIsAssigneeOpen] = useState(false);
   const [selectedPriority, setSelectedPriority] = useState<Priority | null>(
     null
   );
-  const [assignees, setAssignees] = useState<Member[]>([]);
-  const [isAssigneeOpen, setIsAssigneeOpen] = useState(false);
-  const [name, setName] = useState('');
+
   const taskType = 1;
   const currentUserId = user?.userData.id ?? 0;
   const priorityList = workspaceGlobal?.priority;
+
+  useEffect(() => {
+    if (list && list.status.groups) {
+      for (const group of list.status.groups) {
+        if (group.name === 'Not Started') {
+          setStatus(group.items[0]);
+          break;
+        }
+      }
+    }
+  }, [list]);
 
   useEffect(() => {
     if (!spaces || !listId) return;
@@ -109,15 +127,29 @@ export const CreateTask = ({ isOpen, setIsOpen, children, listId }: Props) => {
   const onRemoveAssignee = (assigneeId: number) => {
     setAssignees((prev) => prev.filter((m) => m.id !== assigneeId));
   };
-
+  const onSelectStatus = (status: StatusItem) => {
+    setStatus(status);
+  };
   const onCreateTask = async () => {
-    if (!selectedList) return;
+    if (!selectedList || !name) return;
+    let statusGroupId;
+    if (list?.status && status) {
+      for (const group of list.status.groups) {
+        const match = group.items.find((item) => item.id === status.id);
+        if (match) {
+          statusGroupId = group.id;
+          break;
+        }
+      }
+    }
     const payload: CreateTaskRequest = {
       name,
       listId: selectedList.id,
       typeId: taskType,
       priorityId: selectedPriority?.id,
       assigneeIds: assignees.map((assignee) => assignee.user.id),
+      statusGroupId: statusGroupId,
+      statusItemId: status?.id,
     };
     try {
       const { data } = await handleMutation<CreateTaskResponse>(
@@ -130,7 +162,6 @@ export const CreateTask = ({ isOpen, setIsOpen, children, listId }: Props) => {
       toast.error(LABEL.TASK_CREATION_FAILED);
     }
   };
-
   return (
     <div>
       <Dialog modal={true} open={isOpen} onOpenChange={setIsOpen}>
@@ -170,16 +201,22 @@ export const CreateTask = ({ isOpen, setIsOpen, children, listId }: Props) => {
                 <Description />
                 <div className={'mt-4'}>
                   <div className="space-x-2 w-full flex items-center">
-                    <TaskStatusDialog>
+                    <StatusPopup
+                      status={list?.status ?? null}
+                      onStatusSelect={onSelectStatus}
+                      currentStatus={status}
+                    >
                       <Button
                         variant={'ghost'}
-                        className={
-                          'bg-green-700 hover:bg-green-800 hover:text-white text-white uppercase text-base h-[24px]'
-                        }
+                        className={'uppercase text-base h-[24px]'}
+                        style={{
+                          background: status?.color ?? '',
+                          color: getContrastTextColor(status?.color ?? ''),
+                        }}
                       >
-                        {LABEL.COMPLETE}
+                        {status?.name ?? LABEL.COMPLETED}
                       </Button>
-                    </TaskStatusDialog>
+                    </StatusPopup>
                     <Button
                       onClick={() => setIsAssigneeOpen(true)}
                       variant="outline"
@@ -219,7 +256,6 @@ export const CreateTask = ({ isOpen, setIsOpen, children, listId }: Props) => {
                         </>
                       )}
                     </Button>
-
                     <Button variant={'outline'} className={'h-[24px]'}>
                       <Icon name={'calendar'} /> {LABEL.DUE_DATE}
                     </Button>
@@ -231,7 +267,11 @@ export const CreateTask = ({ isOpen, setIsOpen, children, listId }: Props) => {
                         <Button variant={'outline'} className={'h-[24px]'}>
                           <Icon
                             name={'priority02'}
-                            style={{ color: selectedPriority.color }}
+                            style={{
+                              color: selectedPriority
+                                ? selectedPriority.color
+                                : '',
+                            }}
                           />
                           {selectedPriority.title}
                         </Button>
@@ -263,14 +303,16 @@ export const CreateTask = ({ isOpen, setIsOpen, children, listId }: Props) => {
           />
         </DialogContent>
       </Dialog>
-      <AssigneePopover
-        members={members ?? []}
-        assignees={assignees}
-        open={isAssigneeOpen}
-        onOpenChange={setIsAssigneeOpen}
-        onSelectAssignee={onSelectAssignee}
-        onRemoveAssignee={onRemoveAssignee}
-      />
+      {isAssigneeOpen && (
+        <AssigneePopup
+          members={members ?? []}
+          assignees={assignees}
+          open={isAssigneeOpen}
+          onOpenChange={setIsAssigneeOpen}
+          onSelectAssignee={onSelectAssignee}
+          onRemoveAssignee={onRemoveAssignee}
+        />
+      )}
     </div>
   );
 };

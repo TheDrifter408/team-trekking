@@ -16,16 +16,17 @@ import { useLazyGetListTasksQuery } from '@/service/rtkQueries/listQuery.ts';
 import { TabActionBar } from '@/components/common/table-floating-actoin-bar.tsx';
 import { HeaderType } from '@/types/props/Common.ts';
 import { ListTasksResponse } from '@/types/request-response/list/ApiResponse.ts';
+import { useListStore } from '@/stores/zustand/list-store.ts';
 
 const List = () => {
   const { listId } = Route.useParams();
   const [fetchListTasks] = useLazyGetListTasksQuery();
+  const { list, setList } = useListStore();
   const closeDrawer = useComponentStore((s) => s.closeDrawer);
   const isDrawerOpen = useComponentStore((s) => s.isDrawerOpen('list-drawer'));
 
   const [isTableExpanded, setIsTableExpanded] = useState(false);
   const [isOpenTaskCreate, setIsOpenTaskCreate] = useState(false);
-  const [list, setList] = useState<ListTasksResponse | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -33,7 +34,9 @@ const List = () => {
         fetchListTasks,
         listId
       );
-      if (data) setList(data[0]);
+      if (data) {
+        setList(data[0]);
+      }
     };
     if (listId) fetchData();
   }, [listId]);

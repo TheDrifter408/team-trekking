@@ -19,7 +19,7 @@ interface Props {
   onRemoveAssignee: (assigneeId: number) => void;
 }
 
-export const AssigneePopover = ({
+export const AssigneePopup = ({
   open,
   onOpenChange,
   members,
