@@ -31,7 +31,6 @@ import { PlaceholderAvatar } from '@/components/common/avatar-generator';
 import TaskTypeDropdown from '@/components/common/task-type-dropdown.tsx';
 import { DocEditor } from '@/routes/_auth/task/-components/doc-editor';
 import { $getRoot, EditorState } from 'lexical';
-import TaskStatusDialog from '@/components/common/task-status-dialog.tsx';
 import { PriorityPopover } from '@/components/common/priority-popover.tsx';
 import { useTMTStore } from '@/stores/zustand';
 import { useListStore } from '@/stores/zustand/list-store';
@@ -55,6 +54,15 @@ import { StatusPopup } from '@/components/common/status-popup..tsx';
 import { AssigneePopup } from '@/components/common/assignee-popover.tsx';
 import { CreateTaskResponse } from '@/types/request-response/task/ApiResponse.ts';
 import { StatusItem } from '@/types/request-response/list/ApiResponse.ts';
+import { TaskDate } from '@/components/common/task-date.tsx';
+import {
+  format,
+  isSameWeek,
+  isThisYear,
+  isToday,
+  isTomorrow,
+  isYesterday,
+} from 'date-fns';
 
 interface Props {
   isOpen: boolean;
@@ -76,6 +84,7 @@ export const CreateTask = ({ isOpen, setIsOpen, children, listId }: Props) => {
   const [status, setStatus] = useState<StatusItem | null>(null);
   const [assignees, setAssignees] = useState<Member[]>([]);
   const [isAssigneeOpen, setIsAssigneeOpen] = useState(false);
+  const [dueDate, setDueDate] = useState<string>('');
   const [selectedPriority, setSelectedPriority] = useState<Priority | null>(
     null
   );
@@ -150,6 +159,7 @@ export const CreateTask = ({ isOpen, setIsOpen, children, listId }: Props) => {
       assigneeIds: assignees.map((assignee) => assignee.user.id),
       statusGroupId: statusGroupId,
       statusItemId: status?.id,
+      dueDate: dueDate || null,
     };
     try {
       const { data } = await handleMutation<CreateTaskResponse>(
@@ -161,6 +171,17 @@ export const CreateTask = ({ isOpen, setIsOpen, children, listId }: Props) => {
     } catch (error: unknown) {
       toast.error(LABEL.TASK_CREATION_FAILED);
     }
+  };
+  const formatSmartDate = (date: Date): string => {
+    const now = new Date();
+    if (isSameWeek(now, date, { weekStartsOn: 1 })) {
+      if (isToday(date)) return 'Today';
+      if (isTomorrow(date)) return 'Tomorrow';
+      if (isYesterday(date)) return 'Yesterday';
+    }
+    return isThisYear(date)
+      ? format(date, 'MMM d')
+      : format(date, 'MMM d, yyyy');
   };
   return (
     <div>
@@ -256,9 +277,17 @@ export const CreateTask = ({ isOpen, setIsOpen, children, listId }: Props) => {
                         </>
                       )}
                     </Button>
-                    <Button variant={'outline'} className={'h-[24px]'}>
-                      <Icon name={'calendar'} /> {LABEL.DUE_DATE}
-                    </Button>
+                    <TaskDate
+                      date={dueDate ? new Date(dueDate) : undefined}
+                      onDateChange={(d) => setDueDate(d ? d.toISOString() : '')}
+                    >
+                      <Button variant="outline" className="h-[24px]">
+                        <Icon name="calendar" />
+                        {dueDate
+                          ? formatSmartDate(new Date(dueDate))
+                          : LABEL.DUE_DATE}
+                      </Button>
+                    </TaskDate>
                     <PriorityPopover
                       onSelect={onSelectPriority}
                       priorityList={priorityList ?? []}

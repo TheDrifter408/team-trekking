@@ -26,6 +26,7 @@ export interface CreateTaskRequest {
   assigneeIds?: number[];
   statusGroupId?: number;
   statusItemId?: number;
+  dueDate?: string | null;
 }
 
 export interface UpdateTask {
