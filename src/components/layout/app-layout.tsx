@@ -12,7 +12,8 @@ import {
 } from '@/service/rtkQueries/workspaceQuery';
 import { useWorkspaceStore } from '@/stores/zustand/workspace-store';
 import { SettingsSidebar } from './settings-sidebar';
-import { TaskDialogOverlay } from '@/routes/_auth/task/-components/task-dialog-overlay';
+import { useShouldShowSidebar } from '@/lib/hooks/use-should-show-sidebar';
+import { AnimatePresence, motion } from 'framer-motion';
 
 const AppLayout = () => {
   const { user } = useTMTStore();
@@ -45,6 +46,9 @@ const AppLayout = () => {
   const router = useRouterState();
   const pathname = router.location.pathname;
   const isSettingsRoute = pathname.startsWith('/settings');
+  const isTaskRoute = pathname.startsWith('/task');
+
+  const shouldShowSidebar = useShouldShowSidebar(isTaskRoute);
 
   useEffect(() => {
     if (spacesFolderList) {
@@ -64,22 +68,36 @@ const AppLayout = () => {
         <SidebarProvider className="flex flex-col h-full">
           <AppHeader user={user} />
           <div className="flex flex-1 overflow-hidden">
-            {isSettingsRoute ? (
-              <SettingsSidebar />
-            ) : (
-              <AppSidebar
-                workSpaces={workSpaces}
-                refetchWorkspaces={refetchWorkspaces}
-                refetchSpaces={refetchSpaces}
-                isFetching={isFetching}
-                spacesFolderList={spacesFolderList}
-              />
-            )}
+            <AnimatePresence mode="wait">
+              {shouldShowSidebar && (
+                <motion.div
+                  key={isSettingsRoute ? 'settings' : 'app'}
+                  initial={{ x: -280, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  exit={{ x: -280, opacity: 0 }}
+                  transition={{
+                    duration: 0.4,
+                    ease: [0.25, 0.25, 0, 1],
+                  }}
+                >
+                  {isSettingsRoute ? (
+                    <SettingsSidebar />
+                  ) : (
+                    <AppSidebar
+                      workSpaces={workSpaces}
+                      refetchWorkspaces={refetchWorkspaces}
+                      refetchSpaces={refetchSpaces}
+                      isFetching={isFetching}
+                      spacesFolderList={spacesFolderList}
+                    />
+                  )}
+                </motion.div>
+              )}
+            </AnimatePresence>
             <SidebarInset className="flex-1 overflow-auto">
               <Outlet />
             </SidebarInset>
           </div>
-          <TaskDialogOverlay />
         </SidebarProvider>
       </div>
     </AppContextProvider>

@@ -119,7 +119,10 @@ export const TaskSidebar = ({ ...props }) => {
     <Sidebar
       collapsible="icon"
       side={'right'}
-      className="top-[52px] !z-30 !h-[calc(100svh-110px)] border-l overflow-hidden [&>[data-sidebar=sidebar]]:flex-row-reverse"
+      className={cn(
+        'top-[96px] z-30 lg:z-auto h-[calc(100svh-110px)] right-0 lg:right-auto', // responsive classes
+        'border-l overflow-hidden [&>[data-sidebar=sidebar]]:flex-row-reverse'
+      )}
       {...props}
     >
       {/* Mini sidebar with icons */}

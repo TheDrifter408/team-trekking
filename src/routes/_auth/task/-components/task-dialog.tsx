@@ -23,7 +23,7 @@ import {
   IconUserFilled,
   IconVectorSpline,
 } from '@tabler/icons-react';
-import { Link } from '@tanstack/react-router';
+import { Link, Navigate } from '@tanstack/react-router';
 import { $getRoot, EditorState } from 'lexical';
 import {
   ArrowDownUp,
@@ -122,8 +122,8 @@ export const TaskDialog: FC<TaskDialogProps> = ({ taskId }) => {
   } as CSSProperties & { [key: string]: string };
   // Sidebar onClick toggling
   const onToggleLeftSidebar = () => {
-    console.error('Its firing');
     setIsLeftSidebarOpen(!isLeftSidebarOpen);
+    Navigate({ to: '/home' });
   };
 
   const formatTrackTime = (time: string) => {
@@ -293,7 +293,7 @@ export const TaskDialog: FC<TaskDialogProps> = ({ taskId }) => {
           <SheetContent
             side="left"
             hasCloseIcon={false}
-            className="w-[300px] ring-0 outline-0 !gap-0 bg-gray-100 border-r shadow-lg top-[72px] overflow-y-scroll h-[calc(100%-98px)] no-scrollbar"
+            className="ring-0 outline-0 !gap-0 bg-gray-100 border-r shadow-lg top-[96px] overflow-y-scroll h-[calc(100%-98px)] no-scrollbar"
             overlay={false}
           >
             <div className="h-[60px] gap-2 font-medium sticky bg-white flex items-center px-3 shadow-sm">
@@ -308,316 +308,324 @@ export const TaskDialog: FC<TaskDialogProps> = ({ taskId }) => {
         </Sheet>
       </SidebarInset>
       <DataTableProvider value={store}>
-        <div className={'xl:w-[50%] sm:w-[50%] mx-auto my-10 items-center'}>
-          <div className="space-y-4">
-            {/* Show the parent task title if this is a subtask */}
-            {taskData && taskData.parentTask && (
-              <div className="flex items-center gap-1 hover:bg-accent w-fit rounded-xl px-2 py-[2px]">
-                <CornerLeftUp className="text-muted-foreground" size={14} />
-                <Link
-                  to="/task/$taskId"
-                  params={{ taskId: taskData.parentTask.id.toString() }}
-                  className="text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  {taskData.parentTask.name}
-                </Link>
-              </div>
-            )}
-            {/* Component to display Task Type | Task ID */}
-            <div className="flex items-center border border-accent rounded-lg w-min text-muted-foreground">
-              <div className="flex items-center px-1 border-r border-accent">
-                <IconCircleLetterT className="rounded-lg" size={16} />
-                <span className="px-2 capitalize">
-                  {taskData?.type.label ?? ''}
-                </span>
+        <div className="flex overflow-hidden">
+          <div className={'sm:w-[90%] lg:w-[50%] mx-auto my-10 items-center'}>
+            <div className="space-y-4">
+              {/* Show the parent task title if this is a subtask */}
+              {taskData && taskData.parentTask && (
+                <div className="flex items-center gap-1 hover:bg-accent w-fit rounded-xl px-2 py-[2px]">
+                  <CornerLeftUp className="text-muted-foreground" size={14} />
+                  <Link
+                    to="/task/$taskId"
+                    params={{ taskId: taskData.parentTask.id.toString() }}
+                    className="text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    {taskData.parentTask.name}
+                  </Link>
+                </div>
+              )}
+              {/* Component to display Task Type | Task ID */}
+              <div className="flex items-center border border-accent rounded-lg w-min text-muted-foreground">
+                <div className="flex items-center px-1 border-r border-accent">
+                  <IconCircleLetterT className="rounded-lg" size={16} />
+                  <span className="px-2 capitalize">
+                    {taskData?.type.label ?? ''}
+                  </span>
+                  <div>
+                    <TaskTypeDropdown>
+                      <Button
+                        variant="ghost"
+                        size="icon_sm"
+                        className="h-6 w-6 hover:bg-transparent"
+                      >
+                        <ChevronDown />
+                      </Button>
+                    </TaskTypeDropdown>
+                  </div>
+                </div>
                 <div>
-                  <TaskTypeDropdown>
-                    <Button
-                      variant="ghost"
-                      size="icon_sm"
-                      className="h-6 w-6 hover:bg-transparent"
-                    >
-                      <ChevronDown />
-                    </Button>
-                  </TaskTypeDropdown>
+                  <span className="px-2">{taskData.id}</span>
                 </div>
               </div>
-              <div>
-                <span className="px-2">{taskData.id}</span>
+              {/* HEADER => TITLE */}
+              <div className="mb-4 flex items-center gap-2">
+                {taskData && taskData.parentTask && (
+                  <IconVectorSpline className="text-black" size={16} />
+                )}
+                <Input
+                  type="text"
+                  value={taskName}
+                  onChange={onHandleTaskNameChange}
+                  onBlur={onHandleTaskNameBlur}
+                  className="!text-3xl w-full !font-bold !h-fit tracking-tight bg-transparent border-none focus-visible:ring-0 focus-visible:ring-offset-0 px-0"
+                />
               </div>
-            </div>
-            {/* HEADER => TITLE */}
-            <div className="mb-4 flex items-center gap-2">
-              {taskData && taskData.parentTask && (
-                <IconVectorSpline className="text-black" size={16} />
-              )}
-              <Input
-                type="text"
-                value={taskName}
-                onChange={onHandleTaskNameChange}
-                onBlur={onHandleTaskNameBlur}
-                className="!text-3xl w-full !font-bold !h-fit tracking-tight bg-transparent border-none focus-visible:ring-0 focus-visible:ring-offset-0 px-0"
-              />
-            </div>
-            <div
-              className={cn(
-                'grid sm:grid-cols-1',
-                isSidebarOpen ? '2xl:grid-cols-2' : 'xl:grid-cols-2'
-              )}
-            >
-              {/* Column one contains Status, Dates, Time Estimates, Track Time, Relationships */}
-              <div className="space-y-1">
-                {/* Column 1 */}
-                {/* STATUSES */}
-                {/* START AND END DATES */}
-                <TaskMetaRow
-                  icon={
-                    <IconCalendar
-                      className="text-base font-semibold"
-                      size={15}
+              <div
+                className={cn(
+                  'grid sm:grid-cols-1',
+                  isSidebarOpen ? '2xl:grid-cols-2' : 'xl:grid-cols-2'
+                )}
+              >
+                {/* Column one contains Status, Dates, Time Estimates, Track Time, Relationships */}
+                <div className="space-y-1">
+                  {/* Column 1 */}
+                  {/* STATUSES */}
+                  {/* START AND END DATES */}
+                  <TaskMetaRow
+                    icon={
+                      <IconCalendar
+                        className="text-base font-semibold"
+                        size={15}
+                      />
+                    }
+                    label="Dates"
+                    hover={enterDates}
+                    onHoverChange={setEnterDates}
+                  >
+                    <DatePickerWithRange
+                      value={dateRange}
+                      onChange={onHandleDateRangeChange}
+                      placeholder="Set dates"
                     />
-                  }
-                  label="Dates"
-                  hover={enterDates}
-                  onHoverChange={setEnterDates}
-                >
-                  <DatePickerWithRange
-                    value={dateRange}
-                    onChange={onHandleDateRangeChange}
-                    placeholder="Set dates"
-                  />
-                </TaskMetaRow>
-                {/* TIME ESTIMATE */}
-                <TaskMetaRow
-                  icon={
-                    <IconHourglassEmpty
-                      className={'text-base font-semibold'}
-                      size={15}
-                    />
-                  }
-                  label={'Time Estimate'}
-                  hover={enterEstimatedTime}
-                  onHoverChange={setEnterEstimatedTime}
-                >
-                  <div className="flex -space-x-2 ">
-                    <TimeEstimateDropdown
-                      time={estimatedTime}
-                      onTimeEstimateChange={(minutes) => {
-                        onHandleUpdateTask({ timeEstimate: minutes });
-                      }}
-                    >
-                      <span className="text-sm cursor-pointer hover:text-foreground">
-                        {estimatedTime ?? LABEL.EMPTY}
+                  </TaskMetaRow>
+                  {/* TIME ESTIMATE */}
+                  <TaskMetaRow
+                    icon={
+                      <IconHourglassEmpty
+                        className={'text-base font-semibold'}
+                        size={15}
+                      />
+                    }
+                    label={'Time Estimate'}
+                    hover={enterEstimatedTime}
+                    onHoverChange={setEnterEstimatedTime}
+                  >
+                    <div className="flex -space-x-2 ">
+                      <TimeEstimateDropdown
+                        time={estimatedTime}
+                        onTimeEstimateChange={(minutes) => {
+                          onHandleUpdateTask({ timeEstimate: minutes });
+                        }}
+                      >
+                        <span className="text-sm cursor-pointer hover:text-foreground">
+                          {estimatedTime ?? LABEL.EMPTY}
+                        </span>
+                      </TimeEstimateDropdown>
+                    </div>
+                  </TaskMetaRow>
+                  {/* TRACK TIME */}
+                  <TaskMetaRow
+                    icon={
+                      <IconHourglassEmpty
+                        className={'text-base font-semibold'}
+                        size={15}
+                      />
+                    }
+                    label={'Time Track'}
+                    hover={enterTrackTime}
+                    onHoverChange={setEnterTrackTime}
+                  >
+                    {taskData && !taskData.timeTracked ? (
+                      <span className="text-base flex gap-2 items-center font-medium text-content-tertiary">
+                        <PlayCircle size={15} /> {LABEL.ADD_TIME}
                       </span>
-                    </TimeEstimateDropdown>
-                  </div>
-                </TaskMetaRow>
-                {/* TRACK TIME */}
-                <TaskMetaRow
-                  icon={
-                    <IconHourglassEmpty
-                      className={'text-base font-semibold'}
-                      size={15}
-                    />
-                  }
-                  label={'Time Track'}
-                  hover={enterTrackTime}
-                  onHoverChange={setEnterTrackTime}
-                >
-                  {taskData && !taskData.timeTracked ? (
-                    <span className="text-base flex gap-2 items-center font-medium text-content-tertiary">
-                      <PlayCircle size={15} /> {LABEL.ADD_TIME}
-                    </span>
-                  ) : (
-                    <span className="text-base font-regular">
-                      {formatTrackTime(String(taskData?.timeTracked))}
-                    </span>
-                  )}
-                </TaskMetaRow>
-              </div>
-              <div className="space-y-1">
-                {/* Column 2 */}
-                {/* ASSIGNEES */}
-                <TaskMetaRow
-                  icon={
-                    <IconUserFilled
-                      className="text-base font-semibold"
-                      size={15}
-                    />
-                  }
-                  label="Assignees"
-                  hover={enterAssignee}
-                  onHoverChange={setEnterAssignee}
-                >
-                  {/* TODO: Populate with proper assignees */}
-                  {taskData && taskData?.assignees.length > 0
-                    ? LABEL.NO_ASSIGNEES_SELECTED
-                    : LABEL.NO_ASSIGNEES_SELECTED}
-                </TaskMetaRow>
-                {/* PRIORITY */}
-                <TaskMetaRow
-                  icon={
-                    <IconFlagFilled
-                      className="text-base font-semibold"
-                      size={15}
-                    />
-                  }
-                  label="Priority"
-                  hover={enterPriority}
-                  onHoverChange={setEnterPriority}
-                >
-                  <div className="flex -space-x-2">
-                    {taskData && taskData?.priority ? (
-                      <div className="flex gap-2">
-                        <IconFlagFilled
-                          size={19}
-                          color={priorityFlags[taskData.priority.title]}
-                        />
-                        <span className="text-sm">
-                          {taskData.priority.title.toUpperCase()}
-                        </span>
-                      </div>
                     ) : (
-                      <div className={'flex space-x-2 items-center'}>
-                        <Icon name={'priority'} />
-                        <span className="text-base text-muted-foreground">
-                          {LABEL.EMPTY}
-                        </span>
-                      </div>
+                      <span className="text-base font-regular">
+                        {formatTrackTime(String(taskData?.timeTracked))}
+                      </span>
                     )}
-                  </div>
-                </TaskMetaRow>
-                {/* TAGS */}
-                <TaskMetaRow
-                  icon={
-                    <IconTagsFilled
-                      className={'text-base font-semibold'}
-                      size={15}
+                  </TaskMetaRow>
+                </div>
+                <div className="space-y-1">
+                  {/* Column 2 */}
+                  {/* ASSIGNEES */}
+                  <TaskMetaRow
+                    icon={
+                      <IconUserFilled
+                        className="text-base font-semibold"
+                        size={15}
+                      />
+                    }
+                    label="Assignees"
+                    hover={enterAssignee}
+                    onHoverChange={setEnterAssignee}
+                  >
+                    {/* TODO: Populate with proper assignees */}
+                    {taskData && taskData?.assignees.length > 0
+                      ? LABEL.NO_ASSIGNEES_SELECTED
+                      : LABEL.NO_ASSIGNEES_SELECTED}
+                  </TaskMetaRow>
+                  {/* PRIORITY */}
+                  <TaskMetaRow
+                    icon={
+                      <IconFlagFilled
+                        className="text-base font-semibold"
+                        size={15}
+                      />
+                    }
+                    label="Priority"
+                    hover={enterPriority}
+                    onHoverChange={setEnterPriority}
+                  >
+                    <div className="flex -space-x-2">
+                      {taskData && taskData?.priority ? (
+                        <div className="flex gap-2">
+                          <IconFlagFilled
+                            size={19}
+                            color={priorityFlags[taskData.priority.title]}
+                          />
+                          <span className="text-sm">
+                            {taskData.priority.title.toUpperCase()}
+                          </span>
+                        </div>
+                      ) : (
+                        <div className={'flex space-x-2 items-center'}>
+                          <Icon name={'priority'} />
+                          <span className="text-base text-muted-foreground">
+                            {LABEL.EMPTY}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  </TaskMetaRow>
+                  {/* TAGS */}
+                  <TaskMetaRow
+                    icon={
+                      <IconTagsFilled
+                        className={'text-base font-semibold'}
+                        size={15}
+                      />
+                    }
+                    label={'Tags'}
+                    hover={enterTags}
+                    onHoverChange={setEnterTags}
+                  >
+                    <TagDropdownWithSelection
+                      availableTags={availableTags}
+                      selectedTags={[]}
+                      setSelectedTags={setSelectedTags}
                     />
-                  }
-                  label={'Tags'}
-                  hover={enterTags}
-                  onHoverChange={setEnterTags}
-                >
-                  <TagDropdownWithSelection
-                    availableTags={availableTags}
-                    selectedTags={[]}
-                    setSelectedTags={setSelectedTags}
+                  </TaskMetaRow>
+                </div>
+              </div>
+            </div>
+            <div className="mt-4">
+              <div className="space-y-2">
+                <DocEditor
+                  placeholder={"Start writing or type '/' for commands"}
+                  value={''}
+                  name={'task Description'}
+                  onChange={onChangeDescription}
+                  setIsEditing={() => {}}
+                  onBlur={() => {
+                    onHandleUpdateTask({ description: description });
+                  }}
+                />
+              </div>
+            </div>
+            <div className="mt-4 flex items-center justify-between gap-4">
+              <div className="flex space-x-3">
+                <Button className="h-6 w-12" variant="outline">
+                  <IconVectorSpline
+                    className="text-muted-foreground"
+                    size={14}
                   />
-                </TaskMetaRow>
-              </div>
-            </div>
-          </div>
-          <div className="mt-4">
-            <div className="space-y-2">
-              <DocEditor
-                placeholder={"Start writing or type '/' for commands"}
-                value={''}
-                name={'task Description'}
-                onChange={onChangeDescription}
-                setIsEditing={() => {}}
-                onBlur={() => {
-                  onHandleUpdateTask({ description: description });
-                }}
-              />
-            </div>
-          </div>
-          <div className="mt-4 flex items-center justify-between gap-4">
-            <div className="flex space-x-3">
-              <Button className="h-6 w-12" variant="outline">
-                <IconVectorSpline className="text-muted-foreground" size={14} />
-                3
-              </Button>
-              <Button className="h-6 w-12" variant="outline">
-                <IconListCheck className="text-muted-foreground" size={14} />3
-              </Button>
-            </div>
-            <div className="flex gap-2 bg-gray-200 px-2 py-1 items-center rounded-full whitespace-nowrap">
-              <Avatar className="h-6 w-6 border border-secondary rounded-full shrink-0">
-                <AvatarImage src="https://github.com/shadcn.png" />
-                <AvatarFallback className="text-[10px]">CN</AvatarFallback>
-              </Avatar>
-              <span className="text-sm text-gray-700">3 For me</span>
-            </div>
-          </div>
-          {/* Subtask table container */}
-          <div className="mt-4">
-            <div className="group flex justify-between py-2 px-2">
-              <h3 className="text-xl font-bold text-gray-900">Subtasks</h3>
-              <div className="invisible group-hover:visible flex items-center gap-1">
-                <Button
-                  variant={'ghost'}
-                  className="bg-transparent text-lg text-muted-foreground"
-                  onClick={onPressAddChecklist}
-                >
-                  <ArrowDownUp size={18} />
-                  {LABEL.SORT}
+                  3
                 </Button>
-                <Tooltip>
-                  <TooltipTrigger>
-                    <Button
-                      variant="ghost"
-                      className="bg-transparent text-lg text-muted-foreground "
-                    >
-                      <Maximize2 size={18} />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>{LABEL.FULL_SCREEN}</TooltipContent>
-                </Tooltip>
-                <Tooltip>
-                  <TooltipTrigger>
-                    <Button
-                      variant="ghost"
-                      className={'bg-transparent text-lg text-muted-foreground'}
-                    >
-                      <Flower size={18} />
-                      {LABEL.SUGGEST_SUBTASKS}
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    Generate subtasks based on the comments, title and
-                    checklists of this task
-                  </TooltipContent>
-                </Tooltip>
+                <Button className="h-6 w-12" variant="outline">
+                  <IconListCheck className="text-muted-foreground" size={14} />3
+                </Button>
+              </div>
+              <div className="flex gap-2 bg-gray-200 px-2 py-1 items-center rounded-full whitespace-nowrap">
+                <Avatar className="h-6 w-6 border border-secondary rounded-full shrink-0">
+                  <AvatarImage src="https://github.com/shadcn.png" />
+                  <AvatarFallback className="text-[10px]">CN</AvatarFallback>
+                </Avatar>
+                <span className="text-sm text-gray-700">3 For me</span>
               </div>
             </div>
-            {/* Subtask data grid table */}
-            <DataTableProvider value={store}>
-              <DataTable />
-            </DataTableProvider>
-          </div>
-          {/* Checklist table container */}
-          <div className="group mt-4">
-            <TaskCheckList />
-          </div>
-          {/* Attachments Container */}
-          <div className="mt-4">
-            <div className="group flex justify-between py-2 px-2">
-              <h3 className="text-xl font-bold text-gray-900">
-                {LABEL.ATTACHMENTS}
-              </h3>
-              <div className="invisible group-hover:visible flex items-center gap-1">
-                <Tooltip>
-                  <TooltipTrigger>
-                    <Button
-                      variant="ghost"
-                      className="bg-transparent text-lg text-muted-foreground"
-                    >
-                      <PlusIcon size={18} />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>{LABEL.ATTACHMENTS}</TooltipContent>
-                </Tooltip>
+            {/* Subtask table container */}
+            <div className="mt-4">
+              <div className="group flex justify-between py-2 px-2">
+                <h3 className="text-xl font-bold text-gray-900">Subtasks</h3>
+                <div className="invisible group-hover:visible flex items-center gap-1">
+                  <Button
+                    variant={'ghost'}
+                    className="bg-transparent text-lg text-muted-foreground"
+                    onClick={onPressAddChecklist}
+                  >
+                    <ArrowDownUp size={18} />
+                    {LABEL.SORT}
+                  </Button>
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <Button
+                        variant="ghost"
+                        className="bg-transparent text-lg text-muted-foreground "
+                      >
+                        <Maximize2 size={18} />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>{LABEL.FULL_SCREEN}</TooltipContent>
+                  </Tooltip>
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <Button
+                        variant="ghost"
+                        className={
+                          'bg-transparent text-lg text-muted-foreground'
+                        }
+                      >
+                        <Flower size={18} />
+                        {LABEL.SUGGEST_SUBTASKS}
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      Generate subtasks based on the comments, title and
+                      checklists of this task
+                    </TooltipContent>
+                  </Tooltip>
+                </div>
               </div>
+              {/* Subtask data grid table */}
+              <DataTableProvider value={store}>
+                <DataTable />
+              </DataTableProvider>
             </div>
-            {/* Attachments grid */}
+            {/* Checklist table container */}
+            <div className="group mt-4">
+              <TaskCheckList />
+            </div>
+            {/* Attachments Container */}
+            <div className="mt-4">
+              <div className="group flex justify-between py-2 px-2">
+                <h3 className="text-xl font-bold text-gray-900">
+                  {LABEL.ATTACHMENTS}
+                </h3>
+                <div className="invisible group-hover:visible flex items-center gap-1">
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <Button
+                        variant="ghost"
+                        className="bg-transparent text-lg text-muted-foreground"
+                      >
+                        <PlusIcon size={18} />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>{LABEL.ATTACHMENTS}</TooltipContent>
+                  </Tooltip>
+                </div>
+              </div>
+              {/* Attachments grid */}
+            </div>
           </div>
+          <TaskSidebar />
         </div>
+
         <div className="w-full px-[10px] flex items-center sticky bottom-0">
           <TabActionBar />
         </div>
       </DataTableProvider>
-      <TaskSidebar />
     </SidebarProvider>
   );
 };

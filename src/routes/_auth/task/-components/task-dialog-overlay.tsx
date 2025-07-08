@@ -11,15 +11,8 @@ export const TaskDialogOverlay = () => {
   );
   const taskId = taskMatch?.params?.taskId;
 
-  const onClose = () => {
-    router.history.back();
-  };
-
   return (
-    <TaskLayout
-      open={taskId ? true : false}
-      onOpenChange={(open) => !open && onClose()}
-    >
+    <TaskLayout>
       <TaskDialog taskId={taskId} />
     </TaskLayout>
   );
