@@ -7,6 +7,7 @@ import {
   useUpdateTaskAssigneeMutation,
 } from '@/service/rtkQueries/taskQuery.ts';
 import { handleMutation } from '@/lib/utils/utils.ts';
+import { LABEL } from '@/lib/constants';
 
 const TaskAssignee = ({
   taskId,
@@ -162,7 +163,7 @@ const TaskAssignee = ({
           renderSelectedAssignees()
         ) : (
           <span className="text-[14px] text-gray-600">
-            {selectedAssignees.length <= 0 && 'No assignee'}
+            {selectedAssignees.length <= 0 && LABEL.NO_ASSIGNEES_SELECTED}
           </span>
         )}
       </button>
@@ -190,7 +191,7 @@ const TaskAssignee = ({
           {/* Assignees List */}
           <div className="max-h-60 overflow-y-auto">
             <h3 className="pl-4 pt-2 pr-2 py-1 text-sm font-medium text-gray-600">
-              Assignees
+              {LABEL.ASSIGNEE}
             </h3>
             {filteredAssignees?.map((assignee: Member) => (
               <div
