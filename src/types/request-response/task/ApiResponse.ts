@@ -6,6 +6,7 @@ import {
   Status,
   Type,
   Role,
+  Member,
 } from '@/types/request-response/workspace/ApiResponse';
 export interface CheckList {
   id: number;
@@ -52,7 +53,7 @@ export interface Task {
   parentTask: Task | null;
   subTasks: Task[];
   taskCheckLists: CheckList[];
-  assignees: Assignee[];
+  assignees: Member[];
   outgoingRelations: Relation[];
   incomingRelations: Relation[];
   links: Link[];
@@ -69,15 +70,6 @@ export interface StatusItem {
   name: string;
   color: string;
   order: number;
-}
-
-export interface Assignee {
-  id: number;
-  fullName: string;
-  email: string;
-  image: string | null;
-  forcePasswordChange: boolean;
-  isActive: boolean;
 }
 export interface Relation {
   [key: string]: any;

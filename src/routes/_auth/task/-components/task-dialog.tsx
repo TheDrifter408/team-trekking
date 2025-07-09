@@ -66,7 +66,7 @@ import {
 import { Icon } from '@/assets/icon-path';
 import TimeEstimateDropdown from '@/components/common/estimate-time-dropdown';
 import { TaskSkeleton } from './loading';
-import { Assignee, Task } from '@/types/request-response/task/ApiResponse.ts';
+import { Task } from '@/types/request-response/task/ApiResponse.ts';
 import { DateRange } from 'react-day-picker';
 import Cookies from 'js-cookie';
 import { Sheet, SheetContent } from '@/components/shadcn-ui/sheet';
@@ -79,11 +79,7 @@ import { useDebounceCallback } from '@/lib/hooks/use-debounceCallback';
 import { useWorkspaceStore } from '@/stores/zustand/workspace-store';
 import { TaskPrioritySelect } from './task-priority-select';
 import TaskStatusDialog from '@/components/common/task-status-dialog';
-import { AssigneePopup } from '@/components/common/assignee-popover.tsx';
-import { StatusItem } from '@/types/request-response/list/ApiResponse.ts';
-import { useTMTStore } from '@/stores/zustand';
-import { PlaceholderAvatar } from '@/components/common/avatar-generator.tsx';
-import AssigneeSelector from '@/components/common/task-assignee.tsx';
+import TaskAssignee from '@/components/common/task-assignee.tsx';
 
 const availableTags: TagOption[] = [
   { id: 'initiative', label: 'initiative' },
@@ -102,8 +98,7 @@ interface TaskDialogProps {
 }
 
 export const TaskDialog: FC<TaskDialogProps> = ({ taskId }) => {
-  const { spaces, workspaceGlobal, members } = useWorkspaceStore();
-  const { user } = useTMTStore();
+  const { workspaceGlobal } = useWorkspaceStore();
   const priority = workspaceGlobal?.priority ?? [];
   // Hover states
   const [enterDates, setEnterDates] = useState<boolean>(false);
@@ -117,16 +112,13 @@ export const TaskDialog: FC<TaskDialogProps> = ({ taskId }) => {
   const [taskName, setTaskName] = useState<string>('');
   const [description, setDescription] = useState('');
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
-  const [selectedAssignees, setSelectedAssignees] = useState<Assignee[]>([]);
+  const [selectedAssignees, setSelectedAssignees] = useState<Member[]>([]);
   const [estimatedTime, setEstimatedTime] = useState<string | null>(null);
   const [dateRange, setDateRange] = useState<DateRange | undefined>();
   const [taskPriority, setTaskPriority] = useState<Priority | null>(null);
 
   const store = createDataTableStore({});
   const { open: isSidebarOpen } = useSidebar();
-  const [assignees, setAssignees] = useState<Member[]>([]);
-  const [isAssigneeOpen, setIsAssigneeOpen] = useState(false);
-  const currentUserId = user?.userData.id ?? 0;
 
   const [getTaskData, { data: taskData, isFetching }] = useLazyGetTaskQuery();
   const [updateTask] = useUpdateTaskMutation();
@@ -262,19 +254,6 @@ export const TaskDialog: FC<TaskDialogProps> = ({ taskId }) => {
         console.error('Failed to update task start date:', error);
       }
     }
-  };
-
-  const onSelectAssignee = (member: Member) => {
-    if (member.user.id === currentUserId) {
-      return;
-    }
-    setAssignees((prev) => {
-      const isAlreadySelected = prev.some((a) => a.id === member.id);
-      return isAlreadySelected ? prev : [...prev, member];
-    });
-  };
-  const onRemoveAssignee = (assigneeId: number) => {
-    setAssignees((prev) => prev.filter((m) => m.id !== assigneeId));
   };
 
   // useEffect to handle web socket operations and its side effects
@@ -532,11 +511,10 @@ export const TaskDialog: FC<TaskDialogProps> = ({ taskId }) => {
                     hover={enterAssignee}
                     onHoverChange={setEnterAssignee}
                   >
-                    {/*  TODO: Populate with proper assignees
-                    {taskData && taskData?.assignees.length > 0
-                      ? LABEL.NO_ASSIGNEES_SELECTED
-                      : LABEL.NO_ASSIGNEES_SELECTED}*/}
-                    <AssigneeSelector />
+                    <TaskAssignee
+                      taskId={taskId}
+                      selectedAssignee={selectedAssignees || []}
+                    />
                   </TaskMetaRow>
                   {/* PRIORITY */}
                   <TaskMetaRow

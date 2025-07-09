@@ -6,9 +6,10 @@ import {
   CreateCheckListItemRequest,
   CreateCheckListRequest,
   CreateTaskRequest,
+  UpdateAssigneeRequest,
   UpdateCheckListItemRequest,
   updateChecklistRequest,
-  UpdateTask,
+  UpdateTaskRequest,
 } from '@/types/request-response/task/ApiRequest.ts';
 import {
   CheckList,
@@ -91,11 +92,27 @@ export const taskApi = createApi({
       }),
       transformResponse: (response: ApiResponse<Task>) => response.data,
     }),
-    updateTask: builder.mutation<Task, UpdateTask>({
-      query: (updateTask: UpdateTask) => ({
+    updateTask: builder.mutation<Task, UpdateTaskRequest>({
+      query: (updateTask: UpdateTaskRequest) => ({
         url: `task/${updateTask.id}`,
         data: updateTask,
         method: 'PATCH',
+      }),
+      transformResponse: (response: ApiResponse<Task>) => response.data,
+    }),
+    updateTaskAssignee: builder.mutation<Task, UpdateAssigneeRequest>({
+      query: (updateAssignee: UpdateAssigneeRequest) => ({
+        url: `task/${updateAssignee.id}/assignee`,
+        data: updateAssignee,
+        method: 'PATCH',
+      }),
+      transformResponse: (response: ApiResponse<Task>) => response.data,
+    }),
+    deleteTaskAssignee: builder.mutation<Task, UpdateAssigneeRequest>({
+      query: (updateAssignee: UpdateAssigneeRequest) => ({
+        url: `task/${updateAssignee.id}/assignee/delete`,
+        data: updateAssignee,
+        method: 'DELETE',
       }),
       transformResponse: (response: ApiResponse<Task>) => response.data,
     }),
@@ -113,4 +130,6 @@ export const {
   useCreateTaskMutation,
   useLazyGetTaskQuery,
   useUpdateTaskMutation,
+  useUpdateTaskAssigneeMutation,
+  useDeleteTaskAssigneeMutation,
 } = taskApi;

@@ -1,49 +1,97 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Search, X, Check } from 'lucide-react';
+import { useWorkspaceStore } from '@/stores/zustand/workspace-store.ts';
+import { Member } from '@/types/request-response/workspace/ApiResponse.ts';
+import {
+  useDeleteTaskAssigneeMutation,
+  useUpdateTaskAssigneeMutation,
+} from '@/service/rtkQueries/taskQuery.ts';
+import { handleMutation } from '@/lib/utils/utils.ts';
 
-const AssigneeSelector = () => {
+const TaskAssignee = ({
+  taskId,
+  selectedAssignee,
+}: {
+  taskId: string;
+  selectedAssignee: Member[];
+}) => {
+  const { members } = useWorkspaceStore();
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedAssignees, setSelectedAssignees] = useState([]);
+  const [selectedAssignees, setSelectedAssignees] = useState(selectedAssignee);
+  const [updateTaskAssignee] = useUpdateTaskAssigneeMutation();
+  const [deleteTaskAssignee] = useDeleteTaskAssigneeMutation();
 
-  const assignees = [
-    { id: 1, name: 'Me', avatar: 'MH', isOnline: true },
-    { id: 2, name: 'Samrat Biswas', avatar: 'SB', isOnline: true },
-    { id: 3, name: 'Noor Ullah Al Noor', avatar: 'NA', isOnline: true },
-    {
-      id: 4,
-      name: 'Jawahiir Nabhan',
-      avatar: 'JN',
-      isOnline: false,
-      verified: true,
-    },
-    { id: 5, name: 'Khairul Hasan', avatar: 'KH', isOnline: false },
-    { id: 6, name: 'Tarun', avatar: 'T', isOnline: false },
-    {
-      id: 7,
-      name: 'Rahad Kabir',
-      avatar: 'RK',
-      isOnline: false,
-      verified: true,
-    },
-    {
-      id: 8,
-      name: 'Yiafee Khan',
-      avatar: 'YK',
-      isOnline: false,
-      verified: true,
-    },
-  ];
+  useEffect(() => {
+    setSelectedAssignees(selectedAssignee);
+  }, [selectedAssignee]);
 
-  const filteredAssignees = assignees.filter((assignee) =>
-    assignee.name.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredAssignees = members?.filter((assignee) =>
+    assignee.user.fullName.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const handleAssigneeToggle = (assignee) => {
+  // Function to get initials from full name
+  const getInitials = (fullName: string) => {
+    const names = fullName.trim().split(' ');
+    if (names.length === 1) {
+      return names[0].substring(0, 2).toUpperCase();
+    }
+    return (
+      names[0].charAt(0) + names[names.length - 1].charAt(0)
+    ).toUpperCase();
+  };
+
+  // Function to get avatar content (image or initials)
+  const getAvatarContent = (assignee: Member) => {
+    const hasImage = assignee.user.image && assignee.user.image.trim() !== '';
+
+    if (hasImage) {
+      return (
+        <img
+          src={assignee.user.image}
+          alt={assignee.user.fullName}
+          className="w-full h-full object-cover rounded-full"
+          onError={(e) => {
+            // Fallback to initials if image fails to load
+            const target = e.target as HTMLImageElement;
+            target.style.display = 'none';
+            const parent = target.parentElement;
+            if (parent) {
+              parent.innerHTML = getInitials(assignee.user.fullName);
+            }
+          }}
+        />
+      );
+    } else {
+      return getInitials(assignee.user.fullName);
+    }
+  };
+
+  const handleAssigneeToggle = async (assignee: Member) => {
+    const isSelected = selectedAssignees.some(
+      (a: Member) => a.id === assignee.id
+    );
+    if (isSelected) {
+      const { data } = await handleMutation(deleteTaskAssignee, {
+        id: taskId,
+        assigneeIds: [assignee.user.id],
+      });
+      if (data) updateAssigneeData(assignee);
+    } else {
+      const { data } = await handleMutation(updateTaskAssignee, {
+        id: taskId,
+        assigneeIds: [assignee.user.id],
+      });
+      if (data) updateAssigneeData(assignee);
+    }
+  };
+  const updateAssigneeData = (assignee: Member) => {
     setSelectedAssignees((prev) => {
-      const isSelected = prev.some((a) => a.id === assignee.id);
+      const isSelected = prev.some(
+        (a: Member) => a.user.id === assignee.user.id
+      );
       if (isSelected) {
-        return prev.filter((a) => a.id !== assignee.id);
+        return prev.filter((a: Member) => a.user.id !== assignee.user.id);
       } else {
         return [...prev, assignee];
       }
@@ -56,13 +104,13 @@ const AssigneeSelector = () => {
     if (selectedAssignees.length <= 3) {
       return (
         <div className="flex">
-          {selectedAssignees.map((assignee) => (
-            <div key={assignee.id} className="relative">
+          {selectedAssignees.map((assignee: Member) => (
+            <div key={assignee.id} className="relative group">
               <div className="w-7 h-7 rounded-full bg-blue-500 text-white text-xs font-medium flex items-center justify-center border-2 border-white">
-                {assignee.avatar}
+                {getAvatarContent(assignee)}
               </div>
               <div
-                className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-gray-600 rounded-full flex items-center justify-center cursor-pointer hover:bg-gray-700 transition-colors z-10"
+                className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-gray-600 rounded-full flex items-center justify-center cursor-pointer hover:bg-gray-600 transition-colors z-10 opacity-0 group-hover:opacity-100"
                 onClick={(e) => {
                   e.stopPropagation();
                   handleAssigneeToggle(assignee);
@@ -77,13 +125,13 @@ const AssigneeSelector = () => {
     } else {
       return (
         <div className="flex">
-          {selectedAssignees.slice(0, 2).map((assignee) => (
-            <div key={assignee.id} className="relative">
+          {selectedAssignees.slice(0, 2).map((assignee: Member) => (
+            <div key={assignee.id} className="relative group">
               <div className="w-7 h-7 rounded-full bg-blue-500 text-white text-xs font-medium flex items-center justify-center border-2 border-white">
-                {assignee.avatar}
+                {getAvatarContent(assignee)}
               </div>
               <div
-                className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-gray-600 rounded-full flex items-center justify-center cursor-pointer hover:bg-gray-700 transition-colors z-10"
+                className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-gray-600 rounded-full flex items-center justify-center cursor-pointer hover:bg-gray-600 transition-colors z-10 opacity-0 group-hover:opacity-100"
                 onClick={(e) => {
                   e.stopPropagation();
                   handleAssigneeToggle(assignee);
@@ -144,7 +192,7 @@ const AssigneeSelector = () => {
             <h3 className="pl-4 pt-2 pr-2 py-1 text-sm font-medium text-gray-600">
               Assignees
             </h3>
-            {filteredAssignees.map((assignee) => (
+            {filteredAssignees?.map((assignee: Member) => (
               <div
                 key={assignee.id}
                 className="flex items-center justify-between pl-4 py-1 hover:bg-gray-50 cursor-pointer transition-colors"
@@ -153,27 +201,21 @@ const AssigneeSelector = () => {
                 <div className="flex items-center gap-3">
                   <div className="relative">
                     <div className="w-6 h-6 rounded-full bg-blue-500 text-white text-xs font-medium flex items-center justify-center">
-                      {assignee.avatar}
+                      {getAvatarContent(assignee)}
                     </div>
-                    {selectedAssignees.some((a) => a.id === assignee.id) && (
+                    {selectedAssignees.some(
+                      (a: Member) => a.user.id === assignee.user.id
+                    ) && (
                       <div className="absolute -bottom-0.5 -right-2 w-3.5 h-3.5 bg-red-600 rounded-full flex items-center justify-center cursor-pointer hover:bg-red-600 transition-colors">
                         <X size={10} className="text-white" />
                       </div>
                     )}
-                    {!selectedAssignees.some((a) => a.id === assignee.id) &&
-                      assignee.isOnline && (
-                        <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
-                      )}
-                    {!selectedAssignees.some((a) => a.id === assignee.id) &&
-                      !assignee.isOnline && (
-                        <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-gray-400 rounded-full border-2 border-white"></div>
-                      )}
                   </div>
                   <div className="flex items-center gap-2">
                     <span className="text-sm text-gray-800">
-                      {assignee.name}
+                      {assignee.user.fullName}
                     </span>
-                    {assignee.verified && (
+                    {assignee.user.isActive && (
                       <div className="w-3 h-3 bg-blue-500 rounded-full flex items-center justify-center">
                         <Check size={8} className="text-white" />
                       </div>
@@ -197,4 +239,4 @@ const AssigneeSelector = () => {
   );
 };
 
-export default AssigneeSelector;
+export default TaskAssignee;
