@@ -60,13 +60,11 @@ import {
 import {
   Member,
   Priority,
-  Tag,
-  Task,
 } from '@/types/request-response/workspace/ApiResponse';
 import { Icon } from '@/assets/icon-path';
 import TimeEstimateDropdown from '@/components/common/estimate-time-dropdown';
 import { TaskSkeleton } from './loading';
-import { Task } from '@/types/request-response/task/ApiResponse.ts';
+import { Tag, Task } from '@/types/request-response/task/ApiResponse.ts';
 import { DateRange } from 'react-day-picker';
 import Cookies from 'js-cookie';
 import { Sheet, SheetContent } from '@/components/shadcn-ui/sheet';
@@ -81,6 +79,7 @@ import { TaskPrioritySelect } from './task-priority-select';
 import TaskStatusDialog from '@/components/common/task-status-dialog';
 import TaskAssignee from '@/components/common/task-assignee.tsx';
 import { StatusItem } from '@/types/request-response/list/ApiResponse';
+import { useGetListTagsQuery } from '@/service/rtkQueries/listQuery.ts';
 
 const availableTags: Tag[] = [
   { id: 0, name: 'initiative', isActive: true },
