@@ -292,7 +292,7 @@ export const TaskDialog: FC<TaskDialogProps> = ({ taskId }) => {
   useEffect(() => {
     if (taskData) {
       setTaskName(taskData.name || '');
-      setDescription(taskData.description || '');
+      setDescription(taskData.description);
       setStatus(taskData.statusItem);
       setSelectedTags(taskData.tags || []);
       setSelectedAssignees(taskData?.assignees || []);
