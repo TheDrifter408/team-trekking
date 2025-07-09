@@ -1,5 +1,12 @@
-import React, { useState, useCallback } from 'react';
-import { Search, Settings, Check } from 'lucide-react';
+import {
+  useState,
+  FC,
+  ChangeEvent,
+  Dispatch,
+  SetStateAction,
+  useEffect,
+} from 'react';
+import { Search, Settings, Check, ChevronRight } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,20 +17,19 @@ import {
 } from '@/components/shadcn-ui/dropdown-menu';
 import { Input } from '@/components/shadcn-ui/input';
 import { LABEL } from '@/lib/constants';
-import { cn } from '@/lib/utils/utils.ts';
+import { cn, filterByItemNames } from '@/lib/utils/utils.ts';
+import {
+  StatusGroup,
+  StatusItem,
+} from '@/types/request-response/list/ApiResponse';
+import { Button } from '../shadcn-ui/button';
+import { useGetListTagsQuery } from '@/service/rtkQueries/listQuery';
+import { useDebounce } from '@/lib/hooks/use-debounce';
 
 interface ProgressIconProps {
   progress?: number;
   size?: number;
   color?: string;
-  isCompleted?: boolean;
-}
-
-interface StatusItem {
-  id: string;
-  label: string;
-  color: string;
-  progress: number;
   isCompleted?: boolean;
 }
 
@@ -35,7 +41,7 @@ type ColorKey =
   | 'text-gray-400'
   | 'text-yellow-600';
 
-const ProgressIcon: React.FC<ProgressIconProps> = ({
+const ProgressIcon: FC<ProgressIconProps> = ({
   progress = 0,
   size = 20,
   color = 'text-blue-600',
@@ -99,104 +105,71 @@ const ProgressIcon: React.FC<ProgressIconProps> = ({
 };
 
 interface TaskStatusUIProps {
-  children: React.ReactNode;
+  listId?: number;
+  status: StatusItem | null;
+  setStatus: (status: StatusItem) => void;
 }
 
-const TaskStatusDialog: React.FC<TaskStatusUIProps> = ({ children }) => {
-  const [selectedStatus, setSelectedStatus] = useState<string>('COMPLETED');
+const TaskStatusDialog: FC<TaskStatusUIProps> = ({
+  listId,
+  status,
+  setStatus,
+}) => {
   const [searchQuery, setSearchQuery] = useState<string>('');
+  const [statusGroups, setStatusGroups] = useState<StatusGroup[]>([]);
 
-  const statusItems: StatusItem[] = [
-    { id: 'BACKLOG', label: 'BACKLOG', color: 'text-gray-400', progress: 0 },
-    {
-      id: 'SPRINT_BACKLOG',
-      label: 'SPRINT BACKLOG',
-      color: 'text-yellow-600',
-      progress: 0,
-    },
-  ];
-
-  const activeItems: StatusItem[] = [
-    {
-      id: 'STARTING',
-      label: LABEL.STARTING,
-      color: 'text-orange-600',
-      progress: 25,
-    },
-    {
-      id: 'IN_PROGRESS',
-      label: LABEL.IN_PROGRESS,
-      color: 'text-blue-600',
-      progress: 65,
-    },
-    {
-      id: 'COMPLETED',
-      label: LABEL.COMPLETED,
-      color: 'text-green-600',
-      progress: 100,
-      isCompleted: true,
-    },
-    {
-      id: 'IN_REVIEW',
-      label: LABEL.IN_REVIEW,
-      color: 'text-orange-600',
-      progress: 85,
-    },
-    {
-      id: LABEL.REJECTED,
-      label: 'REJECTED',
-      color: 'text-red-600',
-      progress: 100,
-    },
-    {
-      id: LABEL.BLOCKED,
-      label: 'BLOCKED',
-      color: 'text-orange-600',
-      progress: 30,
-    },
-  ];
-
-  const closedItems: StatusItem[] = [
-    {
-      id: 'CLOSED',
-      label: 'CLOSED',
-      color: 'text-green-600',
-      progress: 100,
-      isCompleted: true,
-    },
-  ];
-
-  const onHandleStatusChange = (statusId: string): void => {
-    setSelectedStatus(statusId);
+  const onSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.currentTarget.value);
   };
 
-  const onHandleSearchChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      e.preventDefault();
-      e.stopPropagation();
-      setSearchQuery(e.target.value);
-    },
-    []
-  );
+  const debouncedQuery = useDebounce(searchQuery, 500);
 
-  const onHandleSearchClick = useCallback(
-    (e: React.MouseEvent<HTMLInputElement>) => {
-      e.preventDefault();
-      e.stopPropagation();
-    },
-    []
-  );
+  const filtered = filterByItemNames(statusGroups, debouncedQuery);
 
-  const filteredItems = (items: StatusItem[]) => {
-    if (!searchQuery) return items;
-    return items.filter((item) =>
-      item.label.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+  const onStatusChange = (groupId: number, statusId: number) => {
+    let group: StatusGroup | undefined;
+    if (list) {
+      group = list.groups.find((group) => group.id === groupId);
+      if (group) {
+        const found = group.items.find((s) => s.id === statusId);
+        if (found) {
+          setStatus(found);
+        }
+      }
+    }
   };
+
+  const { data: list } = useGetListTagsQuery(listId!, {
+    skip: !listId,
+  });
+
+  useEffect(() => {
+    if (list) {
+      setStatusGroups(list.groups);
+    }
+  }, [list]);
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
+      <DropdownMenuTrigger asChild className="">
+        <Button
+          variant="ghost"
+          size="sm"
+          className={cn(
+            'rounded text-white px-2 h-6 text-sm tracking-wide font-bold',
+            'focus:outline-none ring-0 focus:ring-0 focus-within:outline-none focus-within:ring-0'
+          )}
+          style={{
+            backgroundColor:
+              status && status.color !== null ? `${status.color}` : '#3a79e6',
+          }}
+        >
+          {status && status.name.toUpperCase()}
+          <span className="ml-2 pl-2 border-l border-white/40 flex items-center">
+            <ChevronRight className="w-4 h-4" />
+          </span>
+        </Button>
+      </DropdownMenuTrigger>
       <DropdownMenuContent className="w-80" align="start">
         <div className="p-2">
           <div className="relative">
@@ -208,134 +181,51 @@ const TaskStatusDialog: React.FC<TaskStatusUIProps> = ({ children }) => {
               type="text"
               placeholder={LABEL.SEARCH_STATUSES}
               value={searchQuery}
-              onChange={onHandleSearchChange}
-              onClick={onHandleSearchClick}
+              onChange={onSearchChange}
               className="pl-9"
+              onClick={(e) => e.stopPropagation()}
+              onKeyDown={(e) => e.stopPropagation()}
             />
           </div>
         </div>
 
         <DropdownMenuSeparator />
-
-        {/* Not Started Section */}
-        {filteredItems(statusItems).length > 0 && (
-          <>
+        {filtered.map((group) => (
+          <div key={group.id}>
             <DropdownMenuLabel className="flex items-center justify-between">
-              <span className="text-muted-foreground">Not started</span>
+              <span className="text-muted-foreground">{group.name}</span>
               <Settings size={14} className="text-muted-foreground" />
             </DropdownMenuLabel>
-            {filteredItems(statusItems).map((item: StatusItem) => (
+            {group.items.map((item: StatusItem) => (
               <DropdownMenuItem
                 key={item.id}
-                onClick={() => onHandleStatusChange(item.id)}
+                onClick={() => onStatusChange(group.id, item.id)}
                 className="flex items-center justify-between cursor-pointer"
               >
                 <div className="flex items-center space-x-3">
                   <ProgressIcon
-                    progress={item.progress}
+                    progress={item.order}
                     size={16}
                     color={item.color}
-                    isCompleted={item.isCompleted}
+                    isCompleted={false}
                   />
                   <span
                     className={cn(
                       'text-sm',
-                      selectedStatus === item.id && 'font-bold'
+                      status?.id === item.id && 'font-bold'
                     )}
                   >
-                    {item.label}
+                    {item.name}
                   </span>
                 </div>
-                {selectedStatus === item.id && (
+                {status && status.id === item.id && (
                   <Check size={14} className="text-primary" />
                 )}
               </DropdownMenuItem>
             ))}
             <DropdownMenuSeparator />
-          </>
-        )}
-
-        {/* Active Section */}
-        {filteredItems(activeItems).length > 0 && (
-          <>
-            <DropdownMenuLabel className="text-muted-foreground">
-              Active
-            </DropdownMenuLabel>
-            {filteredItems(activeItems).map((item: StatusItem) => (
-              <DropdownMenuItem
-                key={item.id}
-                onClick={() => onHandleStatusChange(item.id)}
-                className="flex items-center justify-between cursor-pointer"
-              >
-                <div className="flex items-center space-x-3">
-                  <ProgressIcon
-                    progress={item.progress}
-                    size={16}
-                    color={item.color}
-                    isCompleted={item.isCompleted}
-                  />
-                  <span
-                    className={cn(
-                      'text-sm',
-                      selectedStatus === item.id && 'font-bold'
-                    )}
-                  >
-                    {item.label}
-                  </span>
-                </div>
-                {selectedStatus === item.id && (
-                  <Check size={14} className="text-primary" />
-                )}
-              </DropdownMenuItem>
-            ))}
-            <DropdownMenuSeparator />
-          </>
-        )}
-
-        {/* Closed Section */}
-        {filteredItems(closedItems).length > 0 && (
-          <>
-            <DropdownMenuLabel className="text-muted-foreground">
-              Closed
-            </DropdownMenuLabel>
-            {filteredItems(closedItems).map((item: StatusItem) => (
-              <DropdownMenuItem
-                key={item.id}
-                onClick={() => onHandleStatusChange(item.id)}
-                className="flex items-center justify-between cursor-pointer"
-              >
-                <div className="flex items-center space-x-3">
-                  <ProgressIcon
-                    progress={item.progress}
-                    size={16}
-                    color={item.color}
-                    isCompleted={item.isCompleted}
-                  />
-                  <span
-                    className={cn(
-                      'text-sm',
-                      selectedStatus === item.id && 'font-bold'
-                    )}
-                  >
-                    {item.label}
-                  </span>
-                </div>
-                {selectedStatus === item.id && (
-                  <Check size={14} className="text-primary" />
-                )}
-              </DropdownMenuItem>
-            ))}
-          </>
-        )}
-
-        {/* No results */}
-        {searchQuery &&
-          filteredItems([...statusItems, ...activeItems, ...closedItems])
-            .length === 0 && (
-            <div className="p-4 text-center text-muted-foreground text-sm">
-              {LABEL.NO_STATUS_FOUND_MATCHING} "{searchQuery}"
-            </div>
-          )}
+          </div>
+        ))}
       </DropdownMenuContent>
     </DropdownMenu>
   );

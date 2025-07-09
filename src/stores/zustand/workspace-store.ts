@@ -11,10 +11,12 @@ import { persist } from 'zustand/middleware';
 interface WorkspaceState {
   workspaceGlobal: WorkSpaceGlobal | null;
   currentWorkspace: Workspace | null;
+  currentSpace: Space | null;
   spaces?: Space[] | null;
   members?: Member[] | null;
   spaceFolderList?: WorkspaceSpaceFolderList | null;
   setCurrentWorkspace: (workspace: Workspace) => void;
+  setCurrentSpace: (space: Space) => void;
   setSpaces: (spaces: Space[]) => void;
   setMembers: (members: Member[]) => void;
   setSpaceFolderList: (spaceFolderList: WorkspaceSpaceFolderList) => void;
@@ -27,10 +29,12 @@ export const useWorkspaceStore = create<WorkspaceState>()(
     (set) => ({
       workspaceGlobal: null,
       currentWorkspace: null,
+      currentSpace: null,
       spaces: null,
       members: null,
       spaceFolderList: null,
       setCurrentWorkspace: (workspace) => set({ currentWorkspace: workspace }),
+      setCurrentSpace: (space) => set({ currentSpace: space }),
       setSpaces: (spaces) => set({ spaces }),
       setMembers: (members) => set({ members }),
       setSpaceFolderList: (spaceFolderList) => set({ spaceFolderList }),

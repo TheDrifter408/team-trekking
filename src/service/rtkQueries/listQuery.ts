@@ -5,6 +5,7 @@ import { ApiResponse } from '@/types/request-response/auth/ApiResponse';
 import {
   ListResponse,
   ListTasksResponse,
+  Status,
 } from '@/types/request-response/list/ApiResponse';
 import { CreateListRequest } from '@/types/request-response/list/ApiRequest';
 
@@ -26,7 +27,20 @@ export const listApi = createApi({
       transformResponse: (response: ApiResponse<Array<ListTasksResponse>>) =>
         response.data,
     }),
+    getListTags: builder.query<Status, number>({
+      query: (listId: number) => ({
+        url: `list/status-view-group/${listId}`,
+      }),
+      transformResponse: (response: ApiResponse<Status>) => {
+        return response.data;
+      },
+    }),
   }),
 });
 
-export const { useCreateListMutation, useLazyGetListTasksQuery } = listApi;
+export const { 
+  useCreateListMutation,
+  useLazyGetListTasksQuery,
+  useGetListTagsQuery,
+  useLazyGetListTagsQuery,
+} = listApi;

@@ -1,7 +1,6 @@
 import { Activity } from '@/types/interfaces/activitySearch.ts';
 import { CheckCircle, Clock, Eye, FileText, Play } from 'lucide-react';
 
-
 export const activitySearchData: Activity[] = [
   {
     id: 1,
