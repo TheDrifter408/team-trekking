@@ -91,7 +91,6 @@ export const CreateTask = ({ isOpen, setIsOpen, children, listId }: Props) => {
 
   const taskType = 1;
   const currentUserId = user?.userData.id ?? 0;
-  const priorityList = workspaceGlobal?.priority;
 
   useEffect(() => {
     if (list && list.status.groups) {
@@ -157,6 +156,7 @@ export const CreateTask = ({ isOpen, setIsOpen, children, listId }: Props) => {
       typeId: taskType,
       priorityId: selectedPriority?.id,
       assigneeIds: assignees.map((assignee) => assignee.user.id),
+      statusViewGroupId: list?.status.id,
       statusGroupId: statusGroupId,
       statusItemId: status?.id,
       dueDate: dueDate || null,
@@ -288,10 +288,7 @@ export const CreateTask = ({ isOpen, setIsOpen, children, listId }: Props) => {
                           : LABEL.DUE_DATE}
                       </Button>
                     </TaskDate>
-                    <PriorityPopover
-                      onSelect={onSelectPriority}
-                      priorityList={priorityList ?? []}
-                    >
+                    <PriorityPopover onSelect={onSelectPriority}>
                       {selectedPriority ? (
                         <Button variant={'outline'} className={'h-[24px]'}>
                           <Icon

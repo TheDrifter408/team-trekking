@@ -10,12 +10,12 @@ import { Icon } from '@/assets/icon-path';
 import { Ban } from 'lucide-react';
 import { LABEL } from '@/lib/constants/appStrings';
 import { Priority } from '@/types/request-response/workspace/ApiResponse';
+import { useWorkspaceStore } from '@/stores/zustand/workspace-store.ts';
 
 type PriorityPopoverProps = {
   isOpen?: boolean;
   setIsOpen?: (open: boolean) => void;
   children: ReactNode;
-  priorityList: Priority[];
   onSelect?: (priority: Priority | null) => void; // TODO: Make this required once usage is finalized
 };
 
@@ -23,9 +23,10 @@ export const PriorityPopover = ({
   isOpen,
   setIsOpen,
   children,
-  priorityList,
   onSelect,
 }: PriorityPopoverProps) => {
+  const { workspaceGlobal } = useWorkspaceStore();
+  const priorityList = workspaceGlobal?.priority ?? [];
   const onSelectPriority = (priority: Priority) => {
     // TODO: Remove fallback once `onSelect` is always passed
     if (onSelect) onSelect(priority);
