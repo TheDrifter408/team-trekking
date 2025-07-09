@@ -11,7 +11,6 @@ import {
   createDataTableStore,
   DataTableProvider,
 } from '@/stores/zustand/data-table-store';
-import { TagOption } from '@/types/interfaces/TagDropDown';
 import {
   IconCalendar,
   IconCheck,
@@ -29,7 +28,6 @@ import { EditorState } from 'lexical';
 import {
   ArrowDownUp,
   ChevronDown,
-  ChevronRight,
   CornerLeftUp,
   Flower,
   Maximize2,
@@ -63,7 +61,11 @@ import { Priority } from '@/types/request-response/workspace/ApiResponse';
 import { Icon } from '@/assets/icon-path';
 import TimeEstimateDropdown from '@/components/common/estimate-time-dropdown';
 import { TaskSkeleton } from './loading';
-import { Assignee, Task } from '@/types/request-response/task/ApiResponse.ts';
+import {
+  Assignee,
+  Tag,
+  Task,
+} from '@/types/request-response/task/ApiResponse.ts';
 import { DateRange } from 'react-day-picker';
 import Cookies from 'js-cookie';
 import { Sheet, SheetContent } from '@/components/shadcn-ui/sheet';
@@ -73,36 +75,23 @@ import { PageHeader } from './page-header';
 import { socket } from '@/lib/constants';
 import { $convertToMarkdownString, TRANSFORMERS } from '@lexical/markdown';
 import { useDebounceCallback } from '@/lib/hooks/use-debounceCallback';
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/shadcn-ui/select';
 import { useWorkspaceStore } from '@/stores/zustand/workspace-store';
 import { TaskPrioritySelect } from './task-priority-select';
 import TaskStatusDialog from '@/components/common/task-status-dialog';
+import { useGetListTagsQuery } from '@/service/rtkQueries/listQuery';
+import { StatusItem } from '@/types/request-response/list/ApiResponse';
 
-const availableTags: TagOption[] = [
-  { id: 'initiative', label: 'initiative' },
-  { id: 'backend', label: 'backend' },
-  { id: 'common-docs', label: 'common docs' },
-  { id: 'complex', label: 'complex' },
-  { id: 'fail1', label: 'fail1' },
-  { id: 'fail2', label: 'fail2' },
-  { id: 'fail3', label: 'fail3' },
-  { id: 'frontend', label: 'frontend' },
-  { id: 'ini', label: 'ini' },
+const availableTags: Tag[] = [
+  { id: 0, name: 'initiative', isActive: true },
+  { id: 1, name: 'backend', isActive: true },
+  { id: 2, name: 'common docs', isActive: true },
+  { id: 3, name: 'complex', isActive: true },
+  { id: 4, name: 'fail1', isActive: true },
+  { id: 5, name: 'fail2', isActive: true },
+  { id: 6, name: 'fail3', isActive: true },
+  { id: 7, name: 'frontend', isActive: true },
+  { id: 8, name: 'ini', isActive: true },
 ];
-
-const priorityFlags: Record<string, string> = {
-  low: 'rgb(29, 78, 216)', // blue-700
-  mid: 'rgb(252, 231, 53)', // yellow-700
-  high: 'rgb(185, 28, 28)', // red-700
-  none: '',
-};
 
 interface TaskDialogProps {
   taskId: string;
@@ -123,7 +112,8 @@ export const TaskDialog: FC<TaskDialogProps> = ({ taskId }) => {
   // Task states
   const [taskName, setTaskName] = useState<string>('');
   const [description, setDescription] = useState('');
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [status, setStatus] = useState<StatusItem | null>(null);
+  const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
   const [selectedAssignees, setSelectedAssignees] = useState<Assignee[]>([]);
   const [estimatedTime, setEstimatedTime] = useState<string | null>(null);
   const [dateRange, setDateRange] = useState<DateRange | undefined>();
@@ -134,6 +124,11 @@ export const TaskDialog: FC<TaskDialogProps> = ({ taskId }) => {
 
   const [getTaskData, { data: taskData, isFetching }] = useLazyGetTaskQuery();
   const [updateTask] = useUpdateTaskMutation();
+
+  // get the data for the tags
+  const { data: tagData } = useGetListTagsQuery(taskData?.list.id, {
+    skip: !taskData?.list.id,
+  });
 
   // States and properties for the left sidebar of task dialog
   const [isLeftSidebarOpen, setIsLeftSidebarOpen] = useState(false);
@@ -298,7 +293,8 @@ export const TaskDialog: FC<TaskDialogProps> = ({ taskId }) => {
     if (taskData) {
       setTaskName(taskData.name || '');
       setDescription(taskData.description || '');
-      setSelectedTags(taskData.tags?.map((tag) => tag.id) || []);
+      setStatus(taskData.statusItem);
+      setSelectedTags(taskData.tags || []);
       setSelectedAssignees(taskData?.assignees || []);
       setEstimatedTime(taskData?.timeEstimate?.toString() || '');
       setTaskPriority(taskData.priority);
@@ -348,8 +344,11 @@ export const TaskDialog: FC<TaskDialogProps> = ({ taskId }) => {
             <div className="space-y-4">
               {/* Show the parent task title if this is a subtask */}
               {taskData && taskData.parentTask && (
-                <div className="flex items-center gap-1 hover:bg-accent w-fit rounded-xl px-2 py-[2px]">
-                  <CornerLeftUp className="text-muted-foreground" size={14} />
+                <div className="flex items-center gap-1 hover:bg-accent w-fit rounded-xl py-[2px]">
+                  <CornerLeftUp
+                    className="text-muted-foreground mb-1"
+                    size={14}
+                  />
                   <Link
                     to="/task/$taskId"
                     params={{ taskId: taskData.parentTask.id.toString() }}
@@ -364,7 +363,7 @@ export const TaskDialog: FC<TaskDialogProps> = ({ taskId }) => {
                 <div className="flex items-center px-1 border-r border-accent">
                   <IconCircleLetterT className="rounded-lg" size={16} />
                   <span className="px-2 capitalize">
-                    {taskData?.type.label ?? ''}
+                    {taskData?.type.singularName ?? ''}
                   </span>
                   <div>
                     <TaskTypeDropdown>
@@ -383,7 +382,7 @@ export const TaskDialog: FC<TaskDialogProps> = ({ taskId }) => {
                 </div>
               </div>
               {/* HEADER => TITLE */}
-              <div className="mb-4 flex items-center gap-2">
+              <div className="flex items-center gap-2">
                 {taskData && taskData.parentTask && (
                   <IconVectorSpline className="text-black" size={16} />
                 )}
@@ -402,7 +401,7 @@ export const TaskDialog: FC<TaskDialogProps> = ({ taskId }) => {
                 )}
               >
                 {/* Column one contains Status, Dates, Time Estimates, Track Time, Relationships */}
-                <div className="space-y-1">
+                <div className="space-y-4">
                   {/* Column 1 */}
                   {/* STATUSES */}
                   <TaskMetaRow
@@ -414,29 +413,20 @@ export const TaskDialog: FC<TaskDialogProps> = ({ taskId }) => {
                     }
                     label="Status"
                   >
-                    <TaskStatusDialog>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className={cn(
-                          'rounded text-white h-6 pt-0.5 px-2 text-xs tracking-wide font-bold flex items-center',
-                          taskData?.statusItem?.color
-                            ? taskData.statusItem.color
-                            : 'bg-gray-500'
-                        )}
-                      >
-                        {taskData.statusItem?.name.toUpperCase()}
-                        <span className="ml-2 pl-2 border-l border-white/40 flex items-center">
-                          <ChevronRight className="w-4 h-4" />
-                        </span>
-                      </Button>
-                    </TaskStatusDialog>
+                    <TaskStatusDialog
+                      listId={taskData.list.id}
+                      status={status}
+                      setStatus={(status) => {
+                        setStatus(status);
+                        onHandleUpdateTask({ statusItemId: status.id });
+                      }}
+                    />
                     <Button
                       variant="ghost"
                       size="sm"
                       className={cn(
                         'h-6 px-2 rounded-[6px] border',
-                        `hover:${taskData.statusItem?.color}`
+                        `hover:${status?.color}`
                       )}
                     >
                       <IconCheck size={15} />
@@ -563,7 +553,7 @@ export const TaskDialog: FC<TaskDialogProps> = ({ taskId }) => {
                   >
                     <TagDropdownWithSelection
                       availableTags={availableTags}
-                      selectedTags={[]}
+                      selectedTags={selectedTags}
                       setSelectedTags={setSelectedTags}
                     />
                   </TaskMetaRow>

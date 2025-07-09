@@ -3,6 +3,7 @@ import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { QueryLifecycleApi } from '@reduxjs/toolkit/query';
 import { StatusItem, View } from '@/types/request-response/space/ApiResponse';
+import { StatusGroup } from '@/types/request-response/list/ApiResponse';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -143,3 +144,22 @@ export function getContrastTextColor(hexColor: string): 'black' | 'white' {
   // Return black for light backgrounds, white for dark
   return luminance > 0.5 ? 'black' : 'white';
 }
+
+export const filterByItemNames = (
+  groups: StatusGroup[],
+  query: string
+): StatusGroup[] => {
+  const lowerQuery = query.toLowerCase().trim();
+  if (!lowerQuery) return groups;
+
+  return groups
+    .map((group) => {
+      const filteredItems = group.items.filter((item) =>
+        item.name.toLowerCase().trim().includes(lowerQuery)
+      );
+      return filteredItems.length > 0
+        ? { ...group, items: filteredItems }
+        : null;
+    })
+    .filter((group) => group !== null);
+};

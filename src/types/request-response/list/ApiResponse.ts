@@ -1,6 +1,8 @@
 import { CreatedBy } from '@/types/request-response/space/ApiResponse';
+import { Tag } from '@/types/request-response/task/ApiResponse';
 
 export interface ListResponse {
+  id: number;
   name: string;
   iconUrl: string;
   avatarKey: string;
@@ -9,14 +11,13 @@ export interface ListResponse {
   startDate: string;
   dueDate: string;
   isInheritStatus: boolean;
+  isActive: boolean;
   isPrivate: boolean;
   createdBy: CreatedBy;
   priority: Priority;
   status: Status;
   folder: Folder;
   type: Type;
-  id: number;
-  isActive: boolean;
   createdAt: string;
 }
 
@@ -113,12 +114,11 @@ export interface Task {
   sprintPoints: string;
   isActive: boolean;
   isArchive: boolean;
-  taskCheckLists: any[];
   parentTask: Task;
   owner: Owner;
-  statusItem: any;
+  statusItem: StatusItem | null;
   priority?: Priority;
-  tags: any[];
+  tags: Tag[];
   type: Type;
 }
 

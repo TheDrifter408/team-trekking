@@ -6,7 +6,7 @@ import {
 import { Button } from '@/components/shadcn-ui/button.tsx';
 import { IconCaretRightFilled } from '@tabler/icons-react';
 import { motion } from 'framer-motion';
-import { Link, useNavigate } from '@tanstack/react-router';
+import { Link } from '@tanstack/react-router';
 import {
   Tooltip,
   TooltipContent,
@@ -37,8 +37,6 @@ export const SidebarSpaceItems = ({
   children,
   onCreatedChildren,
 }: Props) => {
-  const navigate = useNavigate();
-
   const [isOpen, setIsOpen] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [isShareSpace, setIsShareSpace] = useState(false);
