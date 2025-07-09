@@ -3,6 +3,7 @@ import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { QueryLifecycleApi } from '@reduxjs/toolkit/query';
 import { StatusItem } from '@/types/request-response/space/ApiResponse';
+import { StatusGroup } from '@/types/request-response/list/ApiResponse';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -150,4 +151,23 @@ export const getInitialAvatar = (fullName: string) => {
     return names[0].substring(0, 2).toUpperCase();
   }
   return (names[0].charAt(0) + names[names.length - 1].charAt(0)).toUpperCase();
+};
+
+export const filterByItemNames = (
+  groups: StatusGroup[],
+  query: string
+): StatusGroup[] => {
+  const lowerQuery = query.toLowerCase().trim();
+  if (!lowerQuery) return groups;
+
+  return groups
+    .map((group) => {
+      const filteredItems = group.items.filter((item) =>
+        item.name.toLowerCase().trim().includes(lowerQuery)
+      );
+      return filteredItems.length > 0
+        ? { ...group, items: filteredItems }
+        : null;
+    })
+    .filter((group) => group !== null);
 };

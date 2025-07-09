@@ -45,7 +45,6 @@ export const NameColumn = ({ task, row }: Props) => {
       row.toggleExpanded();
     }
   };
-
   return (
     <div
       className="flex items-center min-w-[280px] gap-[12px] overflow-hidden"
@@ -67,11 +66,16 @@ export const NameColumn = ({ task, row }: Props) => {
         </IconButton>
 
         {/* Status Icon */}
-        <TextTooltip message={task.status.name}>
-          <IconButton style={{ color: task.status.color }}>
-            <Icon name="progress2" className={`text-${task.status.color}`} />
-          </IconButton>
-        </TextTooltip>
+        {task.statusItem && (
+          <TextTooltip message={task.statusItem.name}>
+            <IconButton style={{ color: task.statusItem.name }}>
+              <Icon
+                name="progress2"
+                className={`text-${task.statusItem.name}`}
+              />
+            </IconButton>
+          </TextTooltip>
+        )}
       </div>
 
       <div className="ml-[12px] flex flex-col overflow-hidden">

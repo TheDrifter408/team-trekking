@@ -1,16 +1,9 @@
-// Types
-export interface TagOption {
-  id: string;
-  label: string;
-  color?: string;
-  category?: string;
-  disabled?: boolean;
-}
+import { Tag } from '@/types/request-response/task/ApiResponse';
 
 export interface TagDropdownContextType {
-  tags: TagOption[];
-  selectedTags: string[];
-  onTagsChange?: (selectedTags: string[]) => void;
+  tags: Tag[];
+  selectedTags: Tag[];
+  onTagsChange?: (selectedTags: Tag[]) => void;
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
   searchQuery: string;

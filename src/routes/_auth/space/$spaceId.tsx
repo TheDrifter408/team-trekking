@@ -12,7 +12,7 @@ import { useEffect, useState } from 'react';
 const Space = () => {
   const { spaceId } = Route.useParams();
 
-  const { spaces } = useWorkspaceStore();
+  const { spaces, setCurrentSpace } = useWorkspaceStore();
 
   const currentSpace = spaces?.find((s) => s.id.toString() === spaceId);
 
@@ -27,6 +27,7 @@ const Space = () => {
   useEffect(() => {
     if (currentSpace) {
       setFolders(currentSpace.folders);
+      setCurrentSpace(currentSpace);
       const totalLists = [...currentSpace.lists];
       for (const folder of currentSpace.folders) {
         totalLists.push(...folder.lists);

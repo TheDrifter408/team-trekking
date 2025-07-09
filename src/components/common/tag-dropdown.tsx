@@ -1,10 +1,16 @@
-import React, { useState, createContext, useContext, useEffect } from 'react';
+import {
+  useState,
+  createContext,
+  useContext,
+  useEffect,
+  FC,
+  cloneElement,
+  ReactNode,
+  ReactElement,
+} from 'react';
 import { X, Plus, Search } from 'lucide-react';
 import { Tag } from '@/types/request-response/task/ApiResponse';
-import {
-  TagDropdownContextType,
-  TagOption,
-} from '@/types/interfaces/TagDropDown';
+import { TagDropdownContextType } from '@/types/interfaces/TagDropDown';
 // Context
 const TagDropdownContext = createContext<TagDropdownContextType | null>(null);
 
@@ -27,8 +33,8 @@ const tagColors = {
 };
 
 // Tag component
-const TagChip: React.FC<{
-  tag: TagOption;
+const TagChip: FC<{
+  tag: Tag;
   onRemove?: () => void;
   removable?: boolean;
   size?: 'sm' | 'md';
@@ -71,15 +77,15 @@ const TagChip: React.FC<{
 
 // Main Tag Dropdown Component
 interface TagDropdownProps {
-  tags: TagOption[];
-  selectedTags?: string[];
-  onTagsChange?: (selectedTags: string[]) => void;
+  tags: Tag[];
+  selectedTags?: Tag[];
+  onTagsChange?: (selectedTags: Tag[]) => void;
   maxTags?: number;
   allowCreate?: boolean;
   children: React.ReactNode;
 }
 
-const TagDropdown: React.FC<TagDropdownProps> = ({
+const TagDropdown: FC<TagDropdownProps> = ({
   tags,
   selectedTags = [],
   onTagsChange,
@@ -90,7 +96,7 @@ const TagDropdown: React.FC<TagDropdownProps> = ({
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [internalSelectedTags, setInternalSelectedTags] =
-    useState<string[]>(selectedTags);
+    useState<Tag[]>(selectedTags);
 
   const currentSelectedTags =
     selectedTags.length > 0 ? selectedTags : internalSelectedTags;
@@ -138,12 +144,12 @@ const TagDropdown: React.FC<TagDropdownProps> = ({
 // Trigger Component
 interface TagDropdownTriggerProps {
   asChild?: boolean;
-  children?: React.ReactNode;
+  children?: ReactNode;
   placeholder?: string;
   className?: string;
 }
 
-const TagDropdownTrigger: React.FC<TagDropdownTriggerProps> = ({
+const TagDropdownTrigger: FC<TagDropdownTriggerProps> = ({
   asChild = false,
   children,
   placeholder = 'Select tags',
@@ -152,19 +158,17 @@ const TagDropdownTrigger: React.FC<TagDropdownTriggerProps> = ({
   const { selectedTags, tags, isOpen, setIsOpen, onTagsChange } =
     useTagDropdown();
 
-  const selectedTagObjects = tags.filter((tag) =>
-    selectedTags.includes(tag.id)
-  );
+  const selectedTagObjects = tags.filter((tag) => selectedTags.includes(tag));
 
-  const onHandleRemoveTag = (tagId: string) => {
-    const newSelectedTags = selectedTags.filter((id) => id !== tagId);
+  const onHandleRemoveTag = (tagId: number) => {
+    const newSelectedTags = selectedTags.filter((tag) => tag.id !== tagId);
     onTagsChange?.(newSelectedTags);
   };
 
   if (asChild && children) {
     return (
       <div onClick={() => setIsOpen(!isOpen)}>
-        {React.cloneElement(children as React.ReactElement<HTMLButtonElement>, {
+        {cloneElement(children as ReactElement<HTMLButtonElement>, {
           onclick: () => setIsOpen(!isOpen),
         })}
       </div>
@@ -243,53 +247,52 @@ const TagDropdownContent: React.FC<TagDropdownContentProps> = ({
 
   if (!isOpen) return null;
 
-  const onHandleTagToggle = (tagId: string) => {
-    let newSelectedTags: string[];
+  const onHandleTagToggle = (tag: Tag) => {
+    let newSelectedTags: Tag[];
 
-    if (selectedTags.includes(tagId)) {
-      newSelectedTags = selectedTags.filter((id) => id !== tagId);
+    if (selectedTags.includes(tag)) {
+      newSelectedTags = selectedTags.filter((t) => t.id !== tag.id);
     } else {
       if (maxTags && selectedTags.length >= maxTags) return;
-      newSelectedTags = [...selectedTags, tagId];
+      newSelectedTags = [...selectedTags, tag];
     }
 
     onTagsChange?.(newSelectedTags);
   };
 
   // Filter out selected tags from the dropdown list
-  const availableTags = tags.filter((tag) => !selectedTags.includes(tag.id));
+  const availableTags = tags.filter((tag) => !selectedTags.includes(tag));
 
   const filteredTags = searchable
     ? availableTags.filter((tag) =>
-        tag.label.toLowerCase().includes(searchQuery.toLowerCase())
+        tag.name.toLowerCase().includes(searchQuery.toLowerCase())
       )
     : availableTags;
 
   const onHandleCreateTag = () => {
     if (!allowCreate || !searchQuery.trim()) return;
 
-    const newTagId = searchQuery.toLowerCase().replace(/\s+/g, '-');
+    const newTagName = searchQuery.toLowerCase().replace(/\s+/g, '-');
 
     // Don't create if tag already exists (including selected ones)
-    if (tags.some((tag) => tag.id === newTagId)) return;
+    if (tags.some((tag) => tag.name === newTagName)) return;
 
-    const newTag: TagOption = {
-      id: newTagId,
-      label: searchQuery.trim(),
+    const newTag: Tag = {
+      id: 0,
+      name: searchQuery.trim(),
+      isActive: true,
     };
 
     // Add the new tag to the available tags (this would normally be handled by parent component)
-    const newSelectedTags = [...selectedTags, newTag.id];
+    const newSelectedTags = [...selectedTags, newTag];
     onTagsChange?.(newSelectedTags);
     setSearchQuery('');
   };
 
-  const selectedTagObjects = tags.filter((tag) =>
-    selectedTags.includes(tag.id)
-  );
+  const selectedTagObjects = tags.filter((tag) => selectedTags.includes(tag));
 
-  const onHandleRemoveTag = (tagId: string) => {
-    const newSelectedTags = selectedTags.filter((id) => id !== tagId);
+  const onHandleRemoveTag = (tagId: number) => {
+    const newSelectedTags = selectedTags.filter((t) => t.id !== tagId);
     onTagsChange?.(newSelectedTags);
   };
 
@@ -345,7 +348,7 @@ const TagDropdownContent: React.FC<TagDropdownContentProps> = ({
               <button
                 key={tag.id}
                 type="button"
-                onClick={() => !tag.disabled && onHandleTagToggle(tag.id)}
+                onClick={() => !tag.disabled && onHandleTagToggle(tag)}
                 disabled={tag.disabled}
                 className={`
                   flex items-center justify-between w-full px-3 py-2 text-sm text-left
@@ -383,12 +386,12 @@ const TagDropdownContent: React.FC<TagDropdownContentProps> = ({
 
 interface TagDropdownWrapperProps {
   placeholder?: string;
-  availableTags: TagOption[];
+  availableTags: Tag[];
   selectedTags: Tag[];
-  setSelectedTags: (tags: string[]) => void;
+  setSelectedTags: (tags: Tag[]) => void;
 }
 
-const TagDropdownWithSelection: React.FC<TagDropdownWrapperProps> = ({
+const TagDropdownWithSelection: FC<TagDropdownWrapperProps> = ({
   placeholder = 'Empty',
   availableTags,
   selectedTags,

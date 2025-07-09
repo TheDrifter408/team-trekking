@@ -7,20 +7,24 @@ import {
 } from '@tanstack/react-table';
 import { useDataTableStore } from '@/stores/zustand/data-table-store';
 import { Columns } from '@/components/data-table/columns';
-import { flatTasks } from '@/mock/task.ts';
 import { DataTableHeader } from './data-table-header';
 import { DataTableBody } from './data-table-body.tsx';
 import { DataTableProps } from '@/types/props/DataTableProps.ts';
-import { Task } from '@/types/props/Common.ts';
 import { buildTaskTree } from '@/lib/utils/data-table-utils.ts';
+import { useListStore } from '@/stores/zustand/list-store.ts';
 
 export const DataTable = ({ className = '' }: DataTableProps) => {
+  const { list } = useListStore();
   const parentRef = useRef<HTMLDivElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
   const [colSizing, setColSizing] = useState<ColumnSizingState>({});
-  const [tasks, setTasks] = useState<Task[]>(flatTasks);
+  const [tasks, setTasks] = useState([]);
 
   const taskTree = useMemo(() => buildTaskTree(tasks), [tasks]);
+
+  useEffect(() => {
+    if (list) setTasks(list?.tasks);
+  }, [list]);
 
   const setTable = useDataTableStore((state) => state.setTable);
 

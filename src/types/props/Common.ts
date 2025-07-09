@@ -143,7 +143,7 @@ export interface Task {
   id: string;
   name: string;
   progress: number;
-  status: TaskStatus;
+  statusItem: TaskStatus;
   startDate?: string;
   dueDate?: string;
   description?: string;
