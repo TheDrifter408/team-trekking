@@ -6,7 +6,7 @@ import {
   useDeleteTaskAssigneeMutation,
   useUpdateTaskAssigneeMutation,
 } from '@/service/rtkQueries/taskQuery.ts';
-import { handleMutation } from '@/lib/utils/utils.ts';
+import { getInitialAvatar, handleMutation } from '@/lib/utils/utils.ts';
 import { LABEL } from '@/lib/constants';
 
 const TaskAssignee = ({
@@ -31,17 +31,6 @@ const TaskAssignee = ({
     assignee.user.fullName.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Function to get initials from full name
-  const getInitials = (fullName: string) => {
-    const names = fullName.trim().split(' ');
-    if (names.length === 1) {
-      return names[0].substring(0, 2).toUpperCase();
-    }
-    return (
-      names[0].charAt(0) + names[names.length - 1].charAt(0)
-    ).toUpperCase();
-  };
-
   // Function to get avatar content (image or initials)
   const getAvatarContent = (assignee: Member) => {
     const hasImage = assignee.user.image && assignee.user.image.trim() !== '';
@@ -58,17 +47,17 @@ const TaskAssignee = ({
             target.style.display = 'none';
             const parent = target.parentElement;
             if (parent) {
-              parent.innerHTML = getInitials(assignee.user.fullName);
+              parent.innerHTML = getInitialAvatar(assignee.user.fullName);
             }
           }}
         />
       );
     } else {
-      return getInitials(assignee.user.fullName);
+      return getInitialAvatar(assignee.user.fullName);
     }
   };
 
-  const handleAssigneeToggle = async (assignee: Member) => {
+  const onHandleAssigneeToggle = async (assignee: Member) => {
     const isSelected = selectedAssignees.some(
       (a: Member) => a.id === assignee.id
     );
@@ -114,7 +103,7 @@ const TaskAssignee = ({
                 className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-gray-600 rounded-full flex items-center justify-center cursor-pointer hover:bg-gray-600 transition-colors z-10 opacity-0 group-hover:opacity-100"
                 onClick={(e) => {
                   e.stopPropagation();
-                  handleAssigneeToggle(assignee);
+                  onHandleAssigneeToggle(assignee);
                 }}
               >
                 <X size={10} className="text-white" />
@@ -135,7 +124,7 @@ const TaskAssignee = ({
                 className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-gray-600 rounded-full flex items-center justify-center cursor-pointer hover:bg-gray-600 transition-colors z-10 opacity-0 group-hover:opacity-100"
                 onClick={(e) => {
                   e.stopPropagation();
-                  handleAssigneeToggle(assignee);
+                  onHandleAssigneeToggle(assignee);
                 }}
               >
                 <X size={10} className="text-white" />
@@ -197,7 +186,7 @@ const TaskAssignee = ({
               <div
                 key={assignee.id}
                 className="flex items-center justify-between pl-4 py-1 hover:bg-gray-50 cursor-pointer transition-colors"
-                onClick={() => handleAssigneeToggle(assignee)}
+                onClick={() => onHandleAssigneeToggle(assignee)}
               >
                 <div className="flex items-center gap-3">
                   <div className="relative">
