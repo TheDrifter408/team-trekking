@@ -36,7 +36,7 @@ import {
   PlayCircle,
   PlusIcon,
 } from 'lucide-react';
-import { CSSProperties, FC, useEffect, useState } from 'react';
+import React, { CSSProperties, FC, useEffect, useState } from 'react';
 import { TaskMetaRow } from './task-meta-row';
 import { DatePickerWithRange } from '@/components/common/date-picker';
 import TagDropdownWithSelection from '@/components/common/tag-dropdown';
@@ -59,7 +59,10 @@ import {
   useLazyGetTaskQuery,
   useUpdateTaskMutation,
 } from '@/service/rtkQueries/taskQuery';
-import { Priority } from '@/types/request-response/workspace/ApiResponse';
+import {
+  Member,
+  Priority,
+} from '@/types/request-response/workspace/ApiResponse';
 import { Icon } from '@/assets/icon-path';
 import TimeEstimateDropdown from '@/components/common/estimate-time-dropdown';
 import { TaskSkeleton } from './loading';
@@ -73,17 +76,14 @@ import { PageHeader } from './page-header';
 import { socket } from '@/lib/constants';
 import { $convertToMarkdownString, TRANSFORMERS } from '@lexical/markdown';
 import { useDebounceCallback } from '@/lib/hooks/use-debounceCallback';
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/shadcn-ui/select';
 import { useWorkspaceStore } from '@/stores/zustand/workspace-store';
 import { TaskPrioritySelect } from './task-priority-select';
 import TaskStatusDialog from '@/components/common/task-status-dialog';
+import { AssigneePopup } from '@/components/common/assignee-popover.tsx';
+import { StatusItem } from '@/types/request-response/list/ApiResponse.ts';
+import { useTMTStore } from '@/stores/zustand';
+import { PlaceholderAvatar } from '@/components/common/avatar-generator.tsx';
+import AssigneeSelector from '@/components/common/task-assignee.tsx';
 
 const availableTags: TagOption[] = [
   { id: 'initiative', label: 'initiative' },
@@ -97,20 +97,13 @@ const availableTags: TagOption[] = [
   { id: 'ini', label: 'ini' },
 ];
 
-const priorityFlags: Record<string, string> = {
-  low: 'rgb(29, 78, 216)', // blue-700
-  mid: 'rgb(252, 231, 53)', // yellow-700
-  high: 'rgb(185, 28, 28)', // red-700
-  none: '',
-};
-
 interface TaskDialogProps {
   taskId: string;
 }
 
 export const TaskDialog: FC<TaskDialogProps> = ({ taskId }) => {
-  const { workspaceGlobal } = useWorkspaceStore();
-
+  const { spaces, workspaceGlobal, members } = useWorkspaceStore();
+  const { user } = useTMTStore();
   const priority = workspaceGlobal?.priority ?? [];
   // Hover states
   const [enterDates, setEnterDates] = useState<boolean>(false);
@@ -131,6 +124,9 @@ export const TaskDialog: FC<TaskDialogProps> = ({ taskId }) => {
 
   const store = createDataTableStore({});
   const { open: isSidebarOpen } = useSidebar();
+  const [assignees, setAssignees] = useState<Member[]>([]);
+  const [isAssigneeOpen, setIsAssigneeOpen] = useState(false);
+  const currentUserId = user?.userData.id ?? 0;
 
   const [getTaskData, { data: taskData, isFetching }] = useLazyGetTaskQuery();
   const [updateTask] = useUpdateTaskMutation();
@@ -267,6 +263,20 @@ export const TaskDialog: FC<TaskDialogProps> = ({ taskId }) => {
       }
     }
   };
+
+  const onSelectAssignee = (member: Member) => {
+    if (member.user.id === currentUserId) {
+      return;
+    }
+    setAssignees((prev) => {
+      const isAlreadySelected = prev.some((a) => a.id === member.id);
+      return isAlreadySelected ? prev : [...prev, member];
+    });
+  };
+  const onRemoveAssignee = (assigneeId: number) => {
+    setAssignees((prev) => prev.filter((m) => m.id !== assigneeId));
+  };
+
   // useEffect to handle web socket operations and its side effects
   useEffect(() => {
     const room = 'task123';
@@ -522,10 +532,11 @@ export const TaskDialog: FC<TaskDialogProps> = ({ taskId }) => {
                     hover={enterAssignee}
                     onHoverChange={setEnterAssignee}
                   >
-                    {/* TODO: Populate with proper assignees */}
+                    {/*  TODO: Populate with proper assignees
                     {taskData && taskData?.assignees.length > 0
                       ? LABEL.NO_ASSIGNEES_SELECTED
-                      : LABEL.NO_ASSIGNEES_SELECTED}
+                      : LABEL.NO_ASSIGNEES_SELECTED}*/}
+                    <AssigneeSelector />
                   </TaskMetaRow>
                   {/* PRIORITY */}
                   <TaskMetaRow
