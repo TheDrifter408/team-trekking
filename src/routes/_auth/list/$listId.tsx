@@ -30,12 +30,12 @@ const List = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const { data } = await handleMutation<Array<ListTasksResponse>>(
+      const { data } = await handleMutation<ListTasksResponse>(
         fetchListTasks,
         listId
       );
       if (data) {
-        setList(data[0]);
+        setList(data);
       }
     };
     if (listId) fetchData();

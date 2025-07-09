@@ -96,18 +96,18 @@ export const Columns: ColumnDef<Task>[] = [
       icon: 'calendaradd',
     },
   },
-  {
-    accessorKey: COLUMN_META.ACCESSOR_KEY.END_DATE,
-    header: COLUMN_META.HEADER.END_DATE,
-    cell: ({ row }) => <DateColumn task={row.original} dateType="end" />,
-    size: 160,
-    minSize: 140,
-    maxSize: 200,
-    enableResizing: true,
-    meta: {
-      icon: 'calendar',
-    },
-  },
+  // {
+  //   accessorKey: COLUMN_META.ACCESSOR_KEY.END_DATE,
+  //   header: COLUMN_META.HEADER.END_DATE,
+  //   cell: ({ row }) => <DateColumn task={row.original} dateType="end" />,
+  //   size: 160,
+  //   minSize: 140,
+  //   maxSize: 200,
+  //   enableResizing: true,
+  //   meta: {
+  //     icon: 'calendar',
+  //   },
+  // },
   {
     accessorKey: COLUMN_META.ACCESSOR_KEY.OPTIONS,
     header: () => {

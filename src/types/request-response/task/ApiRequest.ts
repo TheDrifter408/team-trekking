@@ -24,6 +24,7 @@ export interface CreateTaskRequest {
   typeId: number;
   priorityId?: number;
   assigneeIds?: number[];
+  statusViewGroupId?: number;
   statusGroupId?: number;
   statusItemId?: number;
   dueDate?: string | null;
