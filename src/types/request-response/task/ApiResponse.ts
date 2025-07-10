@@ -1,7 +1,5 @@
 import {
   Folder,
-  Space,
-  List,
   CreatedBy,
   Priority,
   Status,
@@ -32,15 +30,19 @@ export interface Task {
   isActive: boolean;
   isArchive: boolean;
   taskUid: string | null;
+  subTasks?: Task[];
   type: Type;
-  tags: Tag[];
-  priority: Priority;
-  statusItem: StatusItem;
-  owner: User;
-  parentTask: Task;
-  subTasks: Task[];
-  assignees: Assignee[];
-  list: List;
+  tags?: Tag[];
+  priority: Priority | null;
+  statusItem: StatusItem | null;
+  owner?: User;
+  parentTask?: Task;
+  taskCheckLists?: CheckList[];
+  assignees?: Assignee[];
+  outgoingRelations?: TaskRelations[];
+  incomingRelations?: TaskRelations[];
+  list?: List;
+  folder?: Folder;
 }
 
 export interface Tag {
@@ -82,17 +84,63 @@ export interface Assignee {
   forcePasswordChange: boolean;
   isActive: boolean;
 }
-export interface Relation {
-  [key: string]: any;
+
+export interface TaskRelations {
+  id: number;
+  task: Task;
+  relatedTask: Task;
+  relationType: RelationType;
 }
-export interface Link {
-  [key: string]: any;
+
+export interface RelationType {
+  id: number;
+  name: string;
+  description: string;
 }
-export interface Activity {
-  [key: string]: any;
+
+export interface List {
+  id: number;
+  name: string;
+  iconUrl: string;
+  avatarKey: string;
+  visibility: string;
+  color: string;
+  startDate: string;
+  dueDate: string;
+  isActive: boolean;
+  createdAt: string;
+  isInheritStatus: boolean;
+  isPrivate: boolean;
+  space: Space;
+  folder: Folder | null;
 }
-export interface Tag {
-  [key: string]: any;
+
+export interface Space {
+  id: number;
+  name: string;
+  iconUrl: string;
+  avatarKey: string;
+  visibility: string;
+  color: string;
+  description: string;
+  isPrivate: boolean;
+  startDate: string;
+  dueDate: string;
+  isActive: boolean;
+  createdAt: string;
+  workspace: Workspace;
+}
+
+export interface Workspace {
+  id: number;
+  name: string;
+  color: string;
+  iconUrl: string | null;
+  customManageType: string | null;
+  customDiscoverySource: string | null;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
 }
 export interface CreateTaskResponse {
   id: number;
