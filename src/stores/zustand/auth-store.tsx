@@ -2,15 +2,17 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { UserResponse } from '@/types/request-response/auth/ApiResponse.ts';
 
-interface TeamTrackingState {
+interface AuthState {
   user: UserResponse | null;
   saveUser: (UserResponse: UserResponse) => void;
   getUser: () => UserResponse | null;
   clearUser: () => void;
   updateUser: (user: UserResponse) => void;
+  isFirstTimeLogin: boolean;
+  setIsFirstTimeLogin: (value: boolean) => void;
 }
 
-export const useTMTStore = create<TeamTrackingState>()(
+export const useAuthStore = create<AuthState>()(
   persist(
     (set, get) => ({
       user: null,
@@ -26,9 +28,11 @@ export const useTMTStore = create<TeamTrackingState>()(
           },
         });
       },
+      isFirstTimeLogin: true, // assume it's the first login by default
+      setIsFirstTimeLogin: (value) => set({ isFirstTimeLogin: value }),
     }),
     {
-      name: 'team-tracking-storage',
+      name: 'auth-storage', // key in localStorage
     }
   )
 );
