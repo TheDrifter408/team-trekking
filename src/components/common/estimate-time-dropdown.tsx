@@ -21,21 +21,37 @@ interface TimeEstimateComponentProps {
 }
 
 const parseTimeString = (input: string): string => {
-  const parts = input.trim().toLowerCase().split(/[\s]+/);
+  const trimmed = input.trim().toLowerCase();
+  if (!trimmed) return '';
+
+  // Split by spaces but keep the units with their numbers
+  const parts = trimmed.split(/\s+/);
   let hours = 0;
   let minutes = 0;
-  parts.forEach((part) => {
-    if (part.includes('h')) hours += parseInt(part.replace('h', ''), 10) || 0;
-    else if (part.includes('m'))
-      minutes += parseInt(part.replace('m', ''), 10) || 0;
-    else if (!isNaN(Number(part)))
-      hours === 0 ? (hours = Number(part)) : (minutes = Number(part));
-  });
-  const ms = (hours * 60 + minutes) * 60 * 1000;
-  if (ms === 0) return '';
 
-  // Format as "Xh Ym" instead of using humanizeDuration
-  const totalMinutes = Math.floor(ms / (60 * 1000));
+  parts.forEach((part) => {
+    if (part.includes('h')) {
+      const num = parseInt(part.replace('h', ''), 10);
+      if (!isNaN(num)) hours += num;
+    } else if (part.includes('m')) {
+      const num = parseInt(part.replace('m', ''), 10);
+      if (!isNaN(num)) minutes += num;
+    } else if (!isNaN(Number(part))) {
+      // If it's just a number without suffix
+      const num = Number(part);
+      if (hours === 0) {
+        hours = num;
+      } else {
+        minutes = num;
+      }
+    }
+  });
+
+  // If no valid time parsed, return empty
+  if (hours === 0 && minutes === 0) return '';
+
+  // Format as "Xh Ym"
+  const totalMinutes = hours * 60 + minutes;
   const h = Math.floor(totalMinutes / 60);
   const m = totalMinutes % 60;
 
@@ -47,26 +63,59 @@ const parseTimeString = (input: string): string => {
 
 // Helper function to convert time string to minutes
 const parseTimeToMinutes = (input: string): number => {
-  const parts = input.trim().toLowerCase().split(/[\s]+/);
+  const trimmed = input.trim().toLowerCase();
+  if (!trimmed) return 0;
+
+  const parts = trimmed.split(/\s+/);
   let hours = 0;
   let minutes = 0;
 
   parts.forEach((part) => {
     if (part.includes('h')) {
-      hours += parseInt(part.replace('h', ''), 10) || 0;
+      const num = parseInt(part.replace('h', ''), 10);
+      if (!isNaN(num)) hours += num;
     } else if (part.includes('m')) {
-      minutes += parseInt(part.replace('m', ''), 10) || 0;
+      const num = parseInt(part.replace('m', ''), 10);
+      if (!isNaN(num)) minutes += num;
     } else if (!isNaN(Number(part))) {
       // If it's just a number without suffix, treat as hours if no hours set yet, otherwise minutes
+      const num = Number(part);
       if (hours === 0) {
-        hours = Number(part);
+        hours = num;
       } else {
-        minutes = Number(part);
+        minutes = num;
       }
     }
   });
 
   return hours * 60 + minutes;
+};
+
+// Helper function to suggest formatted time based on input
+const suggestTimeFormat = (input: string): string => {
+  const trimmed = input.trim().toLowerCase();
+  if (!trimmed) return '';
+
+  // If input already has proper format, don't suggest
+  if (trimmed.includes('h') || trimmed.includes('m')) {
+    return parseTimeString(input);
+  }
+
+  // If it's just a number, suggest both hour and minute format
+  const num = Number(trimmed);
+  if (!isNaN(num) && num > 0) {
+    // If number is reasonable for hours (1-24), suggest hours
+    if (num <= 24) {
+      return `${num}h`;
+    }
+    // If number is large, suggest minutes
+    else if (num <= 1440) {
+      // 24 hours = 1440 minutes
+      return `${num}m`;
+    }
+  }
+
+  return parseTimeString(input);
 };
 
 export const TimeEstimateDropdown: React.FC<TimeEstimateComponentProps> = ({
@@ -91,34 +140,49 @@ export const TimeEstimateDropdown: React.FC<TimeEstimateComponentProps> = ({
 
     setInputValue(filteredVal);
 
-    const parsed = parseTimeString(filteredVal);
-    setSuggestion(parsed);
-    // Only show suggestion if there's a meaningful difference and input is not empty
+    const suggested = suggestTimeFormat(filteredVal);
+    setSuggestion(suggested);
+
+    // Show suggestion if:
+    // 1. We have a suggestion
+    // 2. The suggestion is different from current input
+    // 3. The input is not empty
+    // 4. The input doesn't already have the same format
     setShowSuggestion(
-      !!parsed && parsed !== filteredVal && filteredVal.trim() !== ''
+      !!suggested &&
+        suggested !== filteredVal &&
+        filteredVal.trim() !== '' &&
+        suggested !== parseTimeString(filteredVal)
     );
   };
 
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       e.preventDefault();
-      const parsed = parseTimeString(inputValue);
-      if (parsed) {
-        setInputValue(parsed);
-        setSavedTimeEstimate(parsed);
-        // Trigger callback with time in minutes
-        const minutes = parseTimeToMinutes(parsed);
-        onTimeEstimateChange?.(minutes);
+      let finalValue = inputValue;
+
+      // If we have a suggestion showing, use it
+      if (showSuggestion && suggestion) {
+        finalValue = suggestion;
       } else {
-        setSavedTimeEstimate(inputValue);
-        // Try to parse raw input value
-        const minutes = parseTimeToMinutes(inputValue);
-        if (minutes > 0) {
-          onTimeEstimateChange?.(minutes);
+        // Otherwise, try to parse the input
+        const parsed = parseTimeString(inputValue);
+        if (parsed) {
+          finalValue = parsed;
         }
       }
+
+      setInputValue(finalValue);
+      setSavedTimeEstimate(finalValue);
+
+      // Trigger callback with time in minutes
+      const minutes = parseTimeToMinutes(finalValue);
+      if (minutes > 0) {
+        onTimeEstimateChange?.(minutes);
+      }
+
       setShowSuggestion(false);
-      setIsOpen(false); // Close the dropdown
+      setIsOpen(false);
       ref.current?.blur();
     }
   };
@@ -135,26 +199,46 @@ export const TimeEstimateDropdown: React.FC<TimeEstimateComponentProps> = ({
     setInputValue(suggestion);
     setSavedTimeEstimate(suggestion);
     setShowSuggestion(false);
+
+    // Trigger callback with time in minutes
+    const minutes = parseTimeToMinutes(suggestion);
+    if (minutes > 0) {
+      onTimeEstimateChange?.(minutes);
+    }
+
     ref.current?.focus();
   };
 
   const onBlur = () => {
     // Small delay to allow popover click to register
     setTimeout(() => {
+      let finalValue = inputValue;
+
+      // Try to parse and format the input
       const parsed = parseTimeString(inputValue);
-      if (parsed && parsed !== inputValue) {
-        setInputValue(parsed); // update visible input
-        setSavedTimeEstimate(parsed); // update saved
-      } else {
-        setSavedTimeEstimate(inputValue); // fallback to raw value
+      if (parsed) {
+        finalValue = parsed;
+        setInputValue(finalValue);
       }
+
+      setSavedTimeEstimate(finalValue);
       setShowSuggestion(false);
+
+      // Trigger callback with time in minutes
+      const minutes = parseTimeToMinutes(finalValue);
+      if (minutes > 0) {
+        onTimeEstimateChange?.(minutes);
+      }
     }, 150);
   };
 
   const onFocus = () => {
-    // Only show suggestion if we already have one and input has meaningful content
-    if (suggestion && inputValue.trim() !== '' && suggestion !== inputValue) {
+    // Regenerate suggestion when focusing
+    const suggested = suggestTimeFormat(inputValue);
+    setSuggestion(suggested);
+
+    // Show suggestion if we have one and it's different from input
+    if (suggested && inputValue.trim() !== '' && suggested !== inputValue) {
       setShowSuggestion(true);
     }
   };
