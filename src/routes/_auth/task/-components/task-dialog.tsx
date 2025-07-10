@@ -79,7 +79,7 @@ import TaskStatusDialog from '@/components/common/task-status-dialog';
 import TaskAssignee from '@/components/common/task-assignee.tsx';
 import { StatusItem } from '@/types/request-response/list/ApiResponse';
 import { useGetListTagsQuery } from '@/service/rtkQueries/listQuery.ts';
-import { useSocketRoom } from '@/lib/hooks/useSocketRoom.ts';
+import { useSocketRoom } from '@/lib/hooks/use-socket-room.ts';
 
 interface TaskDialogProps {
   taskId: string;
