@@ -6,6 +6,7 @@ import {
   Priority,
   Status,
   Role,
+  Member,
 } from '@/types/request-response/workspace/ApiResponse';
 import { StatusItem } from '@/types/request-response/list/ApiResponse';
 export interface CheckList {
@@ -39,7 +40,7 @@ export interface Task {
   owner: User;
   parentTask: Task;
   subTasks: Task[];
-  assignees: Assignee[];
+  assignees: Member[];
   list: List;
 }
 
@@ -66,15 +67,6 @@ export interface Assignee {
 }
 
 export interface User {
-  id: number;
-  fullName: string;
-  email: string;
-  image: string | null;
-  forcePasswordChange: boolean;
-  isActive: boolean;
-}
-
-export interface Assignee {
   id: number;
   fullName: string;
   email: string;

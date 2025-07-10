@@ -7,7 +7,7 @@ export const LABEL = {
   SHARED_WITH_ME: 'Shared with me',
   CREATE_SPACE: 'Create space',
   SPACES: 'Spaces',
-  NO_ASSIGNEES_SELECTED: 'No assignees.',
+  NO_ASSIGNEES_SELECTED: 'No assignees',
   DESTRUCTIVE: 'destructive',
   LOW: 'Low',
   NORMAL: 'Normal',
@@ -297,4 +297,5 @@ export const LABEL = {
   ADD_TIME: 'Add Time',
   RECENTS: 'Recents',
   TASK_CREATION_FAILED: 'Task creation failed',
+  ASSIGNEES: 'Assignees',
 };
