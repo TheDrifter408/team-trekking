@@ -81,18 +81,6 @@ import TaskAssignee from '@/components/common/task-assignee.tsx';
 import { StatusItem } from '@/types/request-response/list/ApiResponse';
 import { useGetListTagsQuery } from '@/service/rtkQueries/listQuery.ts';
 
-const availableTags: Tag[] = [
-  { id: 0, name: 'initiative', isActive: true },
-  { id: 1, name: 'backend', isActive: true },
-  { id: 2, name: 'common docs', isActive: true },
-  { id: 3, name: 'complex', isActive: true },
-  { id: 4, name: 'fail1', isActive: true },
-  { id: 5, name: 'fail2', isActive: true },
-  { id: 6, name: 'fail3', isActive: true },
-  { id: 7, name: 'frontend', isActive: true },
-  { id: 8, name: 'ini', isActive: true },
-];
-
 interface TaskDialogProps {
   taskId: string;
 }
@@ -123,7 +111,8 @@ export const TaskDialog: FC<TaskDialogProps> = ({ taskId }) => {
 
   const [getTaskData, { data: taskData, isFetching }] = useLazyGetTaskQuery();
   const [updateTask] = useUpdateTaskMutation();
-
+  const spaceId =
+    taskData?.list?.folder?.space?.id ?? taskData?.list?.space?.id;
   // get the data for the tags
   const { data: tagData } = useGetListTagsQuery(taskData?.list.id, {
     skip: !taskData?.list.id,
@@ -553,7 +542,7 @@ export const TaskDialog: FC<TaskDialogProps> = ({ taskId }) => {
                   >
                     <TagDropdownWithSelection
                       taskId={Number(taskId)}
-                      spaceId={28}
+                      spaceId={spaceId}
                     />
                   </TaskMetaRow>
                 </div>
