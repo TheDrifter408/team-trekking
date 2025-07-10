@@ -28,6 +28,7 @@ export interface CreateTaskRequest {
   statusGroupId?: number;
   statusItemId?: number;
   dueDate?: string | null;
+  tagIds?: number[] | null;
 }
 
 export interface UpdateTaskRequest {

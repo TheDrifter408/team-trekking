@@ -132,15 +132,6 @@ export interface TagCreateResponse {
   status: Status;
 }
 
-export interface CreatedBy {
-  id: number;
-  fullName: string;
-  email: string;
-  image: string;
-  forcePasswordChange: boolean;
-  isActive: boolean;
-}
-
 export interface Status {
   id: number;
   name: string;

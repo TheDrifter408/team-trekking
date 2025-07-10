@@ -53,7 +53,11 @@ import {
 import { StatusPopup } from '@/components/common/status-popup..tsx';
 import { AssigneePopup } from '@/components/common/assignee-popover.tsx';
 import { CreateTaskResponse } from '@/types/request-response/task/ApiResponse.ts';
-import { StatusItem } from '@/types/request-response/list/ApiResponse.ts';
+import {
+  ListTasksResponse,
+  StatusItem,
+} from '@/types/request-response/list/ApiResponse.ts';
+import { TagListResponse } from '@/types/request-response/space/ApiResponse.ts';
 import { TaskDate } from '@/components/common/task-date.tsx';
 import {
   format,
@@ -63,6 +67,9 @@ import {
   isTomorrow,
   isYesterday,
 } from 'date-fns';
+import { useLazyGetListTasksQuery } from '@/service/rtkQueries/listQuery.ts';
+import { useLazyGetTagsQuery } from '@/service/rtkQueries/spaceQuery.ts';
+import { TagDialog } from '@/components/common/tag-dialog.tsx';
 
 interface Props {
   isOpen: boolean;
@@ -72,25 +79,27 @@ interface Props {
 }
 
 export const CreateTask = ({ isOpen, setIsOpen, children, listId }: Props) => {
-  const { navigate, routes } = useAppNavigation();
-  const { user } = useTMTStore();
-  const { list } = useListStore();
-  const { spaces, workspaceGlobal, members } = useWorkspaceStore();
+  const { list, setList } = useListStore();
+  const { spaces, members } = useWorkspaceStore();
+  const [fetchListTasks] = useLazyGetListTasksQuery();
   const [createTask] = useCreateTaskMutation();
+  const [fetchTags] = useLazyGetTagsQuery();
 
   const [name, setName] = useState('');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isTagDialogOpen, setIsTagDialogOpen] = useState(false);
   const [selectedList, setSelectedList] = useState<List | null>(null);
   const [status, setStatus] = useState<StatusItem | null>(null);
   const [assignees, setAssignees] = useState<Member[]>([]);
   const [isAssigneeOpen, setIsAssigneeOpen] = useState(false);
+  const [selectedTags, setSelectedTags] = useState<TagListResponse[]>([]);
+  const [spaceTags, setSpaceTags] = useState<Tag[]>([]);
   const [dueDate, setDueDate] = useState<string>('');
   const [selectedPriority, setSelectedPriority] = useState<Priority | null>(
     null
   );
 
   const taskType = 1;
-  const currentUserId = user?.userData.id ?? 0;
 
   useEffect(() => {
     if (list && list.status.groups) {
@@ -103,17 +112,39 @@ export const CreateTask = ({ isOpen, setIsOpen, children, listId }: Props) => {
     }
   }, [list]);
 
+  // Get the List data based on ListId & Space ID.
   useEffect(() => {
+    const getTags = async (id: number) => {
+      const response = await handleMutation<TagListResponse[]>(fetchTags, id);
+      if (response.data) {
+        setSpaceTags(response.data);
+      }
+    };
     if (!spaces || !listId) return;
 
-    const allLists = spaces.flatMap((space) => [
-      ...space.lists,
-      ...space.folders.flatMap((folder) => folder.lists),
-    ]);
+    let foundList: List | undefined = undefined;
+    let foundSpaceId: number | null = null;
 
-    const currentList = allLists.find((list) => list.id === listId);
-    if (currentList) {
-      setSelectedList(currentList);
+    for (const space of spaces) {
+      const listInSpace = space.lists.find((list) => list.id === listId);
+      if (listInSpace) {
+        foundList = listInSpace;
+        foundSpaceId = space.id;
+        break;
+      }
+      for (const folder of space.folders) {
+        const listInFolder = folder.lists.find((list) => list.id === listId);
+        if (listInFolder) {
+          foundList = listInFolder;
+          foundSpaceId = space.id;
+          break;
+        }
+      }
+      if (foundList) break;
+    }
+    if (foundList && foundSpaceId) {
+      setSelectedList(foundList);
+      getTags(foundSpaceId);
     }
   }, [listId, spaces]);
 
@@ -124,9 +155,6 @@ export const CreateTask = ({ isOpen, setIsOpen, children, listId }: Props) => {
     setSelectedPriority(priority);
   };
   const onSelectAssignee = (member: Member) => {
-    if (member.user.id === currentUserId) {
-      return;
-    }
     setAssignees((prev) => {
       const isAlreadySelected = prev.some((a) => a.id === member.id);
       return isAlreadySelected ? prev : [...prev, member];
@@ -134,6 +162,15 @@ export const CreateTask = ({ isOpen, setIsOpen, children, listId }: Props) => {
   };
   const onRemoveAssignee = (assigneeId: number) => {
     setAssignees((prev) => prev.filter((m) => m.id !== assigneeId));
+  };
+  const onSelectTag = (tag: TagListResponse) => {
+    setSelectedTags((prev) => {
+      const isSelected = prev.some((x) => x.id === tag.id);
+      return isSelected ? prev : [...prev, tag];
+    });
+  };
+  const onRemoveTag = (tagId: number) => {
+    setSelectedTags((prev) => prev.filter((x) => x.id !== tagId));
   };
   const onSelectStatus = (status: StatusItem) => {
     setStatus(status);
@@ -160,15 +197,24 @@ export const CreateTask = ({ isOpen, setIsOpen, children, listId }: Props) => {
       statusGroupId: statusGroupId,
       statusItemId: status?.id,
       dueDate: dueDate || null,
+      tagIds: selectedTags.map((tag) => tag.id),
     };
     try {
       const { data } = await handleMutation<CreateTaskResponse>(
         createTask,
         payload
       );
-      if (data) navigate(routes.task, data.id);
-      else toast.error(LABEL.TASK_CREATION_FAILED);
-    } catch (error: unknown) {
+      if (data) {
+        const { data: newList } = await handleMutation<ListTasksResponse>(
+          fetchListTasks,
+          listId
+        );
+        if (newList) {
+          setList(newList);
+        }
+        setIsOpen(false);
+      } else toast.error(LABEL.TASK_CREATION_FAILED);
+    } catch {
       toast.error(LABEL.TASK_CREATION_FAILED);
     }
   };
@@ -307,8 +353,14 @@ export const CreateTask = ({ isOpen, setIsOpen, children, listId }: Props) => {
                         </Button>
                       )}
                     </PriorityPopover>
-                    <Button variant={'outline'} className={'h-[24px]'}>
-                      <Icon name={'tag'} /> {LABEL.TAGS}
+                    <Button
+                      onClick={() => setIsTagDialogOpen(true)}
+                      variant={'outline'}
+                      className={'h-[24px]'}
+                    >
+                      <Icon name={'tag'} />
+                      {selectedTags.length > 0 && selectedTags.length}{' '}
+                      {LABEL.TAGS}
                     </Button>
                     <Button
                       variant={'outline'}
@@ -339,6 +391,14 @@ export const CreateTask = ({ isOpen, setIsOpen, children, listId }: Props) => {
           onRemoveAssignee={onRemoveAssignee}
         />
       )}
+      <TagDialog
+        isOpen={isTagDialogOpen}
+        setIsDialogOpen={setIsTagDialogOpen}
+        tags={spaceTags}
+        onSelectTag={onSelectTag}
+        selectedTags={selectedTags}
+        onRemoveTag={onRemoveTag}
+      />
     </div>
   );
 };
