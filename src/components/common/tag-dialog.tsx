@@ -6,7 +6,7 @@ import {
 import { Input } from '@/components/shadcn-ui/input.tsx';
 import { Badge } from '@/components/shadcn-ui/badge.tsx';
 import { X } from 'lucide-react';
-import { Tag } from '@/types/request-response/space/ApiResponse';
+import { TagListResponse } from '@/types/request-response/space/ApiResponse';
 import { getContrastTextColor } from '@/lib/utils/utils.ts';
 
 export const TagDialog = ({
@@ -23,9 +23,9 @@ export const TagDialog = ({
   searchTerm?: string;
   setSearchTerm?: (term: string) => void;
   setIsDialogOpen: (open: boolean) => void;
-  tags: Tag[];
-  selectedTags?: Tag[];
-  onSelectTag: (tag: Tag) => void;
+  tags: TagListResponse[];
+  selectedTags?: TagListResponse[];
+  onSelectTag: (tag: TagListResponse) => void;
   onRemoveTag: (tagId: number) => void;
 }) => {
   // Filter out selected tags from available tags

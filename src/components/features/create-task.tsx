@@ -57,7 +57,7 @@ import {
   ListTasksResponse,
   StatusItem,
 } from '@/types/request-response/list/ApiResponse.ts';
-import { Tag } from '@/types/request-response/space/ApiResponse.ts';
+import { TagListResponse } from '@/types/request-response/space/ApiResponse.ts';
 import { TaskDate } from '@/components/common/task-date.tsx';
 import {
   format,
@@ -92,7 +92,7 @@ export const CreateTask = ({ isOpen, setIsOpen, children, listId }: Props) => {
   const [status, setStatus] = useState<StatusItem | null>(null);
   const [assignees, setAssignees] = useState<Member[]>([]);
   const [isAssigneeOpen, setIsAssigneeOpen] = useState(false);
-  const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
+  const [selectedTags, setSelectedTags] = useState<TagListResponse[]>([]);
   const [spaceTags, setSpaceTags] = useState<Tag[]>([]);
   const [dueDate, setDueDate] = useState<string>('');
   const [selectedPriority, setSelectedPriority] = useState<Priority | null>(
@@ -115,7 +115,7 @@ export const CreateTask = ({ isOpen, setIsOpen, children, listId }: Props) => {
   // Get the List data based on ListId & Space ID.
   useEffect(() => {
     const getTags = async (id: number) => {
-      const response = await handleMutation<Tag[]>(fetchTags, id);
+      const response = await handleMutation<TagListResponse[]>(fetchTags, id);
       if (response.data) {
         setSpaceTags(response.data);
       }
@@ -163,7 +163,7 @@ export const CreateTask = ({ isOpen, setIsOpen, children, listId }: Props) => {
   const onRemoveAssignee = (assigneeId: number) => {
     setAssignees((prev) => prev.filter((m) => m.id !== assigneeId));
   };
-  const onSelectTag = (tag: Tag) => {
+  const onSelectTag = (tag: TagListResponse) => {
     setSelectedTags((prev) => {
       const isSelected = prev.some((x) => x.id === tag.id);
       return isSelected ? prev : [...prev, tag];
