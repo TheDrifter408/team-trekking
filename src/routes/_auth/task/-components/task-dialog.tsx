@@ -80,6 +80,7 @@ import TaskStatusDialog from '@/components/common/task-status-dialog';
 import TaskAssignee from '@/components/common/task-assignee.tsx';
 import { StatusItem } from '@/types/request-response/list/ApiResponse';
 import { useGetListTagsQuery } from '@/service/rtkQueries/listQuery.ts';
+import { useSocketRoom } from '@/lib/hooks/useSocketRoom.ts';
 
 interface TaskDialogProps {
   taskId: string;
@@ -251,28 +252,31 @@ export const TaskDialog: FC<TaskDialogProps> = ({ taskId }) => {
     }
   };
 
-  // useEffect to handle web socket operations and its side effects
-  useEffect(() => {
-    const room = 'task123';
-    // Join the room
-    socket.emit('join_room', { room });
-    // Listen to real-time updates
-    socket.on(room, (socketData) => {
-      const { name, startDate, dueDate, description } = socketData.data;
-      setTaskName(name);
-      setDateRange({
-        from: new Date(startDate),
-        to: new Date(dueDate),
-      });
-      setDescription(description);
-    });
-
-    // Cleanup
-    return () => {
-      socket.emit('leave_room', { room });
-      socket.off(room);
-    };
-  }, []);
+  useSocketRoom<Task>({
+    roomPrefix: 'task',
+    roomSuffix: taskData?.taskUid as string,
+    socket,
+    onData: ({ name, startDate, dueDate, description }) => {
+      if (name) setTaskName(name);
+      if (description) setDescription(description);
+      if (startDate && dueDate) {
+        setDateRange({
+          from: new Date(startDate),
+          to: new Date(dueDate),
+        });
+      } else if (startDate) {
+        setDateRange((prevState) => ({
+          ...prevState,
+          from: new Date(startDate),
+        }));
+      } else if (dueDate) {
+        setDateRange((prevState) => ({
+          ...prevState,
+          to: new Date(dueDate),
+        }));
+      }
+    },
+  });
 
   useEffect(() => {
     getTaskData(Number(taskId));
