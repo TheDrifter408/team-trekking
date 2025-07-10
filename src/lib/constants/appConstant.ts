@@ -262,6 +262,28 @@ const ACTION = {
   CREATE_DASHBOARD: 'create_dashboard',
   EDIT_SPACE: 'edit_space',
 };
+// Define a constant array of Material Design 200 colors
+const MATERIAL_LIGHT_COLORS: readonly string[] = [
+  '#EF9A9A', // Red 200
+  '#F48FB1', // Pink 200
+  '#CE93D8', // Purple 200
+  '#B39DDB', // Deep Purple 200
+  '#9FA8DA', // Indigo 200
+  '#90CAF9', // Blue 200
+  '#81D4FA', // Light Blue 200
+  '#80DEEA', // Cyan 200
+  '#80CBC4', // Teal 200
+  '#A5D6A7', // Green 200
+  '#C5E1A5', // Light Green 200
+  '#E6EE9C', // Lime 200
+  '#FFF59D', // Yellow 200
+  '#FFE082', // Amber 200
+  '#FFCC80', // Orange 200
+  '#FFAB91', // Deep Orange 200
+  '#BCAAA4', // Brown 200
+  '#E0E0E0', // Grey 300
+  '#B0BEC5', // Blue Grey 200
+] as const;
 
 export {
   API_URLS,
@@ -275,4 +297,5 @@ export {
   LOW_PRIORITY,
   ACTION,
   socket,
+  MATERIAL_LIGHT_COLORS,
 };

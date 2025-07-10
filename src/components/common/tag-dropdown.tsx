@@ -11,7 +11,10 @@ import {
   useDeleteTaskTagMutation,
   useUpdateTaskTagMutation,
 } from '@/service/rtkQueries/taskQuery.ts';
-import { getRandomHexColor, handleMutation } from '@/lib/utils/utils.ts';
+import {
+  getRandomMaterial100Color,
+  handleMutation,
+} from '@/lib/utils/utils.ts';
 import {
   useCreateTagMutation,
   useLazyGetTagsQuery,
@@ -190,14 +193,14 @@ const TagContent: FC<{ className?: string; searchable?: boolean }> = ({
     const { data } = await handleMutation(createTag, {
       spaceId,
       name: newTagName,
-      color: getRandomHexColor(),
+      color: getRandomMaterial100Color(),
     });
 
     if (data) {
       const newTag: Tag = {
         id: Date.now(),
         name: newTagName,
-        color: getRandomHexColor(),
+        color: getRandomMaterial100Color(),
         isActive: true,
       };
 
@@ -311,7 +314,7 @@ const TagContent: FC<{ className?: string; searchable?: boolean }> = ({
 
 const TagDropdown: FC<{
   taskId: number;
-  spaceId: number;
+  spaceId?: number;
   children: ReactNode;
 }> = ({ taskId, spaceId, children }) => {
   const [getTags, { data: tagsData }] = useLazyGetTagsQuery();
@@ -321,7 +324,9 @@ const TagDropdown: FC<{
   const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
-    getTags(spaceId);
+    getTags(spaceId, {
+      skip: !spaceId,
+    });
   }, [spaceId, getTags]);
 
   useEffect(() => {
@@ -378,7 +383,7 @@ const TagDropdown: FC<{
 
 const TagDropdownWithSelection: FC<{
   taskId: number;
-  spaceId: number;
+  spaceId?: number;
 }> = ({ taskId, spaceId }) => (
   <TagDropdown taskId={taskId} spaceId={spaceId}>
     <TagTrigger placeholder="Empty" />

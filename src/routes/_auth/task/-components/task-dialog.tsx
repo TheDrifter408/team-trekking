@@ -111,7 +111,8 @@ export const TaskDialog: FC<TaskDialogProps> = ({ taskId }) => {
 
   const [getTaskData, { data: taskData, isFetching }] = useLazyGetTaskQuery();
   const [updateTask] = useUpdateTaskMutation();
-
+  const spaceId =
+    taskData?.list?.folder?.space?.id ?? taskData?.list?.space?.id;
   // get the data for the tags
   const { data: tagData } = useGetListTagsQuery(taskData?.list.id, {
     skip: !taskData?.list.id,
@@ -541,7 +542,7 @@ export const TaskDialog: FC<TaskDialogProps> = ({ taskId }) => {
                   >
                     <TagDropdownWithSelection
                       taskId={Number(taskId)}
-                      spaceId={28}
+                      spaceId={spaceId}
                     />
                   </TaskMetaRow>
                 </div>

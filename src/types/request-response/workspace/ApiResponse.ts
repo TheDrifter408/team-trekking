@@ -233,6 +233,15 @@ export interface List {
   priority?: Priority;
   status: Status;
   type: Type;
+  space?: TaskSpace;
+  folder?: TaskFolder;
+}
+interface TaskSpace {
+  id: number;
+}
+interface TaskFolder {
+  id: number;
+  space: TaskSpace;
 }
 
 export interface Member {
