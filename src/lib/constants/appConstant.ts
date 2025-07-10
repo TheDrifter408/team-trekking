@@ -285,6 +285,11 @@ const MATERIAL_LIGHT_COLORS: readonly string[] = [
   '#B0BEC5', // Blue Grey 200
 ] as const;
 
+enum SOCKET_ROOM_ACTION {
+  JOIN_ROOM = 'join_room',
+  LEAVE_ROOM = 'leave_room',
+}
+
 export {
   API_URLS,
   HARD_CARD_LIST,
@@ -298,4 +303,5 @@ export {
   ACTION,
   socket,
   MATERIAL_LIGHT_COLORS,
+  SOCKET_ROOM_ACTION,
 };
