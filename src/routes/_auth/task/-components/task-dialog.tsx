@@ -313,7 +313,7 @@ export const TaskDialog: FC<TaskDialogProps> = ({ taskId }) => {
           <SheetContent
             side="left"
             hasCloseIcon={false}
-            className="ring-0 outline-0 !gap-0 bg-gray-100 border-r shadow-lg top-[96px] overflow-y-scroll h-[calc(100%-98px)] no-scrollbar"
+            className="ring-0 outline-0 !gap-0 bg-gray-100 border-r shadow-lg top-[96px] overflow-y-scroll overflow-x-auto h-[calc(100%-98px)] no-scrollbar"
             overlay={false}
           >
             <div className="h-[60px] gap-2 font-medium sticky bg-white flex items-center px-3 shadow-sm">

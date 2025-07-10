@@ -505,3 +505,20 @@ export const taskTypeConfig: MenuSection[] = [
     ],
   },
 ];
+
+export const taskConfig: MenuSection[] = [
+  {
+    items: [
+      {
+        icon: Edit,
+        label: LABEL.RENAME,
+        action: ACTION.RENAME,
+      },
+      {
+        icon: Link,
+        label: LABEL.COPY_LINK,
+        action: ACTION.COPY_LINK,
+      },
+    ],
+  },
+];
