@@ -35,7 +35,7 @@ const API_URLS = {
   TASK_BASE_URL: `http://${currentMode}:${import.meta.env.VITE_TASK_PORT}/`,
 };
 
-const socket = io(`${currentMode}:3011`);
+const SOCKET_CONNECTION = io(`${currentMode}:3011`);
 
 const HOME_CARD_TITLE = {
   MY_WORK: 'My Work',
@@ -301,7 +301,7 @@ export {
   TUTORIAL_TIMER,
   LOW_PRIORITY,
   ACTION,
-  socket,
+  SOCKET_CONNECTION,
   MATERIAL_LIGHT_COLORS,
   SOCKET_ROOM_ACTION,
 };
