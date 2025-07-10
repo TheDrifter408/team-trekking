@@ -7,10 +7,39 @@ import {
   cloneElement,
   ReactNode,
   ReactElement,
+  JSX,
 } from 'react';
 import { X, Plus, Search } from 'lucide-react';
-import { Tag } from '@/types/request-response/task/ApiResponse';
-import { TagDropdownContextType } from '@/types/interfaces/TagDropDown';
+import {
+  useDeleteTaskTagMutation,
+  useUpdateTaskTagMutation,
+} from '@/service/rtkQueries/taskQuery.ts';
+import { getRandomHexColor, handleMutation } from '@/lib/utils/utils.ts';
+import {
+  useCreateTagMutation,
+  useLazyGetTagsQuery,
+} from '@/service/rtkQueries/spaceQuery.ts';
+
+// Types
+interface Tag {
+  id: number;
+  name: string;
+  color?: string;
+  isActive: boolean;
+}
+
+interface TagDropdownContextType {
+  tags: Tag[];
+  selectedTags: Tag[];
+  onTagsChange: (tags: Tag[]) => void;
+  isOpen: boolean;
+  setIsOpen: (isOpen: boolean) => void;
+  searchQuery: string;
+  setSearchQuery: (query: string) => void;
+  maxTags?: number;
+  allowCreate: boolean;
+}
+
 // Context
 const TagDropdownContext = createContext<TagDropdownContextType | null>(null);
 
@@ -22,16 +51,6 @@ const useTagDropdown = () => {
   return context;
 };
 
-// Predefined tag colors
-const tagColors = {
-  backend: 'bg-purple-100 text-purple-800 border-purple-200',
-  frontend: 'bg-green-100 text-green-800 border-green-200',
-  docs: 'bg-blue-100 text-blue-800 border-blue-200',
-  complex: 'bg-red-100 text-red-800 border-red-200',
-  fail: 'bg-orange-100 text-orange-800 border-orange-200',
-  default: 'bg-gray-100 text-gray-800 border-gray-200',
-};
-
 // Tag component
 const TagChip: FC<{
   tag: Tag;
@@ -39,16 +58,6 @@ const TagChip: FC<{
   removable?: boolean;
   size?: 'sm' | 'md';
 }> = ({ tag, onRemove, removable = true, size = 'md' }) => {
-  const getTagColor = (tagName: string) => {
-    const name = tagName?.toLowerCase() || '';
-    if (name.includes('backend')) return tagColors.backend;
-    if (name.includes('frontend')) return tagColors.frontend;
-    if (name.includes('docs')) return tagColors.docs;
-    if (name.includes('complex')) return tagColors.complex;
-    if (name.includes('fail')) return tagColors.fail;
-    return tagColors.default;
-  };
-
   const sizeClasses =
     size === 'sm' ? 'px-2 py-0.5 text-xs' : 'px-2 py-0.5 text-sm';
 
@@ -56,7 +65,7 @@ const TagChip: FC<{
     <span
       className={`
         inline-flex items-center gap-1 rounded-[4px] border font-medium !text-black flex-shrink-0
-        ${getTagColor(tag.name)} ${sizeClasses}
+        ${tag.color} ${sizeClasses}
       `}
     >
       <span className="truncate max-w-[100px]">{tag.name}</span>
@@ -158,14 +167,21 @@ const TagDropdownTrigger: FC<TagDropdownTriggerProps> = ({
 }) => {
   const { selectedTags, tags, isOpen, setIsOpen, onTagsChange } =
     useTagDropdown();
+  const [deleteTag] = useDeleteTaskTagMutation();
 
   const selectedTagObjects = tags.filter((tag) =>
     selectedTags.some((selectedTag) => selectedTag.id === tag.id)
   );
 
-  const onHandleRemoveTag = (tagId: number) => {
-    const newSelectedTags = selectedTags.filter((tag) => tag.id !== tagId);
-    onTagsChange?.(newSelectedTags);
+  const onHandleRemoveTag = async (tagId: number) => {
+    const { data } = await handleMutation(deleteTag, {
+      id: tagId,
+      tagIds: [tagId],
+    });
+    if (data) {
+      const newSelectedTags = selectedTags.filter((tag) => tag.id !== tagId);
+      onTagsChange?.(newSelectedTags);
+    }
   };
 
   if (asChild && children) {
@@ -181,7 +197,7 @@ const TagDropdownTrigger: FC<TagDropdownTriggerProps> = ({
   return (
     <div
       onClick={() => setIsOpen(!isOpen)}
-      className={`flex items-center min-w-0 w-full cursor-pointer ${className}`}
+      className={`flex items-center min-w-0 w-full cursor-pointer py-2 bg-white hover:border-gray-400 focus-within:border-blue-500 focus-within:ring-1 focus-within:ring-blue-500 ${className}`}
     >
       <div className="flex items-center gap-2 min-w-0 flex-1 overflow-hidden">
         {/* Selected Tags Container with fixed width constraints */}
@@ -229,11 +245,15 @@ const TagDropdownTrigger: FC<TagDropdownTriggerProps> = ({
 
 // Content Component
 interface TagDropdownContentProps {
+  taskId: number;
+  spaceId: number;
   className?: string;
   searchable?: boolean;
 }
 
 const TagDropdownContent: React.FC<TagDropdownContentProps> = ({
+  taskId,
+  spaceId,
   className = '',
   searchable = true,
 }) => {
@@ -248,23 +268,32 @@ const TagDropdownContent: React.FC<TagDropdownContentProps> = ({
     allowCreate,
   } = useTagDropdown();
 
+  const [createTag] = useCreateTagMutation();
+  const [updateTag] = useUpdateTaskTagMutation();
+  const [deleteTag] = useDeleteTaskTagMutation();
+
   if (!isOpen) return null;
 
-  const onHandleTagToggle = (tag: Tag) => {
+  const onHandleTagToggle = async (tag: Tag) => {
     let newSelectedTags: Tag[];
 
     const isSelected = selectedTags.some(
       (selectedTag) => selectedTag.id === tag.id
     );
+    const { data } = await handleMutation(updateTag, {
+      id: taskId,
+      tagIds: [tag.id],
+    });
+    if (data) {
+      if (isSelected) {
+        newSelectedTags = selectedTags.filter((t) => t.id !== tag.id);
+      } else {
+        if (maxTags && selectedTags.length >= maxTags) return;
+        newSelectedTags = [...selectedTags, tag];
+      }
 
-    if (isSelected) {
-      newSelectedTags = selectedTags.filter((t) => t.id !== tag.id);
-    } else {
-      if (maxTags && selectedTags.length >= maxTags) return;
-      newSelectedTags = [...selectedTags, tag];
+      onTagsChange?.(newSelectedTags);
     }
-
-    onTagsChange?.(newSelectedTags);
   };
 
   // Filter out selected tags from the dropdown list
@@ -278,7 +307,7 @@ const TagDropdownContent: React.FC<TagDropdownContentProps> = ({
       )
     : availableTags;
 
-  const onHandleCreateTag = () => {
+  const onHandleCreateTag = async () => {
     if (!allowCreate || !searchQuery.trim()) return;
 
     const newTagName = searchQuery.trim();
@@ -290,28 +319,39 @@ const TagDropdownContent: React.FC<TagDropdownContentProps> = ({
 
     if (tagExists) return;
 
-    // Generate a unique ID (in real app, this would come from backend)
-    const newId = Math.max(...tags.map((t) => t.id), 0) + 1;
-
-    const newTag: Tag = {
-      id: newId,
+    const { data } = await handleMutation(createTag, {
+      spaceId: spaceId,
       name: newTagName,
-      isActive: true,
-    };
+      color: getRandomHexColor(),
+    });
 
-    // Add the new tag to the selected tags
-    const newSelectedTags = [...selectedTags, newTag];
-    onTagsChange?.(newSelectedTags);
-    setSearchQuery('');
+    if (data) {
+      const newTag: Tag = {
+        id: 100,
+        name: newTagName,
+        isActive: true,
+      };
+
+      // Add the new tag to the selected tags
+      const newSelectedTags = [...selectedTags, newTag];
+      onTagsChange?.(newSelectedTags);
+      setSearchQuery('');
+    }
   };
 
   const selectedTagObjects = tags.filter((tag) =>
     selectedTags.some((selectedTag) => selectedTag.id === tag.id)
   );
 
-  const onHandleRemoveTag = (tagId: number) => {
-    const newSelectedTags = selectedTags.filter((t) => t.id !== tagId);
-    onTagsChange?.(newSelectedTags);
+  const onHandleRemoveTag = async (tagId: number) => {
+    const { data } = await handleMutation(deleteTag, {
+      id: taskId,
+      tagIds: [tagId],
+    });
+    if (data) {
+      const newSelectedTags = selectedTags.filter((t) => t.id !== tagId);
+      onTagsChange?.(newSelectedTags);
+    }
   };
 
   return (
@@ -400,29 +440,54 @@ const TagDropdownContent: React.FC<TagDropdownContentProps> = ({
   );
 };
 
-interface TagDropdownWrapperProps {
-  placeholder?: string;
-  availableTags: Tag[];
-  selectedTags: Tag[];
-  setSelectedTags: (tags: Tag[]) => void;
-}
-
-const TagDropdownWithSelection: FC<TagDropdownWrapperProps> = ({
-  placeholder = 'Empty',
-  availableTags,
-  selectedTags,
-  setSelectedTags,
+const TagDropdownWithSelection: ({
+  taskId,
+  spaceId,
+}: {
+  taskId: number;
+  spaceId: number;
+}) => JSX.Element = ({
+  taskId,
+  spaceId,
+}: {
+  taskId: number;
+  spaceId: number;
 }) => {
+  const [getTags, { data: tagsData }] = useLazyGetTagsQuery();
+  const [allTags, setAllTags] = useState<Tag[]>([]);
+  const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
+
+  useEffect(() => {
+    getTags(spaceId);
+  }, []);
+
+  useEffect(() => {
+    setAllTags(tagsData || []);
+  }, [tagsData]);
+
+  const handleTagsChange = (newTags: Tag[]) => {
+    setSelectedTags(newTags);
+
+    // If a new tag was created, add it to the all tags list
+    const newTagsToAdd = newTags.filter(
+      (newTag) => !allTags.some((existingTag) => existingTag.id === newTag.id)
+    );
+
+    if (newTagsToAdd.length > 0) {
+      setAllTags((prev) => [...prev, ...newTagsToAdd]);
+    }
+  };
+
   return (
     <TagDropdown
-      tags={availableTags}
+      tags={allTags}
       selectedTags={selectedTags}
-      onTagsChange={setSelectedTags}
+      onTagsChange={handleTagsChange}
       maxTags={10}
       allowCreate={true}
     >
-      <TagDropdownTrigger placeholder={placeholder} />
-      <TagDropdownContent searchable={true} />
+      <TagDropdownTrigger placeholder="Empty" />
+      <TagDropdownContent spaceId={spaceId} taskId={taskId} searchable={true} />
     </TagDropdown>
   );
 };

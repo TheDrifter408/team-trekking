@@ -9,6 +9,7 @@ import {
   UpdateAssigneeRequest,
   UpdateCheckListItemRequest,
   updateChecklistRequest,
+  UpdateTagRequest,
   UpdateTaskRequest,
 } from '@/types/request-response/task/ApiRequest.ts';
 import {
@@ -116,6 +117,22 @@ export const taskApi = createApi({
       }),
       transformResponse: (response: ApiResponse<Task>) => response.data,
     }),
+    updateTaskTag: builder.mutation<Task, UpdateTagRequest>({
+      query: (updateTag: UpdateTagRequest) => ({
+        url: `task/${updateTag.id}/tag`,
+        data: updateTag,
+        method: 'PATCH',
+      }),
+      transformResponse: (response: ApiResponse<Task>) => response.data,
+    }),
+    deleteTaskTag: builder.mutation<Task, UpdateTagRequest>({
+      query: (updateTag: UpdateTagRequest) => ({
+        url: `task/${updateTag.id}/tag/delete`,
+        data: updateTag,
+        method: 'DELETE',
+      }),
+      transformResponse: (response: ApiResponse<Task>) => response.data,
+    }),
     getSubtasks: builder.query<Task[], number>({
       query: (taskId: number) => ({
         url: `task/${taskId}/sub-task`,
@@ -139,4 +156,6 @@ export const {
   useUpdateTaskAssigneeMutation,
   useDeleteTaskAssigneeMutation,
   useGetSubtasksQuery,
+  useUpdateTaskTagMutation,
+  useDeleteTaskTagMutation,
 } = taskApi;
