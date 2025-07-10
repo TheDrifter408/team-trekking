@@ -41,11 +41,11 @@ export const spaceApi = createApi({
       transformResponse: (response: ApiResponse<ViewStatusResponse>) =>
         response.data,
     }),
-    getTags: builder.query<TagListResponse, number>({
+    getTags: builder.query<Array<TagListResponse>, number>({
       query: (spaceId: number) => ({
         url: `space/tag/${spaceId}`,
       }),
-      transformResponse: (response: ApiResponse<TagListResponse>) =>
+      transformResponse: (response: ApiResponse<Array<TagListResponse>>) =>
         response.data,
     }),
     createTag: builder.mutation<TagCreateResponse, CreateSpaceRequest>({
