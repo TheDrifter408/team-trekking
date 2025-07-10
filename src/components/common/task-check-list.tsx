@@ -52,10 +52,10 @@ interface IsAddingItemState {
 }
 
 interface TaskCheckListProps {
-  taskId?: number;
+  taskId: number;
 }
 
-const TaskCheckList = ({ taskId = 1 }: TaskCheckListProps) => {
+const TaskCheckList = ({ taskId }: TaskCheckListProps) => {
   const [getChecklist, { data: checklistsData }] = useLazyGetChecklistQuery();
   const [createCheckList] = useCreateCheckListMutation();
   const [deleteChecklist] = useDeleteChecklistMutation();
@@ -90,7 +90,7 @@ const TaskCheckList = ({ taskId = 1 }: TaskCheckListProps) => {
   const checklistMenuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    getChecklist(1);
+    getChecklist(taskId);
   }, [getChecklist]);
 
   // Update checklists when data is fetched
@@ -177,7 +177,7 @@ const TaskCheckList = ({ taskId = 1 }: TaskCheckListProps) => {
 
         if (data) {
           // Refresh the checklist data to get the updated items
-          getChecklist(taskId);
+          await getChecklist(taskId);
 
           // Reset the input state
           setNewItemText({ ...newItemText, [checklistId]: '' });
@@ -474,7 +474,7 @@ const TaskCheckList = ({ taskId = 1 }: TaskCheckListProps) => {
                   : checklist
               )
             );
-            getChecklist(taskId);
+            await getChecklist(taskId);
           }
         } else {
           // This is updating an existing checklist title
@@ -766,9 +766,9 @@ const TaskCheckList = ({ taskId = 1 }: TaskCheckListProps) => {
               ))}
               {/* Add new item */}
               {isAddingItem[checklist.id] ? (
-                <div className="flex items-center gap-3 p-2 rounded-md">
+                <div className="flex items-center gap-3 p-2 pr-4 rounded-md">
                   <div className="w-4 h-4 flex-shrink-0"></div>
-                  <div className="w-5 h-5 rounded-full border-2 border-gray-300"></div>
+                  <div className="w-4 h-4 rounded-full border-2 border-gray-300"></div>
                   <input
                     type="text"
                     value={newItemText[checklist.id] || ''}

@@ -79,8 +79,9 @@ const LoadEditorContent = ({ value }: { value: string }) => {
   const [editor] = useLexicalComposerContext();
   const hasInitialized = useRef(false);
   useEffect(() => {
-    if (hasInitialized.current) return;
+    if (!value || hasInitialized.current) return;
     hasInitialized.current = true;
+
     editor.update(() => {
       $convertFromMarkdownString(value, TRANSFORMERS);
     });

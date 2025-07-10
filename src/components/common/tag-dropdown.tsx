@@ -40,11 +40,11 @@ const TagChip: FC<{
   size?: 'sm' | 'md';
 }> = ({ tag, onRemove, removable = true, size = 'md' }) => {
   const getTagColor = (label: string) => {
-    if (label.includes('backend')) return tagColors.backend;
-    if (label.includes('frontend')) return tagColors.frontend;
-    if (label.includes('docs')) return tagColors.docs;
-    if (label.includes('complex')) return tagColors.complex;
-    if (label.includes('fail')) return tagColors.fail;
+    if (label?.includes('backend')) return tagColors.backend;
+    if (label?.includes('frontend')) return tagColors.frontend;
+    if (label?.includes('docs')) return tagColors.docs;
+    if (label?.includes('complex')) return tagColors.complex;
+    if (label?.includes('fail')) return tagColors.fail;
     return tagColors.default;
   };
 
@@ -265,17 +265,17 @@ const TagDropdownContent: React.FC<TagDropdownContentProps> = ({
 
   const filteredTags = searchable
     ? availableTags.filter((tag) =>
-        tag.name.toLowerCase().includes(searchQuery.toLowerCase())
+        tag?.name.toLowerCase().includes(searchQuery?.toLowerCase())
       )
     : availableTags;
 
   const onHandleCreateTag = () => {
     if (!allowCreate || !searchQuery.trim()) return;
 
-    const newTagName = searchQuery.toLowerCase().replace(/\s+/g, '-');
+    const newTagName = searchQuery?.toLowerCase().replace(/\s+/g, '-');
 
     // Don't create if tag already exists (including selected ones)
-    if (tags.some((tag) => tag.name === newTagName)) return;
+    if (tags.some((tag) => tag?.name === newTagName)) return;
 
     const newTag: Tag = {
       id: 0,
@@ -366,7 +366,8 @@ const TagDropdownContent: React.FC<TagDropdownContentProps> = ({
             {allowCreate &&
               searchQuery &&
               !tags.some(
-                (tag) => tag.label.toLowerCase() === searchQuery.toLowerCase()
+                (tag) =>
+                  tag?.label?.toLowerCase() === searchQuery?.toLowerCase()
               ) && (
                 <button
                   type="button"

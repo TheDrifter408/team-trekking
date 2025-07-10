@@ -116,6 +116,12 @@ export const taskApi = createApi({
       }),
       transformResponse: (response: ApiResponse<Task>) => response.data,
     }),
+    getSubtasks: builder.query<Task[], number>({
+      query: (taskId: number) => ({
+        url: `task/${taskId}/sub-task`,
+      }),
+      transformResponse: (response: ApiResponse<Task[]>) => response.data,
+    }),
   }),
 });
 
@@ -132,4 +138,5 @@ export const {
   useUpdateTaskMutation,
   useUpdateTaskAssigneeMutation,
   useDeleteTaskAssigneeMutation,
+  useGetSubtasksQuery,
 } = taskApi;

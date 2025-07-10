@@ -292,7 +292,7 @@ export const TaskDialog: FC<TaskDialogProps> = ({ taskId }) => {
   useEffect(() => {
     if (taskData) {
       setTaskName(taskData.name || '');
-      setDescription(taskData.description || '');
+      setDescription(taskData.description);
       setStatus(taskData.statusItem);
       setSelectedTags(taskData.tags || []);
       setSelectedAssignees(taskData?.assignees || []);
@@ -645,7 +645,7 @@ export const TaskDialog: FC<TaskDialogProps> = ({ taskId }) => {
             </div>
             {/* Checklist table container */}
             <div className="group mt-4">
-              <TaskCheckList />
+              <TaskCheckList taskId={Number(taskId)} />
             </div>
             {/* Attachments Container */}
             <div className="mt-4">
