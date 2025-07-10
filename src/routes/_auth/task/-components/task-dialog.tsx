@@ -552,9 +552,8 @@ export const TaskDialog: FC<TaskDialogProps> = ({ taskId }) => {
                     onHoverChange={setEnterTags}
                   >
                     <TagDropdownWithSelection
-                      availableTags={availableTags}
-                      selectedTags={selectedTags}
-                      setSelectedTags={setSelectedTags}
+                      taskId={Number(taskId)}
+                      spaceId={28}
                     />
                   </TaskMetaRow>
                 </div>
