@@ -39,12 +39,13 @@ const TagChip: FC<{
   removable?: boolean;
   size?: 'sm' | 'md';
 }> = ({ tag, onRemove, removable = true, size = 'md' }) => {
-  const getTagColor = (label: string) => {
-    if (label?.includes('backend')) return tagColors.backend;
-    if (label?.includes('frontend')) return tagColors.frontend;
-    if (label?.includes('docs')) return tagColors.docs;
-    if (label?.includes('complex')) return tagColors.complex;
-    if (label?.includes('fail')) return tagColors.fail;
+  const getTagColor = (tagName: string) => {
+    const name = tagName?.toLowerCase() || '';
+    if (name.includes('backend')) return tagColors.backend;
+    if (name.includes('frontend')) return tagColors.frontend;
+    if (name.includes('docs')) return tagColors.docs;
+    if (name.includes('complex')) return tagColors.complex;
+    if (name.includes('fail')) return tagColors.fail;
     return tagColors.default;
   };
 
@@ -55,10 +56,10 @@ const TagChip: FC<{
     <span
       className={`
         inline-flex items-center gap-1 rounded-[4px] border font-medium !text-black flex-shrink-0
-        ${getTagColor(tag.label)} ${sizeClasses}
+        ${getTagColor(tag.name)} ${sizeClasses}
       `}
     >
-      <span className="truncate max-w-[100px]">{tag.label}</span>
+      <span className="truncate max-w-[100px]">{tag.name}</span>
       {removable && onRemove && (
         <button
           type="button"
@@ -158,7 +159,9 @@ const TagDropdownTrigger: FC<TagDropdownTriggerProps> = ({
   const { selectedTags, tags, isOpen, setIsOpen, onTagsChange } =
     useTagDropdown();
 
-  const selectedTagObjects = tags.filter((tag) => selectedTags.includes(tag));
+  const selectedTagObjects = tags.filter((tag) =>
+    selectedTags.some((selectedTag) => selectedTag.id === tag.id)
+  );
 
   const onHandleRemoveTag = (tagId: number) => {
     const newSelectedTags = selectedTags.filter((tag) => tag.id !== tagId);
@@ -178,7 +181,7 @@ const TagDropdownTrigger: FC<TagDropdownTriggerProps> = ({
   return (
     <div
       onClick={() => setIsOpen(!isOpen)}
-      className={`flex items-center min-w-0 w-full ${className}`}
+      className={`flex items-center min-w-0 w-full cursor-pointer ${className}`}
     >
       <div className="flex items-center gap-2 min-w-0 flex-1 overflow-hidden">
         {/* Selected Tags Container with fixed width constraints */}
@@ -250,7 +253,11 @@ const TagDropdownContent: React.FC<TagDropdownContentProps> = ({
   const onHandleTagToggle = (tag: Tag) => {
     let newSelectedTags: Tag[];
 
-    if (selectedTags.includes(tag)) {
+    const isSelected = selectedTags.some(
+      (selectedTag) => selectedTag.id === tag.id
+    );
+
+    if (isSelected) {
       newSelectedTags = selectedTags.filter((t) => t.id !== tag.id);
     } else {
       if (maxTags && selectedTags.length >= maxTags) return;
@@ -261,35 +268,46 @@ const TagDropdownContent: React.FC<TagDropdownContentProps> = ({
   };
 
   // Filter out selected tags from the dropdown list
-  const availableTags = tags.filter((tag) => !selectedTags.includes(tag));
+  const availableTags = tags.filter(
+    (tag) => !selectedTags.some((selectedTag) => selectedTag.id === tag.id)
+  );
 
   const filteredTags = searchable
     ? availableTags.filter((tag) =>
-        tag?.name.toLowerCase().includes(searchQuery?.toLowerCase())
+        tag?.name.toLowerCase().includes(searchQuery?.toLowerCase() || '')
       )
     : availableTags;
 
   const onHandleCreateTag = () => {
     if (!allowCreate || !searchQuery.trim()) return;
 
-    const newTagName = searchQuery?.toLowerCase().replace(/\s+/g, '-');
+    const newTagName = searchQuery.trim();
 
     // Don't create if tag already exists (including selected ones)
-    if (tags.some((tag) => tag?.name === newTagName)) return;
+    const tagExists = tags.some(
+      (tag) => tag?.name.toLowerCase() === newTagName.toLowerCase()
+    );
+
+    if (tagExists) return;
+
+    // Generate a unique ID (in real app, this would come from backend)
+    const newId = Math.max(...tags.map((t) => t.id), 0) + 1;
 
     const newTag: Tag = {
-      id: 0,
-      name: searchQuery.trim(),
+      id: newId,
+      name: newTagName,
       isActive: true,
     };
 
-    // Add the new tag to the available tags (this would normally be handled by parent component)
+    // Add the new tag to the selected tags
     const newSelectedTags = [...selectedTags, newTag];
     onTagsChange?.(newSelectedTags);
     setSearchQuery('');
   };
 
-  const selectedTagObjects = tags.filter((tag) => selectedTags.includes(tag));
+  const selectedTagObjects = tags.filter((tag) =>
+    selectedTags.some((selectedTag) => selectedTag.id === tag.id)
+  );
 
   const onHandleRemoveTag = (tagId: number) => {
     const newSelectedTags = selectedTags.filter((t) => t.id !== tagId);
@@ -348,12 +366,10 @@ const TagDropdownContent: React.FC<TagDropdownContentProps> = ({
               <button
                 key={tag.id}
                 type="button"
-                onClick={() => !tag.disabled && onHandleTagToggle(tag)}
-                disabled={tag.disabled}
+                onClick={() => onHandleTagToggle(tag)}
                 className={`
                   flex items-center justify-between w-full px-3 py-2 text-sm text-left
                   hover:bg-gray-50 focus:outline-none focus:bg-gray-50
-                  disabled:opacity-50 disabled:cursor-not-allowed
                 `}
               >
                 <div className="flex items-center gap-2">
@@ -366,8 +382,7 @@ const TagDropdownContent: React.FC<TagDropdownContentProps> = ({
             {allowCreate &&
               searchQuery &&
               !tags.some(
-                (tag) =>
-                  tag?.label?.toLowerCase() === searchQuery?.toLowerCase()
+                (tag) => tag?.name?.toLowerCase() === searchQuery?.toLowerCase()
               ) && (
                 <button
                   type="button"
