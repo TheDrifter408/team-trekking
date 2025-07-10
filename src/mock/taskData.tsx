@@ -1,9 +1,17 @@
 import { Assignee } from '@/types/props/Common';
 import { taskStatuses } from './workspaceData';
-import { AtSign, Cable, ListChecks, MessageSquare, Replace, User, UsersRound } from 'lucide-react';
+import {
+  AtSign,
+  Cable,
+  ListChecks,
+  MessageSquare,
+  Replace,
+  User,
+  UsersRound,
+} from 'lucide-react';
 
 // Sample notification data
-export const taskNotificationUsers:Assignee[] = [
+export const taskNotificationUsers: Assignee[] = [
   {
     id: 1,
     name: 'Alex Johnson',
@@ -108,13 +116,13 @@ export const taskNotificationUsers:Assignee[] = [
 
 // Sample filter options
 export const filterOptions = [
-  { id: 'person', icon:User , label: 'Person', checked: true },
-  { id: 'comments', icon:MessageSquare, label: 'Comments', checked: true },
-  { id: 'assignee', icon:UsersRound, label: 'Assignee', checked: true },
-  { id: 'checklists', icon:ListChecks, label: 'Checklists', checked:true },
-  { id: 'dependencies',icon:Cable, label: 'Dependencies', checked:true },
-  { id: 'status', icon:Replace, label: 'Status Changes', checked: false },
-  { id: 'mentions', icon:AtSign, label: 'Mentions', checked: true },
+  { id: 'person', icon: User, label: 'Person', checked: true },
+  { id: 'comments', icon: MessageSquare, label: 'Comments', checked: true },
+  { id: 'assignee', icon: UsersRound, label: 'Assignee', checked: true },
+  { id: 'checklists', icon: ListChecks, label: 'Checklists', checked: true },
+  { id: 'dependencies', icon: Cable, label: 'Dependencies', checked: true },
+  { id: 'status', icon: Replace, label: 'Status Changes', checked: false },
+  { id: 'mentions', icon: AtSign, label: 'Mentions', checked: true },
 ];
 
 export const sampleTask = {
