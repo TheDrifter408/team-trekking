@@ -71,7 +71,6 @@ import { Sheet, SheetContent } from '@/components/shadcn-ui/sheet';
 import { TaskList } from '@/components/layout/task-leftsidebar';
 import { TaskSidebar } from '@/components/layout/task-sidebar';
 import { PageHeader } from './page-header';
-import { socket } from '@/lib/constants';
 import { $convertToMarkdownString, TRANSFORMERS } from '@lexical/markdown';
 import { useDebounceCallback } from '@/lib/hooks/use-debounceCallback';
 import { useWorkspaceStore } from '@/stores/zustand/workspace-store';
@@ -255,7 +254,6 @@ export const TaskDialog: FC<TaskDialogProps> = ({ taskId }) => {
   useSocketRoom<Task>({
     roomPrefix: 'task',
     roomSuffix: taskData?.taskUid ?? '',
-    socket,
     onData: ({ name, startDate, dueDate, description }) => {
       if (name) setTaskName(name);
       if (description) setDescription(description);
@@ -384,6 +382,12 @@ export const TaskDialog: FC<TaskDialogProps> = ({ taskId }) => {
                   value={taskName}
                   onChange={onHandleTaskNameChange}
                   onBlur={onHandleTaskNameBlur}
+                  onKeyDown={async (e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault();
+                      await onHandleTaskNameBlur();
+                    }
+                  }}
                   className="!text-3xl w-full !font-bold !h-fit tracking-tight bg-transparent border-none focus-visible:ring-0 focus-visible:ring-offset-0 px-0"
                 />
               </div>
