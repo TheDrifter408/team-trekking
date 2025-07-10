@@ -4,6 +4,7 @@ import { ApiResponse } from '@/types/request-response/auth/ApiResponse.ts';
 import {
   SpaceGlobal,
   ViewStatusResponse,
+  Tag,
 } from '@/types/request-response/space/ApiResponse.ts';
 import { API_URLS } from '@/lib/constants';
 import {
@@ -38,6 +39,12 @@ export const spaceApi = createApi({
       transformResponse: (response: ApiResponse<ViewStatusResponse>) =>
         response.data,
     }),
+    getTags: builder.query<Array<Tag>, number>({
+      query: (spaceId: number) => ({
+        url: `space/tag/${spaceId}`,
+      }),
+      transformResponse: (response: ApiResponse<Array<Tag>>) => response.data,
+    }),
   }),
 });
 
@@ -45,4 +52,5 @@ export const {
   useSpaceGlobalApiQuery,
   useCreateStatusMutation,
   useCreateSpaceMutation,
+  useLazyGetTagsQuery,
 } = spaceApi;

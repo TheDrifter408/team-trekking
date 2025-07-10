@@ -98,3 +98,10 @@ export interface CreatedBy {
   forcePasswordChange: boolean;
   isActive: boolean;
 }
+
+export interface Tag {
+  id: number;
+  name: string;
+  color: string;
+  isActive: boolean;
+}
