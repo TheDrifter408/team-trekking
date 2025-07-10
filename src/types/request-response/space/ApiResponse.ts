@@ -1,3 +1,5 @@
+import { Priority } from '@/types/request-response/workspace/ApiResponse';
+
 export interface SpaceGlobal {
   clickApps: ClickApp[];
   defaultViews: DefaultView[];
@@ -116,20 +118,24 @@ export interface Data {
 export interface TagCreateResponse {
   id: number;
   name: string;
-  iconUrl: string;
-  avatarKey: string;
-  visibility: string;
   color: string;
-  description: string;
-  isPrivate: boolean;
-  startDate: any;
-  dueDate: any;
   isActive: boolean;
-  createdAt: string;
-  focusColor: string;
-  createdBy: CreatedBy;
-  priority: string;
-  status: Status;
+  space: {
+    id: number;
+    name: string;
+    iconUrl: string;
+    avatarKey: string;
+    visibility: string;
+    isPrivate: boolean;
+    startDate: string;
+    dueDate: string;
+    isActive: boolean;
+    createdAt: string;
+    focusColor: string;
+    createdBy: CreatedBy;
+    priority: Priority;
+    status: Status;
+  };
 }
 
 export interface Status {

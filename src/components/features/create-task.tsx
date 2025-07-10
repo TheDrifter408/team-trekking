@@ -32,7 +32,6 @@ import TaskTypeDropdown from '@/components/common/task-type-dropdown.tsx';
 import { DocEditor } from '@/routes/_auth/task/-components/doc-editor';
 import { $getRoot, EditorState } from 'lexical';
 import { PriorityPopover } from '@/components/common/priority-popover.tsx';
-import { useTMTStore } from '@/stores/zustand';
 import { useListStore } from '@/stores/zustand/list-store';
 import { useWorkspaceStore } from '@/stores/zustand/workspace-store.ts';
 import { useCreateTaskMutation } from '@/service/rtkQueries/taskQuery.ts';
@@ -42,8 +41,12 @@ import {
   Folder,
 } from '@/types/request-response/workspace/ApiResponse';
 import { CreateTaskRequest } from '@/types/request-response/task/ApiRequest.ts';
-import { useAppNavigation } from '@/lib/hooks/use-app-navigation.ts';
-import { cn, handleMutation, getContrastTextColor } from '@/lib/utils/utils.ts';
+import {
+  cn,
+  handleMutation,
+  getContrastTextColor,
+  getRandomHexColor,
+} from '@/lib/utils/utils.ts';
 import { LABEL } from '@/lib/constants';
 import { toast } from 'sonner';
 import {
@@ -57,7 +60,10 @@ import {
   ListTasksResponse,
   StatusItem,
 } from '@/types/request-response/list/ApiResponse.ts';
-import { TagListResponse } from '@/types/request-response/space/ApiResponse.ts';
+import {
+  TagListResponse,
+  TagCreateResponse,
+} from '@/types/request-response/space/ApiResponse.ts';
 import { TaskDate } from '@/components/common/task-date.tsx';
 import {
   format,
@@ -68,8 +74,12 @@ import {
   isYesterday,
 } from 'date-fns';
 import { useLazyGetListTasksQuery } from '@/service/rtkQueries/listQuery.ts';
-import { useLazyGetTagsQuery } from '@/service/rtkQueries/spaceQuery.ts';
+import {
+  useLazyGetTagsQuery,
+  useCreateTagMutation,
+} from '@/service/rtkQueries/spaceQuery.ts';
 import { TagDialog } from '@/components/common/tag-dialog.tsx';
+import { CreateSpaceRequest } from '@/types/request-response/space/ApiRequest.ts';
 
 interface Props {
   isOpen: boolean;
@@ -83,9 +93,11 @@ export const CreateTask = ({ isOpen, setIsOpen, children, listId }: Props) => {
   const { spaces, members } = useWorkspaceStore();
   const [fetchListTasks] = useLazyGetListTasksQuery();
   const [createTask] = useCreateTaskMutation();
+  const [createTag] = useCreateTagMutation();
   const [fetchTags] = useLazyGetTagsQuery();
 
   const [name, setName] = useState('');
+  const [spaceId, setSpaceId] = useState<number | null>(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isTagDialogOpen, setIsTagDialogOpen] = useState(false);
   const [selectedList, setSelectedList] = useState<List | null>(null);
@@ -93,7 +105,7 @@ export const CreateTask = ({ isOpen, setIsOpen, children, listId }: Props) => {
   const [assignees, setAssignees] = useState<Member[]>([]);
   const [isAssigneeOpen, setIsAssigneeOpen] = useState(false);
   const [selectedTags, setSelectedTags] = useState<TagListResponse[]>([]);
-  const [spaceTags, setSpaceTags] = useState<Tag[]>([]);
+  const [spaceTags, setSpaceTags] = useState<TagListResponse[]>([]);
   const [dueDate, setDueDate] = useState<string>('');
   const [selectedPriority, setSelectedPriority] = useState<Priority | null>(
     null
@@ -144,6 +156,7 @@ export const CreateTask = ({ isOpen, setIsOpen, children, listId }: Props) => {
     }
     if (foundList && foundSpaceId) {
       setSelectedList(foundList);
+      setSpaceId(foundSpaceId);
       getTags(foundSpaceId);
     }
   }, [listId, spaces]);
@@ -174,6 +187,46 @@ export const CreateTask = ({ isOpen, setIsOpen, children, listId }: Props) => {
   };
   const onSelectStatus = (status: StatusItem) => {
     setStatus(status);
+  };
+  const onCreateTag = async (name: string) => {
+    const color = getRandomHexColor();
+    const newTag = {
+      name: name,
+      color: color,
+      isActive: true,
+      id: Date.now(),
+    };
+    // Here we Update the UI before the API request for smoother performance. Hence, we mutate the
+    // arrays for: (i) tags that are selected (ii) tags available to pick from
+    setSelectedTags((prev) => [...prev, newTag]);
+    setSpaceTags((prev) => [...prev, newTag]);
+    if (spaceId) {
+      const payload: CreateSpaceRequest = {
+        name,
+        spaceId,
+        color: newTag.color,
+      };
+      const { data } = await handleMutation<CreateSpaceRequest>(
+        createTag,
+        payload
+      );
+      if (data) {
+        const { id: createdTagId } = data;
+        const { data: updatedTags } = await handleMutation<TagListResponse[]>(
+          fetchTags,
+          spaceId
+        );
+        if (updatedTags) {
+          setSpaceTags(updatedTags);
+          // newTag.id is temp. update its id with response to match with spaceTags new arr.
+          setSelectedTags((prev) =>
+            prev.map((tag) =>
+              tag.id === newTag.id ? { ...tag, id: createdTagId } : tag
+            )
+          );
+        }
+      }
+    }
   };
   const onCreateTask = async () => {
     if (!selectedList || !name) return;
@@ -398,6 +451,7 @@ export const CreateTask = ({ isOpen, setIsOpen, children, listId }: Props) => {
         onSelectTag={onSelectTag}
         selectedTags={selectedTags}
         onRemoveTag={onRemoveTag}
+        onCreateTag={onCreateTag}
       />
     </div>
   );
