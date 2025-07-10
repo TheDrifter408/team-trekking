@@ -33,3 +33,8 @@ export interface StatusViewRequest {
   workspaceId: number;
   groups?: StatusGroup[];
 }
+export interface CreateSpaceRequest {
+  name: string;
+  color: string;
+  spaceId: number;
+}

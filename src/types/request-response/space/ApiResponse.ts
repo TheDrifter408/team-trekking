@@ -98,3 +98,53 @@ export interface CreatedBy {
   forcePasswordChange: boolean;
   isActive: boolean;
 }
+
+export interface Root {
+  data: Data;
+  error: string;
+  statusCode: number;
+}
+
+export interface Data {
+  name: string;
+  color: string;
+  space: Space;
+  id: number;
+  isActive: boolean;
+}
+
+export interface TagCreateResponse {
+  id: number;
+  name: string;
+  iconUrl: string;
+  avatarKey: string;
+  visibility: string;
+  color: string;
+  description: string;
+  isPrivate: boolean;
+  startDate: any;
+  dueDate: any;
+  isActive: boolean;
+  createdAt: string;
+  focusColor: string;
+  createdBy: CreatedBy;
+  priority: string;
+  status: Status;
+}
+
+export interface Status {
+  id: number;
+  name: string;
+  type: string;
+  identifier: string;
+  identifierId: any;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface TagListResponse {
+  id: number;
+  name: string;
+  color: string;
+  isActive: boolean;
+}

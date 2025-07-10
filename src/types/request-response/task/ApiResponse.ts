@@ -1,9 +1,12 @@
 import {
   Folder,
+  Space,
+  List,
   CreatedBy,
   Priority,
   Status,
   Role,
+  Member,
 } from '@/types/request-response/workspace/ApiResponse';
 import { StatusItem } from '@/types/request-response/list/ApiResponse';
 export interface CheckList {

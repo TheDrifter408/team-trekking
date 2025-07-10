@@ -1,4 +1,4 @@
-import { Header, Cell, Row } from '@tanstack/react-table';
+import { Header, Cell } from '@tanstack/react-table';
 
 export interface DataTableProps {
   height?: string;
