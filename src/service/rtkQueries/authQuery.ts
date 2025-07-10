@@ -1,6 +1,6 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import axiosBaseQuery from '@/service/baseQuery.ts';
-import { useTMTStore } from '@/stores/zustand';
+import { useAuthStore } from '@/stores/zustand/auth-store.tsx';
 import {
   ApiResponse,
   UserResponse,
@@ -22,7 +22,7 @@ export const authApi = createApi({
         url: 'auth/refresh',
         method: 'POST',
         headers: {
-          Authorization: `Bearer ${useTMTStore.getState()?.user?.refreshToken}`,
+          Authorization: `Bearer ${useAuthStore.getState()?.user?.refreshToken}`,
           'Content-Type': 'application/json',
           Accept: 'application/json',
         },

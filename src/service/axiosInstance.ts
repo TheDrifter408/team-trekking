@@ -1,6 +1,6 @@
 import axios from 'axios';
 import * as AxiosLogger from 'axios-logger';
-import { useTMTStore } from '@/stores/zustand';
+import { useAuthStore } from '@/stores/zustand/auth-store.tsx';
 
 const axiosInstance = axios.create();
 
@@ -9,7 +9,7 @@ axiosInstance.interceptors.response.use(AxiosLogger.responseLogger);
 
 axiosInstance.interceptors.request.use(
   (config) => {
-    const token = useTMTStore.getState().user?.token;
+    const token = useAuthStore.getState().user?.token;
     if (token && !config.headers.Authorization) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -22,7 +22,7 @@ axiosInstance.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      useTMTStore.getState().clearUser();
+      useAuthStore.getState().clearUser();
       window.location.href = '/login';
     }
     return Promise.reject(error);

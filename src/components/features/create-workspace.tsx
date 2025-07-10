@@ -35,7 +35,6 @@ import {
   useCreateWorkSpaceMutation,
   useWorkspaceGlobalQuery,
 } from '@/service/rtkQueries/workspaceQuery.ts';
-import { useAuthStore } from '@/stores/zustand/auth-store.ts';
 import {
   ConnectedTool,
   InterestedFeature,
@@ -43,6 +42,7 @@ import {
   WorkType,
 } from '@/types/request-response/workspace/ApiResponse.ts';
 import { useWorkspaceStore } from '@/stores/zustand/workspace-store.ts';
+import { useAuthStore } from '@/stores/zustand/auth-store.tsx';
 
 interface Props {
   isOpen: boolean;

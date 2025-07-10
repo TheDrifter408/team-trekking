@@ -11,7 +11,7 @@ import { loginSchema } from '@/lib/validation/validationSchema.tsx';
 import { usePostSignInMutation } from '@/service/rtkQueries/authQuery.ts';
 import { useLazyWorkspaceGlobalQuery } from '@/service/rtkQueries/workspaceQuery.ts';
 import { UserResponse } from '@/types/request-response/auth/ApiResponse.ts';
-import { useTMTStore } from '@/stores/zustand/index.tsx';
+import { useAuthStore } from '@/stores/zustand/auth-store.tsx';
 import { z } from 'zod';
 import { UserRole } from '@/lib/constants/enum.ts';
 import { handleMutation } from '@/lib/utils/utils.ts';
@@ -22,7 +22,7 @@ const Login = () => {
   const { setWorkspaceGlobal } = useWorkspaceStore();
   const [signIn, { isLoading }] = usePostSignInMutation();
   const [fetchWorkspaceGlobal] = useLazyWorkspaceGlobalQuery();
-  const { saveUser } = useTMTStore();
+  const { saveUser } = useAuthStore();
   const [errorMessage, setErrorMessage] = useState(null);
 
   // Initialize form with Zod schema

@@ -33,14 +33,14 @@ import {
 } from 'lucide-react';
 import { UserResponse } from '@/types/request-response/auth/ApiResponse.ts';
 import { getInitials } from '@/lib/utils/utils.ts';
-import { useTMTStore } from '@/stores/zustand';
+import { useAuthStore } from '@/stores/zustand/auth-store.tsx';
 
 interface Props {
   user: UserResponse | null;
 }
 
 export function ProfileDropdown({ user }: Props) {
-  const { clearUser } = useTMTStore();
+  const { clearUser } = useAuthStore();
   const fullName = user?.userData.fullName ?? 'Jawahiir Nabhan';
   const status = 'Online';
 

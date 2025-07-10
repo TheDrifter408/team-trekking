@@ -3,7 +3,7 @@ import { Outlet, useRouterState } from '@tanstack/react-router';
 import { AppSidebar } from '@/components/layout/app-sidebar.tsx';
 import { AppHeader } from '@/components/layout/app-header';
 import { SidebarInset, SidebarProvider } from '@/components/shadcn-ui/sidebar';
-import { useTMTStore } from '@/stores/zustand';
+import { useAuthStore } from '@/stores/zustand/auth-store.tsx';
 import { AppContextProvider } from '@/lib/context/app-layout-context.tsx';
 import { useSpaceGlobalApiQuery } from '@/service/rtkQueries/spaceQuery.ts';
 import {
@@ -19,7 +19,7 @@ import { useShouldShowSidebar } from '@/lib/hooks/use-should-show-sidebar';
 import { AnimatePresence, motion } from 'framer-motion';
 
 const AppLayout = () => {
-  const { user } = useTMTStore();
+  const { user } = useAuthStore();
   const {
     currentWorkspace,
     setSpaceFolderList,
