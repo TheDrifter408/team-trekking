@@ -47,3 +47,7 @@ export interface UpdateAssigneeRequest {
   id: number;
   assigneeIds: number[];
 }
+export interface UpdateTagRequest {
+  id: number;
+  tagIds: number[];
+}
