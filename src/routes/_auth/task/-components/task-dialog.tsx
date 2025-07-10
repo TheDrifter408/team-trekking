@@ -254,7 +254,7 @@ export const TaskDialog: FC<TaskDialogProps> = ({ taskId }) => {
 
   useSocketRoom<Task>({
     roomPrefix: 'task',
-    roomSuffix: taskData?.taskUid as string,
+    roomSuffix: taskData?.taskUid ?? '',
     socket,
     onData: ({ name, startDate, dueDate, description }) => {
       if (name) setTaskName(name);
