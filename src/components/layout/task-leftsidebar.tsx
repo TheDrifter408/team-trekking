@@ -7,12 +7,16 @@ import { TextTooltip } from '@/components/shadcn-ui/tooltip';
 import { ChevronRight, Ellipsis, Plus } from 'lucide-react';
 import { Icon } from '@/assets/icon-path';
 import { useNavigate } from '@tanstack/react-router';
+import { useGetSubtasksQuery } from '@/service/rtkQueries/taskQuery';
 
 interface TaskListProps {
   task?: Task;
 }
 
 export const TaskList: FC<TaskListProps> = ({ task }) => {
+  const { data: subTasks } = useGetSubtasksQuery(task.id, {
+    skip: !task?.id,
+  });
   return (
     <>
       <div className="px-2 flex items-center justify-between bg-slate-200 group/right_buttons">
@@ -29,14 +33,10 @@ export const TaskList: FC<TaskListProps> = ({ task }) => {
           </Button>
         </div>
       </div>
-      {task ? (
-        task.subTasks.length > 0 ? (
-          task.subTasks.map((task, idx) => (
-            <ExpandableSubTasks key={idx} subtask={task} />
-          ))
-        ) : (
-          <></>
-        )
+      {subTasks !== undefined ? (
+        subTasks?.map((task, idx) => (
+          <ExpandableSubTasks key={idx} subtask={task} />
+        ))
       ) : (
         <LoadingSubtasks />
       )}
@@ -61,7 +61,8 @@ const ExpandableSubTasks = ({ subtask }: ExpandableSubtasks) => {
   const onToggleExpand = () => {
     setIsExpanded((prev) => !prev);
   };
-
+  console.log('Subtasks: ', subtask);
+  console.log('Substasks.length', subtask.subTasks.length);
   return (
     <div className="flex items-center gap-1 hover:bg-slate-200 py-1">
       <div className="max-w-[40px] flex-shrink-0 flex justify-start items-center">
@@ -83,56 +84,12 @@ const ExpandableSubTasks = ({ subtask }: ExpandableSubtasks) => {
         <Icon name="progress2" className="text-green-500" />
       </div>
       <div className="flex flex-col overflow-hidden">
-        {/* Task Name */}
-        <div className="flex items-center overflow-hidden group/right_buttons px-2">
-          {isEditing ? (
-            <input
-              value={editedName}
-              autoFocus
-              onChange={(e) => setEditedName(e.target.value)}
-              onBlur={onRenameSubmit}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') onRenameSubmit();
-                if (e.key === 'Escape') {
-                  setEditedName(subtask.name);
-                  setIsEditing(false);
-                }
-              }}
-              className="text-theme-main-dark text-base bg-transparent font-medium !focus-none !ring-none !outline-none border-none "
-            />
-          ) : (
-            <TextTooltip message={subtask.name}>
-              <span
-                className={cn(
-                  'text-base text-content-default font-medium cursor-pointer truncate max-w-96'
-                )}
-                onClick={() => navigate({ to: `/task/${subtask.id}` })}
-                onDoubleClick={() => setIsEditing(true)}
-              >
-                {subtask.name}
-              </span>
-            </TextTooltip>
-          )}
-          <div className="flex invisible group-hover/right_buttons:visible">
-            <Button variant={'ghost'} size="icon_sm">
-              <Ellipsis />
-            </Button>
-            <Button variant={'ghost'} size="icon_sm">
-              <Plus />
-            </Button>
-          </div>
-        </div>
         {/* Subtasks */}
-        <div
-          className={cn(
-            `grid transform`,
-            isExpanded && subtask.subTasks.length > 0
-              ? `grid-rows-${subtask.subTasks.length}`
-              : 'grid-rows-0'
-          )}
-        >
-          {subtask.subTasks.length > 0 ? (
-            subtask.subTasks.map((subtask: Task) => <div>{subtask.name}</div>)
+        <div className={cn(`grid transform`)}>
+          {subtask.subTasks && subtask.subTasks.length > 0 ? (
+            subtask.subTasks.map((subtask: Task) => (
+              <ExpandableSubTasks subtask={subtask} />
+            ))
           ) : (
             <></>
           )}
