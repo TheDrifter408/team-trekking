@@ -26,8 +26,8 @@ import {
 } from '@/components/shadcn-ui/tooltip.tsx';
 
 interface SingleDatePickerProps {
-  date?: Date;
-  onDateChange?: (date: Date | undefined) => void;
+  date?: Date | string;
+  onDateChange?: (date: Date | undefined | string) => void;
   className?: string;
 }
 

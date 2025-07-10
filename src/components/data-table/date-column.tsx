@@ -11,9 +11,8 @@ export const DateColumn = ({
   onDateChange?: (date: Date | undefined) => void;
 }) => {
   const dateValue = dateType === 'start' ? task.startDate : task.dueDate;
-  const date = dateValue ? new Date(dateValue) : undefined;
 
-  const handleDateChange = (newDate: Date | undefined) => {
+  const onChangeDate = (newDate: Date | undefined) => {
     if (onDateChange) {
       onDateChange(newDate);
     }
@@ -24,8 +23,8 @@ export const DateColumn = ({
   return (
     <div className="w-full">
       <SingleDatePicker
-        date={date}
-        onDateChange={handleDateChange}
+        date={dateValue}
+        onDateChange={onChangeDate}
         className="w-full"
       />
     </div>
