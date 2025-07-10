@@ -51,7 +51,7 @@ import {
 } from '@/components/shadcn-ui/tooltip';
 import { DataTable } from '@/components/data-table/data-table';
 import TaskCheckList from '@/components/common/task-check-list';
-import { LABEL } from '@/lib/constants';
+import { LABEL, SOCKET_ROOM_ACTION } from '@/lib/constants';
 import { TabActionBar } from '@/components/common/table-floating-actoin-bar';
 import {
   useLazyGetTaskQuery,
@@ -254,7 +254,7 @@ export const TaskDialog: FC<TaskDialogProps> = ({ taskId }) => {
 
   useSocketRoom<Task>({
     roomPrefix: 'task',
-    roomSuffix: taskData?.taskUid as string,
+    roomSuffix: taskData?.taskUid ?? '',
     socket,
     onData: ({ name, startDate, dueDate, description }) => {
       if (name) setTaskName(name);

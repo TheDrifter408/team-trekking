@@ -19,10 +19,7 @@ export function useSocketRoom<T>({
   leaveEvent = SOCKET_ROOM_ACTION.LEAVE_ROOM,
 }: UseSocketRoomOptions<T>) {
   useEffect(() => {
-    if (!roomSuffix) return;
-
     const room = `${roomPrefix}${roomSuffix}`;
-
     socket.emit(joinEvent, { room });
     socket.on(room, (socketData: { data: T }) => {
       onData(socketData.data);
