@@ -61,8 +61,6 @@ const ExpandableSubTasks = ({ subtask }: ExpandableSubtasks) => {
   const onToggleExpand = () => {
     setIsExpanded((prev) => !prev);
   };
-  console.log('Subtasks: ', subtask);
-  console.log('Substasks.length', subtask.subTasks.length);
   return (
     <div className="flex items-center gap-1 hover:bg-slate-200 py-1">
       <div className="max-w-[40px] flex-shrink-0 flex justify-start items-center">

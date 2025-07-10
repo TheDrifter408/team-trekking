@@ -30,7 +30,7 @@ export interface CreateTaskRequest {
   dueDate?: string | null;
 }
 
-export interface UpdateTask {
+export interface UpdateTaskRequest {
   id: number;
   name: string;
   description: string;
@@ -41,4 +41,8 @@ export interface UpdateTask {
   dueDate: string;
   timeEstimate: number;
   sprintPoints: number;
+}
+export interface UpdateAssigneeRequest {
+  id: number;
+  assigneeIds: number[];
 }

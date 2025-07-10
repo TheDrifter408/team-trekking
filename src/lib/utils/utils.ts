@@ -2,7 +2,7 @@ import { Column } from '@/types/props/Common.ts';
 import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { QueryLifecycleApi } from '@reduxjs/toolkit/query';
-import { StatusItem, View } from '@/types/request-response/space/ApiResponse';
+import { StatusItem } from '@/types/request-response/space/ApiResponse';
 import { StatusGroup } from '@/types/request-response/list/ApiResponse';
 
 export function cn(...inputs: ClassValue[]) {
@@ -144,6 +144,14 @@ export function getContrastTextColor(hexColor: string): 'black' | 'white' {
   // Return black for light backgrounds, white for dark
   return luminance > 0.5 ? 'black' : 'white';
 }
+
+export const getInitialAvatar = (fullName: string) => {
+  const names = fullName.trim().split(' ');
+  if (names.length === 1) {
+    return names[0].substring(0, 2).toUpperCase();
+  }
+  return (names[0].charAt(0) + names[names.length - 1].charAt(0)).toUpperCase();
+};
 
 export const filterByItemNames = (
   groups: StatusGroup[],

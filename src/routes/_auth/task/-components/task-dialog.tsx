@@ -34,7 +34,7 @@ import {
   PlayCircle,
   PlusIcon,
 } from 'lucide-react';
-import { CSSProperties, FC, useEffect, useState } from 'react';
+import React, { CSSProperties, FC, useEffect, useState } from 'react';
 import { TaskMetaRow } from './task-meta-row';
 import { DatePickerWithRange } from '@/components/common/date-picker';
 import TagDropdownWithSelection from '@/components/common/tag-dropdown';
@@ -57,15 +57,14 @@ import {
   useLazyGetTaskQuery,
   useUpdateTaskMutation,
 } from '@/service/rtkQueries/taskQuery';
-import { Priority } from '@/types/request-response/workspace/ApiResponse';
+import {
+  Member,
+  Priority,
+} from '@/types/request-response/workspace/ApiResponse';
 import { Icon } from '@/assets/icon-path';
 import TimeEstimateDropdown from '@/components/common/estimate-time-dropdown';
 import { TaskSkeleton } from './loading';
-import {
-  Assignee,
-  Tag,
-  Task,
-} from '@/types/request-response/task/ApiResponse.ts';
+import { Tag, Task } from '@/types/request-response/task/ApiResponse.ts';
 import { DateRange } from 'react-day-picker';
 import Cookies from 'js-cookie';
 import { Sheet, SheetContent } from '@/components/shadcn-ui/sheet';
@@ -78,8 +77,9 @@ import { useDebounceCallback } from '@/lib/hooks/use-debounceCallback';
 import { useWorkspaceStore } from '@/stores/zustand/workspace-store';
 import { TaskPrioritySelect } from './task-priority-select';
 import TaskStatusDialog from '@/components/common/task-status-dialog';
-import { useGetListTagsQuery } from '@/service/rtkQueries/listQuery';
+import TaskAssignee from '@/components/common/task-assignee.tsx';
 import { StatusItem } from '@/types/request-response/list/ApiResponse';
+import { useGetListTagsQuery } from '@/service/rtkQueries/listQuery.ts';
 
 const availableTags: Tag[] = [
   { id: 0, name: 'initiative', isActive: true },
@@ -99,7 +99,6 @@ interface TaskDialogProps {
 
 export const TaskDialog: FC<TaskDialogProps> = ({ taskId }) => {
   const { workspaceGlobal } = useWorkspaceStore();
-
   const priority = workspaceGlobal?.priority ?? [];
   // Hover states
   const [enterDates, setEnterDates] = useState<boolean>(false);
@@ -114,7 +113,7 @@ export const TaskDialog: FC<TaskDialogProps> = ({ taskId }) => {
   const [description, setDescription] = useState('');
   const [status, setStatus] = useState<StatusItem | null>(null);
   const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
-  const [selectedAssignees, setSelectedAssignees] = useState<Assignee[]>([]);
+  const [selectedAssignees, setSelectedAssignees] = useState<Member[]>([]);
   const [estimatedTime, setEstimatedTime] = useState<string | null>(null);
   const [dateRange, setDateRange] = useState<DateRange | undefined>();
   const [taskPriority, setTaskPriority] = useState<Priority | null>(null);
@@ -262,6 +261,7 @@ export const TaskDialog: FC<TaskDialogProps> = ({ taskId }) => {
       }
     }
   };
+
   // useEffect to handle web socket operations and its side effects
   useEffect(() => {
     const room = 'task123';
@@ -512,10 +512,10 @@ export const TaskDialog: FC<TaskDialogProps> = ({ taskId }) => {
                     hover={enterAssignee}
                     onHoverChange={setEnterAssignee}
                   >
-                    {/* TODO: Populate with proper assignees */}
-                    {taskData && taskData?.assignees.length > 0
-                      ? LABEL.NO_ASSIGNEES_SELECTED
-                      : LABEL.NO_ASSIGNEES_SELECTED}
+                    <TaskAssignee
+                      taskId={taskId}
+                      selectedAssignee={selectedAssignees || []}
+                    />
                   </TaskMetaRow>
                   {/* PRIORITY */}
                   <TaskMetaRow
