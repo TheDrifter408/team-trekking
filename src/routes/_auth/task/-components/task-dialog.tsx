@@ -81,18 +81,6 @@ import TaskAssignee from '@/components/common/task-assignee.tsx';
 import { StatusItem } from '@/types/request-response/list/ApiResponse';
 import { useGetListTagsQuery } from '@/service/rtkQueries/listQuery.ts';
 
-const availableTags: Tag[] = [
-  { id: 0, name: 'initiative', isActive: true },
-  { id: 1, name: 'backend', isActive: true },
-  { id: 2, name: 'common docs', isActive: true },
-  { id: 3, name: 'complex', isActive: true },
-  { id: 4, name: 'fail1', isActive: true },
-  { id: 5, name: 'fail2', isActive: true },
-  { id: 6, name: 'fail3', isActive: true },
-  { id: 7, name: 'frontend', isActive: true },
-  { id: 8, name: 'ini', isActive: true },
-];
-
 interface TaskDialogProps {
   taskId: string;
 }
