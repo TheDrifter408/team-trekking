@@ -4,16 +4,10 @@ import configureAppStore from '@/stores/store.ts';
 import { PageHeaderContextProvider } from '@/lib/context/page-header-context.tsx';
 import { Toaster } from '@/components/shadcn-ui/sonner';
 import { PersistGate } from 'redux-persist/integration/react';
-import { RouterProvider, createRouter } from '@tanstack/react-router';
-import { routeTree } from './routeTree.gen';
+import { RouterProvider } from '@tanstack/react-router';
+import { createRouter } from '@/router';
 
-const router = createRouter({ routeTree });
-
-declare module '@tanstack/react-router' {
-  interface Register {
-    router: typeof router;
-  }
-}
+const router = createRouter();
 
 function App() {
   const { store, persistor } = configureAppStore();
