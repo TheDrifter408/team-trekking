@@ -1,9 +1,9 @@
 /// <reference types="vitest/config" />
 import { tanstackStart } from '@tanstack/react-start/plugin/vite';
 import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
 import { tanstackRouter } from '@tanstack/router-plugin/vite';
 import svgr from 'vite-plugin-svgr';
-import react from '@vitejs/plugin-react';
 import path from 'path';
 
 // https://vite.dev/config/
