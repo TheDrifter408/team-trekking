@@ -1,6 +1,6 @@
 /// <reference types="vitest/config" />
 import { defineConfig } from 'vite';
-import { tanstackStart } from '@tanstack/react-start/plugin/vite';
+// import { tanstackStart } from '@tanstack/react-start/plugin/vite';
 import react from '@vitejs/plugin-react-swc';
 import { tanstackRouter } from '@tanstack/router-plugin/vite';
 import svgr from 'vite-plugin-svgr';
@@ -25,7 +25,7 @@ export default defineConfig({
     }),
     react(),
     svgr(),
-    tanstackStart({ target: 'vercel' }),
+    //tanstackStart({ target: 'vercel' }),
   ],
   resolve: {
     alias: {
