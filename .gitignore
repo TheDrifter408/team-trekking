@@ -31,3 +31,6 @@ storybook-static
 .env.production
 .vercel
 .nitro
+
+.vercel
+.nitro
