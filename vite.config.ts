@@ -1,8 +1,7 @@
 /// <reference types="vitest/config" />
-import { tanstackStart } from '@tanstack/react-start/plugin/vite';
 import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
 import { tanstackRouter } from '@tanstack/router-plugin/vite';
+import react from '@vitejs/plugin-react';
 import svgr from 'vite-plugin-svgr';
 import path from 'path';
 
@@ -17,18 +16,13 @@ const dirname =
 // More info at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon
 export default defineConfig({
   plugins: [
-    react(),
     tanstackRouter({
-      target: 'react',
       autoCodeSplitting: true,
       routesDirectory: './src/routes',
       generatedRouteTree: './src/routeTree.gen.ts',
     }),
+    react(),
     svgr(),
-    tanstackStart({ 
-      target: 'vercel',
-      customViteReactPlugin: true,
-    }),
   ],
   resolve: {
     alias: {
